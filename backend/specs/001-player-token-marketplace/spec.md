@@ -73,9 +73,10 @@ A market operator must start the marketplace with all player tokens in circulati
 - **FR-005**: The system MUST prevent negative token holdings and reject any transaction that exceeds the available inventory or a user's ownership.
 - **FR-006**: The system MUST keep token ownership records accurate for each user and each player so that balances can be audited at any time.
 - **FR-007**: The system MUST maintain a consistent total token count for each player, ensuring the sum of operator inventory and all user holdings remains equal to 100.
-- **FR-008**: The system MUST calculate purchase and sale values using the player's current quotation at the moment the transaction is processed.
-- **FR-009**: The system MUST support a user account balance or equivalent value wallet that is updated for both purchases and sales.
+- **FR-008**: The system MUST calculate purchase and sale values using the player's current quotation at the moment the transaction is processed. For this initial version, every player's quotation value is fixed at `1` for all transactions, though the system is designed so this value can later become fluctuational without changing the transaction model.
+- **FR-009**: The system MUST support an internal model wallet object associated with each user, used as the value ledger for purchases and sales. This wallet is a backend-only accounting object and is not connected to any external real wallet, payment provider, or bank transaction.
 - **FR-010**: The system MUST provide clear transaction outcomes for successful operations and blocked attempts, including reasons for rejection when applicable.
+- **FR-011**: The initial backend version MUST NOT implement authentication, authorization, or any external security layer; all marketplace flows are intended to operate as a backend-only in-memory simulation without live user identity enforcement. This design decision is temporary and does not preclude adding Spring Security later as the product evolves.
 
 ### Key Entities
 
@@ -98,8 +99,8 @@ A market operator must start the marketplace with all player tokens in circulati
 
 ## Assumptions
 
-- Users have a balance or value account that can be used to settle purchases and sales.
-- The market quotation can change over time and is treated as the current market value for a player.
+- Users have an internal model wallet object that acts as the value ledger for settlements within the backend market simulation; it is not tied to a real external wallet or bank account.
+- For the initial version, the quotation is fixed at `1` to keep the marketplace simple and reduce implementation complexity, but the design remains compatible with future fluctuational quotation logic.
 - The market operator is a privileged internal account, not a regular user account.
 - Each player is assigned a fixed total supply of 100 tokens at market creation and remains capped at that amount.
 - The initial product scope focuses on token trading mechanics and market initialization rather than advanced analytics, social trading, or external market data feeds.
