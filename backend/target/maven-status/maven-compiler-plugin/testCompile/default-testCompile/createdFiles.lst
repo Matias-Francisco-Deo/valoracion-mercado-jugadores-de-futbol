@@ -1,7 +1,7 @@
 com\overcode\persistency\repositories\dto\DummyRepositoryDtoTest.class
+com\overcode\DemoApplicationTests.class
 com\overcode\DemoArithmeticTest.class
 com\overcode\model\DummyModelTest.class
-com\overcode\view\DummyViewTest.class
 com\overcode\controller\dto\DummyControllerDtoTest.class
 com\overcode\service\impl\DummyServiceImplTest.class
 com\overcode\service\interfaces\DummyServiceTest.class
