@@ -4,6 +4,12 @@ Short name: player-token-market
 Overview
 Build a player-token trading market where users trade in-system credits for player tokens. A single superuser initially owns all issued tokens (100 per player). Each football player has a per-token price (initially 100). Users may buy and sell tokens between accounts using internal credits. Transactions must validate availability and ownership, update positions and balances atomically, and record immutable ledger entries.
 
+## Clarifications
+
+### Session 2026-09-02
+- Q: Should this feature include secure authentication and safe password storage instead of the current no-auth/plaintext approach? → A: B
+
+
 Actors
 - Superuser: single privileged account holding initial supply (100 tokens per football player).
 - User: registered participant with an in-system credit balance and token positions.
