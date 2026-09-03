@@ -7,6 +7,10 @@
 - Model the market as four primary entities: `Player`, `User`, `Position`, and `Transaction`.
 - Keep the initial v1 scope intentionally security-light: no JWT, no OAuth, no session auth, and plain-text user credential storage as explicitly required by the product spec.
 - Use eager fetching for all entity relationships to keep portfolio and ledger reads simple and deterministic under the repository’s architecture rules.
+- Add a `GlobalExceptionHandler` with a consistent API error contract and custom `ServiceException` / `ModelException` hierarchies for validation and invariant failures.
+- Implement a shared `executeTransaction` service method that abstracts the buy/sell flow while preserving each operation’s specific validation rules.
+- Separate domain models from persistence concerns: model classes remain ORM-free; JPA annotations and persistence-specific DTOs live in dedicated record-based DTOs under the persistency package.
+- Require constructor-based creation for domain objects, with Lombok used for accessors and no-arg constructors only when the framework demands them.
 
 ## Rationale
 

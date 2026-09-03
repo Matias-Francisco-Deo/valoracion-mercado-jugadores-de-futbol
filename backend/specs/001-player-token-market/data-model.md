@@ -1,5 +1,14 @@
 # Data Model: Player Token Market
 
+## Domain model vs persistence DTOs
+
+The project will keep two parallel representations for each aggregate:
+
+- Domain model objects live under `model/` and contain business logic, validation, and invariants. They are not annotated with JPA or persistence metadata.
+- Persistence DTOs live under `persistency/dto/` and are implemented as Java `record`s. Those records carry the database mapping, column metadata, and repository conversion logic.
+- Domain object creation is constructor-driven: any new `User`, `Player`, or `Transaction` is instantiated with its required values in the constructor instead of creating empty objects and mutating fields afterward.
+- Lombok is used for accessors and framework-friendly constructors, but object mutation is intentionally minimized; domain state changes occur through explicit business methods and transaction execution rather than ad hoc setters.
+
 ## Core entities
 
 ### Player
@@ -85,6 +94,8 @@ Rules:
 - `buyer != seller` or allow same-user self-trade only if explicitly disallowed in future requirement
 - `sum(Position.quantity by player) == Player.totalIssued`
 - No negative balances or negative positions
+- Domain and service validation errors are represented via custom `ModelException` and `ServiceException` subclasses, not generic runtime exceptions.
+- Controller responses are normalized through a `GlobalExceptionHandler` so all invalid requests and invariant failures return stable API payloads.
 
 ## State transitions
 
@@ -95,9 +106,10 @@ Rules:
 1. Validate buyer/seller exist and player exists.
 2. Check buyer funds and seller inventory.
 3. Compute `totalAmount = quantity * currentPrice`.
-4. Update both user positions and balances in one transaction.
-5. Persist ledger row.
-6. Commit only if all checks pass; otherwise roll back.
+4. Route both buy and sell flows through a shared service method: `executeTransaction(...)`.
+5. Update both user positions and balances in one transaction.
+6. Persist ledger row.
+7. Commit only if all checks pass; otherwise roll back.
 
 ### Failure handling
 - Any validation or persistence exception must trigger rollback and leave all balances/positions unchanged.
