@@ -29,4 +29,5 @@ Feature: specs/001-player-token-market/spec.md
 ## Notes
 - Spec validated: all checklist items pass based on review of spec.md.
 - Clarifications provided by the user were applied: peer-to-peer transfers allowed (superuser initially holds all tokens); tokens are integer-only; trades use in-system credits only.
+- Security note: v1 will not implement authentication mechanisms or encryption; users will have email and password fields stored plainly and the system will not enforce authentication. This is an intentional design choice for this phase and carries significant security risks.
 - Ready for planning (/speckit-plan).

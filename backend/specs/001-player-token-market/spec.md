@@ -86,6 +86,8 @@ Assumptions
 - Initial player price is 100; price updates are supported later but out of initial scope.
 - Superuser is single initial owner of all tokens; peer-to-peer transfers are allowed once users hold tokens.
 - Initial user credit balance is 0; credits must be provisioned by system/admin for users to buy.
+- No authentication or encryption: The system will not implement any authentication mechanisms (no JWT, sessions, OAuth, or similar) and will not use encryption for stored data or in-transit communications in this initial phase. User records will include email and password fields stored plainly (e.g., unencrypted/plaintext) and the system will not enforce credential-based authentication — users operate without authentication controls.
+- Risk: This intentionally omits security controls and encryption; treat this as an internal/test-phase system only. Document and accept associated risks before any production deployment.
 
 Edge cases & concurrency
 - Concurrent buys must not allow oversell: enforce DB constraints or serialization.
