@@ -2,7 +2,7 @@ package com.overcode.config;
 
 import com.overcode.persistency.dto.PlayerRecord;
 import com.overcode.persistency.dto.PositionRecord;
-import com.overcode.persistency.dto.UserRecord;
+import com.overcode.persistency.dto.UserJPADTO;
 import com.overcode.persistency.repository.PlayerRepository;
 import com.overcode.persistency.repository.PositionRepository;
 import com.overcode.persistency.repository.UserRepository;
@@ -34,7 +34,7 @@ public class DataInitializer {
             return;
         }
 
-        UserRecord superUser = userRepository.save(new UserRecord("superuser", "superuser@market.local", "password", 0));
+        UserJPADTO superUser = userRepository.save(new UserJPADTO("superuser", "superuser@market.local", "password", 0));
 
         List<String> names = List.of(
             "Lionel Messi",

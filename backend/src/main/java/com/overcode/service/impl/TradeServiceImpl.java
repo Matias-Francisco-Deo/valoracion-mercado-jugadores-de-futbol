@@ -4,7 +4,7 @@ import com.overcode.controller.dto.TradeResponse;
 import com.overcode.persistency.dto.PlayerRecord;
 import com.overcode.persistency.dto.PositionRecord;
 import com.overcode.persistency.dto.TransactionRecord;
-import com.overcode.persistency.dto.UserRecord;
+import com.overcode.persistency.dto.UserJPADTO;
 import com.overcode.persistency.repository.PlayerRepository;
 import com.overcode.persistency.repository.PositionRepository;
 import com.overcode.persistency.repository.TransactionRepository;
@@ -41,9 +41,9 @@ public class TradeServiceImpl implements TradeService {
     public TradeResponse buy(Long buyerId, Long sellerId, Long playerId, Integer quantity) {
         validateTrade(buyerId, sellerId, playerId, quantity);
 
-        UserRecord buyer = userRepository.findById(buyerId)
+        UserJPADTO buyer = userRepository.findById(buyerId)
             .orElseThrow(() -> new NotFoundException("Buyer not found: " + buyerId));
-        UserRecord seller = userRepository.findById(sellerId)
+        UserJPADTO seller = userRepository.findById(sellerId)
             .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
         PlayerRecord player = playerRepository.findById(playerId)
             .orElseThrow(() -> new NotFoundException("Player not found: " + playerId)); // TODO cambiar excepción por una más específica
@@ -92,9 +92,9 @@ public class TradeServiceImpl implements TradeService {
     public TradeResponse sell(Long sellerId, Long buyerId, Long playerId, Integer quantity) { // TODO ojo con lógica de modelo
         validateTrade(buyerId, sellerId, playerId, quantity);
 
-        UserRecord seller = userRepository.findById(sellerId)
+        UserJPADTO seller = userRepository.findById(sellerId)
             .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
-        UserRecord buyer = userRepository.findById(buyerId)
+        UserJPADTO buyer = userRepository.findById(buyerId)
             .orElseThrow(() -> new NotFoundException("Buyer not found: " + buyerId));
         PlayerRecord player = playerRepository.findById(playerId)
             .orElseThrow(() -> new NotFoundException("Player not found: " + playerId));

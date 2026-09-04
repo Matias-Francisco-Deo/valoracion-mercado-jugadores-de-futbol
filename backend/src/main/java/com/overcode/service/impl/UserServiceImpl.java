@@ -6,9 +6,7 @@ import com.overcode.controller.dto.PositionDto;
 import com.overcode.controller.dto.TransactionDto;
 import com.overcode.controller.dto.UserDto;
 import com.overcode.model.User;
-import com.overcode.persistency.dto.PositionRecord;
-import com.overcode.persistency.dto.TransactionRecord;
-import com.overcode.persistency.dto.UserRecord;
+import com.overcode.persistency.dto.UserJPADTO;
 import com.overcode.persistency.repository.PositionRepository;
 import com.overcode.persistency.repository.TransactionRepository;
 import com.overcode.persistency.repository.UserRepository;
@@ -45,15 +43,15 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Email already exists");
         }
 
-        User user = User.create(request.username(), request.email(), request.password());
-        UserRecord saved = userRepository.save(new UserRecord(user.getUsername(), user.getEmail(), user.getPassword(), user.getCreditBalance()));
+        User user = new User(null, request.username(), request.email(), request.password(), 0, 0);
+        UserJPADTO saved = userRepository.save(new UserJPADTO(user.getUsername(), user.getEmail(), user.getPassword(), user.getCreditBalance()));
         return new UserDto(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getCreditBalance());
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDto getUser(Long id) {
-        UserRecord record = userRepository.findById(id)
+        UserJPADTO record = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("User not found: " + id));
         return new UserDto(record.getId(), record.getUsername(), record.getEmail(), record.getCreditBalance());
     }
@@ -61,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public PortfolioDto getPortfolio(Long userId) {
-        UserRecord user = userRepository.findById(userId)
+        UserJPADTO user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found: " + userId));
         List<PositionDto> positions = positionRepository.findByUserId(userId).stream()
             .map(position -> new PositionDto(position.getPlayerId(), position.getQuantity()))
@@ -72,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<TransactionDto> getTransactions(Long userId) {
-        UserRecord user = userRepository.findById(userId)
+        UserJPADTO user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found: " + userId));
         return transactionRepository.findByBuyerIdOrSellerIdOrderByTimestampDesc(user.getId(), user.getId()).stream()
             .map(record -> new TransactionDto(

@@ -6,7 +6,7 @@ import com.overcode.controller.dto.UserDto;
 import com.overcode.persistency.dto.PlayerRecord;
 import com.overcode.persistency.dto.PositionRecord;
 import com.overcode.persistency.dto.TransactionRecord;
-import com.overcode.persistency.dto.UserRecord;
+import com.overcode.persistency.dto.UserJPADTO;
 import com.overcode.persistency.repository.PlayerRepository;
 import com.overcode.persistency.repository.PositionRepository;
 import com.overcode.persistency.repository.TransactionRepository;
@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,8 +52,8 @@ class MarketApiIT {
         CreateUserRequest request = new CreateUserRequest("alice", "alice@example.com", "secret");
         when(userRepository.existsByUsername("alice")).thenReturn(false);
         when(userRepository.existsByEmail("alice@example.com")).thenReturn(false);
-        when(userRepository.save(any(UserRecord.class))).thenAnswer(invocation -> {
-            UserRecord record = invocation.getArgument(0);
+        when(userRepository.save(any(UserJPADTO.class))).thenAnswer(invocation -> {
+            UserJPADTO record = invocation.getArgument(0);
             record.setId(42L);
             return record;
         });
@@ -68,9 +67,9 @@ class MarketApiIT {
 
     @Test
     void buyFlow_shouldAdjustBalanceAndLedger() {
-        UserRecord buyer = new UserRecord("buyer", "buyer@example.com", "secret", 1_000);
+        UserJPADTO buyer = new UserJPADTO("buyer", "buyer@example.com", "secret", 1_000);
         buyer.setId(7L);
-        UserRecord seller = new UserRecord("superuser", "super@market.local", "password", 0);
+        UserJPADTO seller = new UserJPADTO("superuser", "super@market.local", "password", 0);
         seller.setId(1L);
         PlayerRecord player = new PlayerRecord("Lionel Messi", 100, 100);
         player.setId(1L);
@@ -84,7 +83,7 @@ class MarketApiIT {
         when(positionRepository.findByUserIdAndPlayerId(1L, 1L)).thenReturn(Optional.of(sellerPosition));
         when(positionRepository.findByUserIdAndPlayerId(7L, 1L)).thenReturn(Optional.empty());
         when(positionRepository.save(any(PositionRecord.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(userRepository.save(any(UserRecord.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(UserJPADTO.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(transactionRepository.save(any(TransactionRecord.class))).thenAnswer(invocation -> {
             TransactionRecord tx = invocation.getArgument(0);
             tx.setId(99L);

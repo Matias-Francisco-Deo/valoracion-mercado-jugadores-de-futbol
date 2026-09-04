@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("/users/{id}/portfolio")
     public PortfolioDto getPortfolio(@PathVariable Long id) {
         return userService.getPortfolio(id);
-    }
+    } // TODO este dto?
 
     @GetMapping("/users/{id}/transactions")
     public List<TransactionDto> getTransactions(@PathVariable Long id) {
