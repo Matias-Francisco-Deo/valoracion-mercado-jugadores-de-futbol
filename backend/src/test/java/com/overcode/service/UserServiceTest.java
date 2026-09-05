@@ -1,43 +1,66 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
+import com.overcode.persistence.repository.PositionRepository;
+import com.overcode.persistence.repository.TransactionRepository;
+import com.overcode.persistence.repository.dao.PlayerDAO;
+import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.service.impl.UserServiceImpl;
 import com.overcode.service.interfaces.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@Testcontainers
+@SpringBootTest()
 class UserServiceTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-        .withDatabaseName("overcode_test")
-        .withUsername("postgres")
-        .withPassword("postgres");
-
-    @DynamicPropertySource
-    static void setDatasourceProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.datasource.driver-class-name", postgres::getDriverClassName);
-    }
+//    @Configuration
+//    @Import(UserServiceImpl.class)
+//    static class TestConfig {
+//
+//        @Bean
+//        UserRepository userRepository() {
+//            return mock(UserRepository.class);
+//        }
+//
+//        @Bean
+//        PositionRepository positionRepository() {
+//            return mock(PositionRepository.class);
+//        }
+//
+//        @Bean
+//        TransactionRepository transactionRepository() {
+//            return mock(TransactionRepository.class);
+//        }
+//    }
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PlayerDAO playerRepository;
+
+    @BeforeEach
+    void setUp() {
+    }
+
     @Test
     void shouldCreateUser() {
-        User created = userService.create(new User(null, "alice", "alice@example.com", "secret", 0, 0));
+        User newUser = new User(null, "alice", "alice@example.com", "secret", 0, 0);
+        User created = userService.create(newUser);
 
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());

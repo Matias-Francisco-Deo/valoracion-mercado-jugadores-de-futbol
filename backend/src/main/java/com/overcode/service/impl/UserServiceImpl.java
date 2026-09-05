@@ -23,15 +23,16 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PositionRepository positionRepository;
-    private final TransactionRepository transactionRepository;
+//    private final PositionRepository positionRepository;
+//    private final TransactionRepository transactionRepository;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           PositionRepository positionRepository,
-                           TransactionRepository transactionRepository) {
+    public UserServiceImpl(UserRepository userRepository
+//                           PositionRepository positionRepository,
+//                           TransactionRepository transactionRepository
+    ) {
         this.userRepository = userRepository;
-        this.positionRepository = positionRepository;
-        this.transactionRepository = transactionRepository;
+//        this.positionRepository = positionRepository;
+//        this.transactionRepository = transactionRepository;
     }
 
     @Override

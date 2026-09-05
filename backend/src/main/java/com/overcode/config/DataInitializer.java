@@ -19,14 +19,15 @@ public class DataInitializer {
 
     private final PlayerDAO playerDAO;
     private final UserRepository userRepository;
-    private final PositionRepository positionRepository;
+//    private final PositionRepository positionRepository;
 
     public DataInitializer(PlayerDAO playerDAO,
-                           UserRepository userRepository,
-                           PositionRepository positionRepository) {
+                           UserRepository userRepository
+//                           PositionRepository positionRepository
+    ) {
         this.playerDAO = playerDAO;
         this.userRepository = userRepository;
-        this.positionRepository = positionRepository;
+//        this.positionRepository = positionRepository;
     }
 
     @PostConstruct
@@ -50,7 +51,7 @@ public class DataInitializer {
 
         for (String name : names) {
             PlayerRecord player = playerDAO.save(new PlayerRecord(name, 100, 100));
-            positionRepository.save(new PositionRecord(superUser.getId(), player.getId(), 100));
+            // positionRepository.save(new PositionRecord(superUser.getId(), player.getId(), 100));
         }
     }
 }

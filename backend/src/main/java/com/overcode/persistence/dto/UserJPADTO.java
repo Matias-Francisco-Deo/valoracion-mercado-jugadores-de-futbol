@@ -7,29 +7,44 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-public record UserJPADTO(
+public class UserJPADTO {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id,
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    String username,
+    private String username;
 
     @Column(nullable = false, unique = true)
-    String email,
+    private String email;
 
     @Column(nullable = false)
-    String password,
+    private String password;
 
     @Column(name = "credit_balance", nullable = false)
-    Integer creditBalance,
+    private Integer creditBalance;
 
     @Column(name = "tokens", nullable = false)
-    Integer tokens
-) {
+    private Integer tokens;
+
+    public UserJPADTO(Long id, String username, String email, String password, Integer creditBalance, Integer tokens) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.creditBalance = creditBalance;
+        this.tokens = tokens;
+    }
 
     public UserJPADTO(String username, String email, String password, Integer creditBalance, Integer tokens) {
         this(null, username, email, password, creditBalance, tokens);

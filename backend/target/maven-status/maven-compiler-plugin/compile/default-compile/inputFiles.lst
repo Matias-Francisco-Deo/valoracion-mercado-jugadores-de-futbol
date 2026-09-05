@@ -9,7 +9,7 @@ F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jug
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\dto\SellOrderRequest.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\dto\TradeResponse.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\dto\TransactionDto.java
-F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\dto\UserDto.java
+F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\dto\UserResponseDTO.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\exception\ApiError.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\exception\GlobalExceptionHandler.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\controller\OrdersController.java
@@ -24,10 +24,12 @@ F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jug
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\dto\PositionRecord.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\dto\TransactionRecord.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\dto\UserJPADTO.java
-F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\PlayerRepository.java
+F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\dao\PlayerDAO.java
+F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\dao\UserDAO.java
+F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\impl\UserRepositoryImpl.java
+F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\interfaces\UserRepository.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\PositionRepository.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\TransactionRepository.java
-F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\persistence\repository\UserRepository.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\service\exception\ConflictException.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\service\exception\EmailRepetidoException.java
 F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend\src\main\java\com\overcode\service\exception\NombreRepetidoException.java
