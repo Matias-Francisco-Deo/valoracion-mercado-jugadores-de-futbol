@@ -12,7 +12,7 @@ Sync Impact Report
 ## Core Principles
 
 ### I. Layered Architecture
-The project MUST follow a strict layered architecture: model, service, controller, and persistency. Controller components MUST communicate only with the service layer. Services MUST mediate between model and persistency. Model objects MUST NOT know about other layers. Persistency MUST expose a repository abstraction representing the boundary between domain objects and storage logic. Persistency components MAY know the model, but they MUST NOT execute domain behavior. Controller MUST define all DTOs under a dedicated dto subfolder, and persistency MUST also include a repository package structure.
+The project MUST follow a strict layered architecture: model, service, controller, and persistence. Controller components MUST communicate only with the service layer. Services MUST mediate between model and persistence. Model objects MUST NOT know about other layers. Persistency MUST expose a repository abstraction representing the boundary between domain objects and storage logic. Persistency components MAY know the model, but they MUST NOT execute domain behavior. Controller MUST define all DTOs under a dedicated dto subfolder, and persistence MUST also include a repository package structure.
 
 ### II. Rich Model
 All domain logic MUST live inside model objects. The model layer MUST use SOLID principles and design patterns when needed to keep logic cohesive and testable. Any new model object not explicitly specified by the project MUST NOT be created without explicit permission from the project owner. Model-layer work MUST remain confined to the model package and its responsibilities.
@@ -31,7 +31,7 @@ A requirement is considered done only when the implementation has unit tests and
 The project MUST keep a clean separation between responsibility boundaries:
 
 - Controller DTOs MUST be placed under controller/dto.
-- Persistency repositories MUST be isolated in persistency/repository and implemented behind repository interfaces.
+- Persistency repositories MUST be isolated in persistence/repository and implemented behind repository interfaces.
 - Domain logic MUST remain in model objects, not in controllers or repositories.
 - New domain objects MUST be approved before introduction, and only within the model layer.
 - Existing tests MUST NOT be deleted or modified without explicit permission and an affirmative response from the project owner.

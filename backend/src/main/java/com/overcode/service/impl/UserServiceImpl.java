@@ -6,12 +6,13 @@ import com.overcode.controller.dto.PositionDto;
 import com.overcode.controller.dto.TransactionDto;
 import com.overcode.controller.dto.UserDto;
 import com.overcode.model.User;
-import com.overcode.persistency.dto.UserJPADTO;
-import com.overcode.persistency.repository.PositionRepository;
-import com.overcode.persistency.repository.TransactionRepository;
-import com.overcode.persistency.repository.UserRepository;
+import com.overcode.persistence.dto.UserJPADTO;
+import com.overcode.persistence.repository.PositionRepository;
+import com.overcode.persistence.repository.TransactionRepository;
+import com.overcode.persistence.repository.UserRepository;
+import com.overcode.service.exception.EmailRepetidoException;
+import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.exception.NotFoundException;
-import com.overcode.service.exception.ValidationException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,10 +38,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto createUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.username())) {
-            throw new ValidationException("Username already exists");
+            throw new NombreRepetidoException("Username already exists");
         }
         if (userRepository.existsByEmail(request.email())) {
-            throw new ValidationException("Email already exists");
+            throw new EmailRepetidoException("Email already exists");
         }
 
         User user = new User(null, request.username(), request.email(), request.password(), 0, 0);

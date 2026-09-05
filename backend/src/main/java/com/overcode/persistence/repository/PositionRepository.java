@@ -1,6 +1,6 @@
-package com.overcode.persistency.repository;
+package com.overcode.persistence.repository;
 
-import com.overcode.persistency.dto.PositionRecord;
+import com.overcode.persistence.dto.PositionRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

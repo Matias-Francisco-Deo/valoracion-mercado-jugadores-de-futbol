@@ -1,4 +1,4 @@
-package com.overcode.persistency.dto;
+package com.overcode.persistence.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

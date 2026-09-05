@@ -1,14 +1,14 @@
 package com.overcode.service.impl;
 
 import com.overcode.controller.dto.TradeResponse;
-import com.overcode.persistency.dto.PlayerRecord;
-import com.overcode.persistency.dto.PositionRecord;
-import com.overcode.persistency.dto.TransactionRecord;
-import com.overcode.persistency.dto.UserJPADTO;
-import com.overcode.persistency.repository.PlayerRepository;
-import com.overcode.persistency.repository.PositionRepository;
-import com.overcode.persistency.repository.TransactionRepository;
-import com.overcode.persistency.repository.UserRepository;
+import com.overcode.persistence.dto.PlayerRecord;
+import com.overcode.persistence.dto.PositionRecord;
+import com.overcode.persistence.dto.TransactionRecord;
+import com.overcode.persistence.dto.UserJPADTO;
+import com.overcode.persistence.repository.PlayerRepository;
+import com.overcode.persistence.repository.PositionRepository;
+import com.overcode.persistence.repository.TransactionRepository;
+import com.overcode.persistence.repository.UserRepository;
 import com.overcode.service.exception.ConflictException;
 import com.overcode.service.exception.NotFoundException;
 import com.overcode.service.exception.ValidationException;

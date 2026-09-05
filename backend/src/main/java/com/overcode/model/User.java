@@ -26,16 +26,10 @@ public class User {
     }
 
     public void setCreditBalance(Integer creditBalance) {
-        if (creditBalance == null || creditBalance < 0) {
-            throw new IllegalArgumentException("Credit balance cannot be negative");
-        }
-        this.creditBalance = creditBalance;
+        this.creditBalance = Math.max(creditBalance, 0);
     }
 
     public void setTokenBalance(Integer tokens) {
-        if (tokens == null || tokens < 0) {
-            throw new IllegalArgumentException("Token balance cannot be negative");
-        }
-        this.tokens = tokens;
+        this.tokens = Math.max(tokens, 0);
     }
 }

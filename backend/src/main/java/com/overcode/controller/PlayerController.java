@@ -1,8 +1,8 @@
 package com.overcode.controller;
 
 import com.overcode.controller.dto.PlayerDto;
-import com.overcode.persistency.dto.PlayerRecord;
-import com.overcode.persistency.repository.PlayerRepository;
+import com.overcode.persistence.dto.PlayerRecord;
+import com.overcode.persistence.repository.PlayerRepository;
 import com.overcode.service.exception.NotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

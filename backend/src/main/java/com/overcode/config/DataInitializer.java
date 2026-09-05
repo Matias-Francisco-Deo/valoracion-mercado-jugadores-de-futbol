@@ -1,11 +1,11 @@
 package com.overcode.config;
 
-import com.overcode.persistency.dto.PlayerRecord;
-import com.overcode.persistency.dto.PositionRecord;
-import com.overcode.persistency.dto.UserJPADTO;
-import com.overcode.persistency.repository.PlayerRepository;
-import com.overcode.persistency.repository.PositionRepository;
-import com.overcode.persistency.repository.UserRepository;
+import com.overcode.persistence.dto.PlayerRecord;
+import com.overcode.persistence.dto.PositionRecord;
+import com.overcode.persistence.dto.UserJPADTO;
+import com.overcode.persistence.repository.PlayerRepository;
+import com.overcode.persistence.repository.PositionRepository;
+import com.overcode.persistence.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
