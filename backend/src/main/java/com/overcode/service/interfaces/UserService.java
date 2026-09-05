@@ -12,7 +12,7 @@ public interface UserService {
 
     User getUser(Long id);
 
-    PortfolioDto getPortfolio(Long userId);
-
-    List<TransactionDto> getTransactions(Long userId);
+//    PortfolioDto getPortfolio(Long userId);
+//
+//    List<TransactionDto> getTransactions(Long userId);
 }

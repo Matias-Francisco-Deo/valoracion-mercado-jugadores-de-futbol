@@ -19,7 +19,15 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.creditBalance = creditBalance;
+        setCreditBalance(creditBalance);
+        setTokens(tokens);
+    }
+
+    public User(String username, String email, String password, Integer creditBalance, Integer tokens) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        setCreditBalance(creditBalance);
         this.tokens = tokens;
     }
 
@@ -27,7 +35,7 @@ public class User {
         this.creditBalance = Math.max(creditBalance, 0);
     }
 
-    public void setTokenBalance(Integer tokens) {
+    public void setTokens(Integer tokens) {
         this.tokens = Math.max(tokens, 0);
     }
 }

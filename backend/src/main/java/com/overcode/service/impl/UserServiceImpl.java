@@ -54,33 +54,33 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("User not found: " + id));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public PortfolioDto getPortfolio(Long userId) {
-        UserJPADTO user = userDAO.findById(userId)
-            .orElseThrow(() -> new NotFoundException("User not found: " + userId));
-        List<PositionDto> positions = positionRepository.findByUserId(userId).stream()
-            .map(position -> new PositionDto(position.getPlayerId(), position.getQuantity()))
-            .toList();
-        return new PortfolioDto(user.getId(), user.getCreditBalance(), positions);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<TransactionDto> getTransactions(Long userId) {
-        UserJPADTO user = userDAO.findById(userId)
-            .orElseThrow(() -> new NotFoundException("User not found: " + userId));
-        return transactionRepository.findByBuyerIdOrSellerIdOrderByTimestampDesc(user.getId(), user.getId()).stream()
-            .map(record -> new TransactionDto(
-                record.getId(),
-                record.getTimestamp(),
-                record.getType(),
-                record.getBuyerId(),
-                record.getSellerId(),
-                record.getPlayerId(),
-                record.getQuantity(),
-                record.getUnitPrice(),
-                record.getTotalAmount()))
-            .toList();
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public PortfolioDto getPortfolio(Long userId) {
+//        UserJPADTO user = userDAO.findById(userId)
+//            .orElseThrow(() -> new NotFoundException("User not found: " + userId));
+//        List<PositionDto> positions = positionRepository.findByUserId(userId).stream()
+//            .map(position -> new PositionDto(position.getPlayerId(), position.getQuantity()))
+//            .toList();
+//        return new PortfolioDto(user.getId(), user.getCreditBalance(), positions);
+//    }
+//
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<TransactionDto> getTransactions(Long userId) {
+//        UserJPADTO user = userDAO.findById(userId)
+//            .orElseThrow(() -> new NotFoundException("User not found: " + userId));
+//        return transactionRepository.findByBuyerIdOrSellerIdOrderByTimestampDesc(user.getId(), user.getId()).stream()
+//            .map(record -> new TransactionDto(
+//                record.getId(),
+//                record.getTimestamp(),
+//                record.getType(),
+//                record.getBuyerId(),
+//                record.getSellerId(),
+//                record.getPlayerId(),
+//                record.getQuantity(),
+//                record.getUnitPrice(),
+//                record.getTotalAmount()))
+//            .toList();
+//    }
 }

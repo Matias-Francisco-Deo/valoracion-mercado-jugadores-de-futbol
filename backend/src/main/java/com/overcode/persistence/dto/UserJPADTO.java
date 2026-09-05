@@ -35,6 +35,10 @@ public record UserJPADTO(
         this(null, username, email, password, creditBalance, tokens);
     }
 
+    public UserJPADTO(String username, String email, String password, Integer creditBalance) {
+        this(null, username, email, password, creditBalance, 0);
+    }
+
     public static UserJPADTO desdeModelo(User user) {
         if (user == null) {
             return null;

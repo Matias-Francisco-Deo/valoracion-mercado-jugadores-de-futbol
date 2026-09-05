@@ -27,24 +27,27 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequest request) {
         User userModelo = request.aModelo();
         User userCreado = userService.create(userModelo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userCreado);
+        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping("/users/{id}")
-    public UserResponseDTO getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
+        User user = userService.getUser(id);
+        UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @GetMapping("/users/{id}/portfolio")
-    public PortfolioDto getPortfolio(@PathVariable Long id) {
-        return userService.getPortfolio(id);
-    } // TODO este dto?
-
-    @GetMapping("/users/{id}/transactions")
-    public List<TransactionDto> getTransactions(@PathVariable Long id) {
-        return userService.getTransactions(id);
-    }
+//    @GetMapping("/users/{id}/portfolio")
+//    public PortfolioDto getPortfolio(@PathVariable Long id) {
+//        return userService.getPortfolio(id);
+//    } // TODO este dto?
+//
+//    @GetMapping("/users/{id}/transactions")
+//    public List<TransactionDto> getTransactions(@PathVariable Long id) {
+//        return userService.getTransactions(id);
+//    }
 }

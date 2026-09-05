@@ -1,11 +1,13 @@
 package com.overcode.config;
 
+import com.overcode.model.User;
 import com.overcode.persistence.dto.PlayerRecord;
 import com.overcode.persistence.dto.PositionRecord;
 import com.overcode.persistence.dto.UserJPADTO;
 import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.persistence.repository.PositionRepository;
 import com.overcode.persistence.repository.dao.UserDAO;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,25 +18,26 @@ import java.util.List;
 public class DataInitializer {
 
     private final PlayerDAO playerDAO;
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
     private final PositionRepository positionRepository;
 
     public DataInitializer(PlayerDAO playerDAO,
-                           UserDAO userDAO,
+                           UserRepository userRepository,
                            PositionRepository positionRepository) {
         this.playerDAO = playerDAO;
-        this.userDAO = userDAO;
+        this.userRepository = userRepository;
         this.positionRepository = positionRepository;
     }
 
     @PostConstruct
     @Transactional
     public void initialize() {
-        if (userDAO.existsByUsername("superuser")) {
+        if (userRepository.existsByUsername("superuser")) {
             return;
         }
 
-        UserJPADTO superUser = userDAO.save(new UserJPADTO("superuser", "superuser@market.local", "password", 0));
+        User superuser = new User("superuser", "superuser@market.local", "password", 0, 0);
+        User superUser = userRepository.save(superuser);
 
         List<String> names = List.of(
             "Lionel Messi",
