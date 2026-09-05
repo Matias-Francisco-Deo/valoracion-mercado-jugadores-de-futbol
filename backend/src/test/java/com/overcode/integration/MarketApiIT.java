@@ -2,15 +2,15 @@ package com.overcode.integration;
 
 import com.overcode.controller.dto.CreateUserRequest;
 import com.overcode.controller.dto.TradeResponse;
-import com.overcode.controller.dto.UserDto;
+import com.overcode.controller.dto.UserResponseDTO;
 import com.overcode.persistence.dto.PlayerRecord;
 import com.overcode.persistence.dto.PositionRecord;
 import com.overcode.persistence.dto.TransactionRecord;
 import com.overcode.persistence.dto.UserJPADTO;
-import com.overcode.persistence.repository.PlayerRepository;
+import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.persistence.repository.PositionRepository;
 import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.UserRepository;
+import com.overcode.persistence.repository.dao.UserDAO;
 import com.overcode.service.impl.TradeServiceImpl;
 import com.overcode.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -30,10 +30,10 @@ import static org.mockito.Mockito.when;
 class MarketApiIT {
 
     @Mock
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
     @Mock
-    private PlayerRepository playerRepository;
+    private PlayerDAO playerDAO;
 
     @Mock
     private PositionRepository positionRepository;
@@ -50,15 +50,15 @@ class MarketApiIT {
     @Test
     void userRegistration_shouldCreateProfileWithZeroCredits() {
         CreateUserRequest request = new CreateUserRequest("alice", "alice@example.com", "secret");
-        when(userRepository.existsByUsername("alice")).thenReturn(false);
-        when(userRepository.existsByEmail("alice@example.com")).thenReturn(false);
-        when(userRepository.save(any(UserJPADTO.class))).thenAnswer(invocation -> {
+        when(userDAO.existsByUsername("alice")).thenReturn(false);
+        when(userDAO.existsByEmail("alice@example.com")).thenReturn(false);
+        when(userDAO.save(any(UserJPADTO.class))).thenAnswer(invocation -> {
             UserJPADTO record = invocation.getArgument(0);
             record.setId(42L);
             return record;
         });
 
-        UserDto createdUser = userService.createUser(request);
+        UserResponseDTO createdUser = userService.create(request);
 
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.id()).isEqualTo(42L);
@@ -77,13 +77,13 @@ class MarketApiIT {
         sellerPosition.setId(10L);
         PositionRecord buyerPosition = new PositionRecord(7L, 1L, 0);
 
-        when(userRepository.findById(7L)).thenReturn(Optional.of(buyer));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(seller));
-        when(playerRepository.findById(1L)).thenReturn(Optional.of(player));
+        when(userDAO.findById(7L)).thenReturn(Optional.of(buyer));
+        when(userDAO.findById(1L)).thenReturn(Optional.of(seller));
+        when(playerDAO.findById(1L)).thenReturn(Optional.of(player));
         when(positionRepository.findByUserIdAndPlayerId(1L, 1L)).thenReturn(Optional.of(sellerPosition));
         when(positionRepository.findByUserIdAndPlayerId(7L, 1L)).thenReturn(Optional.empty());
         when(positionRepository.save(any(PositionRecord.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(userRepository.save(any(UserJPADTO.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userDAO.save(any(UserJPADTO.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(transactionRepository.save(any(TransactionRecord.class))).thenAnswer(invocation -> {
             TransactionRecord tx = invocation.getArgument(0);
             tx.setId(99L);

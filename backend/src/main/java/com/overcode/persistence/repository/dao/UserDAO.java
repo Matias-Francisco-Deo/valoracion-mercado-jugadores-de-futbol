@@ -1,11 +1,11 @@
-package com.overcode.persistence.repository;
+package com.overcode.persistence.repository.dao;
 
 import com.overcode.persistence.dto.UserJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserJPADTO, Long> {
+public interface UserDAO extends JpaRepository<UserJPADTO, Long> {
 
     boolean existsByUsername(String username);
 

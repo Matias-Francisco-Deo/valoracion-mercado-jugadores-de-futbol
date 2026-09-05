@@ -1,15 +1,15 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.CreateUserRequest;
 import com.overcode.controller.dto.PortfolioDto;
 import com.overcode.controller.dto.PositionDto;
 import com.overcode.controller.dto.TransactionDto;
-import com.overcode.controller.dto.UserDto;
+import com.overcode.controller.dto.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.persistence.dto.UserJPADTO;
 import com.overcode.persistence.repository.PositionRepository;
 import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.UserRepository;
+import com.overcode.persistence.repository.dao.UserDAO;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.exception.NotFoundException;
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private final TransactionRepository transactionRepository;
 
     public UserServiceImpl(UserRepository userRepository,
-                          PositionRepository positionRepository,
-                          TransactionRepository transactionRepository) {
+                           PositionRepository positionRepository,
+                           TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.positionRepository = positionRepository;
         this.transactionRepository = transactionRepository;
@@ -36,31 +36,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto createUser(CreateUserRequest request) {
-        if (userRepository.existsByUsername(request.username())) {
-            throw new NombreRepetidoException("Username already exists");
+    public User create(User userACrear) {
+        if (userRepository.existsByUsername(userACrear.getUsername())) {
+            throw new NombreRepetidoException("El nombre de usuario ya existe");
         }
-        if (userRepository.existsByEmail(request.email())) {
-            throw new EmailRepetidoException("Email already exists");
+        if (userRepository.existsByEmail(userACrear.getEmail())) {
+            throw new EmailRepetidoException("El email ya existe");
         }
 
-        User user = new User(null, request.username(), request.email(), request.password(), 0, 0);
-        UserJPADTO saved = userRepository.save(new UserJPADTO(user.getUsername(), user.getEmail(), user.getPassword(), user.getCreditBalance()));
-        return new UserDto(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getCreditBalance());
+        return userRepository.save(userACrear);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUser(Long id) {
-        UserJPADTO record = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("User not found: " + id));
-        return new UserDto(record.getId(), record.getUsername(), record.getEmail(), record.getCreditBalance());
+    public User getUser(Long id) {
+        return userRepository.recuperar(id)
+                .orElseThrow(() -> new NotFoundException("User not found: " + id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public PortfolioDto getPortfolio(Long userId) {
-        UserJPADTO user = userRepository.findById(userId)
+        UserJPADTO user = userDAO.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found: " + userId));
         List<PositionDto> positions = positionRepository.findByUserId(userId).stream()
             .map(position -> new PositionDto(position.getPlayerId(), position.getQuantity()))
@@ -71,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<TransactionDto> getTransactions(Long userId) {
-        UserJPADTO user = userRepository.findById(userId)
+        UserJPADTO user = userDAO.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found: " + userId));
         return transactionRepository.findByBuyerIdOrSellerIdOrderByTimestampDesc(user.getId(), user.getId()).stream()
             .map(record -> new TransactionDto(

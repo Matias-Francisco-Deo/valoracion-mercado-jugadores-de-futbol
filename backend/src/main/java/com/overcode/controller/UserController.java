@@ -3,7 +3,8 @@ package com.overcode.controller;
 import com.overcode.controller.dto.CreateUserRequest;
 import com.overcode.controller.dto.PortfolioDto;
 import com.overcode.controller.dto.TransactionDto;
-import com.overcode.controller.dto.UserDto;
+import com.overcode.controller.dto.UserResponseDTO;
+import com.overcode.model.User;
 import com.overcode.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,12 +27,14 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
+    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
+        User userModelo = request.aModelo();
+        User userCreado = userService.create(userModelo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userCreado);
     }
 
     @GetMapping("/users/{id}")
-    public UserDto getUser(@PathVariable Long id) {
+    public UserResponseDTO getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 

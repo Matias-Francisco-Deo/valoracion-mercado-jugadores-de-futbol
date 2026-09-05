@@ -5,10 +5,10 @@ import com.overcode.persistence.dto.PlayerRecord;
 import com.overcode.persistence.dto.PositionRecord;
 import com.overcode.persistence.dto.TransactionRecord;
 import com.overcode.persistence.dto.UserJPADTO;
-import com.overcode.persistence.repository.PlayerRepository;
+import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.persistence.repository.PositionRepository;
 import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.UserRepository;
+import com.overcode.persistence.repository.dao.UserDAO;
 import com.overcode.service.exception.ConflictException;
 import com.overcode.service.exception.NotFoundException;
 import com.overcode.service.exception.ValidationException;
@@ -21,17 +21,17 @@ import java.time.Instant;
 @Service
 public class TradeServiceImpl implements TradeService {
 
-    private final PlayerRepository playerRepository;
-    private final UserRepository userRepository;
+    private final PlayerDAO playerDAO;
+    private final UserDAO userDAO;
     private final PositionRepository positionRepository;
     private final TransactionRepository transactionRepository;
 
-    public TradeServiceImpl(PlayerRepository playerRepository,
-                           UserRepository userRepository,
-                           PositionRepository positionRepository,
-                           TransactionRepository transactionRepository) {
-        this.playerRepository = playerRepository;
-        this.userRepository = userRepository;
+    public TradeServiceImpl(PlayerDAO playerDAO,
+                            UserDAO userDAO,
+                            PositionRepository positionRepository,
+                            TransactionRepository transactionRepository) {
+        this.playerDAO = playerDAO;
+        this.userDAO = userDAO;
         this.positionRepository = positionRepository;
         this.transactionRepository = transactionRepository;
     }
@@ -41,11 +41,11 @@ public class TradeServiceImpl implements TradeService {
     public TradeResponse buy(Long buyerId, Long sellerId, Long playerId, Integer quantity) {
         validateTrade(buyerId, sellerId, playerId, quantity);
 
-        UserJPADTO buyer = userRepository.findById(buyerId)
+        UserJPADTO buyer = userDAO.findById(buyerId)
             .orElseThrow(() -> new NotFoundException("Buyer not found: " + buyerId));
-        UserJPADTO seller = userRepository.findById(sellerId)
+        UserJPADTO seller = userDAO.findById(sellerId)
             .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
-        PlayerRecord player = playerRepository.findById(playerId)
+        PlayerRecord player = playerDAO.findById(playerId)
             .orElseThrow(() -> new NotFoundException("Player not found: " + playerId)); // TODO cambiar excepción por una más específica
 
         int totalAmount = quantity * player.getCurrentPrice();
@@ -70,8 +70,8 @@ public class TradeServiceImpl implements TradeService {
 
         positionRepository.save(buyerPosition);
         positionRepository.save(sellerPosition);
-        userRepository.save(buyer);
-        userRepository.save(seller);
+        userDAO.save(buyer);
+        userDAO.save(seller);
 
         TransactionRecord tx = transactionRepository.save(new TransactionRecord( // TODO es lógica de modelo
             Instant.now(),
@@ -92,11 +92,11 @@ public class TradeServiceImpl implements TradeService {
     public TradeResponse sell(Long sellerId, Long buyerId, Long playerId, Integer quantity) { // TODO ojo con lógica de modelo
         validateTrade(buyerId, sellerId, playerId, quantity);
 
-        UserJPADTO seller = userRepository.findById(sellerId)
+        UserJPADTO seller = userDAO.findById(sellerId)
             .orElseThrow(() -> new NotFoundException("Seller not found: " + sellerId));
-        UserJPADTO buyer = userRepository.findById(buyerId)
+        UserJPADTO buyer = userDAO.findById(buyerId)
             .orElseThrow(() -> new NotFoundException("Buyer not found: " + buyerId));
-        PlayerRecord player = playerRepository.findById(playerId)
+        PlayerRecord player = playerDAO.findById(playerId)
             .orElseThrow(() -> new NotFoundException("Player not found: " + playerId));
 
         int totalAmount = quantity * player.getCurrentPrice();
@@ -124,8 +124,8 @@ public class TradeServiceImpl implements TradeService {
 
         positionRepository.save(buyerPosition);
         positionRepository.save(sellerPosition);
-        userRepository.save(buyer);
-        userRepository.save(seller);
+        userDAO.save(buyer);
+        userDAO.save(seller);
 
         TransactionRecord tx = transactionRepository.save(new TransactionRecord(
             Instant.now(),
