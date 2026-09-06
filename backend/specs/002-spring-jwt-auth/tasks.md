@@ -22,7 +22,7 @@ Feature: Spring JWT Authentication and Authorization (specs/002-spring-jwt-auth)
 - [X] T009 Create DTOs for auth requests/responses in backend/src/main/java/com/overcode/controller/dto/AuthDtos.java (RegisterRequest, LoginRequest, AuthResponse)
 - [X] T010 [P] Add AuthService interface in backend/src/main/java/com/overcode/service/interfaces/AuthService.java (register, login signatures)
 - [X] T011 Create integration test base for security tests in backend/src/test/java/com/overcode/integration/SecurityTestBase.java (H2/Testcontainers setup)
-- [ ] T012 [P] Update GlobalExceptionHandler to map authentication validation and conflict exceptions in backend/src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java
+- [X] T012 [P] Update GlobalExceptionHandler to map authentication validation and conflict exceptions in backend/src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java
 
 ---
 

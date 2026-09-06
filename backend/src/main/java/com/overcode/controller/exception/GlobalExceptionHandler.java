@@ -30,6 +30,12 @@ public class GlobalExceptionHandler {
             .body(new ApiError("CONFLICT", ex.getMessage()));
     }
 
+    @ExceptionHandler(com.overcode.service.exception.AuthenticationException.class)
+    public ResponseEntity<ApiError> handleAuthentication(com.overcode.service.exception.AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(new ApiError("AUTHENTICATION_ERROR", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest()
