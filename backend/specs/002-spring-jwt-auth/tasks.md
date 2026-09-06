@@ -17,11 +17,11 @@ Feature: Spring JWT Authentication and Authorization (specs/002-spring-jwt-auth)
 ## Phase 2: Foundational (Blocking prerequisites)
 
 - [ ] T006 [P] Review and document existing User model in backend/src/main/java/com/overcode/model/User.java (confirm fields: username, email, password)
-- [ ] T007 [P] Add password hashing utility in backend/src/main/java/com/overcode/security/PasswordHasher.java (bcrypt wrapper)
-- [ ] T008 [P] Add JWT utility for token creation/validation in backend/src/main/java/com/overcode/security/JwtUtil.java
-- [ ] T009 Create DTOs for auth requests/responses in backend/src/main/java/com/overcode/controller/dto/AuthDtos.java (RegisterRequest, LoginRequest, AuthResponse)
-- [ ] T010 [P] Add AuthService interface in backend/src/main/java/com/overcode/service/interfaces/AuthService.java (register, login signatures)
-- [ ] T011 Create integration test base for security tests in backend/src/test/java/com/overcode/integration/SecurityTestBase.java (H2/Testcontainers setup)
+- [X] T007 [P] Add password hashing utility in backend/src/main/java/com/overcode/security/PasswordHasher.java (bcrypt wrapper)
+- [X] T008 [P] Add JWT utility for token creation/validation in backend/src/main/java/com/overcode/security/JwtUtil.java
+- [X] T009 Create DTOs for auth requests/responses in backend/src/main/java/com/overcode/controller/dto/AuthDtos.java (RegisterRequest, LoginRequest, AuthResponse)
+- [X] T010 [P] Add AuthService interface in backend/src/main/java/com/overcode/service/interfaces/AuthService.java (register, login signatures)
+- [X] T011 Create integration test base for security tests in backend/src/test/java/com/overcode/integration/SecurityTestBase.java (H2/Testcontainers setup)
 - [ ] T012 [P] Update GlobalExceptionHandler to map authentication validation and conflict exceptions in backend/src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java
 
 ---
