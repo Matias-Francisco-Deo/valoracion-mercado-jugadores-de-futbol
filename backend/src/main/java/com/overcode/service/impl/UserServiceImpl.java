@@ -1,14 +1,6 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.PortfolioDto;
-import com.overcode.controller.dto.PositionDto;
-import com.overcode.controller.dto.TransactionDto;
-import com.overcode.controller.dto.UserResponseDTO;
 import com.overcode.model.User;
-import com.overcode.persistence.dto.UserJPADTO;
-import com.overcode.persistence.repository.PositionRepository;
-import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.dao.UserDAO;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -16,8 +8,6 @@ import com.overcode.service.exception.NotFoundException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {

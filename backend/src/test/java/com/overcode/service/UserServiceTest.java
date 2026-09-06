@@ -7,6 +7,8 @@ import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.impl.UserServiceImpl;
 import com.overcode.service.interfaces.UserService;
+import com.overcode.testUtils.TestService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest()
 class UserServiceTest {
 
-//    @Configuration
-//    @Import(UserServiceImpl.class)
-//    static class TestConfig {
-//
-//        @Bean
-//        UserRepository userRepository() {
-//            return mock(UserRepository.class);
-//        }
-//
-//        @Bean
-//        PositionRepository positionRepository() {
-//            return mock(PositionRepository.class);
-//        }
-//
-//        @Bean
-//        TransactionRepository transactionRepository() {
-//            return mock(TransactionRepository.class);
-//        }
-//    }
-
     @Autowired
     private UserService userService;
 
@@ -49,8 +31,13 @@ class UserServiceTest {
     @Autowired
     private PlayerDAO playerRepository;
 
+    @Autowired
+    private TestService testService;
+
     @BeforeEach
     void setUp() {
+        testService.eliminarUsuarios();
+
     }
 
     @Test
@@ -64,4 +51,10 @@ class UserServiceTest {
         assertEquals(0, created.getCreditBalance());
         assertEquals(0, created.getTokens());
     }
+
+    @AfterEach
+    void teardown() {
+        testService.eliminarUsuarios();
+    }
+
 }

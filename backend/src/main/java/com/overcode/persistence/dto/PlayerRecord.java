@@ -24,9 +24,6 @@ public class PlayerRecord { // TODO cambiar por record?
     @Column(name = "total_issued", nullable = false)
     private Integer totalIssued;
 
-    protected PlayerRecord() {
-    }
-
     public PlayerRecord(String name, Integer currentPrice, Integer totalIssued) {
         this.name = name;
         this.currentPrice = currentPrice;

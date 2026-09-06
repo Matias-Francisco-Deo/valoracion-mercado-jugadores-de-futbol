@@ -2,11 +2,7 @@ package com.overcode.config;
 
 import com.overcode.model.User;
 import com.overcode.persistence.dto.PlayerRecord;
-import com.overcode.persistence.dto.PositionRecord;
-import com.overcode.persistence.dto.UserJPADTO;
 import com.overcode.persistence.repository.dao.PlayerDAO;
-import com.overcode.persistence.repository.PositionRepository;
-import com.overcode.persistence.repository.dao.UserDAO;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -49,9 +45,9 @@ public class DataInitializer {
             "Jude Bellingham"
         );
 
-        for (String name : names) {
-            PlayerRecord player = playerDAO.save(new PlayerRecord(name, 100, 100));
-            // positionRepository.save(new PositionRecord(superUser.getId(), player.getId(), 100));
-        }
+//        for (String name : names) {
+//            PlayerRecord player = playerDAO.save(new PlayerRecord(name, 100, 100));
+//            // positionRepository.save(new PositionRecord(superUser.getId(), player.getId(), 100));
+//        }
     }
 }
