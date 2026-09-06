@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest()
 class UserServiceTest {
 
+    public static User USER1;
     @Autowired
     private UserService userService;
 
@@ -36,20 +37,36 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        USER1 = new User("alice", "alice@example.com", "secret", 0, 0);
         testService.eliminarUsuarios();
 
     }
 
     @Test
-    void shouldCreateUser() {
-        User newUser = new User(null, "alice", "alice@example.com", "secret", 0, 0);
-        User created = userService.create(newUser);
+    void crearUnUsuarioExitosamente() {
+        User created = userService.create(USER1);
 
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());
         assertEquals("alice@example.com", created.getEmail());
         assertEquals(0, created.getCreditBalance());
         assertEquals(0, created.getTokens());
+    }
+
+    @Test
+    void estableceTokensEnCeroCuandoEsNegativo() {
+        User user = USER1;
+        user.setTokens(-10);
+
+        assertEquals(0, user.getTokens());
+    }
+
+    @Test
+    void estableceCreditoEnCeroCuandoEsNegativo() {
+        User user = USER1;
+        user.setCreditBalance(-10);
+
+        assertEquals(0, user.getCreditBalance());
     }
 
     @AfterEach
