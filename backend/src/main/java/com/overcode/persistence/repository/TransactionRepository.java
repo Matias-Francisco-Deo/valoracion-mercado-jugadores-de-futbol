@@ -1,6 +1,6 @@
-package com.overcode.persistency.repository;
+package com.overcode.persistence.repository;
 
-import com.overcode.persistency.dto.TransactionRecord;
+import com.overcode.persistence.dto.TransactionRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

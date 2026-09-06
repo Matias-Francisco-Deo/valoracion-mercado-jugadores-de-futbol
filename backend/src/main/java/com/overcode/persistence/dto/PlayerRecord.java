@@ -1,4 +1,4 @@
-package com.overcode.persistency.dto;
+package com.overcode.persistence.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,9 +23,6 @@ public class PlayerRecord { // TODO cambiar por record?
 
     @Column(name = "total_issued", nullable = false)
     private Integer totalIssued;
-
-    protected PlayerRecord() {
-    }
 
     public PlayerRecord(String name, Integer currentPrice, Integer totalIssued) {
         this.name = name;

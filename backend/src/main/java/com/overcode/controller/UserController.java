@@ -3,7 +3,8 @@ package com.overcode.controller;
 import com.overcode.controller.dto.CreateUserRequest;
 import com.overcode.controller.dto.PortfolioDto;
 import com.overcode.controller.dto.TransactionDto;
-import com.overcode.controller.dto.UserDto;
+import com.overcode.controller.dto.UserResponseDTO;
+import com.overcode.model.User;
 import com.overcode.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,22 +27,27 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequest request) {
+        User userModelo = request.aModelo();
+        User userCreado = userService.create(userModelo);
+        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping("/users/{id}")
-    public UserDto getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
+        User user = userService.getUser(id);
+        UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @GetMapping("/users/{id}/portfolio")
-    public PortfolioDto getPortfolio(@PathVariable Long id) {
-        return userService.getPortfolio(id);
-    }
-
-    @GetMapping("/users/{id}/transactions")
-    public List<TransactionDto> getTransactions(@PathVariable Long id) {
-        return userService.getTransactions(id);
-    }
+//    @GetMapping("/users/{id}/portfolio")
+//    public PortfolioDto getPortfolio(@PathVariable Long id) {
+//        return userService.getPortfolio(id);
+//    } // TODO este dto?
+//
+//    @GetMapping("/users/{id}/transactions")
+//    public List<TransactionDto> getTransactions(@PathVariable Long id) {
+//        return userService.getTransactions(id);
+//    }
 }
