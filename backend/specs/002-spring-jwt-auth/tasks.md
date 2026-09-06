@@ -6,10 +6,10 @@ Feature: Spring JWT Authentication and Authorization (specs/002-spring-jwt-auth)
 
 ## Phase 1: Setup (Project initialization)
 
-- [ ] T001 Ensure JJWT dependencies (jjwt-api, jjwt-impl, jjwt-jackson) and spring-boot-starter-security in backend/pom.xml
-- [ ] T002 Add JWT config placeholders (jwt.secret, jwt.expiration) to backend/src/main/resources/application.properties
-- [ ] T003 Add test profile entries for security and H2 in backend/src/test/resources/application-test.properties
-- [ ] T004 Create specs/002-spring-jwt-auth/quickstart.md with run and smoke-check commands
+- [X] T001 Ensure JJWT dependencies (jjwt-api, jjwt-impl, jjwt-jackson) and spring-boot-starter-security in backend/pom.xml
+- [X] T002 Add JWT config placeholders (jwt.secret, jwt.expiration) to backend/src/main/resources/application.properties
+- [X] T003 Add test profile entries for security and H2 in backend/src/test/resources/application-test.properties
+- [X] T004 Create specs/002-spring-jwt-auth/quickstart.md with run and smoke-check commands
 - [ ] T005 [P] Add dependency and build verification CI note in .github/workflows or docs (backend/.github/workflows or specs/002-spring-jwt-auth/quickstart.md)
 
 ---
