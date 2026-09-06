@@ -12,12 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//TODO borrar?
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthRegisterIT extends SecurityTestBase {
-n    @LocalServerPort
+
+    @LocalServerPort
     private int port;
-n    @Autowired
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @Test

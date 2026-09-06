@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
             .body(new ApiError("CONFLICT", ex.getMessage()));
     }
 
-    @ExceptionHandler(com.overcode.service.exception.AuthenticationException.class)
+    @ExceptionHandler(com.overcode.service.exception.AuthenticationException.class)//TODO revisar exeption
     public ResponseEntity<ApiError> handleAuthentication(com.overcode.service.exception.AuthenticationException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(new ApiError("AUTHENTICATION_ERROR", ex.getMessage()));
