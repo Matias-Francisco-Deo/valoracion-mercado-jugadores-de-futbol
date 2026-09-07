@@ -1,7 +1,7 @@
 package com.overcode.controller.exception;
 
 import com.overcode.service.exception.ConflictException;
-import com.overcode.service.exception.NotFoundException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler { // TODO manejar esto mejor
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(NotFoundException ex) {
+    @ExceptionHandler(EntidadNoEncontradaException.class)
+    public ResponseEntity<ApiError> handleNotFound(EntidadNoEncontradaException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ApiError("NOT_FOUND", ex.getMessage()));
     }

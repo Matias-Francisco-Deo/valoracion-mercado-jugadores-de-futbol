@@ -3,7 +3,7 @@ package com.overcode.controller;
 import com.overcode.controller.dto.PlayerDto;
 import com.overcode.persistence.dto.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.PlayerDAOJPA;
-import com.overcode.service.exception.NotFoundException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class PlayerController {
     @GetMapping("/players/{id}")
     public PlayerDto getPlayer(@PathVariable Long id) {
         PlayerJPADTO player = playerDAOJPA.findById(id)
-            .orElseThrow(() -> new NotFoundException("Player not found: " + id));
+            .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + id));
         return new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued());
     }
 }
