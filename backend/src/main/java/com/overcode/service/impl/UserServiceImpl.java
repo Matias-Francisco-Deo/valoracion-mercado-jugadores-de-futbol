@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailRepetidoException("El email ya existe");
         }
 
-        return userRepository.save(userACrear);
+        return userRepository.guardar(userACrear);
     }
 
     @Override

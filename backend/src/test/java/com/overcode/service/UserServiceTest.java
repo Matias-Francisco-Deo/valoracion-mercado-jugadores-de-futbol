@@ -1,11 +1,8 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.PositionRepository;
-import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.dao.PlayerDAO;
+import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
-import com.overcode.service.impl.UserServiceImpl;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -30,7 +27,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PlayerDAO playerRepository;
+    private PlayerDAOJPA playerRepository;
 
     @Autowired
     private TestService testService;

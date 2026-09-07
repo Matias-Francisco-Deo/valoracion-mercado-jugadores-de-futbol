@@ -1,7 +1,7 @@
 package com.overcode.config;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.dao.PlayerDAO;
+import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -12,15 +12,15 @@ import java.util.List;
 @Component
 public class DataInitializer {
 
-    private final PlayerDAO playerDAO;
+    private final PlayerDAOJPA playerDAOJPA;
     private final UserRepository userRepository;
 //    private final PositionRepository positionRepository;
 
-    public DataInitializer(PlayerDAO playerDAO,
+    public DataInitializer(PlayerDAOJPA playerDAOJPA,
                            UserRepository userRepository
 //                           PositionRepository positionRepository
     ) {
-        this.playerDAO = playerDAO;
+        this.playerDAOJPA = playerDAOJPA;
         this.userRepository = userRepository;
 //        this.positionRepository = positionRepository;
     }
@@ -33,7 +33,7 @@ public class DataInitializer {
         }
 
         User superuser = new User("superuser", "superuser@market.local", "password", 0, 0);
-        User superUser = userRepository.save(superuser);
+        User superUser = userRepository.guardar(superuser);
 
         List<String> names = List.of(
             "Lionel Messi",

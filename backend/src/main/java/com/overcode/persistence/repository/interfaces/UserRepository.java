@@ -12,7 +12,7 @@ public interface UserRepository {
 
     Optional<User> findByUsername(String username);
 
-    User save(User user);
+    User guardar(User user);
 
     Optional<User> recuperar(Long id);
 }
