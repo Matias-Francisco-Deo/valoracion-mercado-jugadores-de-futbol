@@ -1,7 +1,7 @@
 package com.overcode.controller;
 
 import com.overcode.controller.dto.PlayerDto;
-import com.overcode.persistence.dto.PlayerRecord;
+import com.overcode.persistence.dto.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.service.exception.NotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +24,14 @@ public class PlayerController {
     @GetMapping("/players")
     public List<PlayerDto> listPlayers() {
         return playerDAO.findAll().stream()
-            .map(player -> new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalIssued()))
+            .map(player -> new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued()))
             .toList();
     }
 
     @GetMapping("/players/{id}")
     public PlayerDto getPlayer(@PathVariable Long id) {
-        PlayerRecord player = playerDAO.findById(id)
+        PlayerJPADTO player = playerDAO.findById(id)
             .orElseThrow(() -> new NotFoundException("Player not found: " + id));
-        return new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalIssued());
+        return new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued());
     }
 }

@@ -1,7 +1,6 @@
 package com.overcode.config;
 
 import com.overcode.model.User;
-import com.overcode.persistence.dto.PlayerRecord;
 import com.overcode.persistence.repository.dao.PlayerDAO;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import jakarta.annotation.PostConstruct;
