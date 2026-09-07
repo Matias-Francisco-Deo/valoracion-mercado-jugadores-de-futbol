@@ -51,7 +51,7 @@ class UserServiceTest {
     }
 
     @Test
-    void estableceTokensEnCeroCuandoEsNegativo() {
+    void estableceTokensEnCeroCuandoEsNegativo() { // TODO hacer mejores test de service. Test para cuando al instanciar uno tiene todo en 0
         User user = USER1;
         user.setTokens(-10);
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler { // TODO manejar esto mejor
+public class GlobalExceptionHandler { // TODO manejar esto mejor, discutirlo
 
     @ExceptionHandler(EntidadNoEncontradaException.class)
     public ResponseEntity<ApiError> handleNotFound(EntidadNoEncontradaException ex) {
