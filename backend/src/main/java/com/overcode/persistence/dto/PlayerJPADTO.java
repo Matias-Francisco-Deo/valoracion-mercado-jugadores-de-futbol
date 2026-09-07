@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto;
 
+import com.overcode.model.Player;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,9 +31,31 @@ public class PlayerJPADTO {
     @Column(name = "total_tokens_issued", nullable = false)
     private Integer totalTokensIssued;
 
-    public PlayerJPADTO(String name, Integer currentPrice, Integer totalTokensIssued) {
+    public PlayerJPADTO(Long id, String name, Integer currentPrice, Integer totalTokensIssued) {
+        this.id = id;
         this.name = name;
         this.currentPrice = currentPrice;
         this.totalTokensIssued = totalTokensIssued;
+    }
+
+    public static PlayerJPADTO desdeModelo(Player player) {
+        if (player == null) {
+            return null;
+        }
+        return new PlayerJPADTO(
+            player.getId(),
+            player.getName(),
+            player.getCurrentPrice(),
+            player.getTotalTokensIssued()
+        );
+    }
+
+    public Player aModelo() {
+        return new Player(
+            this.id,
+            this.name,
+            this.currentPrice,
+            this.totalTokensIssued
+        );
     }
 }

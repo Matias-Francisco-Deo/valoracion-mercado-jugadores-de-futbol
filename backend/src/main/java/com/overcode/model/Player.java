@@ -21,6 +21,13 @@ public class Player {
         setTotalTokensIssued(100);
     }
 
+    public Player(Long id, String name, Integer currentPrice, Integer totalTokensIssued) {
+        this.id = id;
+        this.name = name;
+        setCurrentPrice(currentPrice);
+        setTotalTokensIssued(totalTokensIssued);
+    }
+
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
     }
