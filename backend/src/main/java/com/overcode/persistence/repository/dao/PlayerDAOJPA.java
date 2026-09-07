@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
-    Optional<PlayerJPADTO> findByName(String name);
 }
