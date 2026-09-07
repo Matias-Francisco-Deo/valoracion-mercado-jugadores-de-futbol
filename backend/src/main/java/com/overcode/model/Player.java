@@ -21,6 +21,10 @@ public class Player {
         setTotalTokensIssued(100);
     }
 
+    public Player(String name) {
+        this(null, name);
+    }
+
     public Player(Long id, String name, Integer currentPrice, Integer totalTokensIssued) {
         this.id = id;
         this.name = name;

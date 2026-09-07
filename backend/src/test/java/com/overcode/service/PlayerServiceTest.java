@@ -3,8 +3,10 @@ package com.overcode.service;
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.exception.NombreJugadorRepetidoException;
 import com.overcode.service.exception.ValidationException;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,63 +31,79 @@ class PlayerServiceTest {
     @Autowired
     private PlayerDAOJPA playerDAOJPA;
 
+    private final Player JUGADOR_1 = new Player("Messi");
+    private final Player JUGADOR_2 = new Player("Mbappe");
+
+    @Autowired
+    private TestService testService;
+
     @BeforeEach
     void setUp() {
-        playerDAOJPA.deleteAll();
+        testService.eliminarJugadores();
     }
 
     @AfterEach
     void tearDown() {
-        playerDAOJPA.deleteAll();
+        testService.eliminarJugadores();
     }
 
     @Test
     void crearJugadorValidoExitosamente() {
-        Player nuevo = new Player(null, "Messi", 120, 50);
+        Player nuevo = new Player("Messi");
 
         Player guardado = playerService.crear(nuevo);
 
         assertNotNull(guardado.getId());
         assertEquals("Messi", guardado.getName());
-        assertEquals(120, guardado.getCurrentPrice());
-        assertEquals(50, guardado.getTotalTokensIssued());
+        assertEquals(1, guardado.getCurrentPrice());
+        assertEquals(100, guardado.getTotalTokensIssued());
+    }
+
+    @Test
+    void jugadorNuevoTiene100TokensYValeExactamente1() {
+        Player nuevo = new Player("Messi");
+
+        Player guardado = playerService.crear(nuevo);
+
+        assertEquals(1, guardado.getCurrentPrice());
+        assertEquals(100, guardado.getTotalTokensIssued());
     }
 
     @Test
     void rechazaCreacionConNombreDuplicado() {
-        playerService.crear(new Player(null, "Mbappe", 100, 10));
+        playerService.crear(JUGADOR_1);
 
-        ValidationException exception = assertThrows(ValidationException.class,
-            () -> playerService.crear(new Player(null, "Mbappe", 150, 20)));
+        NombreJugadorRepetidoException exception = assertThrows(NombreJugadorRepetidoException.class,
+            () -> playerService.crear(JUGADOR_1));
 
-        assertTrue(exception.getMessage().contains("Mbappe"));
+        assertTrue(exception.getMessage().contains("Messi"));
     }
 
     @Test
     void obtieneJugadorPorId() {
-        Player creado = playerService.crear(new Player(null, "Ronaldo", 90, 30));
+        Player creado = playerService.crear(JUGADOR_1);
 
         Player encontrado = playerService.recuperar(creado.getId());
 
         assertEquals(creado.getId(), encontrado.getId());
-        assertEquals("Ronaldo", encontrado.getName());
+        assertEquals("Messi", encontrado.getName());
     }
 
     @Test
     void lanzaNotFoundCuandoNoExisteJugador() {
-        assertThrows(EntidadNoEncontradaException.class, () -> playerService.recuperar(999L));
+        assertThrows(EntidadNoEncontradaException.class, () -> playerService.recuperar(-1L));
     }
 
     @Test
     void listaTodosLosJugadores() {
-        playerService.crear(new Player(null, "Player One", 100, 10));
-        playerService.crear(new Player(null, "Player Two", 200, 20));
+        playerService.crear(JUGADOR_1);
+        playerService.crear(JUGADOR_2);
 
         List<Player> jugadores = playerService.recuperarTodos();
 
         assertEquals(2, jugadores.size());
-        assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Player One")));
-        assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Player Two")));
+        assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Messi")));
+        assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Mbappe")));
     }
 
     @Test
