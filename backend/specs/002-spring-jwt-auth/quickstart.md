@@ -17,6 +17,13 @@ Confirm the following dependencies are present in `backend/pom.xml` before imple
 
 No duplicate JWT libraries should be added.
 
+## Environment Variables
+
+Ensure the following properties are set in your environment or `application.properties`:
+
+- `jwt.secret`: A base64-encoded secret key used to sign the JWT tokens. It must be at least 256-bit (32 bytes). Keep this secure!
+- `jwt.expiration`: The token validity duration in milliseconds (e.g., `86400000` for 24 hours).
+
 ## Validation scenarios
 
 ### 1. Registration success
@@ -58,3 +65,7 @@ mvn test
 ```
 
 The test suite should cover successful registration/login, invalid credentials, duplicate email handling, and protected endpoint access.
+
+## CI Verification
+
+For continuous integration (e.g., GitHub Actions), ensure that the build runs `mvn clean test` to verify all security scenarios automatically before merging PRs.

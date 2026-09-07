@@ -34,12 +34,12 @@ public class JwtUtil {
     }
 
     public String getSubject(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+        return getClaims(token).getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            getClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
             return false;
@@ -47,6 +47,14 @@ public class JwtUtil {
     }
 
     public Date getExpiration(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration();
+        return getClaims(token).getExpiration();
+    }
+
+    public io.jsonwebtoken.Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith((javax.crypto.SecretKey) key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

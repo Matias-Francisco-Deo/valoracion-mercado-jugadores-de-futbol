@@ -1,4 +1,11 @@
-C:\Users\joelc\valoracion-mercado-jugadores-de-futbol\backend\src\test\java\com\overcode\integration\MarketApiIT.java
-C:\Users\joelc\valoracion-mercado-jugadores-de-futbol\backend\src\test\java\com\overcode\model\UserTest.java
-C:\Users\joelc\valoracion-mercado-jugadores-de-futbol\backend\src\test\java\com\overcode\service\UserServiceTest.java
-C:\Users\joelc\valoracion-mercado-jugadores-de-futbol\backend\src\test\java\com\overcode\testUtils\TestService.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/AuthLoginIT.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/AuthRegisterIT.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/JwtFailureIT.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/MarketApiIT.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/ProtectedEndpointIT.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/integration/SecurityTestBase.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/model/UserTest.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/service/AuthServiceLoginTest.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/service/AuthServiceRegisterTest.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/service/UserServiceTest.java
+/mnt/5AEC832DEC83028D/Dapp/valoracion-mercado-jugadores-de-futbol/backend/src/test/java/com/overcode/testUtils/TestService.java

@@ -1,3 +1,10 @@
-com\overcode\service\UserServiceTest.class
-com\overcode\model\UserTest.class
-com\overcode\testUtils\TestService.class
+com/overcode/integration/SecurityTestBase.class
+com/overcode/model/UserTest.class
+com/overcode/integration/ProtectedEndpointIT.class
+com/overcode/testUtils/TestService.class
+com/overcode/service/AuthServiceRegisterTest.class
+com/overcode/service/UserServiceTest.class
+com/overcode/integration/AuthLoginIT.class
+com/overcode/integration/AuthRegisterIT.class
+com/overcode/integration/JwtFailureIT.class
+com/overcode/service/AuthServiceLoginTest.class
