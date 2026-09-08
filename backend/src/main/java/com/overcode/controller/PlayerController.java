@@ -1,9 +1,11 @@
 package com.overcode.controller;
 
 import com.overcode.controller.dto.PlayerResponseDTO;
+import com.overcode.model.Player;
 import com.overcode.persistence.dto.PlayerJPADTO;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.interfaces.PlayerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,23 +17,22 @@ import java.util.List;
 @RequestMapping("/")
 public class PlayerController {
 
-    private final PlayerDAOJPA playerDAOJPA;
+    private final PlayerService playerService;
 
-    public PlayerController(PlayerDAOJPA playerDAOJPA) {
-        this.playerDAOJPA = playerDAOJPA;
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
     @GetMapping("/players")
     public List<PlayerResponseDTO> listPlayers() {
-        return playerDAOJPA.findAll().stream()
-            .map(player -> new PlayerResponseDTO(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued()))
+        return playerService.recuperarTodos().stream()
+            .map(PlayerResponseDTO::desdeModelo)
             .toList();
     }
 
     @GetMapping("/players/{id}")
-    public PlayerResponseDTO getPlayer(@PathVariable Long id) {
-        PlayerJPADTO player = playerDAOJPA.findById(id)
-            .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + id));
-        return new PlayerResponseDTO(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued());
+    public ResponseEntity<PlayerResponseDTO> getPlayer(@PathVariable Long id) {
+        Player player = playerService.recuperar(id);
+        return ResponseEntity.ok().body(PlayerResponseDTO.desdeModelo(player));
     }
 }
