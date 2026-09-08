@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User guardar(User user) {
         UserJPADTO dto = UserJPADTO.desdeModelo(user);
         UserJPADTO userDto = userDAOJPA.save(dto);
         return userDto.aModelo();

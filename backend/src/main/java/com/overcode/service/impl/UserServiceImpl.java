@@ -4,7 +4,7 @@ import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
-import com.overcode.service.exception.NotFoundException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,14 +35,14 @@ public class UserServiceImpl implements UserService {
             throw new EmailRepetidoException("El email ya existe");
         }
 
-        return userRepository.save(userACrear);
+        return userRepository.guardar(userACrear);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User getUser(Long id) {
         return userRepository.recuperar(id)
-                .orElseThrow(() -> new NotFoundException("User not found: " + id));
+                .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + id));
     }
 
 //    @Override

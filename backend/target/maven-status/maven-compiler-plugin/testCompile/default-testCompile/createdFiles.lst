@@ -1,2 +1,4 @@
 com\overcode\service\UserServiceTest.class
 com\overcode\model\UserTest.class
+com\overcode\testUtils\TestService.class
+com\overcode\service\PlayerServiceTest.class

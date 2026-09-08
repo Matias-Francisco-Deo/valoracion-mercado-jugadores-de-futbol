@@ -28,7 +28,15 @@ public class User {
         this.email = email;
         this.password = password;
         setCreditBalance(creditBalance);
-        this.tokens = tokens;
+        setTokens(tokens);
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        setCreditBalance(0);
+        setTokens(0);
     }
 
     public void setCreditBalance(Integer creditBalance) {

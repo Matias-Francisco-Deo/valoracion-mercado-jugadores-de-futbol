@@ -1,15 +1,15 @@
-package com.overcode.controller.dto;
+package com.overcode.controller.dto.user;
 
 import com.overcode.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateUserRequest(
-    @NotBlank(message = "Username is required") String username,
+public record CreateUserRequestDTO(
+    @NotBlank(message = "Username is required") String username, // TODO testear esto, trimmear?
     @NotBlank(message = "Email is required") @Email(message = "Email must be valid") String email,
     @NotBlank(message = "Password is required") String password
 ) {
     public User aModelo() {
-        return new User(null, username, email, password, 0, 0);
+        return new User(username, email, password);
     }
 }

@@ -1,11 +1,9 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.PositionRepository;
-import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.dao.PlayerDAO;
+import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
-import com.overcode.service.impl.UserServiceImpl;
+import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -14,9 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest()
@@ -30,7 +27,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PlayerDAO playerRepository;
+    private PlayerDAOJPA playerRepository;
 
     @Autowired
     private TestService testService;
@@ -54,12 +51,22 @@ class UserServiceTest {
     }
 
     @Test
-    void estableceTokensEnCeroCuandoEsNegativo() {
+    void estableceTokensEnCeroCuandoEsNegativo() { // TODO hacer mejores test de service. Test para cuando al instanciar uno tiene todo en 0
         User user = USER1;
         user.setTokens(-10);
 
         assertEquals(0, user.getTokens());
     }
+
+//    @Test
+//    void rechazaCreacionConEmailDuplicado() {
+//        playerService.crear(JUGADOR_1);
+//
+//        EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
+//                () -> playerService.crear(JUGADOR_1));
+//
+//        assertTrue(exception.getMessage().contains("Messi"));
+//    }
 
     @Test
     void estableceCreditoEnCeroCuandoEsNegativo() {
