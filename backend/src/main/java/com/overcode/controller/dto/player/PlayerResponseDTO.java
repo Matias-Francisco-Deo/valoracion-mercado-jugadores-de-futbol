@@ -1,4 +1,4 @@
-package com.overcode.controller.dto;
+package com.overcode.controller.dto.player;
 
 import com.overcode.model.Player;
 

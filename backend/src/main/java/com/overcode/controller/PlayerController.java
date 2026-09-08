@@ -1,9 +1,7 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.PlayerResponseDTO;
+import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
-import com.overcode.persistence.dto.PlayerJPADTO;
-import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
