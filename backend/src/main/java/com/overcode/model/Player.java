@@ -12,7 +12,7 @@ public class Player {
     private Long id;
     private String name;
     private Integer currentPrice;
-    private Integer totalTokensIssued; // TODO tokens como objeto aparte o no?
+    private Integer totalTokensIssued; // TODO tokens como objeto aparte o no? eventualmente sí
 
     public Player(Long id, String name) {
         this.id = id;

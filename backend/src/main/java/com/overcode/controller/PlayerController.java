@@ -1,6 +1,6 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.PlayerDto;
+import com.overcode.controller.dto.PlayerResponseDTO;
 import com.overcode.persistence.dto.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -22,16 +22,16 @@ public class PlayerController {
     }
 
     @GetMapping("/players")
-    public List<PlayerDto> listPlayers() {
+    public List<PlayerResponseDTO> listPlayers() {
         return playerDAOJPA.findAll().stream()
-            .map(player -> new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued()))
+            .map(player -> new PlayerResponseDTO(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued()))
             .toList();
     }
 
     @GetMapping("/players/{id}")
-    public PlayerDto getPlayer(@PathVariable Long id) {
+    public PlayerResponseDTO getPlayer(@PathVariable Long id) {
         PlayerJPADTO player = playerDAOJPA.findById(id)
             .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + id));
-        return new PlayerDto(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued());
+        return new PlayerResponseDTO(player.getId(), player.getName(), player.getCurrentPrice(), player.getTotalTokensIssued());
     }
 }

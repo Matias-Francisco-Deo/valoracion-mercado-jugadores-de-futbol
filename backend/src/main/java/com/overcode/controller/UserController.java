@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
         User user = userService.getUser(id);
         UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
 //    @GetMapping("/users/{id}/portfolio")

@@ -28,9 +28,6 @@ class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
-    @Autowired
-    private PlayerDAOJPA playerDAOJPA;
-
     private final Player JUGADOR_1 = new Player("Messi");
     private final Player JUGADOR_2 = new Player("Mbappe");
 

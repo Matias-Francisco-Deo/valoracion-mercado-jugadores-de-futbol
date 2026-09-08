@@ -10,6 +10,6 @@ public record CreateUserRequest(
     @NotBlank(message = "Password is required") String password
 ) {
     public User aModelo() {
-        return new User(null, username, email, password, 0, 0);
+        return new User(username, email, password);
     }
 }
