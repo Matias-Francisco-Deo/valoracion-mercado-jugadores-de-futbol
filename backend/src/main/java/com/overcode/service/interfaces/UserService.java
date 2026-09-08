@@ -11,8 +11,4 @@ public interface UserService {
     User create(User request);
 
     User getUser(Long id);
-
-//    PortfolioDto getPortfolio(Long userId);
-//
-//    List<TransactionDto> getTransactions(Long userId);
 }
