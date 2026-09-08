@@ -13,33 +13,33 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler { // TODO manejar esto mejor, discutirlo
 
     @ExceptionHandler(EntidadNoEncontradaException.class)
-    public ResponseEntity<ApiError> handleNotFound(EntidadNoEncontradaException ex) {
+    public ResponseEntity<ErrorDTO> handleNotFound(EntidadNoEncontradaException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(new ApiError("NOT_FOUND", ex.getMessage()));
+            .body(new ErrorDTO(ex.getMessage()));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiError> handleValidation(ValidationException ex) {
+    public ResponseEntity<ErrorDTO> handleValidation(ValidationException ex) {
         return ResponseEntity.badRequest()
-            .body(new ApiError("VALIDATION_ERROR", ex.getMessage()));
+            .body(new ErrorDTO(ex.getMessage()));
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiError> handleConflict(ConflictException ex) {
+    public ResponseEntity<ErrorDTO> handleConflict(ConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(new ApiError("CONFLICT", ex.getMessage()));
+            .body(new ErrorDTO(ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest()
-            .body(new ApiError("VALIDATION_ERROR", ex.getBindingResult().getFieldError() == null
+            .body(new ErrorDTO(ex.getBindingResult().getFieldError() == null
                 ? "Request validation failed" : ex.getBindingResult().getFieldError().getDefaultMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGeneric(Exception ex) {
+    public ResponseEntity<ErrorDTO> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new ApiError("INTERNAL_ERROR", ex.getMessage()));
+            .body(new ErrorDTO(ex.getMessage()));
     }
 }
