@@ -2,8 +2,8 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.service.exception.NombreJugadorRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional(readOnly = true)
     public Player recuperar(Long id) {
         return playerRepository.recuperar(id)
-            .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + id));
+            .orElseThrow(() -> new EntidadNoEncontradaException("Jugador no encontrado."));
     }
 
     @Override
@@ -40,9 +40,8 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void validarJugador(Player player) {
-        String nombreNormalizado = player.getName().trim();
-        if (playerRepository.existsByName(nombreNormalizado)) {
-            throw new NombreJugadorRepetidoException("El nombre del jugador ya existe: " + nombreNormalizado);
+        if (playerRepository.existsByName(player.getName())) {
+            throw new NombreRepetidoException("El nombre del jugador ya existe: " + player.getName());
         }
 
     }

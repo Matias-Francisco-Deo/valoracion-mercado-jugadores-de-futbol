@@ -1,8 +1,6 @@
 package com.overcode.controller.exception;
 
-import com.overcode.service.exception.ConflictException;
-import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.ValidationException;
+import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +25,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDTO handleConflict(ConflictException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(NombreRepetidoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleRepeatedName(NombreRepetidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailRepetidoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleRepeatedEmail(EmailRepetidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

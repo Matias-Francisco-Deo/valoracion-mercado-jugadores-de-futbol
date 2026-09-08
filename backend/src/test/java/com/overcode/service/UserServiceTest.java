@@ -3,6 +3,7 @@ package com.overcode.service;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -11,9 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest()
@@ -57,6 +57,16 @@ class UserServiceTest {
 
         assertEquals(0, user.getTokens());
     }
+
+//    @Test
+//    void rechazaCreacionConEmailDuplicado() {
+//        playerService.crear(JUGADOR_1);
+//
+//        EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
+//                () -> playerService.crear(JUGADOR_1));
+//
+//        assertTrue(exception.getMessage().contains("Messi"));
+//    }
 
     @Test
     void estableceCreditoEnCeroCuandoEsNegativo() {

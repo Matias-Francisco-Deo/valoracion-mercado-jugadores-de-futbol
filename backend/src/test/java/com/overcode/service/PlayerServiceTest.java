@@ -1,10 +1,9 @@
 package com.overcode.service;
 
 import com.overcode.model.Player;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
+import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.NombreJugadorRepetidoException;
-import com.overcode.service.exception.ValidationException;
+import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -70,11 +69,13 @@ class PlayerServiceTest {
     void rechazaCreacionConNombreDuplicado() {
         playerService.crear(JUGADOR_1);
 
-        NombreJugadorRepetidoException exception = assertThrows(NombreJugadorRepetidoException.class,
+        NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
             () -> playerService.crear(JUGADOR_1));
 
         assertTrue(exception.getMessage().contains("Messi"));
     }
+
+
 
     @Test
     void obtieneJugadorPorId() {
