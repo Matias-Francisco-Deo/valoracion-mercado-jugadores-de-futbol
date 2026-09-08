@@ -1,14 +1,9 @@
 package com.overcode.integration;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class JwtFailureIT extends SecurityTestBase {
+public class JwtFailureIT {
 
     @LocalServerPort
     private int port;

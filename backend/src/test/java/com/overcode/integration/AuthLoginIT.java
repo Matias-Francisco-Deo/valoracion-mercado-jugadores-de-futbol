@@ -2,7 +2,6 @@ package com.overcode.integration;
 
 import com.overcode.controller.dto.AuthDtos;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,7 @@ import org.springframework.http.MediaType;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthLoginIT extends SecurityTestBase {
+public class AuthLoginIT {
 
     @LocalServerPort
     private int port;

@@ -5,3 +5,4 @@ public class AuthenticationException extends ServiceException {
         super(message);
     }
 }
+//TODO revisar excepciones

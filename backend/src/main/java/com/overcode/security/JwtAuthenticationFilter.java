@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Spring expects username as principal by default, but we can store email.
                 // Normally you'd load user details here, but for stateless JWT we can just set authorities to empty list.
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, new ArrayList<>()
+                        email, null, new ArrayList<>()//TODO revisar si cambiar por el email
                 );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
