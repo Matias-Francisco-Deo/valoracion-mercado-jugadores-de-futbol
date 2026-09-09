@@ -10,6 +10,7 @@ public record CreateUserRequestDTO(
     @NotBlank(message = "Password is required") String password
 ) {
     public User aModelo() {
-        return new User(username, email, password);
+        String trimmedUsername = username.trim();
+        return new User(trimmedUsername, email, password);
     }
 }
