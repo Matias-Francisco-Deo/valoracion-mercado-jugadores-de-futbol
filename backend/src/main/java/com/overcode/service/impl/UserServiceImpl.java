@@ -9,8 +9,14 @@ import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final String SUPERUSER_NAME = "superuser"; // TODO abstraer a .env?
+    public static final String SUPERUSER_EMAIL = "overcode@gmail.com";
+    public static final String SUPERUSER_PASSWORD = "overcodesuperuser";
 
     private final UserRepository userRepository;
 
@@ -32,7 +38,21 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User recuperar(Long id) {
         return userRepository.recuperar(id)
-                .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + id));
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
+    }
+
+    @Override
+    @Transactional
+    public User crearSuperusuario() {
+
+        Optional<User> optionalSuperuser = userRepository.findByUsername(SUPERUSER_NAME);
+
+        if (optionalSuperuser.isPresent()) {
+            return optionalSuperuser.get();
+        }
+
+        User superuser = new User(SUPERUSER_NAME, SUPERUSER_EMAIL, SUPERUSER_PASSWORD);
+        return this.guardar(superuser);
     }
 
     private void validarUsuarioNuevo(User userACrear) {

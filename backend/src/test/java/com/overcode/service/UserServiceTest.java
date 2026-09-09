@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.User;
 import com.overcode.service.exception.EmailRepetidoException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
@@ -78,6 +79,18 @@ class UserServiceTest {
                 () -> userService.guardar(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getEmail()));
+    }
+
+    @Test
+    void crearSuperusuario() { // TODO testear que tenga todos los tokens
+        User superuser = userService.crearSuperusuario();
+        assertNotNull(superuser.getId());
+    }
+
+    @Test
+    void siSuperusuarioYaExisteNoEsError() {
+        userService.crearSuperusuario();
+        assertDoesNotThrow(() -> userService.crearSuperusuario());
     }
 
 
