@@ -25,14 +25,14 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
         User userModelo = request.aModelo();
-        User userCreado = userService.create(userModelo);
+        User userCreado = userService.guardar(userModelo);
         UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
-        User user = userService.getUser(id);
+        User user = userService.recuperar(id);
         UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }

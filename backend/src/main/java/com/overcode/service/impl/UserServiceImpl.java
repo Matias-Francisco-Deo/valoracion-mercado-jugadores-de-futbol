@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User userACrear) {
+    public User guardar(User userACrear) {
         validarUsuarioNuevo(userACrear);
 
         return userRepository.guardar(userACrear);
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUser(Long id) {
+    public User recuperar(Long id) {
         return userRepository.recuperar(id)
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + id));
     }
