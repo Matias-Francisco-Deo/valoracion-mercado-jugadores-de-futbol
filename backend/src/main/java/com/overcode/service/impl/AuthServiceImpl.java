@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {//TODO mover request a cont
             throw new AuthenticationException("Invalid credentials");
         }
 
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();//TODO revisar hash map
         claims.put("uid", user.getId());
         claims.put("username", user.getUsername());
         String token = jwtUtil.generateToken(user.getEmail(), claims);
