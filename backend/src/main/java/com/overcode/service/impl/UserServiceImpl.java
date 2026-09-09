@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-
     }
 
     @Override
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User superuser = new User(SUPERUSER_NAME, SUPERUSER_EMAIL, SUPERUSER_PASSWORD);
-        return this.guardar(superuser);
+        return userRepository.guardar(superuser);
     }
 
     private void validarUsuarioNuevo(User userACrear) {
