@@ -1,8 +1,9 @@
 package com.overcode.config;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,29 +12,25 @@ import java.util.List;
 
 @Component
 public class DataInitializer {
-
-    private final PlayerDAOJPA playerDAOJPA;
     private final UserRepository userRepository;
-//    private final PositionRepository positionRepository;
+    private final PlayerService playerService;
 
-    public DataInitializer(PlayerDAOJPA playerDAOJPA,
-                           UserRepository userRepository
-//                           PositionRepository positionRepository
+    public DataInitializer(
+            UserRepository userRepository, PlayerService playerService
     ) {
-        this.playerDAOJPA = playerDAOJPA;
         this.userRepository = userRepository;
-//        this.positionRepository = positionRepository;
+        this.playerService = playerService;
     }
 
     @PostConstruct
     @Transactional
     public void initialize() {
-        if (userRepository.existsByUsername("superuser")) {
+        if (userRepository.existsByUsername("superuser")) { // usar service?
             return;
         }
 
         User superuser = new User("superuser", "superuser@market.local", "password", 0, 0);
-        User superUser = userRepository.guardar(superuser);
+        userRepository.guardar(superuser);
 
         List<String> names = List.of(
             "Lionel Messi",

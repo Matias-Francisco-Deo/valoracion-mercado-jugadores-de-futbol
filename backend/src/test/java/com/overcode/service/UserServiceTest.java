@@ -1,8 +1,6 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
-import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
@@ -35,7 +33,7 @@ class UserServiceTest {
 
     @Test
     void crearUnUsuarioExitosamente() {
-        User created = userService.create(USER1);
+        User created = userService.guardar(USER1);
 
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());
@@ -44,8 +42,8 @@ class UserServiceTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSuBalanceDeCreditosEsCero() {
-        User created = userService.create(USER1);
-        User retrieved = userService.getUser(created.getId());
+        User created = userService.guardar(USER1);
+        User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
         assertEquals(0, retrieved.getCreditBalance());
@@ -53,8 +51,8 @@ class UserServiceTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSusTokensSonCero() {
-        User created = userService.create(USER1);
-        User retrieved = userService.getUser(created.getId());
+        User created = userService.guardar(USER1);
+        User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
         assertEquals(0, retrieved.getTokens());
@@ -63,10 +61,10 @@ class UserServiceTest {
     @Test
     void rechazaCreacionConNombreDuplicado() {
         User user2 = new User(USER1.getUsername(), "alice2@example.com", "secret");
-        userService.create(USER1);
+        userService.guardar(USER1);
 
         NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
-                () -> userService.create(user2));
+                () -> userService.guardar(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getUsername()));
     }
@@ -74,10 +72,10 @@ class UserServiceTest {
     @Test
     void rechazaCreacionConEmailDuplicado() {
         User user2 = new User("usuarioRepetido", USER1.getEmail(), "secret");
-        userService.create(USER1);
+        userService.guardar(USER1);
 
         EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
-                () -> userService.create(user2));
+                () -> userService.guardar(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getEmail()));
     }
