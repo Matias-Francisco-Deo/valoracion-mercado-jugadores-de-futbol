@@ -7,4 +7,6 @@ public interface UserService {
     User guardar(User request);
 
     User recuperar(Long id);
+
+    User crearSuperusuario();
 }

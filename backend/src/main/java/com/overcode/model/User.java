@@ -11,8 +11,8 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private Integer creditBalance; // TODO preguntar esto
-    private Integer tokens;
+    private Integer creditBalance;
+    private Integer tokens; // TODO cambiar por objetos Token
 
     public User(Long id, String username, String email, String password, Integer creditBalance, Integer tokens) {
         this.id = id;
