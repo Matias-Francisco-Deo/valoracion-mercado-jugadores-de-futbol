@@ -1,6 +1,5 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.AuthDtos;
 import com.overcode.controller.dto.AuthDtos.AuthResponse;
 import com.overcode.controller.dto.AuthDtos.RegisterRequest;
 import com.overcode.controller.dto.AuthDtos.LoginRequest;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

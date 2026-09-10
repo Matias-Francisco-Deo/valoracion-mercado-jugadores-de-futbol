@@ -51,7 +51,7 @@ class AuthServiceRegisterTest {
         when(passwordHasher.hash(validRequest.password())).thenReturn("hashedPassword");
         
         User savedUser = new User(1L, "testuser", "test@example.com", "hashedPassword", 0, 0);
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(userRepository.guardar(any(User.class))).thenReturn(savedUser);
         
         when(jwtUtil.generateToken(anyString(), anyMap())).thenReturn("mockJwtToken");
         when(jwtUtil.getExpiration(anyString())).thenReturn(new Date(System.currentTimeMillis() + 86400000));
@@ -64,7 +64,7 @@ class AuthServiceRegisterTest {
         assertEquals("test@example.com", response.user().email());
         
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository).save(userCaptor.capture());
+        verify(userRepository).guardar(userCaptor.capture());
         User capturedUser = userCaptor.getValue();
         
         assertEquals("test@example.com", capturedUser.getEmail());
@@ -77,7 +77,7 @@ class AuthServiceRegisterTest {
 
         assertThrows(ConflictException.class, () -> authService.register(validRequest));
 
-        verify(userRepository, never()).save(any(User.class));
+        verify(userRepository, never()).guardar(any(User.class));
         verify(passwordHasher, never()).hash(anyString());
         verify(jwtUtil, never()).generateToken(anyString(), anyMap());
     }

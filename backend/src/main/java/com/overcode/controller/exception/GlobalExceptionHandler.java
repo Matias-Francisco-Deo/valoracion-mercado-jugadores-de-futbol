@@ -30,8 +30,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)//Atrapa los errores del @valid de los dto
     public ErrorResponseDTO handleAuthentication(AuthenticationException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

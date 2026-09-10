@@ -3,7 +3,7 @@ package com.overcode.service.impl;
 import com.overcode.controller.dto.AuthDtos.AuthResponse;
 import com.overcode.controller.dto.AuthDtos.RegisterRequest;
 import com.overcode.controller.dto.AuthDtos.LoginRequest;
-import com.overcode.controller.dto.UserResponseDTO;
+import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.JwtUtil;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {//TODO mover request a cont
         }
         String hashed = passwordHasher.hash(request.password());
         User user = new User(null, request.username(), request.email(), hashed, 0, 0);
-        User saved = userRepository.save(user);
+        User saved = userRepository.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
         Map<String, Object> claims = new HashMap<>();

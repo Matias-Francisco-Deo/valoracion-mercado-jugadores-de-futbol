@@ -1,8 +1,6 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
-import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;

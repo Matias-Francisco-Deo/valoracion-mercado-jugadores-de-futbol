@@ -1,7 +1,6 @@
 package com.overcode.service;
 
 import com.overcode.model.Player;
-import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -20,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@SpringBootTest()
 class PlayerServiceTest {
 
     @Autowired
@@ -38,10 +35,7 @@ class PlayerServiceTest {
         testService.eliminarJugadores();
     }
 
-    @AfterEach
-    void tearDown() {
-        testService.eliminarJugadores();
-    }
+
 
     @Test
     void crearJugadorValidoExitosamente() {
@@ -107,5 +101,10 @@ class PlayerServiceTest {
     @Test
     void listaVaciaCuandoNoHayJugadores() {
         assertTrue(playerService.recuperarTodos().isEmpty());
+    }
+
+    @AfterEach
+    void tearDown() {
+        testService.eliminarJugadores();
     }
 }
