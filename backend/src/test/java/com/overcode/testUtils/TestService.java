@@ -1,4 +1,5 @@
 package com.overcode.testUtils;
+import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.dao.UserDAOJPA;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,10 +17,15 @@ public class TestService {
     @Autowired
     private UserDAOJPA userDAO;
 
+    @Autowired
+    private PlayerDAOJPA playerDAO;
+
     public void eliminarUsuarios() {
         userDAO.deleteAll();
 
     }
 
-
+    public void eliminarJugadores() {
+        playerDAO.deleteAll();
+    }
 }

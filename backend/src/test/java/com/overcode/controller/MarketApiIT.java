@@ -1,8 +1,8 @@
 //package com.overcode.integration;
 //
-//import com.overcode.controller.dto.CreateUserRequest;
+//import com.overcode.controller.dto.user.CreateUserRequest;
 //import com.overcode.controller.dto.TradeResponse;
-//import com.overcode.controller.dto.UserResponseDTO;
+//import com.overcode.controller.dto.user.UserResponseDTO;
 //import com.overcode.persistence.dto.PlayerRecord;
 //import com.overcode.persistence.dto.PositionRecord;
 //import com.overcode.persistence.dto.TransactionRecord;

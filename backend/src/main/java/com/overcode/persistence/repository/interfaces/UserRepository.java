@@ -14,7 +14,7 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
-    User save(User user);
+    User guardar(User user);
 
     Optional<User> recuperar(Long id);
 }

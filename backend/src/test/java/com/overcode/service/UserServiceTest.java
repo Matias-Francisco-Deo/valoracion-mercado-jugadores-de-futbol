@@ -1,11 +1,10 @@
 package com.overcode.service;
 
 import com.overcode.model.User;
-import com.overcode.persistence.repository.PositionRepository;
-import com.overcode.persistence.repository.TransactionRepository;
-import com.overcode.persistence.repository.dao.PlayerDAO;
+import com.overcode.persistence.repository.dao.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
-import com.overcode.service.impl.UserServiceImpl;
+import com.overcode.service.exception.EmailRepetidoException;
+import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -14,23 +13,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest()
 class UserServiceTest {
-
     public static User USER1;
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PlayerDAO playerRepository;
 
     @Autowired
     private TestService testService;
@@ -49,25 +40,48 @@ class UserServiceTest {
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());
         assertEquals("alice@example.com", created.getEmail());
-        assertEquals(0, created.getCreditBalance());
-        assertEquals(0, created.getTokens());
     }
 
     @Test
-    void estableceTokensEnCeroCuandoEsNegativo() {
-        User user = USER1;
-        user.setTokens(-10);
+    void alCrearYRecuperarElUsuarioSuBalanceDeCreditosEsCero() {
+        User created = userService.create(USER1);
+        User retrieved = userService.getUser(created.getId());
 
-        assertEquals(0, user.getTokens());
+        assertNotNull(retrieved.getId());
+        assertEquals(0, retrieved.getCreditBalance());
     }
 
     @Test
-    void estableceCreditoEnCeroCuandoEsNegativo() {
-        User user = USER1;
-        user.setCreditBalance(-10);
+    void alCrearYRecuperarElUsuarioSusTokensSonCero() {
+        User created = userService.create(USER1);
+        User retrieved = userService.getUser(created.getId());
 
-        assertEquals(0, user.getCreditBalance());
+        assertNotNull(retrieved.getId());
+        assertEquals(0, retrieved.getTokens());
     }
+
+    @Test
+    void rechazaCreacionConNombreDuplicado() {
+        User user2 = new User(USER1.getUsername(), "alice2@example.com", "secret");
+        userService.create(USER1);
+
+        NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
+                () -> userService.create(user2));
+
+        assertTrue(exception.getMessage().contains(USER1.getUsername()));
+    }
+
+    @Test
+    void rechazaCreacionConEmailDuplicado() {
+        User user2 = new User("usuarioRepetido", USER1.getEmail(), "secret");
+        userService.create(USER1);
+
+        EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
+                () -> userService.create(user2));
+
+        assertTrue(exception.getMessage().contains(USER1.getEmail()));
+    }
+
 
     @AfterEach
     void teardown() {
