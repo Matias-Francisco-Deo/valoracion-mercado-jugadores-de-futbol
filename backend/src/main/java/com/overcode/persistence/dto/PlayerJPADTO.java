@@ -43,20 +43,20 @@ public class PlayerJPADTO {
         if (player == null) {
             return null;
         }
-        return new PlayerJPADTO(
-            player.getId(),
-            player.getName(),
-            player.getCurrentPrice(),
-            TokenJPADTO.desdeModelo(player.getTokens())
-        );
+        PlayerJPADTO dto = new PlayerJPADTO();
+        dto.setId(player.getId());
+        dto.setName(player.getName());
+        dto.setCurrentPrice(player.getCurrentPrice());
+        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
+        return dto;
     }
 
     public Player aModelo() {
-        return new Player(
-            this.id,
-            this.name,
-            this.currentPrice,
-                this.tokens.stream().map(TokenJPADTO::aModelo).collect(Collectors.toList())
-        );
+        Player player = new Player();
+        player.setId(this.id);
+        player.setName(this.name);
+        player.setCurrentPrice(this.currentPrice);
+        player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).collect(Collectors.toList()));
+        return player;
     }
 }

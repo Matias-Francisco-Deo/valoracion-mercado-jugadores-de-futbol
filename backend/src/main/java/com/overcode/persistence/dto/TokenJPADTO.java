@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class TokenJPADTO {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull
     private UserJPADTO owner;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -46,15 +46,49 @@ public class TokenJPADTO {
         );
     }
 
-    public static List<TokenJPADTO> desdeModelo(List<Token> tokens) {
-        return tokens.stream().map(TokenJPADTO::desdeModelo).collect(Collectors.toList());
+    public static TokenJPADTO desdeModelo(Token token, PlayerJPADTO player) {
+        if (token == null) {
+            return null;
+        }
+        return new TokenJPADTO(
+                token.getId(),
+                UserJPADTO.desdeModelo(token.getOwner()),
+                player
+        );
     }
 
-    public Token aModelo() {
+    public static TokenJPADTO desdeModelo(Token token, UserJPADTO user) {
+        if (token == null) {
+            return null;
+        }
+        return new TokenJPADTO(
+                token.getId(),
+                user,
+                PlayerJPADTO.desdeModelo(token.getPlayer())
+        );
+    }
+
+    public static List<TokenJPADTO> desdeModelo(List<Token> tokens, PlayerJPADTO player) {
+        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, player)).collect(Collectors.toList());
+    }
+
+    public static List<TokenJPADTO> desdeModelo(List<Token> tokens, UserJPADTO user) {
+        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, user)).collect(Collectors.toList());
+    }
+
+    public Token aModelo(User user) {
         Token token = new Token();
         token.setId(getId());
-        token.setOwner(getOwner().aModelo());
+        token.setOwner(user);
         token.setPlayer(getPlayer().aModelo());
+        return token;
+    }
+
+    public Token aModelo(Player player) {
+        Token token = new Token();
+        token.setId(getId());
+        token.setOwner(getOwner() == null ? null : getOwner().aModelo());
+        token.setPlayer(player);
         return token;
     }
 

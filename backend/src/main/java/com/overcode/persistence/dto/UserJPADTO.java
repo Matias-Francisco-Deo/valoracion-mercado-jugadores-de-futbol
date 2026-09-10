@@ -36,7 +36,7 @@ public class UserJPADTO {
 
     @OrderBy("id ASC")
     @Column(name = "tokens", nullable = false)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
 
     public UserJPADTO(Long id, String username, String email, String password, Integer creditBalance,  List<TokenJPADTO> tokens) {
@@ -52,26 +52,27 @@ public class UserJPADTO {
         if (user == null) {
             return null;
         }
-        return new UserJPADTO(
-            user.getId(),
-            user.getUsername(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getCreditBalance(),
-            TokenJPADTO.desdeModelo(user.getTokens())
-        );
+        UserJPADTO dto = new UserJPADTO();
+
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        dto.setCreditBalance(user.getCreditBalance());
+        dto.setTokens(TokenJPADTO.desdeModelo(user.getTokens(), dto));
+        return dto;
     }
 
     public User aModelo() {
 
-        return new User(
-            this.id,
-            this.username,
-            this.email,
-            this.password,
-            this.creditBalance,
-                this.tokens.stream().map(TokenJPADTO::aModelo).collect(Collectors.toList())
-
-        );
+        User user = new User();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        user.setEmail(this.email);
+        user.setPassword(this.password);
+        user.setCreditBalance(this.creditBalance);
+        user.setTokens(this.tokens.stream().map(token -> token.aModelo(user)).collect(Collectors.toList()));
+        return user;
     }
+
 }
