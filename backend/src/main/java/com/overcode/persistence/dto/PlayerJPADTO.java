@@ -1,17 +1,17 @@
 package com.overcode.persistence.dto;
 
 import com.overcode.model.Player;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.overcode.model.Token;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity(name="player")
 @Table(name = "players")
 @Setter
 @Getter
@@ -28,14 +28,15 @@ public class PlayerJPADTO {
     @Column(name = "current_price", nullable = false)
     private Integer currentPrice;
 
-    @Column(name = "total_tokens_issued", nullable = false)
-    private Integer totalTokensIssued;
+    @Column(name = "tokens", nullable = false)
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TokenJPADTO> tokens = new ArrayList<>();
 
-    public PlayerJPADTO(Long id, String name, Integer currentPrice, Integer totalTokensIssued) {
-        this.id = id;
-        this.name = name;
-        this.currentPrice = currentPrice;
-        this.totalTokensIssued = totalTokensIssued;
+    public PlayerJPADTO(Long id, String name, Integer currentPrice, List<TokenJPADTO> tokens) {
+        setId(id);
+        setName(name);
+        setCurrentPrice(currentPrice);
+        setTokens(tokens);
     }
 
     public static PlayerJPADTO desdeModelo(Player player) {
@@ -46,7 +47,7 @@ public class PlayerJPADTO {
             player.getId(),
             player.getName(),
             player.getCurrentPrice(),
-            player.getTotalTokensIssued()
+            TokenJPADTO.desdeModelo(player.getTokens())
         );
     }
 
@@ -55,7 +56,7 @@ public class PlayerJPADTO {
             this.id,
             this.name,
             this.currentPrice,
-            this.totalTokensIssued
+                this.tokens.stream().map(TokenJPADTO::aModelo).collect(Collectors.toList())
         );
     }
 }

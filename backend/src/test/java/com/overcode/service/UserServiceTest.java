@@ -27,7 +27,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        USER1 = new User("alice", "alice@example.com", "secret", 0, 0);
+        USER1 = new User("alice", "alice@example.com", "secret");
         testService.eliminarUsuarios();
 
     }
@@ -56,7 +56,7 @@ class UserServiceTest {
         User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
-        assertEquals(0, retrieved.getTokens());
+        assertEquals(0, retrieved.getTokens().size());
     }
 
     @Test

@@ -1,20 +1,20 @@
 package com.overcode.persistence.dto;
 
+import com.overcode.model.Token;
 import com.overcode.model.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name="user")
 @Table(name = "users")
 public class UserJPADTO {
 
@@ -34,24 +34,18 @@ public class UserJPADTO {
     @Column(name = "credit_balance", nullable = false)
     private Integer creditBalance;
 
+    @OrderBy("id ASC")
     @Column(name = "tokens", nullable = false)
-    private Integer tokens;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TokenJPADTO> tokens = new ArrayList<>();
 
-    public UserJPADTO(Long id, String username, String email, String password, Integer creditBalance, Integer tokens) {
+    public UserJPADTO(Long id, String username, String email, String password, Integer creditBalance,  List<TokenJPADTO> tokens) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.creditBalance = creditBalance;
         this.tokens = tokens;
-    }
-
-    public UserJPADTO(String username, String email, String password, Integer creditBalance, Integer tokens) {
-        this(null, username, email, password, creditBalance, tokens);
-    }
-
-    public UserJPADTO(String username, String email, String password, Integer creditBalance) {
-        this(null, username, email, password, creditBalance, 0);
     }
 
     public static UserJPADTO desdeModelo(User user) {
@@ -64,18 +58,20 @@ public class UserJPADTO {
             user.getEmail(),
             user.getPassword(),
             user.getCreditBalance(),
-            user.getTokens()
+            TokenJPADTO.desdeModelo(user.getTokens())
         );
     }
 
     public User aModelo() {
+
         return new User(
             this.id,
             this.username,
             this.email,
             this.password,
             this.creditBalance,
-            this.tokens
+                this.tokens.stream().map(TokenJPADTO::aModelo).collect(Collectors.toList())
+
         );
     }
 }
