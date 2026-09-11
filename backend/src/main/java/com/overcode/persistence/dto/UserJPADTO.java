@@ -35,7 +35,7 @@ public class UserJPADTO {
     private Integer creditBalance;
 
     @OrderBy("id ASC")
-    @Column(name = "tokens", nullable = false)
+    @Column(name = "tokens")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
 

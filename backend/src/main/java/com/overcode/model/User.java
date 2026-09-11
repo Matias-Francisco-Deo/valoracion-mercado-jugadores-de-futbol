@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter @Getter @NoArgsConstructor
@@ -38,7 +39,7 @@ public class User {
         setEmail(email);
         setPassword(password);
         setCreditBalance(0);
-        setTokens(List.of());
+        setTokens(new ArrayList<>());
     }
 
     public void setCreditBalance(Integer creditBalance) {
