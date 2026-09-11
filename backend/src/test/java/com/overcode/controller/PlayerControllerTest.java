@@ -1,6 +1,7 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.AuthDtos;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
@@ -8,7 +9,6 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,13 +53,13 @@ public class PlayerControllerTest {
     }
 
     private String obtainAuthToken() {
-        var req = new AuthDtos.RegisterRequest(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+        var req = new RegisterRequest(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        ResponseEntity<AuthResponse> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthDtos.AuthResponse.class);
+            .toEntity(AuthResponse.class);
 
         return response.getBody().token();
     }

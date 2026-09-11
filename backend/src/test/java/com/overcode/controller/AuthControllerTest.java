@@ -1,6 +1,8 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.AuthDtos;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.LoginRequest;
+import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
@@ -34,14 +36,14 @@ public class AuthControllerTest {
     //------------------------------Tests de registro------------------------------
     @Test
     public void registrarUsuarioConDatosValidos() {
-        var req = new AuthDtos.RegisterRequest("User", "register@example.com", "Password123!");
+        var req = new RegisterRequest("User", "register@example.com", "Password123!");
 
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+        ResponseEntity<AuthResponse> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthDtos.AuthResponse.class);
+            .toEntity(AuthResponse.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -51,14 +53,14 @@ public class AuthControllerTest {
 
     @Test
     public void alCrearUsuarioNuevoTieneDatosDeInicializacionCreditos0YSinTokens() {
-        var req = new AuthDtos.RegisterRequest("User", "register@example.com", "Password123!");
+        var req = new RegisterRequest("User", "register@example.com", "Password123!");
 
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+        ResponseEntity<AuthResponse> response = restClient.post()
                 .uri("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(req)
                 .retrieve()
-                .toEntity(AuthDtos.AuthResponse.class);
+                .toEntity(AuthResponse.class);
 
         assert response.getBody() != null;
         assertEquals(0, response.getBody().user().creditBalance());
@@ -67,7 +69,7 @@ public class AuthControllerTest {
 
     @Test
     public void registrarUsuarioConEmailInvalido() {
-        var req = new AuthDtos.RegisterRequest("invalidEmail", "invalid-email", "Password123!");
+        var req = new RegisterRequest("invalidEmail", "invalid-email", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
             .uri("/auth/register")
@@ -79,7 +81,7 @@ public class AuthControllerTest {
 
     @Test
     public void registrarUsuarioSinEmail() {
-        var req = new AuthDtos.RegisterRequest("sinEmail", "", "Password123!");
+        var req = new RegisterRequest("sinEmail", "", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -91,7 +93,7 @@ public class AuthControllerTest {
 
     @Test
     public void registrarUsuarioSinContraseña() {
-        var req = new AuthDtos.RegisterRequest("sinContraseña", "login@example.com", "");
+        var req = new RegisterRequest("sinContraseña", "login@example.com", "");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -103,7 +105,7 @@ public class AuthControllerTest {
 
     @Test
     public void registrarUsuarioSinNombre() {
-        var req = new AuthDtos.RegisterRequest("", "login@example.com", "Password123");
+        var req = new RegisterRequest("", "login@example.com", "Password123");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -117,13 +119,13 @@ public class AuthControllerTest {
     public void loginConDatosValidos() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new AuthDtos.LoginRequest("login@example.com", "Password123!");
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+        var req = new LoginRequest("login@example.com", "Password123!");
+        ResponseEntity<AuthResponse> response = restClient.post()
             .uri("/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthDtos.AuthResponse.class);
+            .toEntity(AuthResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -135,7 +137,7 @@ public class AuthControllerTest {
     public void loginConContraseñaIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new AuthDtos.LoginRequest("login@example.com", "WrongPassword123!");
+        var req = new LoginRequest("login@example.com", "WrongPassword123!");
 
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> restClient.post()
             .uri("/auth/login")
@@ -149,7 +151,7 @@ public class AuthControllerTest {
     public void loginConEmailIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new AuthDtos.LoginRequest("wrong@example.com", "Password123!");
+        var req = new LoginRequest("wrong@example.com", "Password123!");
 
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> restClient.post()
                 .uri("/auth/login")
@@ -188,14 +190,14 @@ public class AuthControllerTest {
     }
 
     //Metodo para registrar un usuario para tests
-    private AuthDtos.AuthResponse registerUser(String username, String email, String password) {
-        var req = new AuthDtos.RegisterRequest(username, email, password);
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+    private AuthResponse registerUser(String username, String email, String password) {
+        var req = new RegisterRequest(username, email, password);
+        ResponseEntity<AuthResponse> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthDtos.AuthResponse.class);
+            .toEntity(AuthResponse.class);
 
         return response.getBody();
     }

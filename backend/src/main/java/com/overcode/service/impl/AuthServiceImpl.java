@@ -1,6 +1,6 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.AuthDtos.AuthResponse;
+import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -36,18 +36,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse register(String username, String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
-        log.info("Attempting to register user with email: {}", email);
-        if (userRepository.existsByEmail(email)) {
-            log.warn("Registration failed: Email already registered: {}", email);
+    public AuthResponse register(User user) {
+        log.info("Attempting to register user with email: {}", user.getEmail());
+        if (userRepository.existsByEmail(user.getEmail())) {
+            log.warn("Registration failed: Email already registered: {}", user.getEmail());
             throw new ConflictException("Email already registered");
         }
-        String hashed = passwordHasher.hash(password); // TODO esta lógica no parece de service
-        User user = new User(username, email, hashed);
+        String hashed = passwordHasher.hash(user.getPassword());// TODO esta lógica no parece de service
+        user.setPassword(hashed);
         User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();//TODO revisar hash map
         claims.put("uid", saved.getId());
         claims.put("username", saved.getUsername());
 
@@ -58,16 +58,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
-        log.info("Attempting login for email: {}", email);
-        Optional<User> maybe = userRepository.findByEmail(email);
-        if (maybe.isEmpty()) {
-            log.warn("Login failed: User not found for email: {}", email);
-            throw new AuthenticationException("Invalid credentials");
+    public AuthResponse login(User userRequest) {
+        log.info("Attempting login for email: {}", userRequest.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(userRequest.getEmail());
+        if (optionalUser.isEmpty()) {
+            log.warn("Login failed: User not found for email: {}", userRequest.getEmail());
+            throw new AuthenticationException("user no existe");
         }
-        User user = maybe.get();
-        if (!passwordHasher.matches(password, user.getPassword())) { // TODO esta lógica no parece de service
-            log.warn("Login failed: Invalid password for email: {}", email);
+        User user = optionalUser.get();
+        if (!passwordHasher.matches(userRequest.getPassword(), user.getPassword())) { // TODO esta lógica no parece de service
+            log.warn("Login failed: Invalid password for email: {}", user.getEmail());
             throw new AuthenticationException("Invalid credentials");
         }
 
