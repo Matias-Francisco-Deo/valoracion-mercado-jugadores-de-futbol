@@ -8,6 +8,13 @@
 
 **Input**: User description: "We're going to develop tests to cover the Controller of Player and User inside the current backend. This should cover only those controllers, not the auth one, as that has been covered already; On the other hand, you have to test happy and edge cases too"
 
+## Clarifications
+
+### Session 2026-09-11
+
+- Q: Should the test suite for `UserController` cover only the active `GET /users/{id}` endpoint, or should it also re-enable and test the commented-out `POST /users` endpoint? → A: Option A (Cover only the active `GET /users/{id}` endpoint; keep `POST /users` out of scope).
+- Q: Can any authenticated user retrieve any user profile via `GET /users/{id}`, or should access be restricted to only the authenticated user's own profile? → A: Option A (Any authenticated user can retrieve any registered user's profile by ID).
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Verify Player Catalog Endpoints (Priority: P1)
@@ -38,7 +45,7 @@ An authenticated client application needs to look up user profile information by
 
 **Acceptance Scenarios**:
 
-1. **Given** a user exists with a specific identifier and an authenticated request is made for that identifier, **When** the request is processed, **Then** the system returns a successful status and the user profile attributes without exposing sensitive credentials (such as password secrets).
+1. **Given** a user exists with a specific identifier and an authenticated request is made by any registered/authenticated user for that identifier, **When** the request is processed, **Then** the system returns a successful status and the user profile attributes without exposing sensitive credentials (such as password secrets).
 2. **Given** an authenticated request is made with an identifier that does not match any registered user, **When** the request is processed, **Then** the system returns a resource-not-found error.
 3. **Given** an authenticated request is made with a malformed or non-numeric identifier, **When** the request is processed, **Then** the system rejects the request with a client error indicating invalid input format.
 
@@ -76,13 +83,13 @@ The system must protect user and player endpoints so that unauthenticated or inv
 - **FR-003**: The system MUST verify successful retrieval of a specific player profile by identifier (GET /players/{id}) when the record exists.
 - **FR-004**: The system MUST verify that querying a player with a non-existent identifier returns a resource-not-found response (404 Not Found).
 - **FR-005**: The system MUST verify that querying a player with an invalid or malformed identifier returns a client error response (400 Bad Request).
-- **FR-006**: The system MUST verify successful retrieval of a user profile by identifier (GET /users/{id}) for an existing user.
+- **FR-006**: The system MUST verify successful retrieval of any registered user profile by identifier (`GET /users/{id}`) when requested by any valid authenticated user.
 - **FR-007**: The system MUST verify that user profile responses never expose sensitive credentials (such as password hashes or secret tokens).
 - **FR-008**: The system MUST verify that querying a user with a non-existent identifier returns a resource-not-found response (404 Not Found).
 - **FR-009**: The system MUST verify that querying a user with an invalid or malformed identifier returns a client error response (400 Bad Request).
 - **FR-010**: The system MUST verify that unauthenticated requests to player and user endpoints are denied access before reaching controller handlers (401 Unauthorized or 403 Forbidden).
 - **FR-011**: The system MUST verify that requests with invalid or malformed authentication credentials to player and user endpoints are denied access (401 Unauthorized or 403 Forbidden).
-- **FR-012**: The test suite MUST cover only the Player and User controller endpoints, excluding the previously covered authentication controller endpoints.
+- **FR-012**: The test suite MUST cover only the active Player and User controller endpoints (specifically GET /players, GET /players/{id}, and GET /users/{id}), keeping POST /users and authentication controller endpoints out of scope.
 - **FR-013**: The test suite MUST preserve all pre-existing tests in the application without modifying or deleting them.
 
 ### Key Entities *(include if feature involves data)*
