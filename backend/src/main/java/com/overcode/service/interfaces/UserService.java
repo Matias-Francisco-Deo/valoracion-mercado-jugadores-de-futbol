@@ -4,7 +4,7 @@ import com.overcode.model.User;
 
 public interface UserService {
 
-    User guardar(User request);
+    User guardar(User user);
 
     User recuperar(Long id);
 

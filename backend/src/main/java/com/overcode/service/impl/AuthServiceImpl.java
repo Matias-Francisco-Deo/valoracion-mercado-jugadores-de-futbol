@@ -9,6 +9,7 @@ import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.AuthenticationException;
 import com.overcode.service.exception.ConflictException;
 import com.overcode.service.interfaces.AuthService;
+import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -23,25 +24,27 @@ public class AuthServiceImpl implements AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordHasher passwordHasher;
     private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
+    public AuthServiceImpl(UserRepository userRepository, UserService userService, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.userService = userService;
         this.passwordHasher = passwordHasher;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public AuthResponse register(String username, String email, String password) {
+    public AuthResponse register(String username, String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
         log.info("Attempting to register user with email: {}", email);
         if (userRepository.existsByEmail(email)) {
             log.warn("Registration failed: Email already registered: {}", email);
             throw new ConflictException("Email already registered");
         }
-        String hashed = passwordHasher.hash(password);
-        User user = new User(null, username, email, hashed, 0, 0);
-        User saved = userRepository.guardar(user);
+        String hashed = passwordHasher.hash(password); // TODO esta lógica no parece de service
+        User user = new User(username, email, hashed);
+        User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
         Map<String, Object> claims = new HashMap<>();
@@ -55,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(String email, String password) {
+    public AuthResponse login(String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
         log.info("Attempting login for email: {}", email);
         Optional<User> maybe = userRepository.findByEmail(email);
         if (maybe.isEmpty()) {
@@ -63,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationException("Invalid credentials");
         }
         User user = maybe.get();
-        if (!passwordHasher.matches(password, user.getPassword())) {
+        if (!passwordHasher.matches(password, user.getPassword())) { // TODO esta lógica no parece de service
             log.warn("Login failed: Invalid password for email: {}", email);
             throw new AuthenticationException("Invalid credentials");
         }

@@ -44,7 +44,7 @@ class AuthServiceLoginTest {
     @BeforeEach
     void setUp() {
         validRequest = new LoginRequest("test@example.com", "password123");
-        mockUser = new User(1L, "testuser", "test@example.com", "hashedPassword", 0, 0);
+        mockUser = new User("testuser", "test@example.com", "hashedPassword");
     }
 
     @Test
