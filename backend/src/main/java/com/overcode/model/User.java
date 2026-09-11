@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Setter @Getter @NoArgsConstructor
 public class User {
 
@@ -12,38 +15,36 @@ public class User {
     private String email;
     private String password;
     private Integer creditBalance;
-    private Integer tokens; // TODO cambiar por objetos Token
+    private List<Token> tokens;
 
-    public User(Long id, String username, String email, String password, Integer creditBalance, Integer tokens) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public User(Long id, String username, String email, String password, Integer creditBalance, List<Token> tokens) {
+        setId(id);
+        setUsername(username);
+        setEmail(email);
+        setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
     }
 
-    public User(String username, String email, String password, Integer creditBalance, Integer tokens) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public User(String username, String email, String password, Integer creditBalance, List<Token> tokens) {
+        setUsername(username);
+        setEmail(email);
+        setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
     }
 
     public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+        setUsername(username);
+        setEmail(email);
+        setPassword(password);
         setCreditBalance(0);
-        setTokens(0);
+        setTokens(new ArrayList<>());
     }
 
     public void setCreditBalance(Integer creditBalance) {
         this.creditBalance = Math.max(creditBalance, 0);
     }
 
-    public void setTokens(Integer tokens) {
-        this.tokens = Math.max(tokens, 0);
-    }
+
 }
