@@ -3,6 +3,7 @@ package com.overcode.controller;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/")
+@Tag(name = "Player", description = "Endpoints for retrieving football players")
 public class PlayerController {
 
     private final PlayerService playerService;
