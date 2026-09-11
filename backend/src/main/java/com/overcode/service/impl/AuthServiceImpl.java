@@ -3,7 +3,6 @@ package com.overcode.service.impl;
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
-import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.JwtUtil;
 import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.AuthenticationException;
@@ -16,20 +15,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordHasher passwordHasher;
     private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(UserRepository userRepository, UserService userService, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
+    public AuthServiceImpl(UserService userService, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordHasher = passwordHasher;
         this.jwtUtil = jwtUtil;
@@ -38,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(User user) {
         log.info("Attempting to register user with email: {}", user.getEmail());
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userService.existePorEmail(user.getEmail())) {
             log.warn("Registration failed: Email already registered: {}", user.getEmail());
             throw new ConflictException("Email already registered");
         }
@@ -60,12 +56,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(User userRequest) {
         log.info("Attempting login for email: {}", userRequest.getEmail());
-        Optional<User> optionalUser = userRepository.findByEmail(userRequest.getEmail());
-        if (optionalUser.isEmpty()) {
-            log.warn("Login failed: User not found for email: {}", userRequest.getEmail());
-            throw new AuthenticationException("user no existe");
-        }
-        User user = optionalUser.get();
+        User user = userService.recuperarPorEmail(userRequest.getEmail());
         if (!passwordHasher.matches(userRequest.getPassword(), user.getPassword())) { // TODO esta lógica no parece de service
             log.warn("Login failed: Invalid password for email: {}", user.getEmail());
             throw new AuthenticationException("Invalid credentials");

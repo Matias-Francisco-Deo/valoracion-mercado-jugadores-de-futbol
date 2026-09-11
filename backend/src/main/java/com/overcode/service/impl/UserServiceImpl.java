@@ -41,6 +41,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User recuperarPorEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existePorEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
     @Transactional
     public User crearSuperusuario() {
 

@@ -9,4 +9,8 @@ public interface UserService {
     User recuperar(Long id);
 
     User crearSuperusuario();
+
+    User recuperarPorEmail(String email);
+
+    boolean existePorEmail(String email);
 }
