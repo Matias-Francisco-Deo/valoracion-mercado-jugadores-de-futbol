@@ -22,13 +22,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
-        User userModelo = request.aModelo();
-        User userCreado = userService.guardar(userModelo);
-        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-    }
+//    @PostMapping("/users")
+//    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
+//        User userModelo = request.aModelo();
+//        User userCreado = userService.guardar(userModelo);
+//        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+//    }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
@@ -37,13 +37,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-//    @GetMapping("/users/{id}/portfolio")
-//    public PortfolioDto getPortfolio(@PathVariable Long id) {
-//        return userService.getPortfolio(id);
-//    } // TODO este dto?
-//
-//    @GetMapping("/users/{id}/transactions")
-//    public List<TransactionDto> getTransactions(@PathVariable Long id) {
-//        return userService.getTransactions(id);
-//    }
 }

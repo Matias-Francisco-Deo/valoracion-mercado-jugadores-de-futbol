@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.Instant;
 
 public class AuthDtos {
-//TODO separar dtos
+//TODO separar dtos -> eso, separalos, y de paso meteles el aModelo de User, hay un constructor que toma estos 3 params :>
     public record RegisterRequest(
         @NotBlank(message = "Username is required") String username,
         @NotBlank(message = "Email is required") @Email(message = "Email must be valid") String email,
