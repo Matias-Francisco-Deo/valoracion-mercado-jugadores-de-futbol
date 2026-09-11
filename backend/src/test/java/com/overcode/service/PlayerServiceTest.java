@@ -46,7 +46,7 @@ class PlayerServiceTest {
         assertNotNull(guardado.getId());
         assertEquals("Messi", guardado.getName());
         assertEquals(1, guardado.getCurrentPrice());
-        assertEquals(100, guardado.getTotalTokensIssued());
+        assertEquals(100, guardado.getTokens().size());
     }
 
     @Test
@@ -56,7 +56,7 @@ class PlayerServiceTest {
         Player guardado = playerService.crear(nuevo);
 
         assertEquals(1, guardado.getCurrentPrice());
-        assertEquals(100, guardado.getTotalTokensIssued());
+        assertEquals(100, guardado.getTokens().size());
     }
 
     @Test

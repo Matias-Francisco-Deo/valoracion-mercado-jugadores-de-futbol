@@ -7,23 +7,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PlayerTest {
 
     @Test
-    void alCrearAlJugadorComienzaConPrecio1y100TokensEmitidos() {
+    void alCrearAlJugadorComienzaConPrecio1() {
         Player player = new Player(1L, "leo");
         assertEquals(1, player.getCurrentPrice());
-        assertEquals(100, player.getTotalTokensIssued());
+    }
+
+    @Test
+    void alCrearAlJugadorComienzaCon100Tokens() {
+        Player player = new Player(1L, "leo");
+        assertEquals(100, player.getTokens().size());
     }
 
     @Test
     void alAsignarPrecioActualMenorQue1Es1() {
-        Player player = new Player(1L, "leo", 10, 100);
+        Player player = new Player(1L, "leo");
         player.setCurrentPrice(-5);
         assertEquals(1, player.getCurrentPrice());
     }
 
-    @Test
-    void alAsignarTotalTokensEmitidosNegativoEs0() {
-        Player player = new Player(1L, "leo", 10, 100);
-        player.setTotalTokensIssued(-20);
-        assertEquals(0, player.getTotalTokensIssued());
-    }
 }

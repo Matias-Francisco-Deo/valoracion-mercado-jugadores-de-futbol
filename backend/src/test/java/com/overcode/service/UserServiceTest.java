@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.User;
 import com.overcode.service.exception.EmailRepetidoException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
@@ -26,14 +27,14 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        USER1 = new User("alice", "alice@example.com", "secret", 0, 0);
+        USER1 = new User("alice", "alice@example.com", "secret");
         testService.eliminarUsuarios();
 
     }
 
     @Test
     void crearUnUsuarioExitosamente() {
-        User created = userService.create(USER1);
+        User created = userService.guardar(USER1);
 
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());
@@ -42,8 +43,8 @@ class UserServiceTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSuBalanceDeCreditosEsCero() {
-        User created = userService.create(USER1);
-        User retrieved = userService.getUser(created.getId());
+        User created = userService.guardar(USER1);
+        User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
         assertEquals(0, retrieved.getCreditBalance());
@@ -51,20 +52,20 @@ class UserServiceTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSusTokensSonCero() {
-        User created = userService.create(USER1);
-        User retrieved = userService.getUser(created.getId());
+        User created = userService.guardar(USER1);
+        User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
-        assertEquals(0, retrieved.getTokens());
+        assertEquals(0, retrieved.getTokens().size());
     }
 
     @Test
     void rechazaCreacionConNombreDuplicado() {
         User user2 = new User(USER1.getUsername(), "alice2@example.com", "secret");
-        userService.create(USER1);
+        userService.guardar(USER1);
 
         NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
-                () -> userService.create(user2));
+                () -> userService.guardar(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getUsername()));
     }
@@ -72,12 +73,24 @@ class UserServiceTest {
     @Test
     void rechazaCreacionConEmailDuplicado() {
         User user2 = new User("usuarioRepetido", USER1.getEmail(), "secret");
-        userService.create(USER1);
+        userService.guardar(USER1);
 
         EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
-                () -> userService.create(user2));
+                () -> userService.guardar(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getEmail()));
+    }
+
+    @Test
+    void crearSuperusuario() { // TODO testear que tenga todos los tokens
+        User superuser = userService.crearSuperusuario();
+        assertNotNull(superuser.getId());
+    }
+
+    @Test
+    void siSuperusuarioYaExisteNoEsError() {
+        userService.crearSuperusuario();
+        assertDoesNotThrow(() -> userService.crearSuperusuario());
     }
 
 

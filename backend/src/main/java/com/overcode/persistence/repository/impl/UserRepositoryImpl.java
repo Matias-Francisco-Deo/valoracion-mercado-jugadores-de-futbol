@@ -5,6 +5,7 @@ import com.overcode.persistence.dto.UserJPADTO;
 import com.overcode.persistence.repository.dao.UserDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         return userDAOJPA.findByUsername(username).map(UserJPADTO::aModelo);
     }

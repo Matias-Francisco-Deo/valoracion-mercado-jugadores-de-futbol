@@ -9,20 +9,25 @@ import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final String SUPERUSER_NAME = "superuser"; // TODO abstraer a .env?
+    public static final String SUPERUSER_EMAIL = "overcode@gmail.com";
+    public static final String SUPERUSER_PASSWORD = "overcodesuperuser";
 
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-
     }
 
     @Override
     @Transactional
-    public User create(User userACrear) {
+    public User guardar(User userACrear) {
         validarUsuarioNuevo(userACrear);
 
         return userRepository.guardar(userACrear);
@@ -30,9 +35,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUser(Long id) {
+    public User recuperar(Long id) {
         return userRepository.recuperar(id)
-                .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + id));
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
+    }
+
+    @Override
+    @Transactional
+    public User crearSuperusuario() {
+
+        Optional<User> optionalSuperuser = userRepository.findByUsername(SUPERUSER_NAME);
+
+        if (optionalSuperuser.isPresent()) {
+            return optionalSuperuser.get();
+        }
+
+        User superuser = new User(SUPERUSER_NAME, SUPERUSER_EMAIL, SUPERUSER_PASSWORD);
+        return userRepository.guardar(superuser);
     }
 
     private void validarUsuarioNuevo(User userACrear) {
