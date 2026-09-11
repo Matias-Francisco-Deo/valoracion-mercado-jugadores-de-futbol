@@ -42,10 +42,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User recuperarPorEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
+    public Optional<User> recuperarPorEmail(String email) {
+        return userRepository.findByEmail(email);
     }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -14,7 +14,7 @@ public record PlayerResponseDTO(Long id, String name, Integer currentPrice, List
                 player.getId(),
                 player.getName(),
                 player.getCurrentPrice(),
-                player.getTokens().stream().map(Token::getId).collect(Collectors.toList()) // TODO con id llega?
+                player.getTokens().stream().map(Token::getId).collect(Collectors.toList()) // TODO con id llega?-> NO, agregarle id de jugador y de usuario
         );
     }
 }

@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -56,7 +57,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(User userRequest) {
         log.info("Attempting login for email: {}", userRequest.getEmail());
-        User user = userService.recuperarPorEmail(userRequest.getEmail());
+        Optional<User> userOptional = userService.recuperarPorEmail(userRequest.getEmail());
+        if (userOptional.isEmpty()) {
+            log.warn("Login failed: User not found for email: {}", userRequest.getEmail());
+            throw new AuthenticationException("Invalid credentials");
+        }
+        User user = userOptional.get();
+
         if (!passwordHasher.matches(userRequest.getPassword(), user.getPassword())) { // TODO esta lógica no parece de service
             log.warn("Login failed: Invalid password for email: {}", user.getEmail());
             throw new AuthenticationException("Invalid credentials");
