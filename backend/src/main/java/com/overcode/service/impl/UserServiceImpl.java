@@ -41,6 +41,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<User> recuperarPorEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existePorEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
     @Transactional
     public User crearSuperusuario() {
 

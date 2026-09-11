@@ -1,9 +1,8 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.AuthDtos.AuthResponse;
+import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
-import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.JwtUtil;
 import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.AuthenticationException;
@@ -23,31 +22,29 @@ public class AuthServiceImpl implements AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-    private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordHasher passwordHasher;
     private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(UserRepository userRepository, UserService userService, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
+    public AuthServiceImpl(UserService userService, PasswordHasher passwordHasher, JwtUtil jwtUtil) {
         this.userService = userService;
         this.passwordHasher = passwordHasher;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public AuthResponse register(String username, String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
-        log.info("Attempting to register user with email: {}", email);
-        if (userRepository.existsByEmail(email)) {
-            log.warn("Registration failed: Email already registered: {}", email);
+    public AuthResponse register(User user) {
+        log.info("Attempting to register user with email: {}", user.getEmail());
+        if (userService.existePorEmail(user.getEmail())) {
+            log.warn("Registration failed: Email already registered: {}", user.getEmail());
             throw new ConflictException("Email already registered");
         }
-        String hashed = passwordHasher.hash(password); // TODO esta lógica no parece de service
-        User user = new User(username, email, hashed);
+        String hashed = passwordHasher.hash(user.getPassword());// TODO esta lógica no parece de service
+        user.setPassword(hashed);
         User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();//TODO revisar hash map
         claims.put("uid", saved.getId());
         claims.put("username", saved.getUsername());
 
@@ -58,16 +55,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(String email, String password) { // TODO esto debería ser un objeto User mappeado desde el controller
-        log.info("Attempting login for email: {}", email);
-        Optional<User> maybe = userRepository.findByEmail(email);
-        if (maybe.isEmpty()) {
-            log.warn("Login failed: User not found for email: {}", email);
+    public AuthResponse login(User userRequest) {
+        log.info("Attempting login for email: {}", userRequest.getEmail());
+        Optional<User> userOptional = userService.recuperarPorEmail(userRequest.getEmail());
+        if (userOptional.isEmpty()) {
+            log.warn("Login failed: User not found for email: {}", userRequest.getEmail());
             throw new AuthenticationException("Invalid credentials");
         }
-        User user = maybe.get();
-        if (!passwordHasher.matches(password, user.getPassword())) { // TODO esta lógica no parece de service
-            log.warn("Login failed: Invalid password for email: {}", email);
+        User user = userOptional.get();
+
+        if (!passwordHasher.matches(userRequest.getPassword(), user.getPassword())) { // TODO esta lógica no parece de service
+            log.warn("Login failed: Invalid password for email: {}", user.getEmail());
             throw new AuthenticationException("Invalid credentials");
         }
 

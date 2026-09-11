@@ -1,12 +1,12 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.AuthDtos;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,14 +45,14 @@ public class UserControllerTest {
         this.restClient = RestClient.builder().baseUrl("http://localhost:" + port).build();
     }
 
-    private AuthDtos.AuthResponse registerUser(String username, String email, String password) {
-        var req = new AuthDtos.RegisterRequest(username, email, password);
-        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+    private AuthResponse registerUser(String username, String email, String password) {
+        var req = new RegisterRequest(username, email, password);
+        ResponseEntity<AuthResponse> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthDtos.AuthResponse.class);
+            .toEntity(AuthResponse.class);
 
         return response.getBody();
     }

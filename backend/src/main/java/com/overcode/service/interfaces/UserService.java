@@ -2,6 +2,8 @@ package com.overcode.service.interfaces;
 
 import com.overcode.model.User;
 
+import java.util.Optional;
+
 public interface UserService {
 
     User guardar(User user);
@@ -9,4 +11,8 @@ public interface UserService {
     User recuperar(Long id);
 
     User crearSuperusuario();
+
+    Optional<User> recuperarPorEmail(String email);
+
+    boolean existePorEmail(String email);
 }
