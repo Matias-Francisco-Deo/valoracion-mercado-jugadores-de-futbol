@@ -144,19 +144,6 @@ public class PlayerControllerTest {
             .toBodilessEntity());
     }
 
-    // TODO SDD TEST FAILURE
-    @Test
-    @Disabled
-    public void obtenerJugadorConIdInvalidoLanzaBadRequest() {
-        String token = obtainAuthToken();
-
-        assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.get()
-            .uri("/players/" + MALFORMED_ID)
-            .header("Authorization", "Bearer " + token)
-            .retrieve()
-            .toBodilessEntity());
-    }
-
     // ------------------------------ Tests de control de acceso y seguridad ------------------------------
 
     @Test

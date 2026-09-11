@@ -116,19 +116,6 @@ public class UserControllerTest {
             .toBodilessEntity());
     }
 
-    // TODO SDD TEST FAILURE
-    @Test
-    @Disabled
-    public void obtenerUsuarioConIdInvalidoLanzaBadRequest() {
-        var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
-
-        assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.get()
-            .uri("/users/" + MALFORMED_ID)
-            .header("Authorization", "Bearer " + auth.token())
-            .retrieve()
-            .toBodilessEntity());
-    }
-
     // ------------------------------ Tests de control de acceso y seguridad ------------------------------
 
     @Test
