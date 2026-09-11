@@ -4,6 +4,7 @@ import com.overcode.controller.dto.user.CreateUserRequestDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Users", description = "Endpoints for user information")
 public class UserController {
 
     private final UserService userService;
@@ -22,13 +24,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
-        User userModelo = request.aModelo();
-        User userCreado = userService.guardar(userModelo);
-        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-    }
+//    @PostMapping("/users")
+//    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
+//        User userModelo = request.aModelo();
+//        User userCreado = userService.guardar(userModelo);
+//        UserResponseDTO dto = UserResponseDTO.desdeModelo(userCreado);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+//    }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
@@ -37,13 +39,4 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-//    @GetMapping("/users/{id}/portfolio")
-//    public PortfolioDto getPortfolio(@PathVariable Long id) {
-//        return userService.getPortfolio(id);
-//    } // TODO este dto?
-//
-//    @GetMapping("/users/{id}/transactions")
-//    public List<TransactionDto> getTransactions(@PathVariable Long id) {
-//        return userService.getTransactions(id);
-//    }
 }
