@@ -55,7 +55,7 @@ class AuthServiceLoginTest {
         when(jwtUtil.generateToken(anyString(), anyMap())).thenReturn("mockJwtToken");
         when(jwtUtil.getExpiration(anyString())).thenReturn(new Date(System.currentTimeMillis() + 86400000));
 
-        AuthResponse response = authService.login(validRequest);
+        AuthResponse response = authService.login(validRequest.email(), validRequest.password());
 
         assertNotNull(response);
         assertEquals("mockJwtToken", response.token());
@@ -67,7 +67,7 @@ class AuthServiceLoginTest {
     void login_ThrowsAuthenticationException_WhenEmailNotFound() {
         when(userRepository.findByEmail(validRequest.email())).thenReturn(Optional.empty());
 
-        assertThrows(AuthenticationException.class, () -> authService.login(validRequest));
+        assertThrows(AuthenticationException.class, () -> authService.login(validRequest.email(), validRequest.password()));
 
         verify(passwordHasher, never()).matches(anyString(), anyString());
         verify(jwtUtil, never()).generateToken(anyString(), anyMap());
@@ -78,7 +78,7 @@ class AuthServiceLoginTest {
         when(userRepository.findByEmail(validRequest.email())).thenReturn(Optional.of(mockUser));
         when(passwordHasher.matches(validRequest.password(), mockUser.getPassword())).thenReturn(false);
 
-        assertThrows(AuthenticationException.class, () -> authService.login(validRequest));
+        assertThrows(AuthenticationException.class, () -> authService.login(validRequest.email(), validRequest.password()));
 
         verify(jwtUtil, never()).generateToken(anyString(), anyMap());
     }

@@ -1,8 +1,6 @@
 package com.overcode.service.impl;
 
 import com.overcode.controller.dto.AuthDtos.AuthResponse;
-import com.overcode.controller.dto.AuthDtos.RegisterRequest;
-import com.overcode.controller.dto.AuthDtos.LoginRequest;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -20,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class AuthServiceImpl implements AuthService {//TODO mover request a controller de metodos
+public class AuthServiceImpl implements AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
@@ -35,14 +33,14 @@ public class AuthServiceImpl implements AuthService {//TODO mover request a cont
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) {//TODO revisar metodo
-        log.info("Attempting to register user with email: {}", request.email());
-        if (userRepository.existsByEmail(request.email())) {
-            log.warn("Registration failed: Email already registered: {}", request.email());
+    public AuthResponse register(String username, String email, String password) {
+        log.info("Attempting to register user with email: {}", email);
+        if (userRepository.existsByEmail(email)) {
+            log.warn("Registration failed: Email already registered: {}", email);
             throw new ConflictException("Email already registered");
         }
-        String hashed = passwordHasher.hash(request.password());
-        User user = new User(null, request.username(), request.email(), hashed, 0, 0);
+        String hashed = passwordHasher.hash(password);
+        User user = new User(null, username, email, hashed, 0, 0);
         User saved = userRepository.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
@@ -57,16 +55,16 @@ public class AuthServiceImpl implements AuthService {//TODO mover request a cont
     }
 
     @Override
-    public AuthResponse login(LoginRequest request) {//TODO revisar metodo
-        log.info("Attempting login for email: {}", request.email());
-        Optional<User> maybe = userRepository.findByEmail(request.email());
+    public AuthResponse login(String email, String password) {
+        log.info("Attempting login for email: {}", email);
+        Optional<User> maybe = userRepository.findByEmail(email);
         if (maybe.isEmpty()) {
-            log.warn("Login failed: User not found for email: {}", request.email());
+            log.warn("Login failed: User not found for email: {}", email);
             throw new AuthenticationException("Invalid credentials");
         }
         User user = maybe.get();
-        if (!passwordHasher.matches(request.password(), user.getPassword())) {
-            log.warn("Login failed: Invalid password for email: {}", request.email());
+        if (!passwordHasher.matches(password, user.getPassword())) {
+            log.warn("Login failed: Invalid password for email: {}", email);
             throw new AuthenticationException("Invalid credentials");
         }
 

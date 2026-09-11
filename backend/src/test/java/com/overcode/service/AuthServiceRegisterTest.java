@@ -56,7 +56,7 @@ class AuthServiceRegisterTest {
         when(jwtUtil.generateToken(anyString(), anyMap())).thenReturn("mockJwtToken");
         when(jwtUtil.getExpiration(anyString())).thenReturn(new Date(System.currentTimeMillis() + 86400000));
 
-        AuthResponse response = authService.register(validRequest);
+        AuthResponse response = authService.register(validRequest.username(), validRequest.email(), validRequest.password());
 
         assertNotNull(response);
         assertEquals("mockJwtToken", response.token());
@@ -75,7 +75,7 @@ class AuthServiceRegisterTest {
     void register_ThrowsConflictException_WhenEmailExists() {
         when(userRepository.existsByEmail(validRequest.email())).thenReturn(true);
 
-        assertThrows(ConflictException.class, () -> authService.register(validRequest));
+        assertThrows(ConflictException.class, () -> authService.register(validRequest.username(), validRequest.email(), validRequest.password()));
 
         verify(userRepository, never()).guardar(any(User.class));
         verify(passwordHasher, never()).hash(anyString());
