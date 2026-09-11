@@ -12,4 +12,6 @@ public interface UserDAOJPA extends JpaRepository<UserJPADTO, Long> {
     boolean existsByEmail(String email);
 
     Optional<UserJPADTO> findByUsername(String username);
+
+    Optional<UserJPADTO> findByEmail(String email);
 }

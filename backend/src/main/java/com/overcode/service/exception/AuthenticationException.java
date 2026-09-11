@@ -1,0 +1,8 @@
+package com.overcode.service.exception;
+
+public class AuthenticationException extends ServiceException {
+    public AuthenticationException(String message) {
+        super(message);
+    }
+}
+//TODO revisar excepciones

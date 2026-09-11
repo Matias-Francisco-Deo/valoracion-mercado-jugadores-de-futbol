@@ -35,6 +35,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return userDAOJPA.findByEmail(email).map(UserJPADTO::aModelo);
+    }
+
+    @Override
     public User guardar(User user) {
         UserJPADTO dto = UserJPADTO.desdeModelo(user);
         UserJPADTO userDto = userDAOJPA.save(dto);

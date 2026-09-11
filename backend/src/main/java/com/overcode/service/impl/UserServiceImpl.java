@@ -27,10 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User guardar(User userACrear) {
-        validarUsuarioNuevo(userACrear);
+    public User guardar(User user) {
+        validarUsuarioNuevo(user);
 
-        return userRepository.guardar(userACrear);
+        return userRepository.guardar(user);
     }
 
     @Override
