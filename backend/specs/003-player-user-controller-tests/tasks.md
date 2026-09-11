@@ -10,8 +10,8 @@
 
 **Purpose**: Verify dependencies and test harness readiness
 
-- [ ] T001 Verify test environment prerequisites and existing test suite baseline with `./mvnw.cmd test`
-- [ ] T002 Verify database cleanup methods in `src/test/java/com/overcode/testUtils/TestService.java` for users and players
+- [X] T001 Verify test environment prerequisites and existing test suite baseline with `./mvnw.cmd test`
+- [X] T002 Verify database cleanup methods in `src/test/java/com/overcode/testUtils/TestService.java` for users and players
 
 ---
 
@@ -19,8 +19,8 @@
 
 **Purpose**: Core test harness skeletons, RestClient setup, and centralized constants
 
-- [ ] T003 [P] Create `PlayerControllerTest.java` skeleton with `@SpringBootTest(webEnvironment = RANDOM_PORT)`, `RestClient`, `TestService`, and constant definitions (`PLAYER_NAME`, `NON_EXISTENT_ID`, `MALFORMED_ID`, `INVALID_BEARER_TOKEN`) in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T004 [P] Create `UserControllerTest.java` skeleton with `@SpringBootTest(webEnvironment = RANDOM_PORT)`, `RestClient`, `TestService`, and constant definitions (`TEST_USERNAME`, `TEST_EMAIL`, `TEST_PASSWORD`, `NON_EXISTENT_ID`, `MALFORMED_ID`, `INVALID_BEARER_TOKEN`) in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T003 [P] Create `PlayerControllerTest.java` skeleton with `@SpringBootTest(webEnvironment = RANDOM_PORT)`, `RestClient`, `TestService`, and constant definitions (`PLAYER_NAME`, `NON_EXISTENT_ID`, `MALFORMED_ID`, `INVALID_BEARER_TOKEN`) in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T004 [P] Create `UserControllerTest.java` skeleton with `@SpringBootTest(webEnvironment = RANDOM_PORT)`, `RestClient`, `TestService`, and constant definitions (`TEST_USERNAME`, `TEST_EMAIL`, `TEST_PASSWORD`, `NON_EXISTENT_ID`, `MALFORMED_ID`, `INVALID_BEARER_TOKEN`) in `src/test/java/com/overcode/controller/UserControllerTest.java`
 
 **Checkpoint**: Skeletons and authentication helper fixtures ready. User story test implementations can proceed.
 
@@ -32,11 +32,11 @@
 
 **Independent Test**: Execute `./mvnw.cmd test -Dtest=PlayerControllerTest` to verify catalog listing and player ID lookup scenarios.
 
-- [ ] T005 [US1] Implement test `listarJugadoresConBaseVaciaDevuelveListaVacia` asserting 200 OK and empty list for `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T006 [US1] Implement test `listarJugadoresConJugadoresExistentesDevuelveListaCompleta` asserting 200 OK and non-empty list of `PlayerResponseDTO` for `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T007 [US1] Implement test `obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos` asserting 200 OK and matching `PlayerResponseDTO` for `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T008 [US1] Implement test `obtenerJugadorPorIdInexistenteLanzaNotFound` asserting `HttpClientErrorException.NotFound` for non-existent ID on `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T009 [US1] Implement test `obtenerJugadorConIdInvalidoLanzaBadRequest` asserting `HttpClientErrorException.BadRequest` for non-numeric ID on `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java` (annotate with `// TODO SDD TEST FAILURE` if existing framework behavior diverges)
+- [X] T005 [US1] Implement test `listarJugadoresConBaseVaciaDevuelveListaVacia` asserting 200 OK and empty list for `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T006 [US1] Implement test `listarJugadoresConJugadoresExistentesDevuelveListaCompleta` asserting 200 OK and non-empty list of `PlayerResponseDTO` for `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T007 [US1] Implement test `obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos` asserting 200 OK and matching `PlayerResponseDTO` for `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T008 [US1] Implement test `obtenerJugadorPorIdInexistenteLanzaNotFound` asserting `HttpClientErrorException.NotFound` for non-existent ID on `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T009 [US1] Implement test `obtenerJugadorConIdInvalidoLanzaBadRequest` asserting `HttpClientErrorException.BadRequest` for non-numeric ID on `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java` (annotate with `// TODO SDD TEST FAILURE` if existing framework behavior diverges)
 
 **Checkpoint**: Player catalog happy paths and error boundaries are verified.
 
@@ -48,10 +48,10 @@
 
 **Independent Test**: Execute `./mvnw.cmd test -Dtest=UserControllerTest` to verify user profile lookup scenarios.
 
-- [ ] T010 [US2] Implement test `obtenerUsuarioPorIdExistenteDevuelveOkConDatosCorrectos` asserting 200 OK and matching `UserResponseDTO` for `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
-- [ ] T011 [US2] Implement test `obtenerUsuarioPorIdNoExponeContrasenaNiCredenciales` asserting that serialized JSON response does not leak password hash for `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
-- [ ] T012 [US2] Implement test `obtenerUsuarioPorIdInexistenteLanzaNotFound` asserting `HttpClientErrorException.NotFound` for non-existent ID on `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
-- [ ] T013 [US2] Implement test `obtenerUsuarioConIdInvalidoLanzaBadRequest` asserting `HttpClientErrorException.BadRequest` for non-numeric ID on `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java` (annotate with `// TODO SDD TEST FAILURE` if existing framework behavior diverges)
+- [X] T010 [US2] Implement test `obtenerUsuarioPorIdExistenteDevuelveOkConDatosCorrectos` asserting 200 OK and matching `UserResponseDTO` for `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T011 [US2] Implement test `obtenerUsuarioPorIdNoExponeContrasenaNiCredenciales` asserting that serialized JSON response does not leak password hash for `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T012 [US2] Implement test `obtenerUsuarioPorIdInexistenteLanzaNotFound` asserting `HttpClientErrorException.NotFound` for non-existent ID on `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T013 [US2] Implement test `obtenerUsuarioConIdInvalidoLanzaBadRequest` asserting `HttpClientErrorException.BadRequest` for non-numeric ID on `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java` (annotate with `// TODO SDD TEST FAILURE` if existing framework behavior diverges)
 
 **Checkpoint**: User profile retrieval, privacy checks, and error boundaries are verified.
 
@@ -63,12 +63,12 @@
 
 **Independent Test**: Execute `./mvnw.cmd test -Dtest=PlayerControllerTest,UserControllerTest` to verify 403 Forbidden responses.
 
-- [ ] T014 [P] [US3] Implement test `listarJugadoresSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T015 [P] [US3] Implement test `listarJugadoresConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T016 [P] [US3] Implement test `obtenerJugadorPorIdSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T017 [P] [US3] Implement test `obtenerJugadorPorIdConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
-- [ ] T018 [P] [US3] Implement test `obtenerUsuarioPorIdSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
-- [ ] T019 [P] [US3] Implement test `obtenerUsuarioPorIdConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T014 [P] [US3] Implement test `listarJugadoresSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T015 [P] [US3] Implement test `listarJugadoresConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /players` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T016 [P] [US3] Implement test `obtenerJugadorPorIdSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T017 [P] [US3] Implement test `obtenerJugadorPorIdConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /players/{id}` in `src/test/java/com/overcode/controller/PlayerControllerTest.java`
+- [X] T018 [P] [US3] Implement test `obtenerUsuarioPorIdSinTokenLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for unauthenticated `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T019 [P] [US3] Implement test `obtenerUsuarioPorIdConTokenInvalidoLanzaForbidden` asserting `HttpClientErrorException.Forbidden` for invalid token `GET /users/{id}` in `src/test/java/com/overcode/controller/UserControllerTest.java`
 
 **Checkpoint**: Security boundaries across all covered endpoints are verified.
 
@@ -78,9 +78,9 @@
 
 **Purpose**: End-to-end regression validation and quality checks
 
-- [ ] T020 Run full test suite `./mvnw.cmd test` to ensure zero regressions across existing and new test suites
-- [ ] T021 Verify that test names strictly follow Latin-American Spanish conventions and assert specific `HttpClientErrorException` subclasses without generic catches in `src/test/java/com/overcode/controller/PlayerControllerTest.java` and `src/test/java/com/overcode/controller/UserControllerTest.java`
-- [ ] T022 Confirm zero changes were made to production code in `src/main/` via `git status`
+- [X] T020 Run full test suite `./mvnw.cmd test` to ensure zero regressions across existing and new test suites
+- [X] T021 Verify that test names strictly follow Latin-American Spanish conventions and assert specific `HttpClientErrorException` subclasses without generic catches in `src/test/java/com/overcode/controller/PlayerControllerTest.java` and `src/test/java/com/overcode/controller/UserControllerTest.java`
+- [X] T022 Confirm zero changes were made to production code in `src/main/` via `git status`
 
 ---
 

@@ -50,6 +50,22 @@ public class AuthControllerTest {
     }
 
     @Test
+    public void alCrearUsuarioNuevoTieneDatosDeInicializacionCreditos0YSinTokens() {
+        var req = new AuthDtos.RegisterRequest("User", "register@example.com", "Password123!");
+
+        ResponseEntity<AuthDtos.AuthResponse> response = restClient.post()
+                .uri("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(req)
+                .retrieve()
+                .toEntity(AuthDtos.AuthResponse.class);
+
+        assert response.getBody() != null;
+        assertEquals(0, response.getBody().user().creditBalance());
+        assertEquals(0, response.getBody().user().tokens().size());
+    }
+
+    @Test
     public void registrarUsuarioConEmailInvalido() {
         var req = new AuthDtos.RegisterRequest("invalidEmail", "invalid-email", "Password123!");
 
