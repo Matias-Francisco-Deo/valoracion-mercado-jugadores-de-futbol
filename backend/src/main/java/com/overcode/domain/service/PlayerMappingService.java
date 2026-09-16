@@ -43,14 +43,21 @@ public class PlayerMappingService {
     }
 
     private Long extractTeamIdFromHtml(String html, String teamName) {
-        // Formatear el nombre para la URL (ej: "Barcelona" -> "barcelona")
-        String formattedName = teamName.toLowerCase().replace(" ", "-");
+        // Normalizamos el nombre del equipo (ej: "Atlético Madrid" -> "atletico-madrid")
+        String normalizedTeamName = java.text.Normalizer.normalize(teamName, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase()
+                .replace(" ", "-");
+        
+        // Normalizamos el HTML para quitarle las tildes a las URLs de WhoScored
+        String normalizedHtml = java.text.Normalizer.normalize(html, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
         
         // Regex para atrapar: href="/teams/65/show/spain-barcelona"
         // Grupo 1: El ID numérico (65)
-        String regex = "href=\"/teams/(\\d+)/show/[^\"]*" + formattedName + "[^\"]*\"";
+        String regex = "href=\"/teams/(\\d+)/show/[^\"]*" + normalizedTeamName + "[^\"]*\"";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(html);
+        Matcher matcher = pattern.matcher(normalizedHtml);
         
         if (matcher.find()) {
             return Long.parseLong(matcher.group(1));
@@ -60,14 +67,22 @@ public class PlayerMappingService {
     }
 
     private Long extractPlayerIdFromHtml(String html, String playerName) {
-        // Formatear el nombre para la URL (ej: "Lamine Yamal" -> "lamine-yamal")
-        String formattedName = playerName.toLowerCase().replace(" ", "-");
+        // Normalizamos el nombre del jugador (ej. "Enzo Fernández" -> "enzo-fernandez")
+        String normalizedPlayerName = java.text.Normalizer.normalize(playerName, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase()
+                .replace(" ", "-");
+        
+        // Normalizamos el HTML para quitarle las tildes a las URLs de WhoScored
+        // (WhoScored pone href="/players/123/show/enzo-fernández", al normalizar queda "enzo-fernandez")
+        String normalizedHtml = java.text.Normalizer.normalize(html, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
         
         // Regex para atrapar: href="/players/480249/show/lamine-yamal"
         // Grupo 1: El ID numérico (480249)
-        String regex = "href=\"/players/(\\d+)/show/[^\"]*" + formattedName + "[^\"]*\"";
+        String regex = "href=\"/players/(\\d+)/show/[^\"]*" + normalizedPlayerName + "[^\"]*\"";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(html);
+        Matcher matcher = pattern.matcher(normalizedHtml);
         
         if (matcher.find()) {
             return Long.parseLong(matcher.group(1));

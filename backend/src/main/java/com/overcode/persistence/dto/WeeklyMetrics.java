@@ -10,8 +10,8 @@ public class WeeklyMetrics {
     private Integer tackles;
     private Integer keyPasses;
     private Double rating;
-    //TODO agregar dribbles
-
+    private Integer wasDribbled;
+    private Integer successfulDribbles;
     /**
      * NOTA ARQUITECTÓNICA:
      * Almacenamos las métricas (tackles, keyPasses, etc.) en su valor TOTAL ABSOLUTO para no perder precisión.
@@ -47,6 +47,12 @@ public class WeeklyMetrics {
 
     public Double getRating() { return rating; }
     public void setRating(Double rating) { this.rating = rating; }
+
+    public Integer getWasDribbled() { return wasDribbled; }
+    public void setWasDribbled(Integer wasDribbled) { this.wasDribbled = wasDribbled; }
+
+    public Integer getSuccessfulDribbles() { return successfulDribbles; }
+    public void setSuccessfulDribbles(Integer successfulDribbles) { this.successfulDribbles = successfulDribbles; }
 
     public Integer getGamesPlayed() { return gamesPlayed; }
     public void setGamesPlayed(Integer gamesPlayed) { this.gamesPlayed = gamesPlayed; }

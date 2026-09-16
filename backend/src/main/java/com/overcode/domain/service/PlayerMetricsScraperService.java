@@ -9,8 +9,23 @@ import com.overcode.infrastructure.scraper.util.JsonExtractorUtil;
 import com.overcode.persistence.dto.WeeklyMetrics;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class PlayerMetricsScraperService {
+
+    /*
+    * 2 (Premier League)
+
+        4 (LaLiga)
+
+        5 (Serie A)
+
+        3 (Bundesliga)
+
+        22 (Ligue 1)
+    * */
+    private static final Set<Integer> TOP_5_LEAGUES_IDS = Set.of(2, 4, 5, 3, 22);
 
     private final ScraperHttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -38,10 +53,10 @@ public class PlayerMetricsScraperService {
 
         try {
             JsonNode rootNode = objectMapper.readTree(rawJson);
-            
+
             JsonNode tournaments = rootNode.path("tournaments");
             if (tournaments.isMissingNode() || !tournaments.isArray()) {
-                 throw new ScraperExtractionException("No se encontró el nodo 'tournaments' en el JSON.");
+                throw new ScraperExtractionException("No se encontró el nodo 'tournaments' en el JSON.");
             }
 
             int totalGoals = 0;
@@ -50,31 +65,40 @@ public class PlayerMetricsScraperService {
             int totalInterceptions = 0;
             int totalTackles = 0;
             int totalKeyPasses = 0;
+            int totalWasDribbled = 0;
+            int totalSuccessfulDribbles = 0;
             int totalGamesPlayed = 0;
-            
-            double totalPasses = 0;
-            double totalAccuratePasses = 0;
-            
+
+            double totalPasses = 0.0;
+            double totalAccuratePasses = 0.0;
+
             double sumRating = 0.0;
             int ratingAppsCount = 0;
 
-            // Agregamos métricas de todos los torneos oficiales provistos por Opta
-            // si queremos dividir por torneo debemos pasar a usar Jsoup
+            // 2. TODOS los torneos
             for (JsonNode tournament : tournaments) {
+                // Si NO es de una liga Top 5, saltamos y seguimos buscando
+                if (!TOP_5_LEAGUES_IDS.contains(tournament.path("TournamentId").asInt(-1))) {
+                    continue;
+                }
+
+                // Si ES, sumamos a los totales
                 totalGoals += tournament.path("Goals").asInt(0);
                 totalAssists += tournament.path("Assists").asInt(0);
                 totalShotsOnTarget += tournament.path("ShotsOnTarget").asInt(0);
                 totalInterceptions += tournament.path("Interceptions").asInt(0);
                 totalTackles += tournament.path("TotalTackles").asInt(0);
                 totalKeyPasses += tournament.path("KeyPasses").asInt(0);
-                
-                // Sumamos Partidos de Titular (GameStarted) y Suplente (SubOn)
+                totalWasDribbled += tournament.path("WasDribbled").asInt(0);
+                totalSuccessfulDribbles += tournament.path("Dribbles").asInt(0);
+
                 int apps = tournament.path("GameStarted").asInt(0) + tournament.path("SubOn").asInt(0);
                 totalGamesPlayed += apps;
-                
+
                 totalPasses += tournament.path("TotalPasses").asDouble(0.0);
                 totalAccuratePasses += tournament.path("AccuratePasses").asDouble(0.0);
-                
+
+                // Para el Rating hacemos un promedio ponderado según los partidos jugados en ESE equipo/liga
                 double rating = tournament.path("Rating").asDouble(0.0);
                 if (rating > 0 && apps > 0) {
                     sumRating += (rating * apps);
@@ -82,10 +106,16 @@ public class PlayerMetricsScraperService {
                 }
             }
 
-            // Promedio ponderado por la cantidad de partidos (apps) jugados en cada torneo
+            // 3. Si terminó de revisar todos y no sumó ni 1 partido, lanzamos el error
+            if (totalGamesPlayed == 0) {
+                throw new ScraperExtractionException("El jugador no registra actividad en ninguna de las 5 ligas principales.");
+            }
+
+            // 4. Cálculos finales de porcentajes y promedios
             double finalRating = ratingAppsCount > 0 ? (sumRating / ratingAppsCount) : 0.0;
             double passSuccess = totalPasses > 0 ? (totalAccuratePasses / totalPasses) * 100 : 0.0;
 
+            // 5. Guardamos en el DTO
             WeeklyMetrics metrics = new WeeklyMetrics();
             metrics.setPlayerId(playerId);
             metrics.setGoals(totalGoals);
@@ -95,8 +125,10 @@ public class PlayerMetricsScraperService {
             metrics.setInterceptions(totalInterceptions);
             metrics.setTackles(totalTackles);
             metrics.setKeyPasses(totalKeyPasses);
+            metrics.setWasDribbled(totalWasDribbled);
+            metrics.setSuccessfulDribbles(totalSuccessfulDribbles);
             metrics.setGamesPlayed(totalGamesPlayed);
-            metrics.setRating(Math.round(finalRating * 100.0) / 100.0); // Redondear a 2 decimales
+            metrics.setRating(Math.round(finalRating * 100.0) / 100.0);
 
             return metrics;
 
