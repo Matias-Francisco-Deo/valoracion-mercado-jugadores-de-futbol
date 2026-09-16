@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
-        return userAuth.login(user);
+        return userAuth.login(saved);
     }
 
     @Override
