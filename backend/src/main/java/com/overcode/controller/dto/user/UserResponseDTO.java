@@ -19,4 +19,5 @@ public record UserResponseDTO(Long id, String username, String email, Integer cr
                 user.getTokens().stream().map(Token::getId).collect(Collectors.toList())
         );
     }
+
 }
