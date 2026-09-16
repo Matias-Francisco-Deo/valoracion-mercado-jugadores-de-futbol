@@ -103,7 +103,8 @@ public class PlayerControllerTest {
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
-            .toEntity(new ParameterizedTypeReference<List<PlayerResponseDTO>>() {});
+            .toEntity(new ParameterizedTypeReference<>() {
+            });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
