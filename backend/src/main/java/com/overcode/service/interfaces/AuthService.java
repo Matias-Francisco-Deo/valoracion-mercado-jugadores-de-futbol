@@ -2,8 +2,9 @@ package com.overcode.service.interfaces;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.model.User;
+import com.overcode.model.security.Auth;
 
 public interface AuthService {
-    AuthResponse register(User user);
-    AuthResponse login(User user);
+    Auth register(User user);
+    Auth login(User user);
 }
