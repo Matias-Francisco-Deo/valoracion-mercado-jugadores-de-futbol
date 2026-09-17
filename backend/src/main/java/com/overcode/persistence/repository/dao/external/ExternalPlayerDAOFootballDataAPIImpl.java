@@ -4,11 +4,12 @@ import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
     @Override
-    public List<PlayerDraftDTO> listarJugadores() {
-        return List.of();
+    public Optional<List<PlayerDraftDTO>> listarJugadores() {
+        return Optional.of(List.of());
     }
 }

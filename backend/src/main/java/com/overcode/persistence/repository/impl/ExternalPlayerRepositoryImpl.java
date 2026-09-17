@@ -8,6 +8,7 @@ import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
@@ -21,10 +22,16 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    public List<Player> buscarYGuardarJugadores() {
-        List<PlayerDraftDTO> playerDraftDTOS = externalPlayerDAOFootballDataAPI.listarJugadores();
-        playerDAOJPA.saveAll(playerDraftDTOS);
-        return playerDraftDTOS;
+    public Optional<List<Player>> buscarYGuardarJugadores() {
+        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalPlayerDAOFootballDataAPI.listarJugadores();
+
+        if (playerDraftDTOS.isEmpty()) {
+            return Optional.empty();
+        }
+
+
+//        playerDAOJPA.saveAll(playerDraftDTOS);
+        return Optional.of(List.of());
 
     }
 }
