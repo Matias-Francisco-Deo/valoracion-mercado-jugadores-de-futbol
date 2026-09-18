@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionDTO;
-import com.overcode.persistence.dto.external.FootballDataAPI.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.FootballDataAPI.FootballDataPlayerDraftDTO;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void encuentraTodosLosJugadores() {
-        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
+        Optional<List<FootballDataPlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
         if (jugadores.isEmpty()) {
             return; // TODO cómo testear estos casos?
         }
@@ -30,7 +30,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void encuentraTodosLosJugadoresConDatos() {
-        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
+        Optional<List<FootballDataPlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
 
         if (jugadores.isEmpty()) {
             return; // TODO cómo testear estos casos?

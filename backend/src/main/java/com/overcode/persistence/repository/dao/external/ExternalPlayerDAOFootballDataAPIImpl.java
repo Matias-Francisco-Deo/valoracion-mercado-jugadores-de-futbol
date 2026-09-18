@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.persistence.dto.external.FootballDataAPI.*;
+import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import lombok.Getter;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,7 +11,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Repository
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
@@ -53,24 +53,54 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     }
 
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
-        Optional<List<TeamDTO>> teams = getTeamsOfCompetition(competition);
+        Optional<List<TeamDraftDTO>> teams = getTeamsOfCompetition(competition);
 
         if (teams.isEmpty()) return Optional.empty();
-        List<Optional<List<PlayerDraftDTO>>> optionalPlayers = teams.get().stream().map(this::getPlayersOfTeam).toList();
+        List<Optional<List<FootballDataPlayerDraftDTO>>> optionalPlayers = teams.get().stream().map(this::getPlayersOfTeam).toList();
 
         if (optionalPlayers.stream().allMatch(Optional::isEmpty)) return Optional.empty();
 
-        List<PlayerDraftDTO> players = optionalPlayers.stream().filter(Optional::isPresent).map(Optional::get).flatMap(List::stream).toList();
+        List<FootballDataPlayerDraftDTO> players = optionalPlayers.stream().filter(Optional::isPresent).map(Optional::get).flatMap(List::stream).toList();
+        List<PlayerDraftDTO> playerDrafts = players.stream().map(player -> new PlayerDraftDTO(player.name(), competition.name())).toList();
 
-        return Optional.of(players);
+        return Optional.of(playerDrafts);
     }
 
-    private Optional<List<TeamDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
+    private Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
+        CompetitionTeamsDTO nullableTeams = webClient.get().uri("/competitions/" + competition.id() + "/teams")
+                .retrieve()
+                .bodyToMono(CompetitionTeamsDTO.class)
+                .onErrorResume(error -> {
+                    System.err.println("Error occurred while fetching team: " + error.getMessage());
+                    return Mono.empty();
+                })
+                .block(Duration.ofSeconds(10));
+
+        if (nullableTeams == null) return Optional.empty();
+
+        return Optional.of(nullableTeams.teams());
     }
 
-    private Optional<List<PlayerDraftDTO>> getPlayersOfTeam(TeamDTO team) {
+    private Optional<TeamDTO> getTeamFromId(Long teamId) {
+        TeamDTO nullableTeam = webClient.get().uri("/teams/" + teamId)
+                .retrieve()
+                .bodyToMono(TeamDTO.class)
+                .onErrorResume(error -> {
+                    System.err.println("Error occurred while fetching team: " + error.getMessage());
+                    return Mono.empty();
+                })
+                .block(Duration.ofSeconds(10));
 
+        if (nullableTeam == null) return Optional.empty();
 
+        return Optional.of(nullableTeam);
+
+    }
+
+    private Optional<List<FootballDataPlayerDraftDTO>> getPlayersOfTeam(TeamDraftDTO draftTeam) {
+        Optional<TeamDTO> team = getTeamFromId(draftTeam.id());
+
+        return team.map(TeamDTO::squad);
     }
 
 
