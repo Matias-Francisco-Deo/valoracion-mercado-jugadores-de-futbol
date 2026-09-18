@@ -1,6 +1,8 @@
 package com.overcode.persistence.repository.dao.external;
 
-import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionDTO;
+import com.overcode.persistence.dto.external.FootballDataAPI.PlayerDraftDTO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +40,29 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
             assertNotNull(jugador.name());
             assertNotNull(jugador.league());
         });
+    }
+
+    @Test
+    void encuentraTodasLasLigasConIds() {
+        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
+
+//        if (ligas.isEmpty()) {
+//            return; // TODO cómo testear estos casos?
+//        }
+
+        ligas.get().forEach(liga -> {
+            assertNotNull(liga.id());
+            assertNotNull(liga.name());
+        });
+        assertEquals(externalPlayerDAOFootballDataAPIImpl.getLeaguesToUse().size(), ligas.get().size());
+    }
+
+    @Disabled
+    @Test
+    void noEncuentraLigasPorFalloDeApiEntoncesDaEmpty() {
+        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
+
+        assertTrue(ligas.isEmpty());
     }
 
 }

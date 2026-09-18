@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.Player;
-import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.FootballDataAPI.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDAOFootballDataAPI;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
