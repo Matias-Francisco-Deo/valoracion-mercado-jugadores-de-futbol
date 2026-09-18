@@ -3,6 +3,7 @@ package com.overcode.persistence.repository.dao.external;
 import com.overcode.persistence.dto.external.FootballDataAPI.*;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -13,12 +14,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
 
-    private final WebClient webClient = WebClient.builder()
-            .baseUrl("https://api.football-data.org/v4")
-            .defaultHeader("X-Auth-Token", "") // TODO poner Api Key en .env
-            .build();
+    private final WebClient webClient;
+
+    public ExternalPlayerDAOFootballDataAPIImpl(@Value("${football-data.api-key}") String apiKey) {
+        this.webClient = WebClient.builder()
+                .baseUrl("https://api.football-data.org/v4")
+                .defaultHeader("X-Auth-Token", apiKey)
+                .build();
+    }
+
 
     @Getter
     private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of
