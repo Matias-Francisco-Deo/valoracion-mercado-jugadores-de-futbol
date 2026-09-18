@@ -17,15 +17,14 @@ import java.util.Optional;
 
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
 
-    private final WebClient webClient;
+    public final WebClient webClient;
 
-    public ExternalPlayerDAOFootballDataAPIImpl(@Value("${football-data.api-key}") String apiKey) {
+    public ExternalPlayerDAOFootballDataAPIImpl(@Value("${football-data.api-key}") String apiKey, @Value("${football-data.base_url}") String baseUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://api.football-data.org/v4")
+                .baseUrl(baseUrl)
                 .defaultHeader("X-Auth-Token", apiKey)
                 .build();
     }
-
 
     @Getter
     private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of

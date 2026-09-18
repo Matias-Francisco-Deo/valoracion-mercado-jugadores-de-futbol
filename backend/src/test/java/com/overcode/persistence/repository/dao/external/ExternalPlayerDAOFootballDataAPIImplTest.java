@@ -82,6 +82,18 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertFalse(equipos.get().isEmpty());
     }
 
+    @Disabled
+    @Test
+    void noEncuentraLigasPorFalloDeApiEntoncesDaEmpty() {
+
+
+
+        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
+
+        assertTrue(ligas.isEmpty());
+    }
+
+
 //    @Test
 //    void encuentraTodosLosJugadoresDeUnEquipo() {
 //        Optional<List<FootballDataPlayerDraftDTO>> players = externalPlayerDAOFootballDataAPIImpl.getPlayersOfTeam(TEAM_1);
@@ -93,12 +105,5 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 //        assertFalse(players.get().isEmpty());
     }
 
-//    @Disabled
-//    @Test
-//    void noEncuentraLigasPorFalloDeApiEntoncesDaEmpty() {
-//        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
-//
-//        assertTrue(ligas.isEmpty());
-//    }
 
 
