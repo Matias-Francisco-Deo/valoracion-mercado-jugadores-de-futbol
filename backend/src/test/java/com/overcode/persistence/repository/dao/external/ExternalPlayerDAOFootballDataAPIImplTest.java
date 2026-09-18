@@ -5,6 +5,8 @@ import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionDTO;
 import com.overcode.persistence.dto.external.FootballDataAPI.FootballDataPlayerDraftDTO;
 import com.overcode.persistence.dto.external.FootballDataAPI.TeamDraftDTO;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +25,20 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Autowired
     private ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImpl;
 
+
     private final ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock =
             new ExternalPlayerDAOFootballDataAPIImpl("mockKey", "http://localhost:54321");
+
+    @BeforeAll
+    static void setupEnv() {
+        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+    }
 
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
         Thread.sleep(10000);
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
-//        if (jugadores.isEmpty()) {
-//            return; // TODO cómo testear estos casos?
-//        }
 
         assertFalse(jugadores.get().isEmpty());
     }
@@ -41,10 +47,6 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     void encuentraTodosLosJugadoresConDatos() throws InterruptedException {
         Thread.sleep(10000);
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
-
-//        if (jugadores.isEmpty()) {
-//            return; // TODO cómo testear estos casos?
-//        }
 
         jugadores.get().forEach(jugador -> {
             assertNotNull(jugador.name());
@@ -58,10 +60,6 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         Thread.sleep(10000);
         Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
 
-//        if (ligas.isEmpty()) {
-//            return; // TODO cómo testear estos casos?
-//        }
-
         ligas.get().forEach(liga -> {
             assertNotNull(liga.id());
             assertNotNull(liga.name());
@@ -73,10 +71,6 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     void encuentraTodosLosEquiposDeUnaCompetencia() throws InterruptedException {
         Thread.sleep(10000);
         Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImpl.getTeamsOfCompetition(COMPETITION_1);
-
-//        if (ligas.isEmpty()) {
-//            return; // TODO cómo testear estos casos?
-//        }
 
         equipos.get().forEach(equipo -> {
             assertNotNull(equipo.id());
@@ -93,16 +87,24 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertTrue(ligas.isEmpty());
     }
 
+    @Test
+    void noEncuentraJugadoresPorFalloDeApiEntoncesDaEmpty() {
 
-//    @Test
-//    void encuentraTodosLosJugadoresDeUnEquipo() {
-//        Optional<List<FootballDataPlayerDraftDTO>> players = externalPlayerDAOFootballDataAPIImpl.getPlayersOfTeam(TEAM_1);
-//
-//        players.get().forEach(player -> {
-//            assertNotNull(player.id());
-//            assertNotNull(player.name());
-//        });
-//        assertFalse(players.get().isEmpty());
+        Optional<List<PlayerDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.listarJugadores();
+
+        assertTrue(ligas.isEmpty());
+    }
+
+    @Test
+    void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty() {
+
+        Optional<List<TeamDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
+
+        assertTrue(ligas.isEmpty());
+    }
+
+
+
     }
 
 

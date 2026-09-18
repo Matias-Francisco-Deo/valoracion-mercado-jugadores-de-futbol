@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
 
-    public final WebClient webClient;
+    private final WebClient webClient;
 
     public ExternalPlayerDAOFootballDataAPIImpl(@Value("${football-data.api-key}") String apiKey, @Value("${football-data.base_url}") String baseUrl) {
         this.webClient = WebClient.builder()
