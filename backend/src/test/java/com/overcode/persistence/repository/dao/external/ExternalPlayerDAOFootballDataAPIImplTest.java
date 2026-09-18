@@ -23,6 +23,9 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Autowired
     private ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImpl;
 
+    private final ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock =
+            new ExternalPlayerDAOFootballDataAPIImpl("mockKey", "http://localhost:54321");
+
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
         Thread.sleep(10000);
@@ -82,13 +85,10 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertFalse(equipos.get().isEmpty());
     }
 
-    @Disabled
     @Test
     void noEncuentraLigasPorFalloDeApiEntoncesDaEmpty() {
 
-
-
-        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
+        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getCompetitions();
 
         assertTrue(ligas.isEmpty());
     }
