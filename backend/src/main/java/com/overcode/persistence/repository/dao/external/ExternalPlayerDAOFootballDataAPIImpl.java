@@ -23,7 +23,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     @Getter
     private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of
             (
-                    new LeagueRequestDTO("La Liga Play-Offs", "Spain"),
+                    new LeagueRequestDTO("Primera Division", "Spain"), // TODO revisar si es la liga correcta
                     new LeagueRequestDTO("Ligue 1", "France"),
                     new LeagueRequestDTO("Premier League", "England"),
                     new LeagueRequestDTO("Bundesliga", "Germany"),
@@ -47,26 +47,34 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
 
         if (optionalPlayers.stream().allMatch(Optional::isEmpty)) return Optional.empty();
 
-        List<PlayerDraftDTO> players = optionalPlayers.stream().filter(Optional::isPresent).map(Optional::get).flatMap(List::stream).toList();
+        List<PlayerDraftDTO> players = optionalPlayers.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(List::stream).toList();
 
         return Optional.of(players);
     }
 
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
-        Optional<List<TeamDraftDTO>> teams = getTeamsOfCompetition(competition);
+        Optional<List<TeamDraftDTO>> optionalTeam = getTeamsOfCompetition(competition);
 
-        if (teams.isEmpty()) return Optional.empty();
-        List<Optional<List<FootballDataPlayerDraftDTO>>> optionalPlayers = teams.get().stream().map(this::getPlayersOfTeam).toList();
+        if (optionalTeam.isEmpty()) return Optional.empty();
 
-        if (optionalPlayers.stream().allMatch(Optional::isEmpty)) return Optional.empty();
-
-        List<FootballDataPlayerDraftDTO> players = optionalPlayers.stream().filter(Optional::isPresent).map(Optional::get).flatMap(List::stream).toList();
-        List<PlayerDraftDTO> playerDrafts = players.stream().map(player -> new PlayerDraftDTO(player.name(), competition.name())).toList();
+        List<FootballDataPlayerDraftDTO> players = optionalTeam.get().stream()
+                .flatMap(
+                        team -> team.squad().stream()).toList();
+        List<PlayerDraftDTO> playerDrafts = players.stream().map(player ->
+                new PlayerDraftDTO(player.name(), competition.name())).toList();
 
         return Optional.of(playerDrafts);
     }
 
-    private Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
+    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         CompetitionTeamsDTO nullableTeams = webClient.get().uri("/competitions/" + competition.id() + "/teams")
                 .retrieve()
                 .bodyToMono(CompetitionTeamsDTO.class)
@@ -81,28 +89,6 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
         return Optional.of(nullableTeams.teams());
     }
 
-    private Optional<TeamDTO> getTeamFromId(Long teamId) {
-        TeamDTO nullableTeam = webClient.get().uri("/teams/" + teamId)
-                .retrieve()
-                .bodyToMono(TeamDTO.class)
-                .onErrorResume(error -> {
-                    System.err.println("Error occurred while fetching team: " + error.getMessage());
-                    return Mono.empty();
-                })
-                .block(Duration.ofSeconds(10));
-
-        if (nullableTeam == null) return Optional.empty();
-
-        return Optional.of(nullableTeam);
-
-    }
-
-    private Optional<List<FootballDataPlayerDraftDTO>> getPlayersOfTeam(TeamDraftDTO draftTeam) {
-        Optional<TeamDTO> team = getTeamFromId(draftTeam.id());
-
-        return team.map(TeamDTO::squad);
-    }
-
 
     public Optional<List<CompetitionDTO>> getCompetitions() {
         CompetitionsResponseDTO nullableCompetitions = webClient.get().uri("/competitions")
@@ -112,7 +98,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
                     System.err.println("Error occurred while fetching competitions: " + error.getMessage());
                     return Mono.empty();
                 })
-                .block(Duration.ofSeconds(10));
+                .block(Duration.ofSeconds(60));
 
         if (nullableCompetitions == null) return Optional.empty();
 

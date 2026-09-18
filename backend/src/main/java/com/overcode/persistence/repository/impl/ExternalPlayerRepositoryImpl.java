@@ -2,6 +2,7 @@ package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.FootballDataAPI.FootballDataPlayerDraftDTO;
+import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDAOFootballDataAPI;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
@@ -23,7 +24,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
     @Override
     public Optional<List<Player>> buscarYGuardarJugadores() {
-        Optional<List<FootballDataPlayerDraftDTO>> playerDraftDTOS = externalPlayerDAOFootballDataAPI.listarJugadores();
+        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalPlayerDAOFootballDataAPI.listarJugadores();
 
         if (playerDraftDTOS.isEmpty()) {
             return Optional.empty();
