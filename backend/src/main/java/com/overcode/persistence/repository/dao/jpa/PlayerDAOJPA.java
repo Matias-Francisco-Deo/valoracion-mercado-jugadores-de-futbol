@@ -1,6 +1,6 @@
-package com.overcode.persistence.repository.dao;
+package com.overcode.persistence.repository.dao.jpa;
 
-import com.overcode.persistence.dto.PlayerJPADTO;
+import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
