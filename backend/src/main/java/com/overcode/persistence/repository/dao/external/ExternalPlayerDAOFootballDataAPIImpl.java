@@ -3,6 +3,7 @@ package com.overcode.persistence.repository.dao.external;
 import com.overcode.persistence.dto.external.FootballDataAPI.*;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,6 +49,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
 
     }
 
+    @SneakyThrows
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetitions(List<CompetitionDTO> competitionDTOS) {
         List<Optional<List<PlayerDraftDTO>>> optionalPlayers = competitionDTOS.stream().map(this::getPlayersOfCompetition).toList();
 
@@ -61,7 +63,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
         return Optional.of(players);
     }
 
-    private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
+    private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) throws InterruptedException {
         Optional<List<TeamDraftDTO>> optionalTeam = getTeamsOfCompetition(competition);
 
         if (optionalTeam.isEmpty()) return Optional.empty();
@@ -75,12 +77,10 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
         return Optional.of(playerDrafts);
     }
 
-    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) throws InterruptedException {
+
+        Thread.sleep(5000);
+
         CompetitionTeamsDTO nullableTeams = webClient.get().uri("/competitions/" + competition.id() + "/teams")
                 .retrieve()
                 .bodyToMono(CompetitionTeamsDTO.class)

@@ -2,19 +2,13 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionAreaDTO;
 import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionDTO;
-import com.overcode.persistence.dto.external.FootballDataAPI.FootballDataPlayerDraftDTO;
 import com.overcode.persistence.dto.external.FootballDataAPI.TeamDraftDTO;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
-import io.github.cdimascio.dotenv.Dotenv;
-import okhttp3.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
 import java.io.IOException;
@@ -77,7 +71,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     }
 
     @Test
-    void encuentraTodosLosEquiposDeUnaCompetenciaMock() {
+    void encuentraTodosLosEquiposDeUnaCompetenciaMock() throws InterruptedException {
         String json = """
                 {                                                                                                                                                                                                                \s
                     "teams": [                                                                                                                                                                                                   \s
@@ -146,19 +140,17 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     }
 
 
-    @Disabled
+    @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
-        Thread.sleep(10000);
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
 
         assertFalse(jugadores.get().isEmpty());
     }
 
-    @Disabled
+    @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosJugadoresConDatos() throws InterruptedException {
-        Thread.sleep(10000);
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
 
         jugadores.get().forEach(jugador -> {
@@ -168,10 +160,9 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertFalse(jugadores.get().isEmpty());
     }
 
-    @Disabled
+    @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodasLasLigasConIds() throws InterruptedException {
-        Thread.sleep(10000);
         Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
 
         ligas.get().forEach(liga -> {
@@ -181,10 +172,9 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertEquals(externalPlayerDAOFootballDataAPIImpl.getLeaguesToUse().size(), ligas.get().size());
     }
 
-    @Disabled
+    @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosEquiposDeUnaCompetencia() throws InterruptedException {
-        Thread.sleep(10000);
         Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImpl.getTeamsOfCompetition(COMPETITION_1);
 
         equipos.get().forEach(equipo -> {
@@ -211,7 +201,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     }
 
     @Test
-    void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty() {
+    void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty() throws InterruptedException {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500));
         Optional<List<TeamDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
 
