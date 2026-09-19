@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.Player;
-import com.overcode.persistence.dto.PlayerJPADTO;
-import com.overcode.persistence.repository.dao.PlayerDAOJPA;
+import com.overcode.persistence.dto.jpa.PlayerJPADTO;
+import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import org.springframework.stereotype.Repository;
 

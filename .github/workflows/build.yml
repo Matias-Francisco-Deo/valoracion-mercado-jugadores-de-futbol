@@ -17,6 +17,7 @@ jobs:
           POSTGRES_DB: overcode
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: root
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         ports:
           - 5432:5432
         options: >-

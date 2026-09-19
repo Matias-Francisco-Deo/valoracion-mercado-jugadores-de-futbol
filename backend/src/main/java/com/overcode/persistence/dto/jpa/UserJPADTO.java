@@ -1,6 +1,5 @@
-package com.overcode.persistence.dto;
+package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.Token;
 import com.overcode.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;

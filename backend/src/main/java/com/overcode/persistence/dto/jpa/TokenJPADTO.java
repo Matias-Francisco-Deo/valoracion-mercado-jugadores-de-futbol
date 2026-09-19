@@ -1,4 +1,4 @@
-package com.overcode.persistence.dto;
+package com.overcode.persistence.dto.jpa;
 
 import com.overcode.model.Player;
 import com.overcode.model.Token;
