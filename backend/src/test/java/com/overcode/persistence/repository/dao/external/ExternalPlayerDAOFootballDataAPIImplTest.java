@@ -6,14 +6,18 @@ import com.overcode.persistence.dto.external.FootballDataAPI.FootballDataPlayerD
 import com.overcode.persistence.dto.external.FootballDataAPI.TeamDraftDTO;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import okhttp3.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +31,122 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Autowired
     private ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImpl;
 
+    private static MockWebServer mockWebServer;
+    private ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock;
 
-    private final ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock =
-            new ExternalPlayerDAOFootballDataAPIImpl("mockKey", "http://localhost:54321");
+    @BeforeAll
+    static void startServer() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+    }
 
-//    @DynamicPropertySource
-//    static void setupEnv(DynamicPropertyRegistry registry) {
-//        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-//        registry.add("football-data.api-key", () -> dotenv.get("FOOTBALL_DATA_API_KEY"));
-//    }
+    @AfterAll
+    static void shutdownServer() throws IOException {
+        mockWebServer.shutdown();
+    }
 
+    @BeforeEach
+    void setUp() {
+        // Point the DAO to the mock server's dynamically assigned URL
+        externalPlayerDAOFootballDataAPIImplMock = new ExternalPlayerDAOFootballDataAPIImpl("mockKey", mockWebServer.url("/").toString());
+    }
+
+    @Test
+    void encuentraTodasLasLigasConIdsMock() {
+        String json = """
+                {                                                                                                                                                                                                                \s
+                    "competitions": [                                                                                                                                                                                            \s
+                        { "id": 2014, "name": "Primera Division", "area": { "name": "Spain" } },                                                                                                                                 \s
+                        { "id": 2015, "name": "Ligue 1", "area": { "name": "France" } },                                                                                                                                         \s
+                        { "id": 2021, "name": "Premier League", "area": { "name": "England" } },                                                                                                                                 \s
+                        { "id": 2002, "name": "Bundesliga", "area": { "name": "Germany" } },                                                                                                                                     \s
+                        { "id": 2019, "name": "Serie A", "area": { "name": "Italy" } }                                                                                                                                           \s
+                    ]                                                                                                                                                                                                            \s
+                }                                                                                                                                                                                                                \s
+               \s""";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .setBody(json));
+
+        Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getCompetitions();
+
+        assertTrue(ligas.isPresent());
+        assertEquals(5, ligas.get().size());
+    }
+
+    @Test
+    void encuentraTodosLosEquiposDeUnaCompetenciaMock() {
+        String json = """
+                {                                                                                                                                                                                                                \s
+                    "teams": [                                                                                                                                                                                                   \s
+                        {                                                                                                                                                                                                        \s
+                            "id": 81,                                                                                                                                                                                            \s
+                            "name": "FC Barcelona",                                                                                                                                                                              \s
+                            "squad": [                                                                                                                                                                                           \s
+                                { "id": 1, "name": "Lamine Yamal" },                                                                                                                                                             \s
+                                { "id": 2, "name": "Robert Lewandowski" }                                                                                                                                                        \s
+                            ]                                                                                                                                                                                                    \s
+                        }                                                                                                                                                                                                        \s
+                    ]                                                                                                                                                                                                            \s
+                }                                                                                                                                                                                                                \s
+               \s""";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .setBody(json));
+
+        Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
+
+        assertTrue(equipos.isPresent());
+        assertFalse(equipos.get().isEmpty());
+        assertEquals("FC Barcelona", equipos.get().get(0).name());
+    }
+
+    @Test
+    void encuentraTodosLosJugadoresMock() {
+        // listarJugadores() makes multiple calls: 1 to /competitions and 1 per competition to /competitions/{id}/teams
+        // Use a Dispatcher to handle different endpoints:
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .setBody("""
+                                    {                                                                                                                                                                                            \s
+                                        "competitions": [                                                                                                                                                                        \s
+                                            { "id": 2014, "name": "Primera Division", "area": { "name": "Spain" } }                                                                                                              \s
+                                        ]                                                                                                                                                                                        \s
+                                    }                                                                                                                                                                                            \s
+                               \s"""));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .setBody("""
+                                    {                                                                                                                                                                                            \s
+                                        "teams": [                                                                                                                                                                               \s
+                                            {                                                                                                                                                                                    \s
+                                                "id": 81,                                                                                                                                                                        \s
+                                                "name": "FC Barcelona",                                                                                                                                                          \s
+                                                "squad": [                                                                                                                                                                       \s
+                                                    { "id": 101, "name": "Pedri" }                                                                                                                                               \s
+                                                ]                                                                                                                                                                                \s
+                                            }                                                                                                                                                                                    \s
+                                        ]                                                                                                                                                                                        \s
+                                    }                                                                                                                                                                                            \s
+                               \s"""));
+
+
+        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImplMock.listarJugadores();
+
+        assertTrue(jugadores.isPresent());
+        assertFalse(jugadores.get().isEmpty());
+        assertEquals("Pedri", jugadores.get().get(0).name());
+    }
+
+
+    @Disabled
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
         Thread.sleep(10000);
@@ -45,6 +155,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertFalse(jugadores.get().isEmpty());
     }
 
+    @Disabled
     @Test
     void encuentraTodosLosJugadoresConDatos() throws InterruptedException {
         Thread.sleep(10000);
@@ -57,6 +168,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertFalse(jugadores.get().isEmpty());
     }
 
+    @Disabled
     @Test
     void encuentraTodasLasLigasConIds() throws InterruptedException {
         Thread.sleep(10000);
@@ -69,6 +181,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
         assertEquals(externalPlayerDAOFootballDataAPIImpl.getLeaguesToUse().size(), ligas.get().size());
     }
 
+    @Disabled
     @Test
     void encuentraTodosLosEquiposDeUnaCompetencia() throws InterruptedException {
         Thread.sleep(10000);
@@ -83,7 +196,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void noEncuentraLigasPorFalloDeApiEntoncesDaEmpty() {
-
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500));
         Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getCompetitions();
 
         assertTrue(ligas.isEmpty());
@@ -91,7 +204,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void noEncuentraJugadoresPorFalloDeApiEntoncesDaEmpty() {
-
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500));
         Optional<List<PlayerDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.listarJugadores();
 
         assertTrue(ligas.isEmpty());
@@ -99,7 +212,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty() {
-
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500));
         Optional<List<TeamDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
 
         assertTrue(ligas.isEmpty());
