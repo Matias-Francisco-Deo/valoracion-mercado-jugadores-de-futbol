@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // TEMPORAL PARA TESTING?
                 .requestMatchers("/scraper/**").permitAll()
-                .requestMatchers("/players/sync-metrics").permitAll()
+                //.requestMatchers("/players/sync-metrics").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
