@@ -1,12 +1,12 @@
-package com.overcode.domain.service;
+package com.overcode.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overcode.infrastructure.scraper.exception.ScraperExtractionException;
-import com.overcode.infrastructure.scraper.http.ScraperHttpClient;
-import com.overcode.infrastructure.scraper.util.JsonExtractorUtil;
-import com.overcode.persistence.dto.WeeklyMetrics;
+import com.overcode.persistence.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.scraper.http.ScraperHttpClient;
+import com.overcode.persistence.scraper.util.JsonExtractorUtil;
+import com.overcode.model.WeeklyMetrics;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -37,6 +37,8 @@ public class PlayerMetricsScraperService {
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
     }
+
+
 
     /**
      * Extrae las estadísticas detalladas (Opta) del jugador desde el JSON embebido en la página.

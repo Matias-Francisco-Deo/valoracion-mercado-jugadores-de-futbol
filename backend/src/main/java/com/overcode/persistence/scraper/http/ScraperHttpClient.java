@@ -1,7 +1,7 @@
-package com.overcode.infrastructure.scraper.http;
+package com.overcode.persistence.scraper.http;
 
 import com.microsoft.playwright.*;
-import com.overcode.infrastructure.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.scraper.exception.ScraperExtractionException;
 import org.springframework.stereotype.Component;
 
 @Component

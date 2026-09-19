@@ -1,6 +1,6 @@
-package com.overcode.infrastructure.scraper.adapter;
+package com.overcode.persistence.scraper.adapter;
 
-import com.overcode.persistence.dto.WeeklyMetrics;
+import com.overcode.model.WeeklyMetrics;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

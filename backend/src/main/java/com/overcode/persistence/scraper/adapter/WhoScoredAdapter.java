@@ -1,20 +1,21 @@
-package com.overcode.infrastructure.scraper.adapter;
+package com.overcode.persistence.scraper.adapter;
 
-import com.overcode.domain.service.PlayerMappingService;
-import com.overcode.domain.service.PlayerMetricsScraperService;
-import com.overcode.persistence.dto.WeeklyMetrics;
+import com.overcode.persistence.scraper.service.WhoScoredIdResolver;
+import com.overcode.service.impl.PlayerMetricsScraperService;
+import com.overcode.model.WeeklyMetrics;
+import com.overcode.service.interfaces.PlayerMetricsProvider;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WhoScoredAdapter {
+public class WhoScoredAdapter implements PlayerMetricsProvider {
 
-    private final PlayerMappingService playerMappingService;
+    private final WhoScoredIdResolver whoScoredIdResolver;
     private final PlayerMetricsScraperService playerMetricsScraperService;
 
-    public WhoScoredAdapter(PlayerMappingService playerMappingService,
+    public WhoScoredAdapter(WhoScoredIdResolver whoScoredIdResolver,
                             PlayerMetricsScraperService playerMetricsScraperService) {
-        this.playerMappingService = playerMappingService;
+        this.whoScoredIdResolver = whoScoredIdResolver;
         this.playerMetricsScraperService = playerMetricsScraperService;
     }
 
@@ -28,7 +29,7 @@ public class WhoScoredAdapter {
     @Cacheable(value = "playerMetricsCache", key = "#teamName + '-' + #playerName")
     public WeeklyMetrics getPlayerMetrics(String teamName, String playerName) {
         // Flujo 1: Resolver el ID del jugador
-        Long playerId = playerMappingService.resolvePlayerId(teamName, playerName);
+        Long playerId = whoScoredIdResolver.resolvePlayerId(teamName, playerName);
         
         // Flujo 2: Extraer las métricas usando el ID resuelto
         return playerMetricsScraperService.extractWeeklyMetrics(playerId);

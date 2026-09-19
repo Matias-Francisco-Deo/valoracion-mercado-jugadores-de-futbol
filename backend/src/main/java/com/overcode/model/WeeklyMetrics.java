@@ -1,4 +1,4 @@
-package com.overcode.persistence.dto;
+package com.overcode.model;
 
 public class WeeklyMetrics {
     private Long playerId;

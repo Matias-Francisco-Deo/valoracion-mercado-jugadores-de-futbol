@@ -15,6 +15,8 @@ public class Player {
     private Long id;
     private String name;
     private Integer currentPrice;
+    private String clubName;
+    private WeeklyMetrics metrics;
     private List<Token> tokens;
 
     public Player(Long id, String name) {
@@ -47,4 +49,9 @@ public class Player {
         this.currentPrice = Math.max(currentPrice, 1);
     }
 
+    public void actualizarMetricas(WeeklyMetrics newMetrics) {
+        if (newMetrics != null) {
+            this.metrics = newMetrics;
+        }
+    }
 }

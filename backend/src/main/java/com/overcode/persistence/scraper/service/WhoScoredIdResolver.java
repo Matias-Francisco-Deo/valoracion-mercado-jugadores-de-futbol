@@ -1,7 +1,7 @@
-package com.overcode.domain.service;
+package com.overcode.persistence.scraper.service;
 
-import com.overcode.infrastructure.scraper.exception.ScraperExtractionException;
-import com.overcode.infrastructure.scraper.http.ScraperHttpClient;
+import com.overcode.persistence.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.scraper.http.ScraperHttpClient;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
@@ -10,11 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class PlayerMappingService {
+public class WhoScoredIdResolver {
 
     private final ScraperHttpClient httpClient;
 
-    public PlayerMappingService(ScraperHttpClient httpClient) {
+    public WhoScoredIdResolver(ScraperHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 

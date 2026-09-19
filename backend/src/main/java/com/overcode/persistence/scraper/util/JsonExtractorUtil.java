@@ -1,6 +1,6 @@
-package com.overcode.infrastructure.scraper.util;
+package com.overcode.persistence.scraper.util;
 
-import com.overcode.infrastructure.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.scraper.exception.ScraperExtractionException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

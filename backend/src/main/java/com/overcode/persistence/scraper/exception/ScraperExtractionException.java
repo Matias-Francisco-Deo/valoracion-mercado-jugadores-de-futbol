@@ -1,4 +1,4 @@
-package com.overcode.infrastructure.scraper.exception;
+package com.overcode.persistence.scraper.exception;
 
 public class ScraperExtractionException extends RuntimeException {
     public ScraperExtractionException(String message) {
