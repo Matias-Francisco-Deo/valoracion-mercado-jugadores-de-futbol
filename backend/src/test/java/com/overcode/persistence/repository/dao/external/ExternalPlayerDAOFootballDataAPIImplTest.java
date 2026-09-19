@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +31,11 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     private final ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock =
             new ExternalPlayerDAOFootballDataAPIImpl("mockKey", "http://localhost:54321");
 
-    @BeforeAll
-    static void setupEnv() {
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-    }
+//    @DynamicPropertySource
+//    static void setupEnv(DynamicPropertyRegistry registry) {
+//        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+//        registry.add("football-data.api-key", () -> dotenv.get("FOOTBALL_DATA_API_KEY"));
+//    }
 
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
