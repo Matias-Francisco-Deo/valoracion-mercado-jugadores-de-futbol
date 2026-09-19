@@ -63,7 +63,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
         return Optional.of(players);
     }
 
-    private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) throws InterruptedException {
+    private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
         Optional<List<TeamDraftDTO>> optionalTeam = getTeamsOfCompetition(competition);
 
         if (optionalTeam.isEmpty()) return Optional.empty();
@@ -77,7 +77,8 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
         return Optional.of(playerDrafts);
     }
 
-    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) throws InterruptedException {
+    @SneakyThrows
+    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition){
 
         Thread.sleep(5000);
 
