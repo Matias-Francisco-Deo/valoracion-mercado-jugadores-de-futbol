@@ -27,6 +27,12 @@ public class PlayerJPADTO {
     @Column(name = "current_price", nullable = false)
     private Integer currentPrice;
 
+    @Column(name = "club_name")
+    private String clubName;
+
+    @Embedded
+    private WeeklyMetricsJPADTO metrics;
+
     @Column(name = "tokens", nullable = false)
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
@@ -47,6 +53,8 @@ public class PlayerJPADTO {
         dto.setName(player.getName());
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
+        dto.setClubName(player.getClubName());
+        dto.setMetrics(WeeklyMetricsJPADTO.desdeModelo(player.getMetrics()));
         return dto;
     }
 
@@ -56,6 +64,8 @@ public class PlayerJPADTO {
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).collect(Collectors.toList()));
+        player.setClubName(this.clubName);
+        if (this.metrics != null) player.setMetrics(this.metrics.aModelo());
         return player;
     }
 }
