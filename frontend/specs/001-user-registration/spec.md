@@ -16,7 +16,7 @@
 - Q: What validation constraints should the client enforce on the username and password fields before submission? (FR-008) → A: Username min 3 characters (alphanumeric and underscores); password min 6 characters.
 - Q: Where and how should registration errors (such as validation errors and backend registration failures) be displayed to the user? (FR-014) → A: Inline messages beneath individual input fields for validation errors; top-of-card alert banner inside the registration card for server/network errors.
 - Q: What URL route should host the registration page, and how should unauthenticated visitors reaching the root URL ('/') be handled? (FR-002, FR-013) → A: Registration is hosted at `/register`; root index `/` displays the Home page placeholder with a navigation link to `/register`.
-- Q: What brand elements and navigation items should be displayed inside the orange top navigation bar? (FR-001) → A: Platform title ("Valoración de Jugadores") on the left, with an "Iniciar Sesión" link on the right pointing to `/login`.
+- Q: What brand elements and navigation items should be displayed inside the orange top navigation bar? (FR-001) → A: Platform title ("Overcode") on the left, with an "Iniciar Sesión" link on the right pointing to `/login`.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -77,7 +77,7 @@ As a user on any device (mobile phone, tablet, or desktop), I want to view a coh
 
 **Acceptance Scenarios**:
 
-1. **Given** any screen size from mobile (320px+) to desktop (1024px+), **When** the registration page is displayed, **Then** the top navigation bar displays the orange color `#FF9500`, featuring the brand title "Valoración de Jugadores" on the left and an "Iniciar Sesión" navigation link pointing to `/login` on the right.
+1. **Given** any screen size from mobile (320px+) to desktop (1024px+), **When** the registration page is displayed, **Then** the top navigation bar displays the orange color `#FF9500`, featuring the brand title "Overcode" on the left and an "Iniciar Sesión" navigation link pointing to `/login` on the right.
 2. **Given** the registration view, **When** the page renders, **Then** the background displays the green tone `#096638` covered by the `cancha-pelota.png` asset occupying the full background space.
 3. **Given** any supported viewport, **When** observing the registration form, **Then** it is centered with background `#A8A8A8` and contains the title "Registrarse", distinct labeled inputs for email, username, and password, and the submit button.
 
@@ -95,7 +95,7 @@ As a user on any device (mobile phone, tablet, or desktop), I want to view a coh
 
 ### Functional Requirements
 
-- **FR-001**: System MUST render an overall application layout featuring an orange top navigation bar with the color hex `#FF9500`, displaying the brand title "Valoración de Jugadores" on the left and an "Iniciar Sesión" navigation link pointing to `/login` on the right.
+- **FR-001**: System MUST render an overall application layout featuring an orange top navigation bar with the color hex `#FF9500`, displaying the brand title "Overcode" on the left and an "Iniciar Sesión" navigation link pointing to `/login` on the right.
 - **FR-002**: System MUST host the registration view at the route `/register` within the primary content region of the application layout.
 - **FR-003**: System MUST style the registration page background using the solid green color `#096638`.
 - **FR-004**: System MUST display the image `cancha-pelota.png` (sourced from the application assets) layered on top of the green background, occupying the same space as the background.
