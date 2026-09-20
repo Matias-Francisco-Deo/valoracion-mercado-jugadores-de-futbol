@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
-import com.overcode.persistence.scraper.exception.ScraperExtractionException;
-import com.overcode.persistence.scraper.http.ScraperHttpClient;
-import com.overcode.persistence.scraper.util.JsonExtractorUtil;
+import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.repository.dao.external.scraper.http.ScraperHttpClient;
+import com.overcode.persistence.repository.dao.external.scraper.util.JsonExtractorUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
