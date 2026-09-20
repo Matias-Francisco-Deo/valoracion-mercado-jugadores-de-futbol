@@ -1,6 +1,6 @@
-package com.overcode.persistence.repository.dao.external.scraper.util;
+package com.overcode.persistence.repository.dao.external.scrapper.util;
 
-import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

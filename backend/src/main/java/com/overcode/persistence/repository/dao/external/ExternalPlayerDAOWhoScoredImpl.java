@@ -2,8 +2,8 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
-import com.overcode.persistence.repository.dao.external.scraper.service.WhoScoredIdResolver;
-import com.overcode.service.impl.ExternalPlayerWhoScoredScrapper;
+import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
+import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

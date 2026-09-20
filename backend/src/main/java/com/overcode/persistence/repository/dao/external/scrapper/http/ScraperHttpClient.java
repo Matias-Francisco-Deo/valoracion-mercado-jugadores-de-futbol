@@ -1,7 +1,7 @@
-package com.overcode.persistence.repository.dao.external.scraper.http;
+package com.overcode.persistence.repository.dao.external.scrapper.http;
 
 import com.microsoft.playwright.*;
-import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import org.springframework.stereotype.Component;
 
 @Component

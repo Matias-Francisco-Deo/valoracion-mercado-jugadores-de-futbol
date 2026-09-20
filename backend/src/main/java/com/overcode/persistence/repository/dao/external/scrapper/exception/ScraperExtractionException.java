@@ -1,4 +1,4 @@
-package com.overcode.persistence.repository.dao.external.scraper.exception;
+package com.overcode.persistence.repository.dao.external.scrapper.exception;
 
 public class ScraperExtractionException extends RuntimeException {
     public ScraperExtractionException(String message) {
