@@ -13,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
 class PlayerServiceTest {
@@ -101,6 +98,12 @@ class PlayerServiceTest {
     @Test
     void listaVaciaCuandoNoHayJugadores() {
         assertTrue(playerService.recuperarTodos().isEmpty());
+    }
+
+    @Test
+    void actualizarDatosDeJugadoresTraeDatos() {
+        List<Player> players = playerService.actualizarDatosJugadores();
+        assertFalse(players.isEmpty());
     }
 
     @AfterEach

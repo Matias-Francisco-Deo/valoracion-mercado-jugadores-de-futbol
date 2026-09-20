@@ -155,7 +155,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
         jugadores.get().forEach(jugador -> {
             assertNotNull(jugador.name());
-            assertNotNull(jugador.league());
+            assertNotNull(jugador.clubName());
         });
         assertFalse(jugadores.get().isEmpty());
     }

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 
-public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
+public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayerDAO {
 
     private final WebClient webClient;
 
@@ -64,17 +64,18 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     }
 
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
-        Optional<List<TeamDraftDTO>> optionalTeam = getTeamsOfCompetition(competition);
+        Optional<List<TeamDraftDTO>> optionalTeams = getTeamsOfCompetition(competition);
 
-        if (optionalTeam.isEmpty()) return Optional.empty();
+        if (optionalTeams.isEmpty()) return Optional.empty();
 
-        List<FootballDataPlayerDraftDTO> players = optionalTeam.get().stream()
+        List<PlayerDraftDTO> players = optionalTeams.get().stream()
                 .flatMap(
-                        team -> team.squad().stream()).toList();
-        List<PlayerDraftDTO> playerDrafts = players.stream().map(player ->
-                new PlayerDraftDTO(player.name(), competition.name())).toList();
+                        team ->
+                                team.squad().stream().map(player ->
+                                new PlayerDraftDTO(player.name(), team.name()
+                                ))).toList();
 
-        return Optional.of(playerDrafts);
+        return Optional.of(players);
     }
 
     @SneakyThrows
