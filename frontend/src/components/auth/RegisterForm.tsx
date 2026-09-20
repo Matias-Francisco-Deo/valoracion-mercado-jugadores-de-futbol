@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { Input } from '../ui/Input';
+import { Field } from '../ui/Field';
 import { Button } from '../ui/Button';
-import { ApiError } from '../../services/api';
 import type { RegisterCredentials, RegisterFormErrors } from '../../types/auth';
 
-export interface RegisterFormProps {
-  onError?: (message: string | null) => void;
-}
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
+export const RegisterForm = (props: React.ComponentProps<'form'>) => {
   const { register } = useAuth();
   const navigate = useNavigate();
-
+  const [serverError, setServerError] = useState('')
   const [formData, setFormData] = useState<RegisterCredentials>({
     email: '',
     username: '',
@@ -72,11 +68,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
-
-    onError?.(null);
 
     const validationErrors = validate(formData);
     if (Object.keys(validationErrors).length > 0) {
@@ -95,22 +89,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
       });
       // Redirect to Home index upon successful registration
       navigate('/');
-    } catch (err: unknown) {
-      if (err instanceof ApiError) {
-        onError?.(err.sanitizedMessage);
-      } else if (err instanceof Error) {
-        onError?.(err.message);
-      } else {
-        onError?.('Ocurrió un error inesperado al procesar el registro.');
-      }
+    } catch (err: any) {
+      setServerError(err.message)
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="w-full">
-      <Input
+    <form onSubmit={handleSubmit} noValidate
+    className="flex flex-col bg-[#A8A8A8] border border-gray-400/50 shadow-2xl gap-4 p-6 sm:p-8 rounded-xl max-w-md w-full mx-auto backdrop-blur-xs" {...props}>
+      
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 tracking-tight">
+        Registrarse
+      </h2>
+
+      {serverError && (
+        <div role='alert'className='flex justify-center w-full text-sm text-destructive border-destructive rounded-lg'>
+          {serverError}
+        </div>
+      )}
+
+      <Field
         label="Correo Electrónico"
         id="register-email"
         type="email"
@@ -120,9 +120,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
         value={formData.email}
         onChange={handleChange('email')}
         error={errors.email}
+        required
       />
 
-      <Input
+      <Field
         label="Nombre de Usuario"
         id="register-username"
         type="text"
@@ -132,9 +133,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
         value={formData.username}
         onChange={handleChange('username')}
         error={errors.username}
+        required
       />
 
-      <Input
+      <Field
         label="Contraseña"
         id="register-password"
         type="password"
@@ -144,16 +146,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
         value={formData.password}
         onChange={handleChange('password')}
         error={errors.password}
+        required
       />
 
       <div className="mt-6">
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isSubmitting}
-          className="btn-primary"
-        >
-          Registrarse
+        <Button  type="submit" disabled={isSubmitting} className="btn-primary">
+          {isSubmitting ? 'Registrando...' : 'Registrarse'}
         </Button>
       </div>
 
@@ -161,8 +159,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onError }) => {
         ¿Ya tienes cuenta? Inicia sesión{' '}
         <Link
           to="/login"
-          className="font-bold underline hover:text-[#e08500] transition-colors"
-        >
+          className="font-bold underline hover:text-[#e08500] transition-colors">
           aqui
         </Link>
       </div>

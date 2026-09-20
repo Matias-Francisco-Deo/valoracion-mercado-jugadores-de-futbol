@@ -6,7 +6,8 @@ export interface UserProfile {
   id: string | number;
   email: string;
   username: string;
-  createdAt?: string;
+  creditBalance: number;
+  tokens:number[];
 }
 
 export interface RegisterCredentials {
@@ -17,6 +18,7 @@ export interface RegisterCredentials {
 
 export interface AuthResponse {
   token: string;
+  expiresAt: string;
   user: UserProfile;
 }
 

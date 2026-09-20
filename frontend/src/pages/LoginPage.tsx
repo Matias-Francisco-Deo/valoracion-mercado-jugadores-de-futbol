@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 /**
  * Placeholder Login page component ('/login') for upcoming feature implementation.
  */
-export const LoginPage: React.FC = () => {
+export default function LoginPage() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-gray-50">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md space-y-4">

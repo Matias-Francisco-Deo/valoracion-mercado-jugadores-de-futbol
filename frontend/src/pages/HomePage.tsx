@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 /**
  * Placeholder Home page view ('/') acting as the primary index route of the application.
  */
-export const HomePage: React.FC = () => {
+export default function HomePage() {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
