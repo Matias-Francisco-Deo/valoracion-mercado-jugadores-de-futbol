@@ -39,13 +39,6 @@ public class ExternalPlayerWhoScoredScrapper {
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
     }
 
-    /**
-     * Extrae las estadísticas detalladas (Opta) del jugador desde el JSON embebido en la página.
-     *
-     * @param playerId       ID interno de WhoScored
-     * @param playerDraftDTO
-     * @return DTO con las métricas requeridas
-     */
     public Player getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
         String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/";
         String html = httpClient.getHtml(playerUrl);

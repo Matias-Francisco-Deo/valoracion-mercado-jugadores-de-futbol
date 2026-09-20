@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 @Service
 public class WhoScoredIdResolver {
 
+    public static final String WHOSCORED_URL = "https://www.whoscored.com";
     private final ScraperHttpClient httpClient;
 
     public WhoScoredIdResolver(ScraperHttpClient httpClient) {
@@ -27,7 +28,7 @@ public class WhoScoredIdResolver {
      */
     public Long resolvePlayerId(String teamName, String playerName) {
         // Paso 1: Buscar el equipo en el buscador de WhoScored
-        String teamSearchUrl = "https://www.whoscored.com/Search/?t=" + URLEncoder.encode(teamName, StandardCharsets.UTF_8);
+        String teamSearchUrl = WHOSCORED_URL + "/Search/?t=" + URLEncoder.encode(teamName, StandardCharsets.UTF_8);
         String searchHtml = httpClient.getHtml(teamSearchUrl);
         
         Long teamId = extractTeamIdFromHtml(searchHtml, teamName);
@@ -35,7 +36,7 @@ public class WhoScoredIdResolver {
         // Paso 2: Con el Team ID, ir a la página del equipo para buscar al jugador
         // Nota: WhoScored redirige o formatea la URL, pero el ID es suficiente para la ruta base.
         // Ej: https://www.whoscored.com/Teams/65
-        String teamUrl = "https://www.whoscored.com/Teams/" + teamId;
+        String teamUrl = WHOSCORED_URL + "/Teams/" + teamId;
         String teamHtml = httpClient.getHtml(teamUrl);
         
         // Paso 3: Buscar el ID del jugador aislando el href con Regex (sin usar DOM)
@@ -54,7 +55,7 @@ public class WhoScoredIdResolver {
                 .replaceAll("\\p{M}", "");
         
         // Regex para atrapar: href="/teams/65/show/spain-barcelona"
-        // Grupo 1: El ID numérico (65)
+        // Grupo 1: El ID numérico
         String regex = "href=\"/teams/(\\d+)/show/[^\"]*" + normalizedTeamName + "[^\"]*\"";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(normalizedHtml);

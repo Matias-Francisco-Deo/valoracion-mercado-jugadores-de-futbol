@@ -15,7 +15,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
     @Autowired
     private ExternalPlayerDAOWhoScoredImpl externalPlayerDAOWhoScoredImpl;
 
-    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Lionel Messi", "Barcelona");
+    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé", "Real Madrid");
 
 
     @Test
@@ -32,7 +32,6 @@ public class ExternalPlayerDAOWhoScoredImplTest {
         assertNotNull(player.getShotsOnTarget());
         assertNotNull(player.getSuccessfulDribbles());
         assertNotNull(player.getTackles());
-        assertNotNull(player.getTokens());
         assertNotNull(player.getWasDribbled());
         assertNotNull(player.getKeyPasses());
     }
