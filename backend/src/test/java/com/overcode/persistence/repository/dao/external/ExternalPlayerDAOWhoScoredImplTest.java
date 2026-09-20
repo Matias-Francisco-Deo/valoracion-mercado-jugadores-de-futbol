@@ -2,7 +2,6 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
-import com.overcode.persistence.scraper.adapter.ExternalPlayerDAOWhoScoredImpl;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

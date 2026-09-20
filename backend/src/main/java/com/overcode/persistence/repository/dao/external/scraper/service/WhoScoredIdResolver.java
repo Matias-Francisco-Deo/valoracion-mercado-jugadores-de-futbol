@@ -1,7 +1,7 @@
-package com.overcode.persistence.scraper.service;
+package com.overcode.persistence.repository.dao.external.scraper.service;
 
-import com.overcode.persistence.scraper.exception.ScraperExtractionException;
-import com.overcode.persistence.scraper.http.ScraperHttpClient;
+import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import com.overcode.persistence.repository.dao.external.scraper.http.ScraperHttpClient;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;

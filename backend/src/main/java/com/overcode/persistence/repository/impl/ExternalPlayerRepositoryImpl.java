@@ -4,9 +4,9 @@ import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
+import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
-import com.overcode.service.interfaces.ExternalPlayerDataDAO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.Player;
+import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
-import com.overcode.service.interfaces.ExternalPlayerDataDAO;
 import com.overcode.service.interfaces.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

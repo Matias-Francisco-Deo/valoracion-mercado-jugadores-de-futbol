@@ -1,4 +1,4 @@
-package com.overcode.service.interfaces;
+package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
