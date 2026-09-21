@@ -122,9 +122,9 @@ public class ExternalPlayerWhoScoredScrapper {
             player.setInterceptions(totalInterceptions);
             player.setTackles(totalTackles);
             player.setKeyPasses(totalKeyPasses);
-            player.setWasDribbled(totalWasDribbled);
+//            player.setWasDribbled(totalWasDribbled);
             player.setSuccessfulDribbles(totalSuccessfulDribbles);
-            player.setGamesPlayed(totalGamesPlayed);
+//            player.setGamesPlayed(totalGamesPlayed);
             player.setRating(Math.round(finalRating * 100.0) / 100.0);
 
             return player;

@@ -22,7 +22,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
 
 //    @Cacheable(value = "playerMetricsCache", key = "#teamName + '-' + #playerName")
     @Override
-    public Player getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
+    public Player getDatosDeJugador(PlayerDraftDTO playerDraftDTO) { // TODO cambiar por Optional<Player>
         Long playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.clubName(), playerDraftDTO.name());
 
         return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, playerDraftDTO);

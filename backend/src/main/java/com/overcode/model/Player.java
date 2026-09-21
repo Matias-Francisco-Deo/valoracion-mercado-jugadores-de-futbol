@@ -17,19 +17,19 @@ public class Player {
     private String clubName;
 
     private Integer goals;
-    private Integer assists;
+    private Integer assists; // no
     private Integer shotsOnTarget;
     private Integer passes;
 
     private Integer interceptions;
     private Integer tackles;
-    private Integer keyPasses;
+    private Integer keyPasses; // no
     private Double rating;
 
-    private Integer wasDribbled;
+//    private Integer wasDribbled;
     private Integer successfulDribbles;
-    private Integer gamesPlayed;
-//    private WeeklyMetrics metrics;
+//    private Integer gamesPlayed; TODO pal futuro?
+
     private List<Token> tokens;
 
     public Player(Long id, String name) {

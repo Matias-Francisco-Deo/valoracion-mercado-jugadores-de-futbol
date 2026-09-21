@@ -31,7 +31,7 @@ public class ExternalPlayerRepositoryImplTest {
 
             assertNotNull(player.getName());
             assertNotNull(player.getClubName());
-            assertNotNull(player.getGamesPlayed());
+//            assertNotNull(player.getGamesPlayed());
             assertNotNull(player.getGoals());
             assertNotNull(player.getAssists());
             assertNotNull(player.getRating());
@@ -39,7 +39,7 @@ public class ExternalPlayerRepositoryImplTest {
             assertNotNull(player.getShotsOnTarget());
             assertNotNull(player.getSuccessfulDribbles());
             assertNotNull(player.getTackles());
-            assertNotNull(player.getWasDribbled());
+//            assertNotNull(player.getWasDribbled());
             assertNotNull(player.getKeyPasses());
         }
                 ));

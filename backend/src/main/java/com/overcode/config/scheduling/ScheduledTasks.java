@@ -20,7 +20,7 @@ public class ScheduledTasks {
         this.playerService = playerService;
     }
 
-    @Scheduled(cron = "0 0 0 * * MON") // TODO revisar horario
+    @Scheduled(cron = "0 0 0 * * MON")
 	public void actualizarJugadores() {
 		log.info("Actualizando datos de jugadores...");
 		List<Player> players = playerService.actualizarDatosJugadores();
