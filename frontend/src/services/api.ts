@@ -2,7 +2,7 @@
  * Base API client with strictly sanitized error handling adhering to Constitution Principle I.
  */
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface BackendErrorBody {
   statusCode?: number;
