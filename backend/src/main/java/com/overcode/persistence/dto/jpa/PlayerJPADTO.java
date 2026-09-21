@@ -30,8 +30,30 @@ public class PlayerJPADTO {
     @Column(name = "club_name")
     private String clubName;
 
-//    @Embedded
-//    private WeeklyMetricsJPADTO metrics;
+    @Column(name = "goals")
+    private Integer goals;
+    @Column(name = "assists")
+    private Integer assists;
+    @Column(name = "shots_on_target")
+    private Integer shotsOnTarget;
+    @Column(name = "passes")
+    private Integer passes;
+
+    @Column(name = "interceptions")
+    private Integer interceptions;
+    @Column(name = "tackles")
+    private Integer tackles;
+    @Column(name = "key_passes")
+    private Integer keyPasses;
+    @Column(name = "rating")
+    private Double rating;
+
+    @Column(name = "was_dribbled")
+    private Integer wasDribbled;
+    @Column(name = "successful_dribbles")
+    private Integer successfulDribbles;
+    @Column(name = "games_played")
+    private Integer gamesPlayed;
 
     @Column(name = "tokens", nullable = false)
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -54,7 +76,18 @@ public class PlayerJPADTO {
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setClubName(player.getClubName());
-//        dto.setMetrics(WeeklyMetricsJPADTO.desdeModelo(player.getMetrics()));
+        dto.setGoals(player.getGoals());
+        dto.setAssists(player.getAssists());
+        dto.setShotsOnTarget(player.getShotsOnTarget());
+        dto.setPasses(player.getPasses());
+        dto.setInterceptions(player.getInterceptions());
+        dto.setTackles(player.getTackles());
+        dto.setKeyPasses(player.getKeyPasses());
+        dto.setRating(player.getRating());
+        dto.setWasDribbled(player.getWasDribbled());
+        dto.setSuccessfulDribbles(player.getSuccessfulDribbles());
+        dto.setGamesPlayed(player.getGamesPlayed());
+
         return dto;
     }
 
@@ -65,7 +98,17 @@ public class PlayerJPADTO {
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).collect(Collectors.toList()));
         player.setClubName(this.clubName);
-//        if (this.metrics != null) player.setMetrics(this.metrics.aModelo());
+        player.setGoals(this.goals);
+        player.setAssists(this.assists);
+        player.setShotsOnTarget(this.shotsOnTarget);
+        player.setPasses(this.passes);
+        player.setInterceptions(this.interceptions);
+        player.setTackles(this.tackles);
+        player.setKeyPasses(this.keyPasses);
+        player.setRating(this.rating);
+        player.setWasDribbled(this.wasDribbled);
+        player.setSuccessfulDribbles(this.successfulDribbles);
+        player.setGamesPlayed(this.gamesPlayed);
         return player;
     }
 }
