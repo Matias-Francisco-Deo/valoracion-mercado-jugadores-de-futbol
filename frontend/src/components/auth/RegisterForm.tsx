@@ -21,38 +21,35 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
 
   const validate = (data: RegisterCredentials): RegisterFormErrors => {
     const validationErrors: RegisterFormErrors = {};
-    const trimmedEmail = data.email.trim();
-    const trimmedUsername = data.username.trim();
-    const password = data.password;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
     // Email validation
-    if (!trimmedEmail) {
+    if (!data.email.trim()) {
       validationErrors.email = 'El correo electrónico es requerido.';
-    } else if (!emailRegex.test(trimmedEmail)) {
+    } else if (!emailRegex.test(data.email.trim())) {
       validationErrors.email = 'Ingresa un formato de correo electrónico válido.';
     }
 
     // Username validation
-    if (!trimmedUsername) {
+    if (!data.username.trim()) {
       validationErrors.username = 'El nombre de usuario es requerido.';
-    } else if (trimmedUsername.length < 3) {
+    } else if (data.username.trim().length < 3) {
       validationErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres.';
-    } else if (trimmedUsername.length > 30) {
+    } else if (data.username.trim().length > 30) {
       validationErrors.username = 'El nombre de usuario no puede superar los 30 caracteres.';
-    } else if (!usernameRegex.test(trimmedUsername)) {
+    } else if (!usernameRegex.test(data.username.trim())) {
       validationErrors.username = 'El nombre de usuario solo puede contener letras, números y guiones bajos.';
     }
 
     // Password validation
-    if (!password) {
+    if (!data.password) {
       validationErrors.password = 'La contraseña es requerida.';
-    } else if (password.length < 6) {
+    } else if (data.password.length < 6) {
       validationErrors.password = 'La contraseña debe tener al menos 6 caracteres.';
-    } else if (password.length > 100) {
-      validationErrors.password = 'La contraseña no puede superar los 100 caracteres.';
+    } else if (data.password.length > 30) {
+      validationErrors.password = 'La contraseña no puede superar los 30 caracteres.';
     }
 
     return validationErrors;
@@ -61,6 +58,7 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
   const handleChange = (field: keyof RegisterCredentials) => (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
+    setServerError("");
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     // Clear field-specific error as user types
     if (errors[field]) {
@@ -146,6 +144,7 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
         value={formData.password}
         onChange={handleChange('password')}
         error={errors.password}
+        maxLength={30}
         required
       />
 

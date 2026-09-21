@@ -1,70 +1,46 @@
-import React, { useState, useCallback } from 'react';
-import type { UserProfile, RegisterCredentials, AuthContextType } from '../types/auth';
+import React, { useState,createContext, useCallback } from 'react';
+import type {RegisterCredentials, AuthContextType } from '../types/auth';
 import { authService } from '../services/authService';
-import {
-  AuthContext,
-  STORAGE_KEY_TOKEN,
-  STORAGE_KEY_USER,
-} from './authContextBase';
+import { getSession, removeSession, saveSession } from '@/lib/session';
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => {
-    try {
-      const storedToken = localStorage.getItem(STORAGE_KEY_TOKEN);
-      const storedUser = localStorage.getItem(STORAGE_KEY_USER);
-      if (storedToken && storedUser) {
-        return storedToken;
-      }
-    } catch (err: unknown) {
-      console.error('[AuthContext] Error reading initial token from localStorage:', err);
-    }
-    return null;
-  });
-
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    try {
-      const storedToken = localStorage.getItem(STORAGE_KEY_TOKEN);
-      const storedUser = localStorage.getItem(STORAGE_KEY_USER);
-      if (storedToken && storedUser) {
-        return JSON.parse(storedUser) as UserProfile;
-      }
-    } catch (err: unknown) {
-      console.error('[AuthContext] Error reading initial user from localStorage:', err);
-    }
-    return null;
-  });
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [session, setSession] = useState(() => getSession());
+  const [isLoading, setIsLoading] = useState(false);
 
   const register = useCallback(async (credentials: RegisterCredentials): Promise<void> => {
     setIsLoading(true);
+
     try {
       const response = await authService.register(credentials);
-      setToken(response.token);
-      setUser(response.user);
+      
+      const newSession = {
+          token: response.token,
+          user: response.user,
+        };
 
-      localStorage.setItem(STORAGE_KEY_TOKEN, response.token);
-      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(response.user));
+      saveSession(newSession);
+      setSession(newSession);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const logout = useCallback((): void => {
-    localStorage.removeItem(STORAGE_KEY_TOKEN);
-    localStorage.removeItem(STORAGE_KEY_USER);
-    setToken(null);
-    setUser(null);
+    removeSession();
+    setSession(null);
+
   }, []);
 
   const value: AuthContextType = {
-    user,
-    token,
-    isAuthenticated: Boolean(token && user),
+    user: session?.user ?? null,
+    token: session?.token ?? null,
+    isAuthenticated: session !== null,
     isLoading,
     register,
     logout,

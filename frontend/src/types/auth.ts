@@ -37,7 +37,3 @@ export interface RegisterFormErrors {
   password?: string;
 }
 
-export interface AlertState {
-  type: 'error' | 'success' | 'info';
-  message: string;
-}

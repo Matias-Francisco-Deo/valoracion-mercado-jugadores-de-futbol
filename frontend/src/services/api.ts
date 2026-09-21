@@ -11,42 +11,22 @@ export interface BackendErrorBody {
 }
 
 export class ApiError extends Error {
-  public statusCode: number;
-  public sanitizedMessage: string;
-  public rawMessage?: string;
+  statusCode: number;
 
-  constructor(statusCode: number, sanitizedMessage: string, rawMessage?: string) {
-    super(sanitizedMessage);
+  constructor(statusCode: number, message: string) {
+    super(message);
     this.name = 'ApiError';
     this.statusCode = statusCode;
-    this.sanitizedMessage = sanitizedMessage;
-    this.rawMessage = rawMessage;
   }
 }
 
-function getSanitizedErrorMessage(status: number, rawMessage?: string): string {
-  if (status === 409) {
-    return 'El correo electrónico o nombre de usuario ya se encuentra registrado.';
-  }
-  if (status === 400) {
-    return 'Los datos ingresados son inválidos. Por favor revisa los campos e intenta nuevamente.';
-  }
-  if (status === 404) {
-    return 'El recurso solicitado no fue encontrado.';
-  }
-  if (status >= 500) {
-    return 'Ocurrió un error en el servidor. Por favor intenta nuevamente más tarde.';
-  }
-  return rawMessage && typeof rawMessage === 'string'
-    ? rawMessage
-    : 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
-}
 
 export async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
+
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(options.headers || {}),
+    ...options.headers,
   };
 
   try {
@@ -56,20 +36,15 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
     });
 
     if (!response.ok) {
-      let rawErrorText = '';
-      try {
-        const errorJson = (await response.json()) as BackendErrorBody;
-        rawErrorText = Array.isArray(errorJson.message)
-          ? errorJson.message.join(', ')
-          : errorJson.message || errorJson.error || '';
-      } catch {
-        rawErrorText = await response.text().catch(() => '');
-      }
+      const message = await response.text();
 
-      console.error(`[API Error] ${options.method || 'GET'} ${url} returned ${response.status}:`, rawErrorText);
+      console.log(JSON.parse(message).message);
+      const errorMessage = JSON.parse(message).message;
 
-      const sanitizedMessage = getSanitizedErrorMessage(response.status, rawErrorText);
-      throw new ApiError(response.status, sanitizedMessage, rawErrorText);
+      throw new ApiError(
+        response.status,
+        errorMessage || 'La solicitud fue rechazada por el servidor.',
+      );
     }
 
     // Handle 204 No Content
@@ -85,10 +60,10 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
 
     // Network interruption, DNS failure, or connection refused
     console.error(`[Network/Client Error] ${options.method || 'GET'} ${url}:`, error);
+
     throw new ApiError(
       0,
-      'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet o intenta nuevamente más tarde.',
-      error instanceof Error ? error.message : String(error)
+      'No se pudo conectar con el servidor.',
     );
   }
 }
