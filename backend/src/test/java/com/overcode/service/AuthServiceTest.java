@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.model.User;
+import com.overcode.model.security.Auth;
 import com.overcode.service.exception.AuthenticationException;
 import com.overcode.service.exception.ConflictException;
 import com.overcode.service.impl.AuthServiceImpl;
@@ -34,17 +35,17 @@ public class AuthServiceTest {
     //------------------------------Tests de registro------------------------------
     @Test
     void RegistroConCredencialesValidas() {
-        AuthResponse response = authService.register(userRegistrer);
+        Auth response = authService.register(userRegistrer);
 
         assertNotNull(response);
         assertNotNull( response.token());
-        assertEquals("jorge", response.user().username());
-        assertEquals("test@example.com", response.user().email());
+        assertEquals("jorge", response.user().getUsername());
+        assertEquals("test@example.com", response.user().getEmail());
     }
 
     @Test
     void RegistroConEmailExistente() {
-        AuthResponse response = authService.register(userRegistrer);
+        authService.register(userRegistrer);
 
         userRegistrer = new User("ana", "test@example.com", "Password123");
 
@@ -57,12 +58,12 @@ public class AuthServiceTest {
     void loginConCredencialesValidas() {
         authService.register(userRegistrer);
 
-        AuthResponse response = authService.login(userLogin);
+        Auth response = authService.login(userLogin);
 
         assertNotNull(response);
         assertNotNull( response.token());
-        assertEquals("jorge", response.user().username());
-        assertEquals("test@example.com", response.user().email());
+        assertEquals("jorge", response.user().getUsername());
+        assertEquals("test@example.com", response.user().getEmail());
     }
 
     @Test

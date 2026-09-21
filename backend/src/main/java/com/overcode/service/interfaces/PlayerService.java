@@ -11,4 +11,6 @@ public interface PlayerService {
     Player recuperar(Long id);
 
     List<Player> recuperarTodos();
+
+    void sincronizarMetricas();
 }

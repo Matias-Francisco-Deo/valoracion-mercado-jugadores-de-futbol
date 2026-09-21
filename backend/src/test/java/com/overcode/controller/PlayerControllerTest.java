@@ -103,7 +103,8 @@ public class PlayerControllerTest {
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
-            .toEntity(new ParameterizedTypeReference<List<PlayerResponseDTO>>() {});
+            .toEntity(new ParameterizedTypeReference<>() {
+            });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -176,6 +177,29 @@ public class PlayerControllerTest {
         assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
             .uri("/players/" + NON_EXISTENT_ID)
             .header("Authorization", INVALID_BEARER_TOKEN)
+            .retrieve()
+            .toBodilessEntity());
+    }
+
+    // ------------------------------ Tests de sync-metrics ------------------------------
+    @Test
+    public void syncMetricsConTokenValidoDevuelveOk() {
+        String token = obtainAuthToken();
+
+        ResponseEntity<String> response = restClient.post()
+            .uri("/players/sync-metrics")
+            .header("Authorization", "Bearer " + token)
+            .retrieve()
+            .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().contains("Metrics synchronization completed successfully"));
+    }
+
+    @Test
+    public void syncMetricsSinTokenLanzaForbidden() {
+        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.post()
+            .uri("/players/sync-metrics")
             .retrieve()
             .toBodilessEntity());
     }
