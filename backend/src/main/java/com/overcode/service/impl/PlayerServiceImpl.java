@@ -45,20 +45,6 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.listarTodos();
     }
 
-//    @Override
-//    @Transactional
-//    public void sincronizarMetricas() {
-//        List<Player> players = playerRepository.listarTodos();
-//        for (Player p : players) {
-//            WeeklyMetrics metrics = metricsProvider.getPlayerMetrics(p.getClubName(), p.getName());
-//            if (metrics != null) {
-//                p.actualizarMetricas(metrics);
-//                playerRepository.guardar(p);
-//                log.info("✅ Métricas actualizadas para: {}", p.getName());
-//            }
-//        }
-//    }
-
     @Override
     public List<Player> actualizarDatosJugadores() {
         return playerRepository.actualizarDatosJugadores();
