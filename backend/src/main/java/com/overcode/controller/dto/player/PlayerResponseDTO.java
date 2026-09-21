@@ -9,7 +9,13 @@ import java.util.stream.Collectors;
 public record PlayerResponseDTO(Long id,
                                 String name,
                                 Integer currentPrice,
-                                // TODO qué info necesita el front?
+                                String clubName,
+                                Integer goals,
+                                Integer shotsOnTarget,
+                                Integer passes,
+                                Integer interceptions,
+                                Integer tackles,
+                                Double rating,
                                 List<TokenResponseDTO> tokens) {
 
     public static PlayerResponseDTO desdeModelo(Player player) {
@@ -18,6 +24,13 @@ public record PlayerResponseDTO(Long id,
                 player.getId(),
                 player.getName(),
                 player.getCurrentPrice(),
+                player.getClubName(),
+                player.getGoals(),
+                player.getShotsOnTarget(),
+                player.getPasses(),
+                player.getInterceptions(),
+                player.getTackles(),
+                player.getRating(),
                 player.getTokens().stream().map(TokenResponseDTO::desdeModelo).collect(Collectors.toList())
         );
     }
