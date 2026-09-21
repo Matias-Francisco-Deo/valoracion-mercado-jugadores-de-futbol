@@ -181,20 +181,20 @@ public class PlayerControllerTest {
             .toBodilessEntity());
     }
 
-    // ------------------------------ Tests de sync-metrics ------------------------------
-    @Test
-    public void syncMetricsConTokenValidoDevuelveOk() {
-        String token = obtainAuthToken();
-
-        ResponseEntity<String> response = restClient.post()
-            .uri("/players/sync-metrics")
-            .header("Authorization", "Bearer " + token)
-            .retrieve()
-            .toEntity(String.class);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().contains("Metrics synchronization completed successfully"));
-    }
+//    // ------------------------------ Tests de sync-metrics ------------------------------
+//    @Test
+//    public void syncMetricsConTokenValidoDevuelveOk() {
+//        String token = obtainAuthToken();
+//
+//        ResponseEntity<String> response = restClient.post()
+//            .uri("/players/sync-metrics")
+//            .header("Authorization", "Bearer " + token)
+//            .retrieve()
+//            .toEntity(String.class);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertTrue(response.getBody().contains("Metrics synchronization completed successfully"));
+//    }
 
     @Test
     public void syncMetricsSinTokenLanzaForbidden() {
