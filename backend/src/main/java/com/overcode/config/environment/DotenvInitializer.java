@@ -1,4 +1,4 @@
-package com.overcode.config;                                                                                                                                                                                                  
+package com.overcode.config.environment;
                                                                                                                                                                                                                                   
     import io.github.cdimascio.dotenv.Dotenv;                                                                                                                                                                                     
     import org.springframework.context.ApplicationContextInitializer;                                                                                                                                                             
