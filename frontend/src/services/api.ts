@@ -36,14 +36,25 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
     });
 
     if (!response.ok) {
-      const message = await response.text();
+      const responseText = await response.text();
+      let errorBody: BackendErrorBody = {};
 
-      console.log(JSON.parse(message).message);
-      const errorMessage = JSON.parse(message).message;
+      try {
+        errorBody = JSON.parse(responseText) as BackendErrorBody;
+      } catch {
+        errorBody = {};
+      }
+
+      const backendMessage = Array.isArray(errorBody.message)
+        ? errorBody.message.join(', ')
+        : errorBody.message;
+      const errorMessage = response.status >= 500
+        ? 'No se pudo conectar con el servidor.'
+        : backendMessage || 'La solicitud fue rechazada por el servidor.';
 
       throw new ApiError(
         response.status,
-        errorMessage || 'La solicitud fue rechazada por el servidor.',
+        errorMessage,
       );
     }
 

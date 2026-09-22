@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import type { RegisterCredentials, AuthResponse } from '../types/auth';
+import type { LoginCredentials, RegisterCredentials, AuthResponse } from '../types/auth';
 
 /**
  * Authentication service handling API communication with authentication endpoints.
@@ -16,6 +16,16 @@ export const authService = {
       body: JSON.stringify({
         email: credentials.email.trim(),
         username: credentials.username.trim(),
+        password: credentials.password,
+      }),
+    });
+  },
+
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    return apiClient<AuthResponse>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: credentials.email.trim(),
         password: credentials.password,
       }),
     });

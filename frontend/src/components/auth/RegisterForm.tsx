@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
 import { useAuth } from '../../hooks/useAuth';
 import { Field } from '../ui/Field';
 import { Button } from '../ui/Button';
 import type { RegisterCredentials, RegisterFormErrors } from '../../types/auth';
+import { registerSchema } from '../../schemas/registerSchema';
 
 
 export const RegisterForm = (props: React.ComponentProps<'form'>) => {
@@ -18,42 +20,6 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
 
   const [errors, setErrors] = useState<RegisterFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  const validate = (data: RegisterCredentials): RegisterFormErrors => {
-    const validationErrors: RegisterFormErrors = {};
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;
-
-    // Email validation
-    if (!data.email.trim()) {
-      validationErrors.email = 'El correo electrónico es requerido.';
-    } else if (!emailRegex.test(data.email.trim())) {
-      validationErrors.email = 'Ingresa un formato de correo electrónico válido.';
-    }
-
-    // Username validation
-    if (!data.username.trim()) {
-      validationErrors.username = 'El nombre de usuario es requerido.';
-    } else if (data.username.trim().length < 3) {
-      validationErrors.username = 'El nombre de usuario debe tener al menos 3 caracteres.';
-    } else if (data.username.trim().length > 30) {
-      validationErrors.username = 'El nombre de usuario no puede superar los 30 caracteres.';
-    } else if (!usernameRegex.test(data.username.trim())) {
-      validationErrors.username = 'El nombre de usuario solo puede contener letras, números y guiones bajos.';
-    }
-
-    // Password validation
-    if (!data.password) {
-      validationErrors.password = 'La contraseña es requerida.';
-    } else if (data.password.length < 6) {
-      validationErrors.password = 'La contraseña debe tener al menos 6 caracteres.';
-    } else if (data.password.length > 30) {
-      validationErrors.password = 'La contraseña no puede superar los 30 caracteres.';
-    }
-
-    return validationErrors;
-  };
 
   const handleChange = (field: keyof RegisterCredentials) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -70,9 +36,18 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
     e.preventDefault();
     if (isSubmitting) return;
 
-    const validationErrors = validate(formData);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    try {
+      await registerSchema.validate(formData, { abortEarly: false });
+    } catch (error: unknown) {
+      if (error instanceof yup.ValidationError) {
+        const validationErrors = error.inner.reduce<RegisterFormErrors>((fieldErrors, validationError) => {
+          if (validationError.path && !fieldErrors[validationError.path as keyof RegisterFormErrors]) {
+            fieldErrors[validationError.path as keyof RegisterFormErrors] = validationError.message;
+          }
+          return fieldErrors;
+        }, {});
+        setErrors(validationErrors);
+      }
       return;
     }
 
@@ -87,8 +62,8 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
       });
       // Redirect to Home index upon successful registration
       navigate('/');
-    } catch (err: any) {
-      setServerError(err.message)
+    } catch (err: unknown) {
+      setServerError(err instanceof Error ? err.message : 'No se pudo registrar el usuario.');
     } finally {
       setIsSubmitting(false);
     }

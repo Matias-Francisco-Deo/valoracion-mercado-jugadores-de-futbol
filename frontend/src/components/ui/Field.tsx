@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { Input } from './input';
+import { Input } from './Input';
 import { cn } from '@/lib/utils';
 
 interface FieldProps extends Omit<React.ComponentProps<'input'>, 'placeholder'> {

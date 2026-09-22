@@ -16,6 +16,11 @@ export interface RegisterCredentials {
   password: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
   token: string;
   expiresAt: string;
@@ -28,12 +33,18 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   register: (credentials: RegisterCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
 }
 
 export interface RegisterFormErrors {
   email?: string;
   username?: string;
+  password?: string;
+}
+
+export interface LoginFormErrors {
+  email?: string;
   password?: string;
 }
 
