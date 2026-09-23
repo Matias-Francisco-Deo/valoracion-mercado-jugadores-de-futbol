@@ -1,18 +1,22 @@
-import {Button} from "@/components/ui/Button.tsx";
 import {Link} from "react-router-dom";
 import type {LinkProps} from "react-router";
+import {cn} from "@/lib/utils.ts";
 
-export const PageLink = ({ className, ...props }: LinkProps) => {
+export const PageLink = ({ className, children, ...props }: LinkProps) => {
   return (
       <div >
-          <Button className="bg-brand-orange max-w-30 text-lg">
-              <Link
-                    className=""
-                    {...props}
-              >
-                  Ver más
-              </Link>
-          </Button>
+          <Link
+              className={cn(
+                  'bg-brand-orange text-primary-foreground rounded-lg px-4 py-2 transition',
+
+                  'enabled:hover:opacity-90 enabled:active:scale-95',
+
+                  'disabled:cursor-not-allowed disabled:opacity-70', className
+              )}
+              {...props}
+          >
+              {children}
+          </Link>
       </div>
   )
 }
