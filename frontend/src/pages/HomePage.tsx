@@ -2,10 +2,24 @@
 export default function HomePage() {
   // const { user, isAuthenticated, logout } = useAuth();
 
+  const datosJugadores = [
+    {name: "Messi"}, {name: "Messi"}, {name: "Messi"}, {name: "Messi"}, {name: "Messi"}
+  ]
+
   return (
-      <div></div>
-    // <div className="flex-1 flex flex-col p-6 text-center bg-pitch-green">
-    //     <PageWindow></PageWindow>
-    // </div>
+      <div className="flex flex-col gap-10">
+        <p className="text-2xl" >Top Jugadores</p>
+        <div className="text-center text-3xl flex flex-col gap-10">
+          <div className="flex gap-4">
+          {datosJugadores.map(jugador =>
+            <div>
+              {jugador.name}
+            </div>
+          )}
+          </div>
+          <p>¡Pronto abriremos las puertas al tradeo de tokens!</p>
+        </div>
+      </div>
+
   );
 };
