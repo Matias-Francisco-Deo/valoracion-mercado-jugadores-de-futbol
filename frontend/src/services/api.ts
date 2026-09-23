@@ -36,14 +36,21 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
     });
 
     if (!response.ok) {
-      const message = await response.text();
+      const responseText = await response.text();
+      const errorBody = JSON.parse(responseText) as BackendErrorBody;
 
-      console.log(JSON.parse(message).message);
-      const errorMessage = JSON.parse(message).message;
+      //convert the array to string if the backend returns an array of messages
+      const backendMessage = Array.isArray(errorBody.message)
+        ? errorBody.message.join(', ')
+        : errorBody.message;
+
+      const errorMessage = response.status >= 500
+        ? 'Ocurrió un error inesperado. Intente nuevamente más tarde.'
+        : backendMessage || 'La solicitud fue rechazada por el servidor.';
 
       throw new ApiError(
         response.status,
-        errorMessage || 'La solicitud fue rechazada por el servidor.',
+        errorMessage,
       );
     }
 

@@ -2,6 +2,7 @@ import type { UserProfile } from '../types/auth';
 
 export interface AuthSession {
   token: string;
+  expiresAt: string;
   user: UserProfile;
 }
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import canchaPelotaBg from '../assets/cancha-pelota.png';
 import { RegisterForm } from '../components/auth/RegisterForm';
 

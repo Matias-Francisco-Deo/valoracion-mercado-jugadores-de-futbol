@@ -1,5 +1,5 @@
-import React, { useState,createContext, useCallback } from 'react';
-import type {RegisterCredentials, AuthContextType } from '../types/auth';
+import React, { createContext, useCallback, useState } from 'react';
+import type { LoginCredentials, RegisterCredentials, AuthContextType } from '../types/auth';
 import { authService } from '../services/authService';
 import { getSession, removeSession, saveSession } from '@/lib/session';
 
@@ -20,9 +20,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await authService.register(credentials);
       
       const newSession = {
-          token: response.token,
-          user: response.user,
-        };
+        token: response.token,
+        expiresAt: response.expiresAt,
+        user: response.user,
+      };
+
+      saveSession(newSession);
+      setSession(newSession);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
+    setIsLoading(true);
+
+    try {
+      const response = await authService.login(credentials);
+      const newSession = {
+        token: response.token,
+        expiresAt: response.expiresAt,
+        user: response.user,
+      };
 
       saveSession(newSession);
       setSession(newSession);
@@ -43,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: session !== null,
     isLoading,
     register,
+    login,
     logout,
   };
 
