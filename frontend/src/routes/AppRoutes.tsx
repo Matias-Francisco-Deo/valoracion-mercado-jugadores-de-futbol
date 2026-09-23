@@ -7,19 +7,20 @@ const HomePage = lazy(() => import('@/pages/HomePage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const PlayerPage = lazy(() => import('@/pages/PlayerPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route element={<AuthLayout />}>
+      <Route Component={AuthLayout}>{/*layout de registro y login */}
         <Route path="/register" Component={RegisterPage} />
         <Route path="/login" Component={LoginPage} />
         
       </Route>
-      <Route element={<ProtectedLayout />}>{/*esta es la zona segura :D*/}
-          <Route path="*" Component={HomePage} />
+      <Route Component={ProtectedLayout}>{/*layout general*/}
           <Route path="/" Component={HomePage} />
-          <Route path="/player" Component={PlayerPage} />{/*mover a zona segura */}
+          <Route path="/p/:playerId" Component={PlayerPage} />
+          <Route path="*" Component={NotFoundPage} errorElement/>
       </Route>
 
     </Routes>
