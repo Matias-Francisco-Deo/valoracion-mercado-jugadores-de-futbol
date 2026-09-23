@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import React from "react";
 import type {Player} from "@/types/player.ts";
+import { Link } from 'react-router-dom';
 
 export type PlayerCardProps = {
     player: Player
@@ -17,6 +18,9 @@ export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
         >
             <div className="text-xl">
                 {player.name} - {player.clubName}
+                <Link to={`/p/${player.id}`} className="text-red-500 hover:underline">
+                    Ver detalles
+                </Link>
             </div>
             <div className="flex flex-col justify-between">
                 <div>Goles: {player.goals}</div>
