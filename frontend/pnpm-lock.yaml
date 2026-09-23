@@ -20,6 +20,9 @@ importers:
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
+      react-router:
+        specifier: ^8.4.0
+        version: 8.4.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-router-dom:
         specifier: ^7.18.3
         version: 7.18.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -192,6 +195,9 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
+
+  '@remix-run/route-pattern@0.22.1':
+    resolution: {integrity: sha512-czdGJWh09Lapvcqt7Vb09KlrU2PhRJ8xQaI+AItTuD9aDJ5MAgxnS38lnys6Ll+6RJEqPiaUqTwIQhVLwFvv+w==}
 
   '@rolldown/binding-android-arm-eabi@1.2.6':
     resolution: {integrity: sha512-b+jTcARdTiFLI6jB4a5XjTm0RWd6KcRfQj/I2356fxUZemiho9zQLxo0RtCuMDAyKcLo6cEltkgbQp6d1+sjjQ==}
@@ -406,6 +412,9 @@ packages:
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
+
+  cookie-es@3.1.1:
+    resolution: {integrity: sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg==}
 
   cookie@1.1.1:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
@@ -640,6 +649,16 @@ packages:
       react-dom:
         optional: true
 
+  react-router@8.4.0:
+    resolution: {integrity: sha512-JtydAkBvU9UTEe5qNC+POhu+ZBNM7rlKY2IegwXc7Idj7xfRG16x5RZrw3mju+XlqBxfvb2ky9P3jUp9WyWC1g==}
+    engines: {node: '>=22.22.0'}
+    peerDependencies:
+      react: '>=19.2.7'
+      react-dom: '>=19.2.7'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
   react-toastify@11.1.0:
     resolution: {integrity: sha512-e9h23x3phN0wbFeB6yovmWp7lobzV4CaCH0LO8nVP6H7Y+3GbcLpIzMm9dJhcp1RXbpyfvjgpfXqO80QAmn7sg==}
     peerDependencies:
@@ -823,6 +842,8 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.80.0':
     optional: true
 
+  '@remix-run/route-pattern@0.22.1': {}
+
   '@rolldown/binding-android-arm-eabi@1.2.6':
     optional: true
 
@@ -956,6 +977,8 @@ snapshots:
       vite: 8.2.2(@types/node@24.13.3)(jiti@2.7.0)
 
   clsx@2.1.1: {}
+
+  cookie-es@3.1.1: {}
 
   cookie@1.1.1: {}
 
@@ -1133,6 +1156,14 @@ snapshots:
       cookie: 1.1.1
       react: 19.2.8
       set-cookie-parser: 2.7.2
+    optionalDependencies:
+      react-dom: 19.2.8(react@19.2.8)
+
+  react-router@8.4.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      '@remix-run/route-pattern': 0.22.1
+      cookie-es: 3.1.1
+      react: 19.2.8
     optionalDependencies:
       react-dom: 19.2.8(react@19.2.8)
 

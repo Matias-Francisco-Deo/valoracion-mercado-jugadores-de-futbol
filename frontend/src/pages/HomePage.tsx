@@ -1,49 +1,88 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import {PlayerCard} from "@/components/player/PlayerCard.tsx";
+import type {Player} from "@/types/player.ts";
+import {PageLink} from "@/components/ui/PageLink.tsx";
 
-/**
- * Placeholder Home page view ('/') acting as the primary index route of the application.
- */
 export default function HomePage() {
-  const { user, isAuthenticated, logout } = useAuth();
+  // const { user, isAuthenticated, logout } = useAuth();
+
+    const datosJugadores: Player[] = [
+        {
+            id: 1,
+            currentPrice: 120000000,
+            clubName: "Inter Miami",
+            name: "Messi",
+            goals: 30,
+            shotsOnTarget: 45,
+            passes: 80,
+            tackles: 12,
+            rating: 9.8,
+            interceptions: 6,
+        },
+        {
+            id: 2,
+            currentPrice: 110000000,
+            clubName: "Manchester City",
+            name: "De Bruyne",
+            goals: 12,
+            shotsOnTarget: 28,
+            passes: 92,
+            tackles: 10,
+            rating: 9.4,
+            interceptions: 14,
+        },
+        {
+            id: 3,
+            currentPrice: 95000000,
+            clubName: "Real Madrid",
+            name: "Bellingham",
+            goals: 18,
+            shotsOnTarget: 32,
+            passes: 85,
+            tackles: 20,
+            rating: 9.2,
+            interceptions: 11,
+        },
+        {
+            id: 4,
+            currentPrice: 87000000,
+            clubName: "Bayern Munich",
+            name: "Kane",
+            goals: 25,
+            shotsOnTarget: 40,
+            passes: 70,
+            tackles: 8,
+            rating: 9.1,
+            interceptions: 5,
+        },
+        {
+            id: 5,
+            currentPrice: 78000000,
+            clubName: "Barcelona",
+            name: "Yamal",
+            goals: 10,
+            shotsOnTarget: 22,
+            passes: 78,
+            tackles: 9,
+            rating: 8.9,
+            interceptions: 7,
+        },
+    ];
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-gray-50">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Valoración de Mercado de Jugadores de Fútbol
-        </h1>
-        {isAuthenticated && user ? (
-          <div className="space-y-4">
-            <p className="text-green-700 font-medium">
-              ¡Bienvenido, <span className="font-semibold">{user.username}</span>!
-            </p>
-            <p className="text-sm text-gray-600">
-              Sesión iniciada con: <span className="font-mono">{user.email}</span>
-            </p>
-            <button
-              onClick={logout}
-              className="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-colors cursor-pointer"
-            >
-              Cerrar Sesión
-            </button>
+      <div className="flex flex-col gap-10 ">
+        <p className="text-2xl">Top 5 Jugadores</p>
+        <div className="text-center text-3xl flex flex-col gap-10 ">
+          <div className="flex justify-center gap-8 flex-wrap ">
+          {datosJugadores.map(player =>
+            <PlayerCard player={player}/>
+          )}
           </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              Bienvenido a la plataforma. Regístrate para acceder al sistema de valoración de jugadores.
-            </p>
-            <div>
-              <Link
-                to="/register"
-                className="inline-block px-6 py-2.5 bg-[#FF9500] hover:bg-[#e08500] text-white font-semibold rounded-md shadow-sm transition-colors"
-              >
-                Ir a Registrarse
-              </Link>
-            </div>
+        </div>
+          <div>
+            <PageLink className="bg-brand-orange text-lg" to="/catalogo"> Ver más </PageLink>
           </div>
-        )}
+          <p className="text-2xl text-center">¡Pronto abriremos las puertas al tradeo de tokens!</p>
       </div>
-    </div>
+
   );
 };

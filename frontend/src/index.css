@@ -7,6 +7,7 @@
 
   --color-destructive: #e7000b;
   --color-destructive-foreground: #ffffff;
+  --aspect-poster: 2/3;
 }
 *{
   margin: 0;
@@ -86,6 +87,28 @@ body,
   width: 100%;
   max-width: 28rem;
 }
+
+@utility link {
+  color: var(--color-white);
+
+  text-decoration-color: transparent;
+  /*text-decoration-line: underline;*/
+  text-underline-offset: 4px;
+
+  transition:
+          opacity 150ms ease,
+          text-decoration-color 150ms ease;
+
+  &:hover {
+    opacity: 0.9;
+    text-decoration-color: currentColor;
+  }
+
+  &:active {
+    opacity: 0.75;
+  }
+}
+
 
 @media (min-width: 768px) {
   .card-container {
