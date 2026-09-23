@@ -69,9 +69,9 @@ export default function HomePage() {
 
   return (
       <div className="flex flex-col gap-10">
-        <p className="text-2xl" >Top Jugadores</p>
+        <p className="text-2xl" >Top 5 Jugadores</p>
         <div className="text-center text-3xl flex flex-col gap-10">
-          <div className="flex justify-center gap-4 flex-wrap">
+          <div className="flex justify-center gap-8 flex-wrap">
           {datosJugadores.map(player =>
             <PlayerCard player={player}>
 
