@@ -7,6 +7,7 @@ import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoSc
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
@@ -22,7 +23,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
 
 //    @Cacheable(value = "playerMetricsCache", key = "#teamName + '-' + #playerName")
     @Override
-    public Player getDatosDeJugador(PlayerDraftDTO playerDraftDTO) { // TODO cambiar por Optional<Player>
+    public Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
         Long playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.clubName(), playerDraftDTO.name());
 
         return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, playerDraftDTO);
@@ -32,6 +33,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
     public List<Player> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS) {
         return playerDraftDTOS.stream()
                 .map(this::getDatosDeJugador)
+                .flatMap(Optional::stream)
                 .toList();
     }
 }

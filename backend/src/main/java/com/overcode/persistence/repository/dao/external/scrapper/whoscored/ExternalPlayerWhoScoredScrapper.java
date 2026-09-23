@@ -10,6 +10,7 @@ import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHtt
 import com.overcode.persistence.repository.dao.external.scrapper.util.JsonExtractorUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -39,7 +40,7 @@ public class ExternalPlayerWhoScoredScrapper {
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
     }
 
-    public Player getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
+    public Optional<Player> getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
         String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/";
         String html = httpClient.getHtml(playerUrl);
 
@@ -127,7 +128,7 @@ public class ExternalPlayerWhoScoredScrapper {
 //            player.setGamesPlayed(totalGamesPlayed);
             player.setRating(Math.round(finalRating * 100.0) / 100.0);
 
-            return player;
+            return Optional.of(player);
 
         } catch (JsonProcessingException e) {
             throw new ScraperExtractionException("Error al parsear el JSON de estadísticas con Jackson.", e);
