@@ -28,8 +28,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
     }
 
     @Getter
-    private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of
-            (
+    private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of(
                     new LeagueRequestDTO("Primera Division", "Spain"), // TODO revisar si es la liga correcta
                     new LeagueRequestDTO("Ligue 1", "France"),
                     new LeagueRequestDTO("Premier League", "England"),

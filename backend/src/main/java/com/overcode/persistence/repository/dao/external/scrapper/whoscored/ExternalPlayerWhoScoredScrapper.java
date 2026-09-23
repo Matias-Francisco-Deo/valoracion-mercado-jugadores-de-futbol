@@ -115,6 +115,7 @@ public class ExternalPlayerWhoScoredScrapper {
             Player player = new Player();
             player.setName(playerDraftDTO.name());
             player.setClubName(playerDraftDTO.clubName());
+            player.setCurrentPrice(1);
 //            metrics.setPlayerId(playerId);
             player.setGoals(totalGoals);
             player.setAssists(totalAssists);
