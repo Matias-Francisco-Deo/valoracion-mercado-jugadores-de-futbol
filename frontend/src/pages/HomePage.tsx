@@ -1,5 +1,6 @@
 import {PlayerCard} from "@/components/player/PlayerCard.tsx";
 import type {Player} from "@/types/player.ts";
+import {PageLink} from "@/components/ui/PageLink.tsx";
 
 export default function HomePage() {
   // const { user, isAuthenticated, logout } = useAuth();
@@ -68,18 +69,19 @@ export default function HomePage() {
     ];
 
   return (
-      <div className="flex flex-col gap-10">
-        <p className="text-2xl" >Top Jugadores</p>
-        <div className="text-center text-3xl flex flex-col gap-10">
-          <div className="flex justify-center gap-4">
+      <div className="flex flex-col gap-10 ">
+        <p className="text-2xl">Top 5 Jugadores</p>
+        <div className="text-center text-3xl flex flex-col gap-10 ">
+          <div className="flex justify-center gap-8 flex-wrap ">
           {datosJugadores.map(player =>
-            <PlayerCard player={player}>
-
-            </PlayerCard>
+            <PlayerCard player={player}/>
           )}
           </div>
-          <p>¡Pronto abriremos las puertas al tradeo de tokens!</p>
         </div>
+          <div>
+            <PageLink className="bg-brand-orange text-lg" to="/catalogo"> Ver más </PageLink>
+          </div>
+          <p className="text-2xl text-center">¡Pronto abriremos las puertas al tradeo de tokens!</p>
       </div>
 
   );

@@ -10,19 +10,24 @@ export type PlayerCardProps = {
 export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
     return (
         <div
+            key={player.id}
             className={cn(className,
-                "bg-gray-400 aspect-poster flex-1 " +
-                "text-lg min-w-40 max-w-80 text-start p-4 " +
-                "flex flex-col gap-4 rounded-lg justify-between",)}
+                "bg-gray-400 aspect-poster flex flex-col flex-1" +
+                "text-lg w-60 min-w-40 text-start p-4 " +
+                " gap-4 rounded-lg justify-between",)}
             {...props}
         >
-            <div className="text-xl">
-                {player.name} - {player.clubName}
-                <Link to={`/p/${player.id}`} className="text-red-500 hover:underline">
-                    Ver detalles
-                </Link>
+            <div>
+                <div className="text-xl">
+                    {player.name}
+                </div>
+                <div className="text-sm">
+                    {player.clubName}
+                </div>
             </div>
-            <div className="flex flex-col justify-between">
+            <img src="src/assets/pelota.jpg"
+                 className="rounded-b-full min-w-30 max-w-50" alt="Pelota"/>
+            <div className="flex flex-col justify-between text-lg">
                 <div>Goles: {player.goals}</div>
                 <div>Pases: {player.passes}</div>
                 <div>Rating: {player.rating}</div>
