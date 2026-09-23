@@ -78,7 +78,7 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
       </h2>
 
       {serverError && (
-        <div role='alert'className='flex justify-center w-full text-sm text-destructive border-destructive rounded-lg'>
+        <div role='alert'className='flex justify-center w-full text-sm text-destructive rounded-lg'>
           {serverError}
         </div>
       )}
@@ -129,12 +129,12 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
         </Button>
       </div>
 
-      <div className="mt-5 text-center text-sm text-gray-900 font-medium">
+      <div className="mt-5 text-center text-sm font-medium">
         ¿Ya tienes cuenta? Inicia sesión{' '}
         <Link
           to="/login"
-          className="font-bold underline hover:text-[#e08500] transition-colors">
-          aqui
+          className="font-bold text-[#9EE2EE] hover:text-[#e08500] transition-colors">
+          aqui.
         </Link>
       </div>
     </form>

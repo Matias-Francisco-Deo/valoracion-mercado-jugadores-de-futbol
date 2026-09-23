@@ -7,7 +7,7 @@ import type { LoginFormErrors } from '../../types/auth';
 import { Button } from '../ui/Button';
 import { Field } from '../ui/Field';
 
-export const LoginForm = () => {
+export const LoginForm = (props: React.ComponentProps<'form'>) => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormValues>({ email: '', password: '' });
@@ -41,7 +41,7 @@ export const LoginForm = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
 
@@ -73,13 +73,14 @@ export const LoginForm = () => {
       onSubmit={handleSubmit}
       noValidate
       className="flex w-full max-w-md flex-col gap-4 rounded-xl border border-gray-400/50 bg-card-gray p-6 shadow-2xl backdrop-blur-xs sm:p-8"
+      {...props}
     >
       <h1 className="mb-4 text-center text-2xl font-bold tracking-tight sm:text-3xl">
         Iniciar sesión
       </h1>
 
       {serverError && (
-        <div role="alert" className="rounded-lg border border-destructive px-3 py-2 text-sm text-destructive">
+        <div role="alert" className="flex rounded-lg justify-center w-full  px-3 py-2 text-sm text-destructive">
           {serverError}
         </div>
       )}
@@ -101,7 +102,6 @@ export const LoginForm = () => {
         type="password"
         name="password"
         autoComplete="current-password"
-        placeholder="Mínimo 6 caracteres"
         value={formData.password}
         onChange={handleChange('password')}
         error={errors.password}
@@ -115,10 +115,10 @@ export const LoginForm = () => {
         </Button>
       </div>
 
-      <div className="mt-3 text-center text-sm font-medium text-gray-900">
+      <div className="mt-3 text-center text-sm font-medium">
         ¿No tienes cuenta? Regístrate{' '}
-        <Link to="/register" className="font-bold underline transition-colors hover:text-[#e08500]">
-          aquí
+        <Link to="/register" className="font-bold text-[#9EE2EE] transition-colors hover:text-[#e08500]">
+          aquí.
         </Link>
       </div>
     </form>

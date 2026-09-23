@@ -37,19 +37,15 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
 
     if (!response.ok) {
       const responseText = await response.text();
-      let errorBody: BackendErrorBody = {};
+      const errorBody = JSON.parse(responseText) as BackendErrorBody;
 
-      try {
-        errorBody = JSON.parse(responseText) as BackendErrorBody;
-      } catch {
-        errorBody = {};
-      }
-
+      //convert the array to string if the backend returns an array of messages
       const backendMessage = Array.isArray(errorBody.message)
         ? errorBody.message.join(', ')
         : errorBody.message;
+
       const errorMessage = response.status >= 500
-        ? 'No se pudo conectar con el servidor.'
+        ? 'Ocurrió un error inesperado. Intente nuevamente más tarde.'
         : backendMessage || 'La solicitud fue rechazada por el servidor.';
 
       throw new ApiError(
