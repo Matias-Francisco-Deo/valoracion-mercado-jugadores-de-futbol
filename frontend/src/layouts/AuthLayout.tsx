@@ -6,7 +6,7 @@ import { Navbar } from '../components/common/Navbar';
  * Shared layout component framing the application with the top Navbar and dynamic route content.
  * Structured to ensure zero unwanted vertical scrollbars.
  */
-export const MainLayout: React.FC = () => {
+export const AuthLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
       <Navbar />

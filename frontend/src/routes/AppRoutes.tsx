@@ -1,20 +1,27 @@
 import React, { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayout } from '../layouts/MainLayout';
+import { AuthLayout } from '../layouts/AuthLayout';
+import {ProtectedLayout} from "@/layouts/ProtectedLayout.tsx";
 
 const HomePage = lazy(() => import('@/pages/HomePage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
+const PlayerPage = lazy(() => import('@/pages/PlayerPage'))
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/" Component={HomePage} />
+      <Route element={<AuthLayout />}>
         <Route path="/register" Component={RegisterPage} />
         <Route path="/login" Component={LoginPage} />
-        <Route path="*" Component={HomePage} />
+        
       </Route>
+      <Route element={<ProtectedLayout />}>{/*esta es la zona segura :D*/}
+          <Route path="*" Component={HomePage} />
+          <Route path="/" Component={HomePage} />
+          <Route path="/player" Component={PlayerPage} />{/*mover a zona segura */}
+      </Route>
+
     </Routes>
   );
 };
