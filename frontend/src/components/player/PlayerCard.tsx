@@ -10,15 +10,15 @@ export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
     return (
         <div
             className={cn(className,
-                "bg-gray-400 aspect-poster flex-1 " +
-                "text-lg min-w-40 max-w-80 text-start p-4 " +
-                "flex flex-col gap-4 rounded-lg justify-between",)}
+                "bg-gray-400 aspect-poster flex flex-col flex-1" +
+                "text-lg w-60 text-start p-4 " +
+                " gap-4 rounded-lg justify-between",)}
             {...props}
         >
             <div className="text-xl">
                 {player.name} - {player.clubName}
             </div>
-            <div className="flex flex-col justify-between">
+            <div className="flex flex-col justify-between text-lg">
                 <div>Goles: {player.goals}</div>
                 <div>Pases: {player.passes}</div>
                 <div>Rating: {player.rating}</div>
