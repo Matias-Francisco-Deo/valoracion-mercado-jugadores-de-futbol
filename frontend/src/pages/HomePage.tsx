@@ -78,7 +78,9 @@ export default function HomePage() {
           )}
           </div>
         </div>
-          <PageLink className="max-w-30 text-lg" to="/catalogo"> Ver más </PageLink>
+          <div>
+            <PageLink className="bg-brand-orange text-lg" to="/catalogo"> Ver más </PageLink>
+          </div>
           <p className="text-2xl text-center">¡Pronto abriremos las puertas al tradeo de tokens!</p>
       </div>
 
