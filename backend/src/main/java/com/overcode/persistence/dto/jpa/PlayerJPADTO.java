@@ -75,6 +75,7 @@ public class PlayerJPADTO {
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setClubName(player.getClubName());
+        dto.setExternalId(player.getExternalId());
         dto.setGoals(player.getGoals());
         dto.setAssists(player.getAssists());
         dto.setShotsOnTarget(player.getShotsOnTarget());
@@ -93,6 +94,7 @@ public class PlayerJPADTO {
     public Player aModelo() {
         Player player = new Player();
         player.setId(this.id);
+        player.setExternalId(this.getExternalId());
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).collect(Collectors.toList()));
