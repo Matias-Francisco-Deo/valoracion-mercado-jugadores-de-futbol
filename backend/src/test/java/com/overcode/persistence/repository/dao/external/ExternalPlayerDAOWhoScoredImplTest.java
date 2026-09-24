@@ -86,7 +86,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
         when(whoScoredIdResolverMock.resolvePlayerId("Real Madrid CF", "Vinícius Júnior")).thenReturn(22222L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(22222L, JUGADOR_DRAFT_2)).thenReturn(Optional.of(mockPlayer2));
 
-        List<Player> jugadores = externalPlayerDAOWhoScoredImplMock.getDatosJugadores(List.of(JUGADOR_DRAFT_1, JUGADOR_DRAFT_2));
+        List<Player> jugadores = externalPlayerDAOWhoScoredImplMock.getDatosJugadores(List.of(JUGADOR_DRAFT_1, JUGADOR_DRAFT_2)).get();
 
         assertFalse(jugadores.isEmpty());
         assertEquals(2, jugadores.size());

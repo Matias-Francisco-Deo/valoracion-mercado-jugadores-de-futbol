@@ -34,10 +34,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
     }
 
     @Override
-    public List<Player> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS) {
-        return playerDraftDTOS.stream()
-                .map(this::getDatosDeJugador)
-                .flatMap(Optional::stream)
-                .toList();
+    public Optional<List<Player>> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS) {
+        return Optional.of(playerDraftDTOS.stream().map(this::getDatosDeJugador).flatMap(Optional::stream).toList());
     }
 }

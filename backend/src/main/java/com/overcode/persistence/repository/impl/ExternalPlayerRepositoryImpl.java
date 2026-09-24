@@ -18,6 +18,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = 20;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
@@ -27,17 +28,18 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
     @Override
     public Optional<List<Player>> buscarYGuardarJugadores() {
-        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores();
+        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
-        if (playerDraftDTOS.isEmpty()) {
-            return Optional.empty();
-        }
+        if (playerDraftDTOS.isEmpty()) return Optional.empty();
 
-        List<Player> players = externalPlayerDataDAO.getDatosJugadores(playerDraftDTOS.get());
 
-        playerDAOJPA.saveAll(players.stream().map(PlayerJPADTO::desdeModelo).toList());
+        Optional<List<Player>> players = externalPlayerDataDAO.getDatosJugadores(playerDraftDTOS.get());
 
-        return Optional.of(players);
+        if (players.isEmpty()) return Optional.empty();
+
+        playerDAOJPA.saveAll(players.get().stream().map(PlayerJPADTO::desdeModelo).toList());
+
+        return players;
 
     }
 }

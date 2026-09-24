@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ExternalPlayerDataDAO {
     Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO);
-    List<Player> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS);
+    Optional<List<Player>> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS);
 
 }

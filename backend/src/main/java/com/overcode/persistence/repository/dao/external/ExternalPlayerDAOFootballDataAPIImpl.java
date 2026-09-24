@@ -40,7 +40,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
     }
 
     @Override
-    public Optional<List<PlayerDraftDTO>> listarJugadores() {
+    public Optional<List<PlayerDraftDTO>> listarJugadores(Optional<Integer> maxPlayers) {
 
         Optional<List<CompetitionDTO>> competitions = getCompetitions();
 
