@@ -7,7 +7,6 @@ import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
     }
 
-    private @NonNull Stream<PlayerJPADTO> upsertPlayer(Player player) {
+    private Stream<PlayerJPADTO> upsertPlayer(Player player) {
         if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
             return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
         }

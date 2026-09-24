@@ -41,7 +41,7 @@ public class ExternalPlayerWhoScoredScrapper {
     }
 
     public Optional<Player> getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
-        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/";
+        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/"; // TODO externalizar URL
         String html = httpClient.getHtml(playerUrl);
 
         // Aislamos el JSON crudo del estado inicial de la página
@@ -113,9 +113,11 @@ public class ExternalPlayerWhoScoredScrapper {
 
             // 5. Guardamos en el DTO
             Player player = new Player();
+            player.setExternalId(playerId);
             player.setName(playerDraftDTO.name());
             player.setClubName(playerDraftDTO.clubName());
             player.setCurrentPrice(1);
+
 //            metrics.setPlayerId(playerId);
             player.setGoals(totalGoals);
             player.setAssists(totalAssists);
