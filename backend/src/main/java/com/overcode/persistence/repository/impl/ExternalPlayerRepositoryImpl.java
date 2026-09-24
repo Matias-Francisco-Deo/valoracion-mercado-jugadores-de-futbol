@@ -7,6 +7,7 @@ import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final Integer MAX_PLAYERS_TO_RETRIEVE = 50;
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = 4;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
@@ -38,29 +39,30 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
         if (players.isEmpty()) return Optional.empty();
 
-        List<PlayerJPADTO> jpaDTOPlayers = players.get().stream().flatMap(player -> {
-                    if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
-                        return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
-                    }
-                    return playerDAOJPA.updateWithExternalId(
-                            player.getExternalId(),
-                            player.getName(),
-                            player.getGoals(),
-                            player.getCurrentPrice(),
-                            player.getAssists(),
-                            player.getClubName(),
-                            player.getShotsOnTarget(),
-                            player.getPasses(),
-                            player.getInterceptions(),
-                            player.getTackles(),
-                            player.getKeyPasses(),
-                            player.getRating(),
-                            player.getSuccessfulDribbles()
-                    ).stream();
-                }
-        ).toList();
+        List<PlayerJPADTO> jpaDTOPlayers = players.get().stream().flatMap(this::upsertPlayer).toList();
 
         return Optional.of(jpaDTOPlayers.stream().map(PlayerJPADTO::aModelo).toList());
 
+    }
+
+    private @NonNull Stream<PlayerJPADTO> upsertPlayer(Player player) {
+        if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
+            return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
+        }
+        return playerDAOJPA.updateWithExternalId(
+                player.getExternalId(),
+                player.getName(),
+                player.getGoals(),
+                player.getCurrentPrice(),
+                player.getAssists(),
+                player.getClubName(),
+                player.getShotsOnTarget(),
+                player.getPasses(),
+                player.getInterceptions(),
+                player.getTackles(),
+                player.getKeyPasses(),
+                player.getRating(),
+                player.getSuccessfulDribbles()
+        ).stream();
     }
 }
