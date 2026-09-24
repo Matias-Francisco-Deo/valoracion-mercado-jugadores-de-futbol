@@ -3,7 +3,7 @@ import { RegisterForm } from '../components/auth/RegisterForm';
 
 export default function RegisterPage() {
   return (
-      <div className=" w-full h-[calc(100dvh-4rem)] flex items-center justify-center p-4 bg-center bg-cover overflow-hidden"
+      <div className=" w-full flex flex-1 items-center justify-center p-4 bg-center bg-cover overflow-hidden"
     style={{ backgroundImage: `url(${canchaPelotaBg})` }}>
 
 

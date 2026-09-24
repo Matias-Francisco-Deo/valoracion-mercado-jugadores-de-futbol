@@ -52,20 +52,16 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
     }
 
     setErrors({});
-    setServerError('');
     setIsSubmitting(true);
 
-    try {
-      await login({
-        email: formData.email.trim(),
-        password: formData.password,
-      });
+    return login(formData).then(() => {
       navigate('/');
-    } catch (error: unknown) {
-      setServerError(error instanceof Error ? error.message : 'No se pudo iniciar sesión.');
-    } finally {
+    }).catch((err: unknown) => {
+      setServerError(err instanceof Error ? err.message : 'No se pudo iniciar sesión.');
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
+
   };
 
   return (
