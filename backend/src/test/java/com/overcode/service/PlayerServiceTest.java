@@ -7,6 +7,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -100,6 +101,7 @@ class PlayerServiceTest {
         assertTrue(playerService.recuperarTodos().isEmpty());
     }
 
+    @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void actualizarDatosDeJugadoresTraeDatos() {
         List<Player> players = playerService.actualizarDatosJugadores();
