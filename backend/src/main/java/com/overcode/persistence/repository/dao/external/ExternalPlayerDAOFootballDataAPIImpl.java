@@ -44,8 +44,11 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
 
         Optional<List<CompetitionDTO>> competitions = getCompetitions();
 
-        return competitions.flatMap(this::getPlayersOfCompetitions);
+        Optional<List<PlayerDraftDTO>> players = competitions.flatMap(this::getPlayersOfCompetitions);
 
+        if (competitions.isEmpty() || players.isEmpty()) return Optional.empty();
+
+        return Optional.of(players.get().stream().limit(maxPlayers).toList());
     }
 
     @SneakyThrows
