@@ -48,6 +48,8 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
 
         if (competitions.isEmpty() || players.isEmpty()) return Optional.empty();
 
+        if (maxPlayers == null) return players;
+
         return Optional.of(players.get().stream().limit(maxPlayers).toList());
     }
 
