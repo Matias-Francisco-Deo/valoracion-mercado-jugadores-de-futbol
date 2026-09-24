@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import React from "react";
 import type {Player} from "@/types/player.ts";
-import { Link } from 'react-router-dom';
 
 export type PlayerCardProps = {
     player: Player
@@ -26,7 +25,7 @@ export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
                 </div>
             </div>
             <img src="src/assets/pelota.jpg"
-                 className="rounded-b-full min-w-30 max-w-50" alt="Pelota"/>
+                className="rounded-b-full min-w-30 max-w-50" alt="Pelota"/>
             <div className="flex flex-col justify-between text-lg">
                 <div>Goles: {player.goals}</div>
                 <div>Pases: {player.passes}</div>
