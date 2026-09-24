@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
@@ -18,7 +19,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final Integer MAX_PLAYERS_TO_RETRIEVE = 20;
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = 50;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
@@ -37,9 +38,29 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
         if (players.isEmpty()) return Optional.empty();
 
-        playerDAOJPA.saveAll(players.get().stream().map(PlayerJPADTO::desdeModelo).toList());
+        List<PlayerJPADTO> jpaDTOPlayers = players.get().stream().flatMap(player -> {
+                    if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
+                        return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
+                    }
+                    return playerDAOJPA.updateWithExternalId(
+                            player.getExternalId(),
+                            player.getName(),
+                            player.getGoals(),
+                            player.getCurrentPrice(),
+                            player.getAssists(),
+                            player.getClubName(),
+                            player.getShotsOnTarget(),
+                            player.getPasses(),
+                            player.getInterceptions(),
+                            player.getTackles(),
+                            player.getKeyPasses(),
+                            player.getRating(),
+                            player.getSuccessfulDribbles()
+                    ).stream();
+                }
+        ).toList();
 
-        return players;
+        return Optional.of(jpaDTOPlayers.stream().map(PlayerJPADTO::aModelo).toList());
 
     }
 }

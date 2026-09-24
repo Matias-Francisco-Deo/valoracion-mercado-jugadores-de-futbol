@@ -12,6 +12,8 @@ import java.util.List;
 public class Player {
 
     private Long id;
+    private Long externalId;
+
     private String name;
     private Integer currentPrice;
     private String clubName;

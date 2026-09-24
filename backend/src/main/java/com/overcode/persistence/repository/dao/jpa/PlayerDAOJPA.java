@@ -2,12 +2,51 @@ package com.overcode.persistence.repository.dao.jpa;
 
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
-    boolean existsByNameIgnoreCase(String name); // TODO cambiar esto?
+    boolean existsByNameIgnoreCase(String name);
 
-    List<PlayerJPADTO> findAllByOrderByIdAsc(); // TODO cambiar esto?
+    List<PlayerJPADTO> findAllByOrderByIdAsc();
+
+    @Modifying
+    @Query(
+            "update player p " +
+                    "set p.currentPrice=:currentPrice," +
+                    "p.assists = :assists, " +
+                    "p.name = :name," +
+                    "p.goals =: goals," +
+                    "p.currentPrice =: currentPrice," +
+                    "p.clubName =: clubName," +
+                    "p.shotsOnTarget =: shotsOnTarget," +
+                    "p.passes =: passes," +
+                    "p.interceptions =: interceptions," +
+                    "p.tackles =: tackles," +
+                    "p.keyPasses =: keyPasses," +
+                    "p.rating =: rating," +
+                    "p.successfulDribbles =: successfulDribbles " +
+                    "where p.externalId = :externalId"
+    )
+    List<PlayerJPADTO> updateWithExternalId(
+            @Param("externalId") Long externalId,
+            @Param("name") String name,
+            @Param("goals") Integer goals,
+            @Param("currentPrice") Integer currentPrice,
+            @Param("assists") Integer assists,
+            @Param("clubName") String clubName,
+            @Param("shotsOnTarget") Integer shotsOnTarget,
+            @Param("passes") Integer passes,
+            @Param("interceptions") Integer interceptions,
+            @Param("tackles") Integer tackles,
+            @Param("keyPasses") Integer keyPasses,
+            @Param("rating") Double rating,
+            @Param("successfulDribbles") Integer successfulDribbles
+    );
+
+    boolean existsByExternalId(Long externalId);
 }

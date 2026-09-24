@@ -21,6 +21,9 @@ public class PlayerJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true) // TODO índices?
+    private Long externalId; // TODO tiene sentido? o es raro tener el ID de otros adentro de la db? porque esto haría más rápido el proceso
+
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -47,13 +50,9 @@ public class PlayerJPADTO {
     private Integer keyPasses;
     @Column(name = "rating")
     private Double rating;
-
-//    @Column(name = "was_dribbled")
-//    private Integer wasDribbled;
     @Column(name = "successful_dribbles")
     private Integer successfulDribbles;
-//    @Column(name = "games_played")
-//    private Integer gamesPlayed;
+
 
     @Column(name = "tokens", nullable = false)
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
