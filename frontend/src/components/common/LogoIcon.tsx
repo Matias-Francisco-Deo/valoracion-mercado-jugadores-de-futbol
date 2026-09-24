@@ -1,4 +1,4 @@
-import overlordSkull from "../../../public/overlord-skull.png"
+import overlordSkull from '@/assets/overlord-skull.png';
 
 export const LogoIcon = ({ className, ...props }: React.ComponentProps<'img'>) => {
   return (

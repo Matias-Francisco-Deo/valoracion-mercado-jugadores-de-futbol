@@ -54,19 +54,14 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
     setErrors({});
     setIsSubmitting(true);
 
-    try {
-      await register({
-        email: formData.email.trim(),
-        username: formData.username.trim(),
-        password: formData.password,
-      });
-      // Redirect to Home index upon successful registration
+    return register(formData).then(() => {
       navigate('/');
-    } catch (err: unknown) {
+    }).catch((err: unknown) => {
       setServerError(err instanceof Error ? err.message : 'No se pudo registrar el usuario.');
-    } finally {
+    }).finally(() => {
       setIsSubmitting(false);
-    }
+    });
+
   };
 
   return (

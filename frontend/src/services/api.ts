@@ -2,12 +2,14 @@
  * Base API client with strictly sanitized error handling adhering to Constitution Principle I.
  */
 
+import { HttpError } from "@/lib/http-error";
+import { getSession, removeSession } from "@/lib/session";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export interface BackendErrorBody {
-  statusCode?: number;
-  error?: string;
-  message?: string | string[];
+export interface ApiError {
+    message: string
+  
 }
 
 export class ApiError extends Error {
@@ -21,37 +23,35 @@ export class ApiError extends Error {
 }
 
 
-export async function apiClient<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+export async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
 
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...options.headers,
-  };
+  const session = getSession();
 
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
+    }
+  }).catch(() => {
+    throw new HttpError(0, 'No se pudo conectar con el servidor.');
+  });
 
     if (!response.ok) {
-      const responseText = await response.text();
-      const errorBody = JSON.parse(responseText) as BackendErrorBody;
+      const data: ApiError = await response.json().catch(() => ({
+        error:{
+          message: 'Ocurrió un error inesperado.',
+        },
+      }))
 
-      //convert the array to string if the backend returns an array of messages
-      const backendMessage = Array.isArray(errorBody.message)
-        ? errorBody.message.join(', ')
-        : errorBody.message;
+      if (response.status === 401 && session) {
+          removeSession()
+        window.location.href = '/login?reason=session-expired'
+      }
 
-      const errorMessage = response.status >= 500
-        ? 'Ocurrió un error inesperado. Intente nuevamente más tarde.'
-        : backendMessage || 'La solicitud fue rechazada por el servidor.';
+      throw new HttpError(response.status, data.message)
 
-      throw new ApiError(
-        response.status,
-        errorMessage,
-      );
     }
 
     // Handle 204 No Content
@@ -59,18 +59,38 @@ export async function apiClient<T>(endpoint: string, options: RequestInit = {}):
       return {} as T;
     }
 
-    return (await response.json()) as T;
-  } catch (error: unknown) {
-    if (error instanceof ApiError) {
-      throw error;
-    }
+  return response.json()
+}
 
-    // Network interruption, DNS failure, or connection refused
-    console.error(`[Network/Client Error] ${options.method || 'GET'} ${url}:`, error);
+export const futbolApi = {
+  get<T>(path: string) {
+    return request<T>(path)
+  },
 
-    throw new ApiError(
-      0,
-      'No se pudo conectar con el servidor.',
-    );
-  }
+  post<T>(path: string, body: unknown) {
+    return request<T>(path, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+  },
+
+  put<T>(path: string, body: unknown) {
+    return request<T>(path, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    })
+  },
+
+  patch<T>(path: string, body: unknown) {
+    return request<T>(path, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    })
+  },
+
+  delete<T>(path: string) {
+    return request<T>(path, {
+      method: 'DELETE',
+    })
+  },
 }
