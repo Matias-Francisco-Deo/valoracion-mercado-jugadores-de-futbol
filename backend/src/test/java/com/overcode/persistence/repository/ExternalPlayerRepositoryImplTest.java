@@ -2,6 +2,7 @@ package com.overcode.persistence.repository;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.impl.ExternalPlayerRepositoryImpl;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ public class ExternalPlayerRepositoryImplTest {
     @Autowired
     private ExternalPlayerRepositoryImpl externalPlayerRepositoryImpl;
 
+    @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void encuentraJugadoresConDatos(){
         Optional<List<Player>> optionalPlayers = externalPlayerRepositoryImpl.buscarYGuardarJugadores();
