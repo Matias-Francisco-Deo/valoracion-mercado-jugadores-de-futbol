@@ -69,10 +69,10 @@ public class UserServiceImpl implements UserService {
 
     private void validarUsuarioNuevo(User userACrear) {
         if (userRepository.existsByUsername(userACrear.getUsername())) {
-            throw new NombreRepetidoException("El nombre de usuario ya existe" + userACrear.getUsername());
+            throw new NombreRepetidoException("El nombre de usuario " + userACrear.getUsername() + " ya existe");
         }
         if (userRepository.existsByEmail(userACrear.getEmail())) {
-            throw new EmailRepetidoException("El email ya existe" + userACrear.getEmail());
+            throw new EmailRepetidoException("El email " + userACrear.getEmail() + " ya existe");
         }
     }
 

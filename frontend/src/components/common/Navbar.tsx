@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { UserMenu } from './UserMenu';
+import {Link} from 'react-router-dom';
+import {useAuth} from '../../hooks/useAuth';
+import {UserMenu} from './UserMenu';
 import {LogoIcon} from './LogoIcon';
 
 /**
@@ -17,7 +17,7 @@ export const Navbar: React.FC = () => {
       <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <Link
           to="/"
-          className="flex text-white items-center text-2xl font-bold tracking-tight hover:opacity-90 transition-opacity"
+          className="flex text-black items-center text-4xl font-bold tracking-wider hover:opacity-90 transition-opacity font-logo"
         >
           <LogoIcon/>
           Overcode

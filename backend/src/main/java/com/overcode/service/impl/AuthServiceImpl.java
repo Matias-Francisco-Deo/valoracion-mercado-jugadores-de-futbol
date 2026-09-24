@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> userOptional = userService.recuperarPorEmail(user.getEmail());
         if (userOptional.isEmpty()) {
             log.warn("Login failed: User not found for email: {}", user.getEmail());
-            throw new AuthenticationException("Invalid credentials");
+            throw new AuthenticationException("Email o contraseña Incorrectos");
         }
         User persistedUser = userOptional.get();
         userAuth.validateAuthenticated(user, persistedUser);

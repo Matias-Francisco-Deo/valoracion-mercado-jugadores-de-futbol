@@ -29,7 +29,7 @@ public class UserAuth {
     public void validateAuthenticated(User user, User persistedUser) {
         if (!passwordHasher.matches(user.getPassword(), persistedUser.getPassword())) {
             log.warn("Login failed: Invalid password for email: {}", user.getEmail());
-            throw new AuthenticationException("Invalid credentials");
+            throw new AuthenticationException("Email o contraseña Incorrectos");
         }
     }
 

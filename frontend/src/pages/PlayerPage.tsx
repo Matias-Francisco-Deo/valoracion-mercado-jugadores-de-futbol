@@ -1,11 +1,13 @@
 import { MainPlayerInfo } from "@/components/player/MainPlayerInfo";
 import type { Player } from "@/types/player";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {ServerErrorComponent} from "@/components/ServerErrorComponent";
 import { Loading } from "@/components/common/Loagind";
 import NotFoundPage from "./NotFoundPage";
 import { MetricBox } from "@/components/player/MetricBox";
+import type { HttpError } from "@/lib/http-error";
+import { getPlayerById } from "@/services/PlayerService";
 
 //TODO borrar placeholder
     const placeholder = {
@@ -23,9 +25,21 @@ import { MetricBox } from "@/components/player/MetricBox";
 
 export default function PlayerPage(){
     const { playerId } = useParams();
-    const [player,setPlayer] = useState<Player>(placeholder);//agregar null al type y cambiar el placeholder por null
-    const [error,setError] = useState<string | null>(null);
+    const [player,setPlayer] = useState<Player|null>(null);
+    const [error,setError] = useState<HttpError  | null>(null);
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+            if (!playerId) return
+            getPlayerById(playerId)
+            .then(setPlayer)
+            .catch((error: HttpError) => setError(error))
+            .finally(() => setLoading(false))
+        }, [playerId])
+
+    if (loading) return <Loading text="Cargando jugador..." className="flex-1" />
+    if (error?.status === 404) return <NotFoundPage />
+    if ((error?.status && error.status >= 500) || !player) return <ServerErrorComponent/>
 
     const metrics = [
         { title: "Goles", value: player.goals },
@@ -34,10 +48,6 @@ export default function PlayerPage(){
         { title: "Entradas", value: player.tackles },
         { title: "Intercepciones", value: player.interceptions },
     ];
-    
-    if (loading) return <Loading text="Cargando jugador..." className="flex-1" />
-    //if (error?.status === 404) return <NotFoundPage />
-    //if ((error?.status && error.status >= 500) || !player) return <ServerErrorComponent/>
 
     return(
         <div className="flex flex-col self-center bg-gray-400 p-4 rounded-3xl">
