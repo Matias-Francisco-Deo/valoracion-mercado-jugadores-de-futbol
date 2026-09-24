@@ -30,6 +30,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
     public Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
         try {
             Long playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.clubName(), playerDraftDTO.name());
+
             log.info("Buscando jugador: {}", playerDraftDTO.name());
             return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, playerDraftDTO);
         } catch (Exception e) { // TODO excepcion muy general?
