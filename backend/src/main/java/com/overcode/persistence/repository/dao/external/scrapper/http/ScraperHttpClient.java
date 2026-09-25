@@ -38,15 +38,21 @@ public class ScraperHttpClient {
         BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
                 .setHeadless(true);
 
-        BrowserContext context = null;
-        Page page = null;
-        try (Browser browser = playwright.chromium().launch(launchOptions)) { // TODO mejorar trys?
+        Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
+                        .setUserAgent(
+                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                        + "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                        + "Chrome/117.0.0.0 Safari/537.36");
 
-            Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-                    .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
+        try (Browser browser = playwright.chromium().launch(launchOptions);
+             BrowserContext context = browser.newContext(contextOptions);
+             Page page = context.newPage()) { // TODO mejorar trys?
 
-            context = browser.newContext(contextOptions);
-            page = context.newPage();
+//            Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
+//                    .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
+
+//            context = browser.newContext(contextOptions);
+//            page = context.newPage();
 
             page.navigate(url);
 
@@ -62,10 +68,6 @@ public class ScraperHttpClient {
             }
 
             return content;
-        } finally {
-            if (page != null) page.close();
-            if (context != null) context.close();
         }
-
     }
 }
