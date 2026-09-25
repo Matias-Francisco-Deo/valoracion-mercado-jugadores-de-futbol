@@ -46,7 +46,8 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     private PlayerJPADTO upsertPlayer(Player player) {
-        if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
+        boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
+        if (!existsOnDB) {
             return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player));
         }
         playerDAOJPA.updateWithExternalId(
