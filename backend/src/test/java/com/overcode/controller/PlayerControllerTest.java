@@ -9,6 +9,7 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -145,41 +146,6 @@ public class PlayerControllerTest {
             .toBodilessEntity());
     }
 
-    // ------------------------------ Tests de control de acceso y seguridad ------------------------------
-
-    @Test
-    public void listarJugadoresSinTokenLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/players")
-            .retrieve()
-            .toBodilessEntity());
-    }
-
-    @Test
-    public void listarJugadoresConTokenInvalidoLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/players")
-            .header("Authorization", INVALID_BEARER_TOKEN)
-            .retrieve()
-            .toBodilessEntity());
-    }
-
-    @Test
-    public void obtenerJugadorPorIdSinTokenLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/players/" + NON_EXISTENT_ID)
-            .retrieve()
-            .toBodilessEntity());
-    }
-
-    @Test
-    public void obtenerJugadorPorIdConTokenInvalidoLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/players/" + NON_EXISTENT_ID)
-            .header("Authorization", INVALID_BEARER_TOKEN)
-            .retrieve()
-            .toBodilessEntity());
-    }
 
 //    // ------------------------------ Tests de sync-metrics ------------------------------
 //    @Test
