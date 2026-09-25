@@ -4,5 +4,9 @@ import { futbolApi } from "./api";
 export async function getPlayerById(playerId: string): Promise<Player> {
     const response = futbolApi.get<Player>(`/players/${playerId}`);
     return response;
+}
 
+export async function getPlayers(): Promise<Player[]> {
+    const response = futbolApi.get<Player[]>('/players');
+    return response;
 }
