@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class TestService {
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
     @Autowired
     private UserDAOJPA userDAO;
 

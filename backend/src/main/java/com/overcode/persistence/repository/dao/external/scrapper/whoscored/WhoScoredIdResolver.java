@@ -19,7 +19,7 @@ public class WhoScoredIdResolver {
         this.httpClient = httpClient;
     }
 
-    public Long resolvePlayerId(String teamName, String playerName) {
+    public Long resolvePlayerId(String playerName) {
         // Paso 1: Buscar jugador directamente
         String playerSearchUrl = WHOSCORED_URL + "/Search/?t=" + URLEncoder.encode(playerName, StandardCharsets.UTF_8);
         String searchHtml = httpClient.getHtml(playerSearchUrl);
