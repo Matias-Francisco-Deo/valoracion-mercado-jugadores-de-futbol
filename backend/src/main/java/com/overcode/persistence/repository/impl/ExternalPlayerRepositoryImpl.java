@@ -19,7 +19,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final Integer MAX_PLAYERS_TO_RETRIEVE = 4;
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = 10;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
