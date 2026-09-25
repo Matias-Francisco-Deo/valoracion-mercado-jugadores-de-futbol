@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Repository
 public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
@@ -40,15 +39,15 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
         if (players.isEmpty()) return Optional.empty();
 
-        List<PlayerJPADTO> upsertedPlayers = players.get().stream().flatMap(this::upsertPlayer).toList();
+        List<PlayerJPADTO> upsertedPlayers = players.get().stream().map(this::upsertPlayer).toList();
 
         return Optional.of(upsertedPlayers.stream().map(PlayerJPADTO::aModelo).toList());
 
     }
 
-    private Stream<PlayerJPADTO> upsertPlayer(Player player) {
+    private PlayerJPADTO upsertPlayer(Player player) {
         if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
-            return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
+            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player));
         }
         playerDAOJPA.updateWithExternalId(
                 player.getExternalId(),
@@ -68,8 +67,8 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
         Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
 
         if (optionalPlayerJPADTO.isEmpty()) return
-                Stream.of(PlayerJPADTO.desdeModelo(player));
+                PlayerJPADTO.desdeModelo(player);
 
-        return Stream.of(optionalPlayerJPADTO.get());
+        return optionalPlayerJPADTO.get();
     }
 }
