@@ -8,8 +8,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Arrays;
-import java.util.Comparator;
 
 @Service
 public class WhoScoredIdResolver {

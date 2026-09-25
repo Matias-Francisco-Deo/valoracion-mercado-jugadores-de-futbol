@@ -22,39 +22,50 @@ public class ScraperHttpClient {
         int maxRetries = 2;
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try (Playwright playwright = Playwright.create()) {
-                
-                BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
-                        .setHeadless(true);
-                
-                try (Browser browser = playwright.chromium().launch(launchOptions)) {
-                    
-                    Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-                            .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
-                    
-                    BrowserContext context = browser.newContext(contextOptions);
-                    Page page = context.newPage();
-                    
-                    page.navigate(url);
-                    
-                    // Esperamos 7 segundos para darle tiempo a Cloudflare Y a las llamadas AJAX de WhoScored
-                    page.waitForTimeout(7000); 
-                    
-                    String content = page.content();
-                    if (content.contains("Cloudflare") && content.contains("Checking your browser")) {
-                        if (attempt == maxRetries) {
-                            throw new ScraperExtractionException("Cloudflare challenge no superado en 7s para la URL: " + url);
-                        }
-                        continue; // Reintentamos
-                    }
-                    
-                    return content;
-                }
+                String content = getHtmlPlaywright(url, playwright, attempt, maxRetries);
+                if (content != null) return content;
             } catch (Exception e) {
                 if (attempt == maxRetries) {
                     throw new ScraperExtractionException("Error fatal ejecutando Playwright para la URL: " + url, e);
                 }
             }
+
         }
         throw new ScraperExtractionException("Fallo inesperado obteniendo HTML para: " + url);
+    }
+
+    private static String getHtmlPlaywright(String url, Playwright playwright, int attempt, int maxRetries) {
+        BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
+                .setHeadless(true);
+
+        BrowserContext context = null;
+        Page page = null;
+        try (Browser browser = playwright.chromium().launch(launchOptions)) { // TODO mejorar trys?
+
+            Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
+                    .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
+
+            context = browser.newContext(contextOptions);
+            page = context.newPage();
+
+            page.navigate(url);
+
+            // Esperamos 5 segundos para darle tiempo a Cloudflare Y a las llamadas AJAX de WhoScored
+            page.waitForTimeout(5000);
+
+            String content = page.content();
+            if (content.contains("Cloudflare") && content.contains("Checking your browser")) {
+                if (attempt == maxRetries) {
+                    throw new ScraperExtractionException("Cloudflare challenge no superado en 5s para la URL: " + url);
+                }
+                return null;
+            }
+
+            return content;
+        } finally {
+            if (page != null) page.close();
+            if (context != null) context.close();
+        }
+
     }
 }
