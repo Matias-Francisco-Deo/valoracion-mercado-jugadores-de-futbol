@@ -3,6 +3,7 @@ package com.overcode.persistence.repository.impl;
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
+import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerDAOJPA playerDAOJPA;
+    private final ExternalPlayerRepository externalPlayerRepository;
 
-    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA) {
+    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA, ExternalPlayerRepository externalPlayerRepository) {
         this.playerDAOJPA = playerDAOJPA;
+        this.externalPlayerRepository = externalPlayerRepository;
     }
 
     @Override
@@ -40,5 +43,10 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return playerDAOJPA.findAllByOrderByIdAsc().stream()
             .map(PlayerJPADTO::aModelo)
             .toList();
+    }
+
+    @Override
+    public List<Player> actualizarDatosJugadores() {
+        return externalPlayerRepository.buscarYGuardarJugadores().orElse(List.of());
     }
 }

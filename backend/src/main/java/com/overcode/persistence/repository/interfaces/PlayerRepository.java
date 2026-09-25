@@ -14,4 +14,7 @@ public interface PlayerRepository {
     Optional<Player> recuperar(Long id);
 
     List<Player> listarTodos();
+
+    List<Player> actualizarDatosJugadores();
+
 }

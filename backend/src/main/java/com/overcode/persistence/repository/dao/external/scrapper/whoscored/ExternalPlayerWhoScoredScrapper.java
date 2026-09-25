@@ -1,18 +1,20 @@
-package com.overcode.service.impl;
+package com.overcode.persistence.repository.dao.external.scrapper.whoscored;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overcode.persistence.scraper.exception.ScraperExtractionException;
-import com.overcode.persistence.scraper.http.ScraperHttpClient;
-import com.overcode.persistence.scraper.util.JsonExtractorUtil;
-import com.overcode.model.WeeklyMetrics;
+import com.overcode.model.Player;
+import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
+import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
+import com.overcode.persistence.repository.dao.external.scrapper.util.JsonExtractorUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class PlayerMetricsScraperService {
+public class ExternalPlayerWhoScoredScrapper {
 
     /*
     * 2 (Premier League)
@@ -30,7 +32,7 @@ public class PlayerMetricsScraperService {
     private final ScraperHttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public PlayerMetricsScraperService(ScraperHttpClient httpClient) {
+    public ExternalPlayerWhoScoredScrapper(ScraperHttpClient httpClient) {
         this.httpClient = httpClient;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
@@ -38,16 +40,8 @@ public class PlayerMetricsScraperService {
         this.objectMapper.configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
     }
 
-
-
-    /**
-     * Extrae las estadísticas detalladas (Opta) del jugador desde el JSON embebido en la página.
-     * 
-     * @param playerId ID interno de WhoScored
-     * @return DTO con las métricas requeridas
-     */
-    public WeeklyMetrics extractWeeklyMetrics(Long playerId) {
-        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/";
+    public Optional<Player> getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
+        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/"; // TODO externalizar URL
         String html = httpClient.getHtml(playerUrl);
 
         // Aislamos el JSON crudo del estado inicial de la página
@@ -118,21 +112,26 @@ public class PlayerMetricsScraperService {
             double passSuccess = totalPasses > 0 ? (totalAccuratePasses / totalPasses) * 100 : 0.0;
 
             // 5. Guardamos en el DTO
-            WeeklyMetrics metrics = new WeeklyMetrics();
-            metrics.setPlayerId(playerId);
-            metrics.setGoals(totalGoals);
-            metrics.setAssists(totalAssists);
-            metrics.setShotsOnTarget(totalShotsOnTarget);
-            metrics.setPasses((int) Math.round(passSuccess));
-            metrics.setInterceptions(totalInterceptions);
-            metrics.setTackles(totalTackles);
-            metrics.setKeyPasses(totalKeyPasses);
-            metrics.setWasDribbled(totalWasDribbled);
-            metrics.setSuccessfulDribbles(totalSuccessfulDribbles);
-            metrics.setGamesPlayed(totalGamesPlayed);
-            metrics.setRating(Math.round(finalRating * 100.0) / 100.0);
+            Player player = new Player();
+            player.setExternalId(playerId);
+            player.setName(playerDraftDTO.name());
+            player.setClubName(playerDraftDTO.clubName());
+            player.setCurrentPrice(1);
 
-            return metrics;
+//            metrics.setPlayerId(playerId);
+            player.setGoals(totalGoals);
+            player.setAssists(totalAssists);
+            player.setShotsOnTarget(totalShotsOnTarget);
+            player.setPasses((int) Math.round(passSuccess));
+            player.setInterceptions(totalInterceptions);
+            player.setTackles(totalTackles);
+            player.setKeyPasses(totalKeyPasses);
+//            player.setWasDribbled(totalWasDribbled);
+            player.setSuccessfulDribbles(totalSuccessfulDribbles);
+//            player.setGamesPlayed(totalGamesPlayed);
+            player.setRating(Math.round(finalRating * 100.0) / 100.0);
+
+            return Optional.of(player);
 
         } catch (JsonProcessingException e) {
             throw new ScraperExtractionException("Error al parsear el JSON de estadísticas con Jackson.", e);

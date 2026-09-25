@@ -1,4 +1,4 @@
-package com.overcode.config;
+package com.overcode.config.environment;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

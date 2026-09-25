@@ -12,13 +12,13 @@ public class WeeklyMetrics {
     private Double rating;
     private Integer wasDribbled;
     private Integer successfulDribbles;
+    private Integer gamesPlayed;
     /**
      * NOTA ARQUITECTÓNICA:
      * Almacenamos las métricas (tackles, keyPasses, etc.) en su valor TOTAL ABSOLUTO para no perder precisión.
      * Para mostrar el "2.7" (promedio) para que se vea igual que en WhoScored,
      * hay que dividir la métrica por 'gamesPlayed' (Apps = GameStarted + SubOn del JSON)
      */
-    private Integer gamesPlayed;
 
     // Getters and Setters
     public Long getPlayerId() { return playerId; }

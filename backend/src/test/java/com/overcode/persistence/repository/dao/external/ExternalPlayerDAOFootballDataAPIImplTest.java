@@ -28,6 +28,8 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     private static MockWebServer mockWebServer;
     private ExternalPlayerDAOFootballDataAPIImpl externalPlayerDAOFootballDataAPIImplMock;
 
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = null;
+
     @BeforeAll
     static void startServer() throws IOException {
         mockWebServer = new MockWebServer();
@@ -132,7 +134,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
                                \s"""));
 
 
-        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImplMock.listarJugadores();
+        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImplMock.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         assertTrue(jugadores.isPresent());
         assertFalse(jugadores.get().isEmpty());
@@ -143,7 +145,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosJugadores() throws InterruptedException {
-        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
+        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         assertFalse(jugadores.get().isEmpty());
     }
@@ -151,11 +153,11 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosJugadoresConDatos() throws InterruptedException {
-        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores();
+        Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         jugadores.get().forEach(jugador -> {
             assertNotNull(jugador.name());
-            assertNotNull(jugador.league());
+            assertNotNull(jugador.clubName());
         });
         assertFalse(jugadores.get().isEmpty());
     }
@@ -195,7 +197,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Test
     void noEncuentraJugadoresPorFalloDeApiEntoncesDaEmpty() {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500));
-        Optional<List<PlayerDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.listarJugadores();
+        Optional<List<PlayerDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         assertTrue(ligas.isEmpty());
     }

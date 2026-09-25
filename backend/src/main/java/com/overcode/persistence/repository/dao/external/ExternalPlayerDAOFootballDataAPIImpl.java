@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Repository
 
-public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFootballDataAPI {
+public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayerDAO {
 
     private final WebClient webClient;
 
@@ -28,8 +28,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     }
 
     @Getter
-    private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of
-            (
+    private final List<LeagueRequestDTO> leaguesToUse = new ArrayList<>(List.of(
                     new LeagueRequestDTO("Primera Division", "Spain"), // TODO revisar si es la liga correcta
                     new LeagueRequestDTO("Ligue 1", "France"),
                     new LeagueRequestDTO("Premier League", "England"),
@@ -41,12 +40,17 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     }
 
     @Override
-    public Optional<List<PlayerDraftDTO>> listarJugadores() {
+    public Optional<List<PlayerDraftDTO>> listarJugadores(Integer maxPlayers) {
 
         Optional<List<CompetitionDTO>> competitions = getCompetitions();
 
-        return competitions.flatMap(this::getPlayersOfCompetitions);
+        Optional<List<PlayerDraftDTO>> players = competitions.flatMap(this::getPlayersOfCompetitions);
 
+        if (competitions.isEmpty() || players.isEmpty()) return Optional.empty();
+
+        if (maxPlayers == null) return players;
+
+        return Optional.of(players.get().stream().limit(maxPlayers).toList());
     }
 
     @SneakyThrows
@@ -64,17 +68,18 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalPlayerDAOFo
     }
 
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
-        Optional<List<TeamDraftDTO>> optionalTeam = getTeamsOfCompetition(competition);
+        Optional<List<TeamDraftDTO>> optionalTeams = getTeamsOfCompetition(competition);
 
-        if (optionalTeam.isEmpty()) return Optional.empty();
+        if (optionalTeams.isEmpty()) return Optional.empty();
 
-        List<FootballDataPlayerDraftDTO> players = optionalTeam.get().stream()
+        List<PlayerDraftDTO> players = optionalTeams.get().stream()
                 .flatMap(
-                        team -> team.squad().stream()).toList();
-        List<PlayerDraftDTO> playerDrafts = players.stream().map(player ->
-                new PlayerDraftDTO(player.name(), competition.name())).toList();
+                        team ->
+                                team.squad().stream().map(player ->
+                                new PlayerDraftDTO(player.name(), team.name()
+                                ))).toList();
 
-        return Optional.of(playerDrafts);
+        return Optional.of(players);
     }
 
     @SneakyThrows

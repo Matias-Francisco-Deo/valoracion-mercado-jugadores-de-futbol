@@ -69,10 +69,12 @@ public class TokenJPADTO {
     }
 
     public static List<TokenJPADTO> desdeModelo(List<Token> tokens, PlayerJPADTO player) {
-        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, player)).collect(Collectors.toList());
+        if (tokens == null) return new java.util.ArrayList<>();
+        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, player)).collect(java.util.stream.Collectors.toList());
     }
 
     public static List<TokenJPADTO> desdeModelo(List<Token> tokens, UserJPADTO user) {
+        if (tokens == null) return new java.util.ArrayList<>();
         return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, user)).collect(Collectors.toList());
     }
 

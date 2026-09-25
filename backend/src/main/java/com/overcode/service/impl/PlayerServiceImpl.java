@@ -1,12 +1,13 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.Player;
-import com.overcode.model.WeeklyMetrics;
+import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
-import com.overcode.service.interfaces.PlayerMetricsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,10 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
-    private final PlayerMetricsProvider metricsProvider;
+    private final ExternalPlayerDataDAO metricsProvider;
+    private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerMetricsProvider metricsProvider) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, ExternalPlayerDataDAO metricsProvider) {
         this.playerRepository = playerRepository;
         this.metricsProvider = metricsProvider;
     }
@@ -44,17 +46,8 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    @Transactional
-    public void sincronizarMetricas() {
-        List<Player> players = playerRepository.listarTodos();
-        for (Player p : players) {
-            WeeklyMetrics metrics = metricsProvider.getPlayerMetrics(p.getClubName(), p.getName());
-            if (metrics != null) {
-                p.actualizarMetricas(metrics);
-                playerRepository.guardar(p);
-                System.out.println("✅ Métricas actualizadas para: " + p.getName());
-            }
-        }
+    public List<Player> actualizarDatosJugadores() {
+        return playerRepository.actualizarDatosJugadores();
     }
 
     private void validarJugador(Player player) {

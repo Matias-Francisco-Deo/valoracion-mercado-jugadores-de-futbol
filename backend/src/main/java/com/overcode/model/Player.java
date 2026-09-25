@@ -3,7 +3,6 @@ package com.overcode.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -13,10 +12,26 @@ import java.util.List;
 public class Player {
 
     private Long id;
+    private Long externalId;
+
     private String name;
     private Integer currentPrice;
     private String clubName;
-    private WeeklyMetrics metrics;
+
+    private Integer goals;
+    private Integer assists; // no
+    private Integer shotsOnTarget;
+    private Integer passes;
+
+    private Integer interceptions;
+    private Integer tackles;
+    private Integer keyPasses; // no
+    private Double rating;
+
+//    private Integer wasDribbled;
+    private Integer successfulDribbles;
+//    private Integer gamesPlayed; TODO pal futuro?
+
     private List<Token> tokens;
 
     public Player(Long id, String name) {
@@ -49,9 +64,9 @@ public class Player {
         this.currentPrice = Math.max(currentPrice, 1);
     }
 
-    public void actualizarMetricas(WeeklyMetrics newMetrics) {
-        if (newMetrics != null) {
-            this.metrics = newMetrics;
-        }
-    }
+//    public void actualizarMetricas(WeeklyMetrics newMetrics) {
+//        if (newMetrics != null) {
+//            this.metrics = newMetrics;
+//        }
+//    }
 }

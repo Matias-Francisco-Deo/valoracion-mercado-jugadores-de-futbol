@@ -36,9 +36,9 @@ public class PlayerController {
         return ResponseEntity.ok().body(PlayerResponseDTO.desdeModelo(player));
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/players/sync-metrics")
-    public ResponseEntity<String> syncMetrics() {
-        playerService.sincronizarMetricas();
-        return ResponseEntity.ok("{\"message\": \"Metrics synchronization completed successfully\"}");
-    }
+//    @org.springframework.web.bind.annotation.PostMapping("/players/sync-metrics")
+//    public ResponseEntity<String> syncMetrics() {
+//        playerService.sincronizarMetricas();
+//        return ResponseEntity.ok("{\"message\": \"Metrics synchronization completed successfully\"}");
+//    }
 }
