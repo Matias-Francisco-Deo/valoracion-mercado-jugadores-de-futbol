@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
@@ -20,19 +21,18 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
                     "set p.currentPrice=:currentPrice," +
                     "p.assists = :assists, " +
                     "p.name = :name," +
-                    "p.goals =: goals," +
-                    "p.currentPrice =: currentPrice," +
-                    "p.clubName =: clubName," +
-                    "p.shotsOnTarget =: shotsOnTarget," +
-                    "p.passes =: passes," +
-                    "p.interceptions =: interceptions," +
-                    "p.tackles =: tackles," +
-                    "p.keyPasses =: keyPasses," +
-                    "p.rating =: rating," +
-                    "p.successfulDribbles =: successfulDribbles " +
+                    "p.goals = :goals," +
+                    "p.clubName = :clubName," +
+                    "p.shotsOnTarget = :shotsOnTarget," +
+                    "p.passes = :passes," +
+                    "p.interceptions = :interceptions," +
+                    "p.tackles = :tackles," +
+                    "p.keyPasses = :keyPasses," +
+                    "p.rating = :rating," +
+                    "p.successfulDribbles = :successfulDribbles " +
                     "where p.externalId = :externalId"
     )
-    List<PlayerJPADTO> updateWithExternalId(
+    void updateWithExternalId(
             @Param("externalId") Long externalId,
             @Param("name") String name,
             @Param("goals") Integer goals,
@@ -49,4 +49,6 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     );
 
     boolean existsByExternalId(Long externalId);
+
+    Optional<PlayerJPADTO> findByExternalId(Long externalId);
 }

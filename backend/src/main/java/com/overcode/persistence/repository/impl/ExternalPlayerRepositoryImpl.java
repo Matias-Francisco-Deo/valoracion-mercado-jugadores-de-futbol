@@ -8,6 +8,7 @@ import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
+    @Transactional
     public Optional<List<Player>> buscarYGuardarJugadores() {
         Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
@@ -38,9 +40,9 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
         if (players.isEmpty()) return Optional.empty();
 
-        List<PlayerJPADTO> jpaDTOPlayers = players.get().stream().flatMap(this::upsertPlayer).toList();
+        List<PlayerJPADTO> upsertedPlayers = players.get().stream().flatMap(this::upsertPlayer).toList();
 
-        return Optional.of(jpaDTOPlayers.stream().map(PlayerJPADTO::aModelo).toList());
+        return Optional.of(upsertedPlayers.stream().map(PlayerJPADTO::aModelo).toList());
 
     }
 
@@ -48,7 +50,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
         if (!playerDAOJPA.existsByExternalId(player.getExternalId())) {
             return Stream.of(playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)));
         }
-        return playerDAOJPA.updateWithExternalId(
+        playerDAOJPA.updateWithExternalId(
                 player.getExternalId(),
                 player.getName(),
                 player.getGoals(),
@@ -62,6 +64,12 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
                 player.getKeyPasses(),
                 player.getRating(),
                 player.getSuccessfulDribbles()
-        ).stream();
+        );
+        Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
+
+        if (optionalPlayerJPADTO.isEmpty()) return
+                Stream.of(PlayerJPADTO.desdeModelo(player));
+
+        return Stream.of(optionalPlayerJPADTO.get());
     }
 }
