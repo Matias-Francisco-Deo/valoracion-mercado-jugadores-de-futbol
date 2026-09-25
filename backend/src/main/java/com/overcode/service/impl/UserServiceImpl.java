@@ -3,9 +3,10 @@ package com.overcode.service.impl;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EmailRepetidoException;
-import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,14 +15,20 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final String SUPERUSER_NAME = "superuser"; // TODO abstraer a .env?
-    public static final String SUPERUSER_EMAIL = "overcode@gmail.com";
-    public static final String SUPERUSER_PASSWORD = "overcodesuperuser";
+    public String superuserName;
+    public String superuserEmail;
+    public String superuserPassword;
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository
+    public UserServiceImpl(UserRepository userRepository,
+                           @Value("${superuser.name}") String superuserName,
+                           @Value("${superuser.password}") String superuserPassword,
+                           @Value("${superuser.email}") String superuserEmail
     ) {
+        this.superuserName = superuserName;
+        this.superuserEmail = superuserEmail;
+        this.superuserPassword = superuserPassword;
         this.userRepository = userRepository;
     }
 
@@ -57,13 +64,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User crearSuperusuario() {
 
-        Optional<User> optionalSuperuser = userRepository.findByUsername(SUPERUSER_NAME);
+        Optional<User> optionalSuperuser = userRepository.findByUsername(superuserName);
 
         if (optionalSuperuser.isPresent()) {
             return optionalSuperuser.get();
         }
 
-        User superuser = new User(SUPERUSER_NAME, SUPERUSER_EMAIL, SUPERUSER_PASSWORD);
+        User superuser = new User(superuserName, superuserEmail, superuserPassword);
         return userRepository.guardar(superuser);
     }
 

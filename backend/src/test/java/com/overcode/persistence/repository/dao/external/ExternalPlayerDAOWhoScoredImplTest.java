@@ -4,6 +4,7 @@ import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
+import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,16 @@ public class ExternalPlayerDAOWhoScoredImplTest {
     private WhoScoredIdResolver whoScoredIdResolverMock;
     private ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapperMock;
 
+    @Autowired
+    private PlayerDAOJPA playerDAOJPA;
+
     private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé", "Real Madrid CF");
 
     @BeforeEach
     void setUp() {
         whoScoredIdResolverMock = Mockito.mock(WhoScoredIdResolver.class);
         externalPlayerWhoScoredScrapperMock = Mockito.mock(ExternalPlayerWhoScoredScrapper.class);
-        externalPlayerDAOWhoScoredImplMock = new ExternalPlayerDAOWhoScoredImpl(whoScoredIdResolverMock, externalPlayerWhoScoredScrapperMock);
+        externalPlayerDAOWhoScoredImplMock = new ExternalPlayerDAOWhoScoredImpl(whoScoredIdResolverMock, externalPlayerWhoScoredScrapperMock, playerDAOJPA);
     }
 
     @Test
