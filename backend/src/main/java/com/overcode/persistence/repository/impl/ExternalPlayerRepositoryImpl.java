@@ -19,7 +19,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final Integer MAX_PLAYERS_TO_RETRIEVE = 10;
+    private final Integer MAX_PLAYERS_TO_RETRIEVE = null;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
@@ -28,21 +28,22 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    @Transactional
     public Optional<List<Player>> buscarYGuardarJugadores() {
         Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         if (playerDraftDTOS.isEmpty()) return Optional.empty();
 
+        List<PlayerJPADTO> upsertedPlayers = new java.util.ArrayList<>();
+        for (PlayerDraftDTO draftDTO : playerDraftDTOS.get()) {
+            Optional<Player> player = externalPlayerDataDAO.getDatosDeJugador(draftDTO);
+            if (player.isPresent()) {
+                upsertedPlayers.add(upsertPlayer(player.get()));
+            }
+        }
 
-        Optional<List<Player>> players = externalPlayerDataDAO.getDatosJugadores(playerDraftDTOS.get());
-
-        if (players.isEmpty()) return Optional.empty();
-
-        List<PlayerJPADTO> upsertedPlayers = players.get().stream().map(this::upsertPlayer).toList();
+        if (upsertedPlayers.isEmpty()) return Optional.empty();
 
         return Optional.of(upsertedPlayers.stream().map(PlayerJPADTO::aModelo).toList());
-
     }
 
     private PlayerJPADTO upsertPlayer(Player player) {

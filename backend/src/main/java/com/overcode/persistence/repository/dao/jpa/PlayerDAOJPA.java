@@ -13,9 +13,12 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
+    Optional<PlayerJPADTO> findByNameIgnoreCase(String name);
+
     List<PlayerJPADTO> findAllByOrderByIdAsc();
 
     @Modifying
+    @org.springframework.transaction.annotation.Transactional
     @Query(
             "update player p " +
                     "set p.currentPrice=:currentPrice," +
