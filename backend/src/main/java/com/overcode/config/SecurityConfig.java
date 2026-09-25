@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // TEMPORAL PARA TESTING?
-                .requestMatchers("/scraper/**").permitAll()
+                .requestMatchers("/players/**").permitAll()
+                    .requestMatchers("/users/*").permitAll()
                 //.requestMatchers("/players/sync-metrics").permitAll()
                 .anyRequest().authenticated()
             )

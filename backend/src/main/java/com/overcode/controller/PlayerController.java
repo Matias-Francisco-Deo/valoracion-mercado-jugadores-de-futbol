@@ -26,8 +26,8 @@ public class PlayerController {
     @GetMapping("/players")
     public List<PlayerResponseDTO> listPlayers() {
         return playerService.recuperarTodos().stream()
-            .map(PlayerResponseDTO::desdeModelo)
-            .toList();
+                .map(PlayerResponseDTO::desdeModelo)
+                .toList();
     }
 
     @GetMapping("/players/{id}")
@@ -35,10 +35,4 @@ public class PlayerController {
         Player player = playerService.recuperar(id);
         return ResponseEntity.ok().body(PlayerResponseDTO.desdeModelo(player));
     }
-
-//    @org.springframework.web.bind.annotation.PostMapping("/players/sync-metrics")
-//    public ResponseEntity<String> syncMetrics() {
-//        playerService.sincronizarMetricas();
-//        return ResponseEntity.ok("{\"message\": \"Metrics synchronization completed successfully\"}");
-//    }
 }

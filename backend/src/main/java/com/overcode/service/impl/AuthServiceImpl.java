@@ -31,11 +31,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Auth register(User user) {
         log.info("Attempting to register user with email: {}", user.getEmail());
-        if (userService.existePorEmail(user.getEmail())) {
-            log.warn("Registration failed: Email already registered: {}", user.getEmail());
-            throw new ConflictException("Email already registered");
-        }
         userAuth.register(user);
+
         User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
