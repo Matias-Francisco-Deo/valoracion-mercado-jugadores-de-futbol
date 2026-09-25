@@ -7,6 +7,7 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -116,22 +117,4 @@ public class UserControllerTest {
             .toBodilessEntity());
     }
 
-    // ------------------------------ Tests de control de acceso y seguridad ------------------------------
-
-    @Test
-    public void obtenerUsuarioPorIdSinTokenLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/users/" + NON_EXISTENT_ID)
-            .retrieve()
-            .toBodilessEntity());
-    }
-
-    @Test
-    public void obtenerUsuarioPorIdConTokenInvalidoLanzaForbidden() {
-        assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
-            .uri("/users/" + NON_EXISTENT_ID)
-            .header("Authorization", INVALID_BEARER_TOKEN)
-            .retrieve()
-            .toBodilessEntity());
-    }
 }

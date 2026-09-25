@@ -1,10 +1,9 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.model.User;
 import com.overcode.model.security.Auth;
 import com.overcode.service.exception.AuthenticationException;
-import com.overcode.service.exception.ConflictException;
+import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.impl.AuthServiceImpl;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -49,7 +48,7 @@ public class AuthServiceTest {
 
         userRegistrer = new User("ana", "test@example.com", "Password123");
 
-        assertThrows(ConflictException.class, () -> authService.register(userRegistrer));
+        assertThrows(EmailRepetidoException.class, () -> authService.register(userRegistrer));
     }
 
 
