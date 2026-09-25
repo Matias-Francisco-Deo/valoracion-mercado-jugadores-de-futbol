@@ -49,7 +49,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
         mockPlayer.setGoals(15);
         mockPlayer.setRating(8.5);
 
-        when(whoScoredIdResolverMock.resolvePlayerId("Real Madrid CF", "Kylian Mbappé")).thenReturn(11119L);
+        when(whoScoredIdResolverMock.resolvePlayerId("Kylian Mbappé")).thenReturn(11119L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(11119L, JUGADOR_DRAFT_1)).thenReturn(Optional.of(mockPlayer));
 
         Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(JUGADOR_DRAFT_1);
@@ -66,7 +66,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
     void noEncuentraJugadorInexistenteYDevuelveVacioMock() {
         PlayerDraftDTO JUGADOR_FANTASMA = new PlayerDraftDTO("Jugador Fantasma", "Club Fantasma");
 
-        when(whoScoredIdResolverMock.resolvePlayerId(anyString(), anyString())).thenReturn(null);
+        when(whoScoredIdResolverMock.resolvePlayerId(anyString())).thenReturn(null);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(null, JUGADOR_FANTASMA)).thenReturn(Optional.empty());
 
         Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(JUGADOR_FANTASMA);
@@ -84,10 +84,10 @@ public class ExternalPlayerDAOWhoScoredImplTest {
         Player mockPlayer2 = new Player();
         mockPlayer2.setName("Vinícius Júnior");
 
-        when(whoScoredIdResolverMock.resolvePlayerId("Real Madrid CF", "Kylian Mbappé")).thenReturn(11119L);
+        when(whoScoredIdResolverMock.resolvePlayerId("Kylian Mbappé")).thenReturn(11119L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(11119L, JUGADOR_DRAFT_1)).thenReturn(Optional.of(mockPlayer1));
 
-        when(whoScoredIdResolverMock.resolvePlayerId("Real Madrid CF", "Vinícius Júnior")).thenReturn(22222L);
+        when(whoScoredIdResolverMock.resolvePlayerId("Vinícius Júnior")).thenReturn(22222L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(22222L, JUGADOR_DRAFT_2)).thenReturn(Optional.of(mockPlayer2));
 
         List<Player> jugadores = externalPlayerDAOWhoScoredImplMock.getDatosJugadores(List.of(JUGADOR_DRAFT_1, JUGADOR_DRAFT_2)).get();

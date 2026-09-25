@@ -7,7 +7,6 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +29,6 @@ public class UserControllerTest {
     private static final String SECOND_EMAIL = "other@example.com";
     private static final String SECOND_PASSWORD = "OtherPassword123!";
     private static final Long NON_EXISTENT_ID = 999999L;
-    private static final String MALFORMED_ID = "invalid-id";
-    private static final String INVALID_BEARER_TOKEN = "Bearer invalid.token.value";
 
     @LocalServerPort
     private int port;

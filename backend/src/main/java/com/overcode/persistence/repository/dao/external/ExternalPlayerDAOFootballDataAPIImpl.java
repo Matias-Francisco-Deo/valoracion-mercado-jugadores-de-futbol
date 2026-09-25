@@ -4,6 +4,8 @@ import com.overcode.persistence.dto.external.FootballDataAPI.*;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayerDAO {
 
     private final WebClient webClient;
+
+    private static final Logger log = LoggerFactory.getLogger(ExternalPlayerDAOFootballDataAPIImpl.class);
 
     public ExternalPlayerDAOFootballDataAPIImpl(@Value("${football-data.api-key}") String apiKey, @Value("${football-data.base_url}") String baseUrl) {
         this.webClient = WebClient.builder()
@@ -91,7 +95,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
                 .retrieve()
                 .bodyToMono(CompetitionTeamsDTO.class)
                 .onErrorResume(error -> {
-                    System.err.println("Error occurred while fetching team: " + error.getMessage());
+                    log.error("Error occurred while fetching team: {}", error.getMessage());
                     return Mono.empty();
                 })
                 .block(Duration.ofSeconds(10));
@@ -107,7 +111,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
                 .retrieve()
                 .bodyToMono(CompetitionsResponseDTO.class)
                 .onErrorResume(error -> {
-                    System.err.println("Error occurred while fetching competitions: " + error.getMessage());
+                    log.error("Error occurred while fetching competitions: {}", error.getMessage());
                     return Mono.empty();
                 })
                 .block(Duration.ofSeconds(60));

@@ -49,6 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private void validarJugador(Player player) {
         if (playerRepository.existsByName(player.getName())) {
+            log.error("Jugador ya existe: {}", player.getName());
             throw new NombreRepetidoException("El nombre del jugador ya existe: " + player.getName());
         }
 

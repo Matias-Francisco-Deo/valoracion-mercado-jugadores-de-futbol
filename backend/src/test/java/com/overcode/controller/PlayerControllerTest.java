@@ -9,7 +9,6 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,8 +33,6 @@ public class PlayerControllerTest {
     private static final String PLAYER_NAME = "Player1";
     private static final String SECOND_PLAYER_NAME = "Player2";
     private static final Long NON_EXISTENT_ID = -1L;
-    private static final String MALFORMED_ID = "invalid-id";
-    private static final String INVALID_BEARER_TOKEN = "Bearer invalid.token.value";
 
     @LocalServerPort
     private int port;
@@ -145,22 +142,6 @@ public class PlayerControllerTest {
             .retrieve()
             .toBodilessEntity());
     }
-
-
-//    // ------------------------------ Tests de sync-metrics ------------------------------
-//    @Test
-//    public void syncMetricsConTokenValidoDevuelveOk() {
-//        String token = obtainAuthToken();
-//
-//        ResponseEntity<String> response = restClient.post()
-//            .uri("/players/sync-metrics")
-//            .header("Authorization", "Bearer " + token)
-//            .retrieve()
-//            .toEntity(String.class);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertTrue(response.getBody().contains("Metrics synchronization completed successfully"));
-//    }
 
     @Test
     public void syncMetricsSinTokenLanzaForbidden() {

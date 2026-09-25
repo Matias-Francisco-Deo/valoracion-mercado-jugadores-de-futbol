@@ -118,7 +118,6 @@ public class ExternalPlayerWhoScoredScrapper {
             player.setClubName(playerDraftDTO.clubName());
             player.setCurrentPrice(1);
 
-//            metrics.setPlayerId(playerId);
             player.setGoals(totalGoals);
             player.setAssists(totalAssists);
             player.setShotsOnTarget(totalShotsOnTarget);
@@ -126,9 +125,7 @@ public class ExternalPlayerWhoScoredScrapper {
             player.setInterceptions(totalInterceptions);
             player.setTackles(totalTackles);
             player.setKeyPasses(totalKeyPasses);
-//            player.setWasDribbled(totalWasDribbled);
             player.setSuccessfulDribbles(totalSuccessfulDribbles);
-//            player.setGamesPlayed(totalGamesPlayed);
             player.setRating(Math.round(finalRating * 100.0) / 100.0);
 
             return Optional.of(player);

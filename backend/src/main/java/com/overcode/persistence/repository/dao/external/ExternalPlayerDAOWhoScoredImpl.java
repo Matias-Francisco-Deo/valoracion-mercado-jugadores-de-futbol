@@ -6,7 +6,6 @@ import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
-import com.overcode.service.impl.AuthServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -21,7 +20,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
     private final ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapper;
     private final PlayerDAOJPA playerDAOJPA;
 
-    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ExternalPlayerDAOWhoScoredImpl.class);
 
     public ExternalPlayerDAOWhoScoredImpl(WhoScoredIdResolver whoScoredIdResolver,
                                           ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapper,
@@ -43,7 +42,7 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
                 log.info("Jugador {} ya conocido (ID: {}). Salteando búsqueda...", playerDraftDTO.name(), playerId);
             } else {
                 // 2. Fallback to searching WhoScored if new
-                playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.clubName(), playerDraftDTO.name());
+                playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.name());
                 log.info("Buscando nuevo jugador: {}", playerDraftDTO.name());
             }
 
