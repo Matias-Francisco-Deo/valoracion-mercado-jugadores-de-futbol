@@ -30,6 +30,13 @@ public class PlayerController {
                 .toList();
     }
 
+    @GetMapping("/players/top")
+    public List<PlayerResponseDTO> listTopPlayers() {
+        return playerService.listarTop5JugadoresPorRating().stream()
+                .map(PlayerResponseDTO::desdeModelo)
+                .toList();
+    }
+
     @GetMapping("/players/{id}")
     public ResponseEntity<PlayerResponseDTO> getPlayer(@PathVariable Long id) {
         Player player = playerService.recuperar(id);

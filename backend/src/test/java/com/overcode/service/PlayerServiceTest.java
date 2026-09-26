@@ -136,6 +136,15 @@ class PlayerServiceTest {
 
     }
 
+    @Test
+    void listaLosTop5JugadoresPorRatingCuandoNoHayJugadoresDaVacio() {
+
+        List<Player> jugadores = playerService.listarTop5JugadoresPorRating();
+
+        assertTrue(jugadores.isEmpty());
+
+    }
+
     private Player getJugadorConRating(String name, Double rating) {
         return new Player(name, "Club", 10, 5, 20, 3, 2, rating, 5);
     }

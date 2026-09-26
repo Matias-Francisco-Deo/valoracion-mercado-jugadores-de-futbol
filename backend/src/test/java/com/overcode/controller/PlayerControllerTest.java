@@ -77,7 +77,7 @@ public class PlayerControllerTest {
     // ------------------------------ Tests de listado de jugadores ------------------------------
 
     @Test
-    public void listarJugadoresConBaseVaciaDevuelveListaVacia() { // TODO este test luego del scraping es posible que no pase
+    public void listarJugadoresConBaseVaciaDevuelveListaVacia() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
@@ -92,7 +92,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() { // TODO este test luego del scraping es posible que no pase
+    public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConNombre(PLAYER_NAME));
         playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
@@ -109,6 +109,48 @@ public class PlayerControllerTest {
         assertEquals(2, response.getBody().size());
         assertTrue(response.getBody().stream().anyMatch(p -> PLAYER_NAME.equals(p.name())));
         assertTrue(response.getBody().stream().anyMatch(p -> SECOND_PLAYER_NAME.equals(p.name())));
+    }
+
+    @Test
+    public void listarTopJugadoresTraeOrdenadosPorRating() {
+        String token = obtainAuthToken();
+        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
+        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertEquals(2, players.size());
+        assertSame(players.get(0).id(), player1.getId());
+        assertSame(players.get(1).id(), player2.getId());
+
+    }
+
+    @Test
+    public void listarTopJugadoresSinJugadoresDaVacio() {
+        String token = obtainAuthToken();
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertTrue(players.isEmpty());
+
     }
 
     // ------------------------------ Tests de consulta de jugador por ID ------------------------------
@@ -153,5 +195,9 @@ public class PlayerControllerTest {
 
     private Player getJugadorConNombre(String name) {
         return new Player(name, "Club", 10, 5, 20, 3, 2, 2.0, 5);
+    }
+
+    private Player getJugadorConRating(String name, Double rating) {
+        return new Player(name, "Club", 10, 5, 20, 3, 2, rating, 5);
     }
 }
