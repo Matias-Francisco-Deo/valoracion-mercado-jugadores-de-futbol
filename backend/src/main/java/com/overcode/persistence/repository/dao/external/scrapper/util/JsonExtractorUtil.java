@@ -10,7 +10,7 @@ public class JsonExtractorUtil {
     // Coincide con la asignación específica de JavaScript y extrae el objeto JSON.
     // Pattern.DOTALL permite que el '.' coincida con los caracteres de salto de línea.
     private static final Pattern ARGS_JSON_PATTERN = Pattern.compile(
-            "require\\.config\\.params\\['args'\\]\\s*=\\s*(\\{.*?\\});\\s*</script>",
+            "require\\.config\\.params\\['args']\\s*=\\s*(\\{\"[^\\\\}]*+});\\s*</script>",
             Pattern.DOTALL
     );
 

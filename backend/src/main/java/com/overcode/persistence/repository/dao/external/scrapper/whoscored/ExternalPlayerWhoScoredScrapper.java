@@ -61,7 +61,6 @@ public class ExternalPlayerWhoScoredScrapper {
             int totalInterceptions = 0;
             int totalTackles = 0;
             int totalKeyPasses = 0;
-            int totalWasDribbled = 0;
             int totalSuccessfulDribbles = 0;
             int totalGamesPlayed = 0;
 
@@ -85,7 +84,6 @@ public class ExternalPlayerWhoScoredScrapper {
                 totalInterceptions += tournament.path("Interceptions").asInt(0);
                 totalTackles += tournament.path("TotalTackles").asInt(0);
                 totalKeyPasses += tournament.path("KeyPasses").asInt(0);
-                totalWasDribbled += tournament.path("WasDribbled").asInt(0);
                 totalSuccessfulDribbles += tournament.path("Dribbles").asInt(0);
 
                 int apps = tournament.path("GameStarted").asInt(0) + tournament.path("SubOn").asInt(0);

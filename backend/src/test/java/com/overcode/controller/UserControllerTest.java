@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClient;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+ class UserControllerTest {
 
     private static final String DEFAULT_USERNAME = "userTestUser";
     private static final String DEFAULT_EMAIL = "usertest@example.com";
@@ -39,7 +39,7 @@ public class UserControllerTest {
     private RestClient restClient;
 
     @PostConstruct
-    public void init() {
+     void init() {
         this.restClient = RestClient.builder().baseUrl("http://localhost:" + port).build();
     }
 
@@ -68,7 +68,7 @@ public class UserControllerTest {
     // ------------------------------ Tests de consulta de usuario por ID ------------------------------
 
     @Test
-    public void obtenerUsuarioPorIdExistenteDevuelveOkConDatosCorrectos() {
+     void obtenerUsuarioPorIdExistenteDevuelveOkConDatosCorrectos() {
         var authUser1 = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         var authUser2 = registerUser(SECOND_USERNAME, SECOND_EMAIL, SECOND_PASSWORD);
         Long user1Id = authUser1.user().id();
@@ -87,7 +87,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void obtenerUsuarioPorIdNoExponeContrasenaNiCredenciales() {
+     void obtenerUsuarioPorIdNoExponeContrasenaNiCredenciales() {
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
@@ -104,7 +104,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void obtenerUsuarioPorIdInexistenteLanzaNotFound() {
+     void obtenerUsuarioPorIdInexistenteLanzaNotFound() {
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
         assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()

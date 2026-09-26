@@ -73,7 +73,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     }
 
     @Test
-    void encuentraTodosLosEquiposDeUnaCompetenciaMock() throws InterruptedException {
+    void encuentraTodosLosEquiposDeUnaCompetenciaMock()  {
         String json = """
                 {                                                                                                                                                                                                                \s
                     "teams": [                                                                                                                                                                                                   \s
@@ -98,7 +98,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
         assertTrue(equipos.isPresent());
         assertFalse(equipos.get().isEmpty());
-        assertEquals("FC Barcelona", equipos.get().get(0).name());
+        assertEquals("FC Barcelona", equipos.get().getFirst().name());
     }
 
     @Test
@@ -138,13 +138,13 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
         assertTrue(jugadores.isPresent());
         assertFalse(jugadores.get().isEmpty());
-        assertEquals("Pedri", jugadores.get().get(0).name());
+        assertEquals("Pedri", jugadores.get().getFirst().name());
     }
 
 
     @Disabled("Use manually since it can fail if the API is down")
     @Test
-    void encuentraTodosLosJugadores() throws InterruptedException {
+    void encuentraTodosLosJugadores()  {
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         assertFalse(jugadores.get().isEmpty());
@@ -152,7 +152,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Disabled("Use manually since it can fail if the API is down")
     @Test
-    void encuentraTodosLosJugadoresConDatos() throws InterruptedException {
+    void encuentraTodosLosJugadoresConDatos()  {
         Optional<List<PlayerDraftDTO>> jugadores = externalPlayerDAOFootballDataAPIImpl.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
 
         jugadores.get().forEach(jugador -> {
@@ -164,7 +164,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Disabled("Use manually since it can fail if the API is down")
     @Test
-    void encuentraTodasLasLigasConIds() throws InterruptedException {
+    void encuentraTodasLasLigasConIds()  {
         Optional<List<CompetitionDTO>> ligas = externalPlayerDAOFootballDataAPIImpl.getCompetitions();
 
         ligas.get().forEach(liga -> {
@@ -176,7 +176,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Disabled("Use manually since it can fail if the API is down")
     @Test
-    void encuentraTodosLosEquiposDeUnaCompetencia() throws InterruptedException {
+    void encuentraTodosLosEquiposDeUnaCompetencia()  {
         Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImpl.getTeamsOfCompetition(COMPETITION_1);
 
         equipos.get().forEach(equipo -> {
@@ -203,7 +203,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     }
 
     @Test
-    void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty() throws InterruptedException {
+    void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty()  {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500));
         Optional<List<TeamDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
 
