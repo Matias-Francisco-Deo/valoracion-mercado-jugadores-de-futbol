@@ -1,5 +1,6 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.player.PlayerNoFilter;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
@@ -25,7 +26,7 @@ public class PlayerController {
 
     @GetMapping("/players")
     public List<PlayerResponseDTO> listPlayers() {
-        return playerService.recuperarTodos().stream()
+        return playerService.recuperarTodosConFiltro(new PlayerNoFilter()).stream()
                 .map(PlayerResponseDTO::desdeModelo)
                 .toList();
     }

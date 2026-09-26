@@ -1,5 +1,7 @@
 package com.overcode.service.impl;
 
+import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.controller.dto.player.PlayerNoFilter;
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -38,9 +40,16 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Player> recuperarTodos() {
-        return playerRepository.listarTodos();
+    public List<Player> recuperarTodosConFiltro(PlayerFilter filter) {
+        return playerRepository.recuperarTodosConFiltro(filter);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Player> recuperarTodosConFiltro() {
+        return playerRepository.recuperarTodosConFiltro(new PlayerNoFilter());
+    }
+
 
     @Override
     public List<Player> actualizarDatosJugadores() {

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +18,19 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     List<PlayerJPADTO> findAllByOrderByIdAsc();
 
+//    @Query( // TODO hay que hacer un filtrado por posición, no todavía
+//            "from player p where p.rating=:rating order by p.id asc"
+//    )
+//    List<PlayerJPADTO> listarJugadoresPorRating(@Param("rating") Double rating);
+
+    @Query(
+            "from player p where p.clubName=:clubName order by p.id asc"
+    )
+    List<PlayerJPADTO> listarJugadoresPorClub(@Param("clubName") String clubName);
+
+
     @Modifying
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     @Query(
             "update player p " +
                     "set p.currentPrice=:currentPrice," +

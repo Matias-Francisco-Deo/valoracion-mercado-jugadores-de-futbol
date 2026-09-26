@@ -1,5 +1,6 @@
 package com.overcode.service;
 
+import com.overcode.controller.dto.player.PlayerFilterByClub;
 import com.overcode.model.Player;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -32,8 +33,6 @@ class PlayerServiceTest {
     void setUp() {
         testService.eliminarJugadores();
     }
-
-
 
     @Test
     void crearJugadorValidoExitosamente() {
@@ -89,7 +88,7 @@ class PlayerServiceTest {
         playerService.crear(JUGADOR_1);
         playerService.crear(JUGADOR_2);
 
-        List<Player> jugadores = playerService.recuperarTodos();
+        List<Player> jugadores = playerService.recuperarTodosConFiltro();
 
         assertEquals(2, jugadores.size());
         assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Messi")));
@@ -98,7 +97,7 @@ class PlayerServiceTest {
 
     @Test
     void listaVaciaCuandoNoHayJugadores() {
-        assertTrue(playerService.recuperarTodos().isEmpty());
+        assertTrue(playerService.recuperarTodosConFiltro().isEmpty());
     }
 
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
@@ -176,8 +175,40 @@ class PlayerServiceTest {
 
     }
 
+    @Test
+    void listaJugadoresPorClub() {
+        Player jugador1 = getJugadorConClub("Jugador1", "Club1");
+        playerService.crear(jugador1);
+
+        Player jugador2 = getJugadorConClub("Jugador2", "Club1");
+        playerService.crear(jugador2);
+
+        Player jugador3 = getJugadorConClub("Jugador3", "Club2");
+        playerService.crear(jugador3);
+
+        Player jugador4 = getJugadorConClub("Jugador4", "Club2");
+        playerService.crear(jugador4);
+
+        Player jugador5 = getJugadorConClub("Jugador5", "Club2");
+        playerService.crear(jugador5);
+
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+        List<Player> expectedPlayers = List.of(jugador1, jugador2);
+
+
+        assertEquals(jugadores.size(), expectedPlayers.size());
+        for (int i = 0; i < jugadores.size(); i++) {
+            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        }
+
+    }
+
     private Player getJugadorConRating(String name, Double rating) {
         return new Player(name, "Club",0, 10, 5, 20, 3, 2, 0, rating, 5);
+    }
+
+            private Player getJugadorConClub(String name, String club) {
+        return new Player(name, club,0, 10, 5, 20, 3, 2, 0, 5.0, 5);
     }
 
     @AfterEach
