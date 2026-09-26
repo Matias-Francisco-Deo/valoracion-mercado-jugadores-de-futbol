@@ -14,7 +14,7 @@ import { getPlayerById } from "@/services/PlayerService";
             id: 1,
             currentPrice: 120000000,
             clubName: "Inter Miami",
-            name: "Messi",
+            name: "Leonel Messi",
             goals: 30,
             shotsOnTarget: 45,
             passes: 80,

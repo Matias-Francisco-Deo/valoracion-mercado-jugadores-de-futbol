@@ -37,20 +37,7 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleAuthentication(AuthenticationException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
-/*
-    //este handler devuelve un map con cada campo con su error
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-*/
+
     //este handler devuelve un solo mensaje de error al azar en caso de que haya mas de 1
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
