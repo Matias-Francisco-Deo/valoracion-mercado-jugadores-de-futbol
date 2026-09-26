@@ -219,10 +219,10 @@ public class PlayerControllerTest {
     }
 
     private Player getJugadorConNombre(String name) {
-        return new Player(name, "Club", 10, 5, 20, 3, 2, 2.0, 5);
+        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, 2.0, 5);
     }
 
     private Player getJugadorConRating(String name, Double rating) {
-        return new Player(name, "Club", 10, 5, 20, 3, 2, rating, 5);
+        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, rating, 5);
     }
 }

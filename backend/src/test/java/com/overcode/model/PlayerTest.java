@@ -26,7 +26,7 @@ class PlayerTest {
     }
 
     private Player getJugadorConName(String name) {
-        return new Player(name, "Club", 10, 5, 20, 3, 2, 2.0, 5);
+        return new Player(name, "Club",0, 10, 5, 20, 3, 2, 0, 2.0, 5);
     }
 
 

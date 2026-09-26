@@ -32,12 +32,18 @@ public class Player {
 
     private List<Token> tokens;
 
-    public Player(Long id, String name, String clubName, Integer goals,
+    public Player(Long id, String name, String clubName,
+                  Integer goals,
                   Integer shotsOnTarget, Integer passes,
-                  Integer interceptions, Integer keyPasses, Double rating, Integer successfulDribbles) {
+                  Integer interceptions, Integer keyPasses,
+                  Integer assists, Integer tackles,
+                  Double rating, Integer successfulDribbles) {
         setId(id);
         setName(name);
         setClubName(clubName);
+
+        setAssists(assists);
+        setTackles(tackles);
         setGoals(goals);
         setShotsOnTarget(shotsOnTarget);
         setPasses(passes);
@@ -58,10 +64,13 @@ public class Player {
         return newTokens;
     }
 
-    public Player(String name, String clubName, Integer goals,
+    public Player(String name, String clubName,
+                  Integer goals,
                   Integer shotsOnTarget, Integer passes,
-                  Integer interceptions, Integer keyPasses, Double rating, Integer successfulDribbles) {
-        this(null, name, clubName, goals, shotsOnTarget, passes, interceptions, keyPasses, rating, successfulDribbles);
+                  Integer interceptions, Integer keyPasses,
+                  Integer assists, Integer tackles,
+                  Double rating, Integer successfulDribbles) {
+        this(null, name, clubName, goals, shotsOnTarget, passes, interceptions, keyPasses, assists, tackles, rating, successfulDribbles);
     }
 
 
