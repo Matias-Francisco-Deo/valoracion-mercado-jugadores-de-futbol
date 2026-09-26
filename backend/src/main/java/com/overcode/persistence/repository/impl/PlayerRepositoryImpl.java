@@ -1,5 +1,6 @@
 package com.overcode.persistence.repository.impl;
 
+import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
@@ -39,10 +40,8 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public List<Player> listarTodos() {
-        return playerDAOJPA.findAllByOrderByIdAsc().stream()
-            .map(PlayerJPADTO::aModelo)
-            .toList();
+    public List<Player> listarJugadores(PlayerFilter filtro) {
+        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague()).stream().map(PlayerJPADTO::aModelo).toList();
     }
 
     @Override

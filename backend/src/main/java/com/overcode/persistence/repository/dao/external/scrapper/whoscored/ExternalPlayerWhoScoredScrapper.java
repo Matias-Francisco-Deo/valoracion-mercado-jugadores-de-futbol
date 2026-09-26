@@ -110,12 +110,12 @@ public class ExternalPlayerWhoScoredScrapper {
             double passSuccess = totalPasses > 0 ? (totalAccuratePasses / totalPasses) * 100 : 0.0;
 
             // 5. Guardamos en el DTO
-            Player player = new Player();
+            Player player = new Player(); // TODO usar constructores?
             player.setExternalId(playerId);
             player.setName(playerDraftDTO.name());
             player.setClubName(playerDraftDTO.clubName());
+            player.setLeague(playerDraftDTO.league());
             player.setCurrentPrice(1);
-
             player.setGoals(totalGoals);
             player.setAssists(totalAssists);
             player.setShotsOnTarget(totalShotsOnTarget);

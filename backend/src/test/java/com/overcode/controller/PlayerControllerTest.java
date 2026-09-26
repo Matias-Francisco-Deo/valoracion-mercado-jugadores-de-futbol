@@ -22,6 +22,7 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+import static com.overcode.testUtils.TestPlayerUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -112,6 +113,87 @@ public class PlayerControllerTest {
     }
 
     @Test
+    public void listarJugadoresConJugadoresExistentesConFiltroPorClubDevuelveDeEseClub() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
+        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players?clubName=Club1")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+        assertNotNull(players);
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
+
+    @Test
+    public void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
+        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players?clubName=Club1")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+        assertNotNull(players);
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
+
+    @Test
+    public void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConLiga(PLAYER_NAME, "Liga1"));
+        playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players?league=Liga1")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+        assertNotNull(players);
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
+
+    @Test
+    public void ligarJugadoresPorVariosFiltros() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
+        playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
+        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club1"));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players?clubName=Club1&league=Liga1")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+        assertNotNull(players);
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
+
+    @Test
     public void listarTopJugadoresTraeOrdenadosPorRating() {
         String token = obtainAuthToken();
         Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
@@ -133,6 +215,7 @@ public class PlayerControllerTest {
         assertEquals(players.get(1).id(), player2.getId());
 
     }
+
 
     @Test
     public void listarTopJugadoresTrae5AunqueHayaMas() {
@@ -218,11 +301,6 @@ public class PlayerControllerTest {
             .toBodilessEntity());
     }
 
-    private Player getJugadorConNombre(String name) {
-        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, 2.0, 5);
-    }
 
-    private Player getJugadorConRating(String name, Double rating) {
-        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, rating, 5);
-    }
+
 }

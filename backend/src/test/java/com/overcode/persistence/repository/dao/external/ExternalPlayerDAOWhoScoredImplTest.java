@@ -32,7 +32,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
     @Autowired
     private PlayerDAOJPA playerDAOJPA;
 
-    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé", "Real Madrid CF");
+    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé", "Real Madrid CF", "La Liga");
 
     @BeforeEach
     void setUp() {
@@ -64,7 +64,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
 
     @Test
     void noEncuentraJugadorInexistenteYDevuelveVacioMock() {
-        PlayerDraftDTO JUGADOR_FANTASMA = new PlayerDraftDTO("Jugador Fantasma", "Club Fantasma");
+        PlayerDraftDTO JUGADOR_FANTASMA = new PlayerDraftDTO("Jugador Fantasma", "Club Fantasma", "Liga Fantasma");
 
         when(whoScoredIdResolverMock.resolvePlayerId(anyString())).thenReturn(null);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(null, JUGADOR_FANTASMA)).thenReturn(Optional.empty());
@@ -76,7 +76,7 @@ public class ExternalPlayerDAOWhoScoredImplTest {
 
     @Test
     void encuentraVariosJugadoresMock() {
-        PlayerDraftDTO JUGADOR_DRAFT_2 = new PlayerDraftDTO("Vinícius Júnior", "Real Madrid CF");
+        PlayerDraftDTO JUGADOR_DRAFT_2 = new PlayerDraftDTO("Vinícius Júnior", "Real Madrid CF", "La Liga");
         
         Player mockPlayer1 = new Player();
         mockPlayer1.setName("Kylian Mbappé");
