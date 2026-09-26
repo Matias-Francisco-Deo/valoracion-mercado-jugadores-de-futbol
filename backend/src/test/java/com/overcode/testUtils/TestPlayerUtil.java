@@ -15,6 +15,13 @@ public class TestPlayerUtil {
         return new Player(name, "Club", liga,0, 10, 5, 20, 3, 2, 0, 5.0, 5);
     }
 
+    static public Player getJugadorConLigaYClub(String name, String liga, String clubName) {
+        Player jugador = getJugadorConLiga(name, liga);
+        jugador.setClubName(clubName);
+        return jugador;
+    }
+
+
     static public Player getJugadorConNombre(String name) {
         return new Player(name, "Club", "Liga1",0, 10, 5, 20, 3, 2, 0, 2.0, 5);
     }
