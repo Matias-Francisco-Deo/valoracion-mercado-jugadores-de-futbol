@@ -22,8 +22,8 @@ class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
-    private final Player JUGADOR_1 = new Player("Messi");
-    private final Player JUGADOR_2 = new Player("Mbappe");
+    private final Player JUGADOR_1 = new Player("Messi", "Barcelona", 10, 5, 20, 3, 2, 8.5, 5);
+    private final Player JUGADOR_2 = new Player("Mbappe", "PSG", 15, 8, 25, 4, 3, 9.0, 7);
 
     @Autowired
     private TestService testService;
@@ -37,7 +37,7 @@ class PlayerServiceTest {
 
     @Test
     void crearJugadorValidoExitosamente() {
-        Player nuevo = new Player("Messi");
+        Player nuevo = new Player("Messi", "Barcelona", 10, 5, 20, 3, 2, 8.5, 5);
 
         Player guardado = playerService.crear(nuevo);
 
@@ -49,7 +49,7 @@ class PlayerServiceTest {
 
     @Test
     void jugadorNuevoTiene100TokensYValeExactamente1() {
-        Player nuevo = new Player("Messi");
+        Player nuevo = new Player("Messi", "Barcelona", 10, 5, 20, 3, 2, 8.5, 5);
 
         Player guardado = playerService.crear(nuevo);
 
@@ -106,6 +106,38 @@ class PlayerServiceTest {
     void actualizarDatosDeJugadoresTraeDatos() {
         List<Player> players = playerService.actualizarDatosJugadores();
         assertFalse(players.isEmpty());
+    }
+
+    @Test
+    void listaLosTop5JugadoresPorRating() {
+        Player jugador1 = getJugadorConRating("Jugador1", 2D);
+        playerService.crear(jugador1);
+
+        Player jugador2 = getJugadorConRating("Jugador2", 3D);
+        playerService.crear(jugador2);
+
+        Player jugador3 = getJugadorConRating("Jugador3", 4D);
+        playerService.crear(jugador3);
+
+        Player jugador4 = getJugadorConRating("Jugador4", 9D);
+        playerService.crear(jugador4);
+
+        Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
+        playerService.crear(jugador5);
+
+        List<Player> jugadores = playerService.listarTop5JugadoresPorRating();
+        List<Player> expectedPlayers = List.of(jugador5, jugador4, jugador3, jugador2, jugador1);
+
+
+        assertEquals(expectedPlayers.size(), jugadores.size());
+        for (int i = 0; i < jugadores.size(); i++) {
+            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        }
+
+    }
+
+    private Player getJugadorConRating(String name, Double rating) {
+        return new Player(name, "Club", 10, 5, 20, 3, 2, rating, 5);
     }
 
     @AfterEach

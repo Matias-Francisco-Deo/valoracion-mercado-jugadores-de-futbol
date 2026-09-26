@@ -94,8 +94,8 @@ public class PlayerControllerTest {
     @Test
     public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() { // TODO este test luego del scraping es posible que no pase
         String token = obtainAuthToken();
-        playerService.crear(new Player(PLAYER_NAME));
-        playerService.crear(new Player(SECOND_PLAYER_NAME));
+        playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
             .uri("/players")
@@ -116,7 +116,7 @@ public class PlayerControllerTest {
     @Test
     public void obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos() {
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(new Player(PLAYER_NAME));
+        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
 
         ResponseEntity<PlayerResponseDTO> response = restClient.get()
             .uri("/players/" + guardado.getId())
@@ -149,5 +149,9 @@ public class PlayerControllerTest {
             .uri("/players/sync-metrics")
             .retrieve()
             .toBodilessEntity());
+    }
+
+    private Player getJugadorConNombre(String name) {
+        return new Player(name, "Club", 10, 5, 20, 3, 2, 2.0, 5);
     }
 }
