@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record RegisterRequest(
-        @NotBlank(message = "Username is required") String username,
-        @NotBlank(message = "Email is required") @Email(message = "Email must be valid") String email,
-        @NotBlank(message = "Password is required") String password
+        @NotBlank(message = "El Usuario es obligatoria") String username,
+        @NotBlank(message = "El Email es obligatoria") @Email(message = "El Email debe ser valido") String email,
+        @NotBlank(message = "La Contraseña es obligatoria") String password
 ) {
     public User aModelo() {
         String trimmedUsername = username.trim();

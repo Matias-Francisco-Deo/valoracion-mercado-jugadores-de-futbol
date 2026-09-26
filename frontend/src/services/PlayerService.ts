@@ -6,3 +6,8 @@ export async function getPlayerById(playerId: string): Promise<Player> {
     return response;
 
 }
+
+export async function getAllPlayers() {
+    const response = futbolApi.get<Player[]>(`/players`);
+    return response;
+}

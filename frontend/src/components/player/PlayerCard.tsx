@@ -1,15 +1,16 @@
 import { cn } from '@/lib/utils'
-import React from "react";
 import type {Player} from "@/types/player.ts";
+import { Link, type LinkProps } from 'react-router-dom';
 
-export type PlayerCardProps = {
+interface PlayerCardProps extends Omit<LinkProps, 'to'> {
     player: Player
-} & React.ComponentProps<'div'>
+}
 
 export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
     return (
-        <div
+        <Link
             key={player.id}
+            to={`/p/${player.id}`}
             className={cn(className,
                 "bg-gray-400 aspect-poster flex flex-col flex-1" +
                 "text-lg w-60 min-w-40 text-start p-4 " +
@@ -32,6 +33,6 @@ export const PlayerCard = ({player, className, ...props }: PlayerCardProps) => {
                 <div>Rating: {player.rating}</div>
                 <div>Precio actual: {player.currentPrice}</div>
             </div>
-        </div>
+        </Link>
     )
 }
