@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { PlayerCard } from "@/components/player/PlayerCard.tsx";
 import type { Player } from "@/types/player";
-import { getPlayers } from "@/services/PlayerService";
-import { Loading } from "@/components/common/Loagind";
+import { getAllPlayers } from "@/services/PlayerService";
+import { Loading } from "@/components/common/Loading";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import type { HttpError } from "@/lib/http-error";
 
@@ -12,17 +12,17 @@ export default function CatalogoPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getPlayers()
+        getAllPlayers()
             .then((data) => setPlayers(data))
             .catch((error: HttpError) => setError(error))
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <Loading text="Cargando catálogo..." className="flex-1" />
+    if (loading) return <Loading text="Cargando catálogo..." />
     if (error) return <ServerErrorComponent />
 
     return (
-        <div className="flex flex-col gap-10 w-full">
+        <div className="flex flex-col flex-1 gap-10 w-full p-4">
             <h1 className="text-3xl font-bold text-center">Catálogo de Jugadores</h1>
 
             <div className="flex justify-center gap-8 flex-wrap">
@@ -31,9 +31,9 @@ export default function CatalogoPage() {
                         <PlayerCard key={player.id} player={player} />
                     ))
                 ) : (
-                    <div className="text-center text-xl text-gray-500 py-10">
+                    <p className="text-center text-xl py-10">
                         No hay jugadores disponibles en el catálogo en este momento.
-                    </div>
+                    </p>
                 )}
             </div>
         </div>

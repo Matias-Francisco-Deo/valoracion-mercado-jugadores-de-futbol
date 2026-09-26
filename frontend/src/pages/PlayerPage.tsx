@@ -3,7 +3,7 @@ import type { Player } from "@/types/player";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {ServerErrorComponent} from "@/components/ServerErrorComponent";
-import { Loading } from "@/components/common/Loagind";
+import { Loading } from "@/components/common/Loading";
 import NotFoundPage from "./NotFoundPage";
 import { MetricBox } from "@/components/player/MetricBox";
 import type { HttpError } from "@/lib/http-error";
@@ -14,7 +14,7 @@ import { getPlayerById } from "@/services/PlayerService";
             id: 1,
             currentPrice: 120000000,
             clubName: "Inter Miami",
-            name: "Messi",
+            name: "Leonel Messi",
             goals: 30,
             shotsOnTarget: 45,
             passes: 80,
@@ -27,7 +27,7 @@ export default function PlayerPage(){
     const { playerId } = useParams();
     const [player,setPlayer] = useState<Player|null>(null);
     const [error,setError] = useState<HttpError  | null>(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
             if (!playerId) return
@@ -50,10 +50,10 @@ export default function PlayerPage(){
     ];
 
     return(
-        <div className="flex flex-col self-center bg-gray-400 p-4 rounded-3xl">
+        <div className="w-full max-w-[700px] flex flex-col self-center bg-gray-400 p-4 rounded-3xl">
 
             <MainPlayerInfo player={player} />
-            <div className="flex flex-wrap max-w-[650px] justify-center gap-4">{/*cambiar por grid? */}
+            <div className="flex flex-wrap justify-center gap-4">
             {metrics.map((metric) => (
                 <MetricBox
                     key={metric.title}

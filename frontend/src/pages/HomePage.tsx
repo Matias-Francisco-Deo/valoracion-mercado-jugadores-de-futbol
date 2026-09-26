@@ -1,9 +1,11 @@
 import {PlayerCard} from "@/components/player/PlayerCard.tsx";
 import type {Player} from "@/types/player.ts";
 import {PageLink} from "@/components/ui/PageLink.tsx";
-
-export default function HomePage() {
-  // const { user, isAuthenticated, logout } = useAuth();
+import { useEffect, useState } from "react";
+import type { HttpError } from "@/lib/http-error";
+import { getAllPlayers } from "@/services/PlayerService";
+import { ServerErrorComponent } from "@/components/ServerErrorComponent";
+import { Loading } from "@/components/common/Loading";
 
     const datosJugadores: Player[] = [
         {
@@ -68,12 +70,28 @@ export default function HomePage() {
         },
     ];
 
+export default function HomePage() {
+  const [players,setPlayers] = useState<Player[]>([]);
+  const [error,setError] = useState<HttpError  | null>(null);
+  const [loading, setLoading] = useState(true)
+
+  useEffect(()=>{
+    getAllPlayers()
+    .then((players) => setPlayers(players.slice(0, 5)))//agarro 5 de la lista
+    .catch((e: HttpError) =>setError(e))
+    .finally(() => setLoading(false))
+  },[]);
+
+  if (loading) return <Loading text="Cargando..." />
+
+  if (error?.status === 500) return <ServerErrorComponent />
+
   return (
       <div className="flex flex-col gap-10 ">
         <p className="text-2xl">Top 5 Jugadores</p>
-        <div className="text-center text-3xl flex flex-col gap-10 ">
+        <div className="text-center text-3xl flex flex-col gap-10 min-h-[320px] sm:min-h-[425px]">
           <div className="flex justify-center gap-8 flex-wrap ">
-          {datosJugadores.map(player =>
+          {players.map(player =>
             <PlayerCard player={player}/>
           )}
           </div>

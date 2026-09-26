@@ -14,12 +14,12 @@ export const MainPlayerInfo = ({player, className, ...props }: MainPlayerInfoPro
             <img src={pelota} alt={player.name} 
             className="w-full max-w-50 rounded-b-full" />
             <div className="flex flex-col gap-2 justify-around">
-                <div>
-                    <h2>{player.name}</h2>
+                <div className="flex flex-col">
+                    <h2 className="text-4xl font-PlayerName">{player.name}</h2>
+                    <span>{player.clubName}</span>
                 </div>
                 
-                <span>{player.clubName}</span>
-                <span>Precio actual: ${player.currentPrice}</span>
+                <span>Precio token: ${player.currentPrice}</span>
             </div>
             <p className="flex flex-col gap-1 items-center">
                 Rating{" "}

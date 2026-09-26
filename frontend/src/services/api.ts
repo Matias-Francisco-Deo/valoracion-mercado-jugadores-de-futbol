@@ -7,22 +7,6 @@ import { getSession, removeSession } from "@/lib/session";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export interface ApiError {
-    message: string
-  
-}
-
-export class ApiError extends Error {
-  statusCode: number;
-
-  constructor(statusCode: number, message: string) {
-    super(message);
-    this.name = 'ApiError';
-    this.statusCode = statusCode;
-  }
-}
-
-
 export async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
 
@@ -39,7 +23,7 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
   });
 
     if (!response.ok) {
-      const data: ApiError = await response.json().catch(() => ({
+      const data: HttpError = await response.json().catch(() => ({
         error:{
           message: 'Ocurrió un error inesperado.',
         },
