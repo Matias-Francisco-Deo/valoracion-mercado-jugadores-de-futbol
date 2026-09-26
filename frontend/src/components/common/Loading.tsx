@@ -7,7 +7,7 @@ interface LoadingProps extends React.ComponentProps<'div'> {
 
 export const Loading = ({ text, className, ...props }: LoadingProps) => (
   <div
-    className={cn('flex h-full flex-col items-center justify-center gap-4', className)}
+    className={cn('flex flex-1 flex-col items-center justify-center gap-4 text-black', className)}
     {...props}
   >
     <LoaderCircle className="size-12 animate-spin" />

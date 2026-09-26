@@ -8,12 +8,21 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Pochaev";
+  src: url("assets/fonts/Pochaevsk-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-brand-orange: #FF9500;
   --color-pitch-green: #096638;
   --color-card-gray: #A8A8A8;
 
   --font-logo: "MeaCulpa", sans-serif;
+  --font-PlayerName: "Pochaev", sans-serif;
 
   --color-destructive: #e7000b;
   --color-destructive-foreground: #ffffff;
