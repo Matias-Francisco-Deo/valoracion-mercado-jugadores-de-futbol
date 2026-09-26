@@ -32,11 +32,28 @@ public class Player {
 
     private List<Token> tokens;
 
-    public Player(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public Player(Long id, String name, String clubName,
+                  Integer goals,
+                  Integer shotsOnTarget, Integer passes,
+                  Integer interceptions, Integer keyPasses,
+                  Integer assists, Integer tackles,
+                  Double rating, Integer successfulDribbles) {
+        setId(id);
+        setName(name);
+        setClubName(clubName);
+
+        setAssists(assists);
+        setTackles(tackles);
+        setGoals(goals);
+        setShotsOnTarget(shotsOnTarget);
+        setPasses(passes);
+        setInterceptions(interceptions);
+        setKeyPasses(keyPasses);
+        setRating(rating);
+        setSuccessfulDribbles(successfulDribbles);
         setCurrentPrice(1);
-        setTokens(getInitialTokens()); // deberían ser 100 tokens acá
+        setTokens(getInitialTokens());
+
     }
 
     private List<Token> getInitialTokens() {
@@ -47,16 +64,15 @@ public class Player {
         return newTokens;
     }
 
-    public Player(String name) {
-        this(null, name);
+    public Player(String name, String clubName,
+                  Integer goals,
+                  Integer shotsOnTarget, Integer passes,
+                  Integer interceptions, Integer keyPasses,
+                  Integer assists, Integer tackles,
+                  Double rating, Integer successfulDribbles) {
+        this(null, name, clubName, goals, shotsOnTarget, passes, interceptions, keyPasses, assists, tackles, rating, successfulDribbles);
     }
 
-    public Player(Long id, String name, Integer currentPrice, List<Token> tokens) {
-        this.id = id;
-        this.name = name;
-        setCurrentPrice(currentPrice);
-        setTokens(tokens);
-    }
 
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);

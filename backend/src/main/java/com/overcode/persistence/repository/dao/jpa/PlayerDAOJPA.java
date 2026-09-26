@@ -54,4 +54,9 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     boolean existsByExternalId(Long externalId);
 
     Optional<PlayerJPADTO> findByExternalId(Long externalId);
+
+    @Query(
+            "from player p order by p.rating desc limit 5"
+    )
+    List<PlayerJPADTO> listarTop5JugadoresPorRating();
 }

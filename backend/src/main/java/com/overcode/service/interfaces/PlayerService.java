@@ -13,4 +13,6 @@ public interface PlayerService {
     List<Player> recuperarTodos();
 
     List<Player> actualizarDatosJugadores();
+
+    List<Player> listarTop5JugadoresPorRating();
 }

@@ -77,7 +77,7 @@ public class PlayerControllerTest {
     // ------------------------------ Tests de listado de jugadores ------------------------------
 
     @Test
-    public void listarJugadoresConBaseVaciaDevuelveListaVacia() { // TODO este test luego del scraping es posible que no pase
+    public void listarJugadoresConBaseVaciaDevuelveListaVacia() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
@@ -92,10 +92,10 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() { // TODO este test luego del scraping es posible que no pase
+    public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() {
         String token = obtainAuthToken();
-        playerService.crear(new Player(PLAYER_NAME));
-        playerService.crear(new Player(SECOND_PLAYER_NAME));
+        playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
             .uri("/players")
@@ -111,12 +111,79 @@ public class PlayerControllerTest {
         assertTrue(response.getBody().stream().anyMatch(p -> SECOND_PLAYER_NAME.equals(p.name())));
     }
 
+    @Test
+    public void listarTopJugadoresTraeOrdenadosPorRating() {
+        String token = obtainAuthToken();
+        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
+        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertEquals(2, players.size());
+        assertEquals(players.get(0).id(), player1.getId());
+        assertEquals(players.get(1).id(), player2.getId());
+
+    }
+
+    @Test
+    public void listarTopJugadoresTrae5AunqueHayaMas() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConRating("jugador1", 9.5D));
+        playerService.crear(getJugadorConRating("jugador2", 8.5D));
+        playerService.crear(getJugadorConRating("jugador3", 7.5D));
+        playerService.crear(getJugadorConRating("jugador4", 6.5D));
+        playerService.crear(getJugadorConRating("jugador5", 5.5D));
+        playerService.crear(getJugadorConRating("jugador6", 5.5D));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertEquals(5, players.size());
+
+    }
+
+    @Test
+    public void listarTopJugadoresSinJugadoresDaVacio() {
+        String token = obtainAuthToken();
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertTrue(players.isEmpty());
+
+    }
+
     // ------------------------------ Tests de consulta de jugador por ID ------------------------------
 
     @Test
     public void obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos() {
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(new Player(PLAYER_NAME));
+        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
 
         ResponseEntity<PlayerResponseDTO> response = restClient.get()
             .uri("/players/" + guardado.getId())
@@ -149,5 +216,13 @@ public class PlayerControllerTest {
             .uri("/players/sync-metrics")
             .retrieve()
             .toBodilessEntity());
+    }
+
+    private Player getJugadorConNombre(String name) {
+        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, 2.0, 5);
+    }
+
+    private Player getJugadorConRating(String name, Double rating) {
+        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, rating, 5);
     }
 }

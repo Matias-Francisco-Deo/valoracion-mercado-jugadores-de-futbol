@@ -17,4 +17,5 @@ public interface PlayerRepository {
 
     List<Player> actualizarDatosJugadores();
 
+    List<Player> listarTop5JugadoresPorRating();
 }

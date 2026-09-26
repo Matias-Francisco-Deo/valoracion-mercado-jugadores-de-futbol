@@ -49,4 +49,11 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     public List<Player> actualizarDatosJugadores() {
         return externalPlayerRepository.buscarYGuardarJugadores().orElse(List.of());
     }
+
+    @Override
+    public List<Player> listarTop5JugadoresPorRating() {
+        return playerDAOJPA.listarTop5JugadoresPorRating().stream()
+            .map(PlayerJPADTO::aModelo)
+            .toList();
+    }
 }

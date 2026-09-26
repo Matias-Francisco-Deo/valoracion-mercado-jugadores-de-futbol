@@ -20,36 +20,36 @@ public class PlayerJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "external_id", nullable = true, unique = true) // TODO índices? null?
+    @Column(name = "external_id", unique = true) // TODO índices? null?
     private Long externalId; // TODO tiene sentido? o es raro tener el ID de otros adentro de la db? porque esto haría más rápido el proceso
 
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(name = "current_price", nullable = false)
+    @Column(nullable = false, name = "current_price")
     private Integer currentPrice;
 
-    @Column(name = "club_name")
+    @Column(nullable = false, name = "club_name")
     private String clubName;
 
-    @Column(name = "goals")
+    @Column(nullable = false, name = "goals")
     private Integer goals;
-    @Column(name = "assists")
+    @Column(nullable = false, name = "assists")
     private Integer assists;
-    @Column(name = "shots_on_target")
+    @Column(nullable = false, name = "shots_on_target")
     private Integer shotsOnTarget;
-    @Column(name = "passes")
+    @Column(nullable = false, name = "passes")
     private Integer passes;
 
-    @Column(name = "interceptions")
+    @Column(nullable = false, name = "interceptions")
     private Integer interceptions;
-    @Column(name = "tackles")
+    @Column(nullable = false, name = "tackles")
     private Integer tackles;
-    @Column(name = "key_passes")
+    @Column(nullable = false, name = "key_passes")
     private Integer keyPasses;
-    @Column(name = "rating")
+    @Column(nullable = false, name = "rating")
     private Double rating;
-    @Column(name = "successful_dribbles")
+    @Column(nullable = false, name = "successful_dribbles")
     private Integer successfulDribbles;
 
 

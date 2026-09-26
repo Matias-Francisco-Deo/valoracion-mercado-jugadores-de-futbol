@@ -47,6 +47,12 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.actualizarDatosJugadores();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Player> listarTop5JugadoresPorRating() {
+        return playerRepository.listarTop5JugadoresPorRating();
+    }
+
     private void validarJugador(Player player) {
         if (playerRepository.existsByName(player.getName())) {
             log.error("Jugador ya existe: {}", player.getName());
