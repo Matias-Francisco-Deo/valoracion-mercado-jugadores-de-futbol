@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClient;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerTest {
+ class AuthControllerTest {
 
     @LocalServerPort
     private int port;
@@ -31,12 +31,12 @@ public class AuthControllerTest {
     private RestClient restClient;
 
     @PostConstruct
-    public void init() {
+     void init() {
         this.restClient = RestClient.builder().baseUrl("http://localhost:" + port).build();
     }
     //------------------------------Tests de registro------------------------------
     @Test
-    public void registrarUsuarioConDatosValidos() {
+     void registrarUsuarioConDatosValidos() {
         var req = new RegisterRequest("User", "register@example.com", "Password123!");
 
         ResponseEntity<AuthResponse> response = restClient.post()
@@ -53,7 +53,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void alCrearUsuarioNuevoTieneDatosDeInicializacionCreditos0YSinTokens() {
+     void alCrearUsuarioNuevoTieneDatosDeInicializacionCreditos0YSinTokens() {
         var req = new RegisterRequest("User", "register@example.com", "Password123!");
 
         ResponseEntity<AuthResponse> response = restClient.post()
@@ -68,7 +68,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void registrarUsuarioConEmailInvalido() {
+     void registrarUsuarioConEmailInvalido() {
         var req = new RegisterRequest("invalidEmail", "invalid-email", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
@@ -80,7 +80,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void registrarUsuarioSinEmail() {
+     void registrarUsuarioSinEmail() {
         var req = new RegisterRequest("sinEmail", "", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
@@ -92,7 +92,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void registrarUsuarioSinContraseña() {
+     void registrarUsuarioSinContraseña() {
         var req = new RegisterRequest("sinContraseña", "login@example.com", "");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
@@ -104,7 +104,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void registrarUsuarioSinNombre() {
+     void registrarUsuarioSinNombre() {
         var req = new RegisterRequest("", "login@example.com", "Password123");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
@@ -116,7 +116,7 @@ public class AuthControllerTest {
     }
     //------------------------------Tests de login------------------------------
     @Test
-    public void loginConDatosValidos() {
+     void loginConDatosValidos() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
         var req = new LoginRequest("login@example.com", "Password123!");
@@ -134,7 +134,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void loginConContraseñaIncorrecta() {
+     void loginConContraseñaIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
         var req = new LoginRequest("login@example.com", "WrongPassword123!");
@@ -148,7 +148,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void loginConEmailIncorrecta() {
+     void loginConEmailIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
         var req = new LoginRequest("wrong@example.com", "Password123!");
@@ -163,7 +163,7 @@ public class AuthControllerTest {
     //------------------------------Tests de accesos a endpoints protegidos------------------------------
     @Disabled("Temporally disabled for later usage")
     @Test
-    public void accederEndpointProtegidoSinToken() {
+     void accederEndpointProtegidoSinToken() {
         assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
             .uri("/users/1")
             .retrieve()
@@ -172,7 +172,7 @@ public class AuthControllerTest {
 
     @Disabled("Temporally disabled for later usage")
     @Test
-    public void accederEndpointProtegidoConTokenValido() {
+     void accederEndpointProtegidoConTokenValido() {
         var auth = registerUser("protectedUser", "protected@example.com", "Password123!");
         //como el token es válido, debería poder acceder al endpoint protegido y obtener Not Found porque el usuario no existe en lugar de Forbidden
         assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()
@@ -184,7 +184,7 @@ public class AuthControllerTest {
 
     @Disabled("Temporally disabled for later usage")
     @Test
-    public void accederEndpointProtegidoConTokenInvalido() {
+     void accederEndpointProtegidoConTokenInvalido() {
         assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.get()
             .uri("/users/1")
             .header("Authorization", "Bearer invalid.token.value")

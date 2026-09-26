@@ -1,17 +1,14 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.model.User;
 import com.overcode.model.security.Auth;
 import com.overcode.security.UserAuth;
 import com.overcode.service.exception.AuthenticationException;
-import com.overcode.service.exception.ConflictException;
 import com.overcode.service.interfaces.AuthService;
 import com.overcode.service.interfaces.UserService;
-import org.springframework.stereotype.Service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 

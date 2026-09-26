@@ -2,7 +2,6 @@ package com.overcode.service;
 
 import com.overcode.model.User;
 import com.overcode.service.exception.EmailRepetidoException;
-import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest()

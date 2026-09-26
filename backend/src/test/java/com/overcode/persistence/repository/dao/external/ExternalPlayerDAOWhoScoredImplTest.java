@@ -8,7 +8,6 @@ import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -36,8 +36,8 @@ public class ExternalPlayerDAOWhoScoredImplTest {
 
     @BeforeEach
     void setUp() {
-        whoScoredIdResolverMock = Mockito.mock(WhoScoredIdResolver.class);
-        externalPlayerWhoScoredScrapperMock = Mockito.mock(ExternalPlayerWhoScoredScrapper.class);
+        whoScoredIdResolverMock = mock(WhoScoredIdResolver.class);
+        externalPlayerWhoScoredScrapperMock = mock(ExternalPlayerWhoScoredScrapper.class);
         externalPlayerDAOWhoScoredImplMock = new ExternalPlayerDAOWhoScoredImpl(whoScoredIdResolverMock, externalPlayerWhoScoredScrapperMock, playerDAOJPA);
     }
 

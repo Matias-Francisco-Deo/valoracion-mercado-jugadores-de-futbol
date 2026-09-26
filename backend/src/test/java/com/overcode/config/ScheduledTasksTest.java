@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
     ScheduledTasksTest.TestSchedulingConfig.class,
     ScheduledTasks.class
 })
-public class ScheduledTasksTest {
+class ScheduledTasksTest {
 
     @Configuration
     @EnableScheduling
@@ -51,7 +51,7 @@ public class ScheduledTasksTest {
     PlayerService playerService;
 
     @Test
-    public void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {
+    void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {
         when(playerService.actualizarDatosJugadores()).thenReturn(List.of());
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
