@@ -5,9 +5,12 @@ import { getAllPlayers } from "@/services/PlayerService";
 import { Loading } from "@/components/common/Loading";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import type { HttpError } from "@/lib/http-error";
+import { FilterMenu } from '@/components/common/FilterMenu';
+import { MessajeBox } from '@/components/common/MessageBox';
 
 export default function CatalogoPage() {
     const [players, setPlayers] = useState<Player[]>([]);
+    const [selectedFilter, setSelectedFilter] = useState("");
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -19,23 +22,33 @@ export default function CatalogoPage() {
     }, []);
 
     if (loading) return <Loading text="Cargando catálogo..." />
-    if (error) return <ServerErrorComponent />
+    //if (error) return <ServerErrorComponent />
 
     return (
-        <div className="flex flex-col flex-1 gap-10 w-full p-4">
-            <h1 className="text-3xl font-bold text-center">Catálogo de Jugadores</h1>
-
-            <div className="flex justify-center gap-8 flex-wrap">
+        <div className="flex flex-col flex-1 gap-10 w-full p-4 relative">
+            
                 {players.length > 0 ? (
-                    players.map(player => (
-                        <PlayerCard key={player.id} player={player} />
-                    ))
+                    <>
+                        <FilterMenu
+                            filters={["Rating", "largo", "goles"]}
+                            selectedFilter={selectedFilter}
+                            onFilterChange={setSelectedFilter}
+                            className="absolute right-0"
+                        />
+
+                        <div className="flex justify-center gap-8 flex-wrap">
+                            {players.map(player => (
+                                <PlayerCard
+                                    key={player.id}
+                                    player={player}
+                                />
+                            ))}
+                        </div>
+                    </>
                 ) : (
-                    <p className="text-center text-xl py-10">
-                        No hay jugadores disponibles en el catálogo en este momento.
-                    </p>
+                    <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
+                    className='items-center'/>
                 )}
-            </div>
         </div>
     );
 }

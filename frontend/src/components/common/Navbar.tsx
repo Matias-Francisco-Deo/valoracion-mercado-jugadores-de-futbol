@@ -1,7 +1,8 @@
 import {Link} from 'react-router-dom';
 import {useAuth} from '../../hooks/useAuth';
 import {UserMenu} from './UserMenu';
-import {LogoIcon} from './LogoIcon';
+import {LogoIcon} from '../../icon/LogoIcon';
+import { PageLink } from '../ui/PageLink';
 
 /**
  * Top navigation bar featuring the Overcode brand and login navigation link.
@@ -15,14 +16,19 @@ export const Navbar: React.FC = () => {
   return (
     <header className="h-16 w-full shrink-0 bg-brand-orange shadow-md z-10">
       <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <Link
-          to="/"
-          className="flex text-black items-center text-4xl font-bold tracking-wider hover:opacity-90 transition-opacity font-logo"
-        >
-          <LogoIcon/>
-          Overcode
-        </Link>
-        <nav className="flex justify-end">
+        <nav className="flex items-center gap-6">
+          <Link  to="/"
+            className="flex text-black items-center text-4xl font-bold tracking-wider hover:opacity-90 transition-opacity font-logo">
+            <LogoIcon/>
+            Overcode
+          </Link>
+
+          <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/catalogo">
+            Catalogo 
+          </PageLink>
+        </nav>
+        
+        <div>
           {!isAuthenticated || !user ? (
             <Link
               to="/login"
@@ -33,7 +39,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <UserMenu user={user} onLogout={logout} />
           )}
-        </nav>
+        </div>
       </div>
     </header>
   );

@@ -10,3 +10,8 @@ export async function getAllPlayers() {
     const response = futbolApi.get<Player[]>(`/players`);
     return response;
 }
+
+export async function getFiltredPlayers(filter:string) {
+    const response = futbolApi.get<Player[]>(`/players`);
+    return response;
+}
