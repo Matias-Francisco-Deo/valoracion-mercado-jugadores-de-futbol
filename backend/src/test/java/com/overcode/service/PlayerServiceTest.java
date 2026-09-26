@@ -234,12 +234,18 @@ class PlayerServiceTest {
     }
 
     @Test
-    void listarJugadoresConfIltroSinJugadoresDaVacio() {
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+    void listarJugadoresConFiltroLigaSinJugadoresDaVacio() {
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByLeague("Liga1"));
         assertTrue(jugadores.isEmpty());
 
     }
 
+    @Test
+    void listarJugadoresConFiltroClubSinJugadoresDaVacio() {
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+        assertTrue(jugadores.isEmpty());
+
+    }
 
 
     @AfterEach

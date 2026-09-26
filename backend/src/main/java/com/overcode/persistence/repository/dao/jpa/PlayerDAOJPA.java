@@ -24,6 +24,11 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 //    List<PlayerJPADTO> listarJugadoresPorRating(@Param("rating") Double rating);
 
     @Query(
+            "from player p where p.league=:league order by p.id asc"
+    )
+    List<PlayerJPADTO> listarJugadoresPorLiga(@Param("league") String league);
+
+    @Query(
             "from player p where p.clubName=:clubName order by p.id asc"
     )
     List<PlayerJPADTO> listarJugadoresPorClub(@Param("clubName") String clubName);

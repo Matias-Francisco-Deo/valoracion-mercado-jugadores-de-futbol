@@ -19,18 +19,17 @@ public class PlayerJPADTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "external_id", unique = true) // TODO índices? null?
     private Long externalId; // TODO tiene sentido? o es raro tener el ID de otros adentro de la db? porque esto haría más rápido el proceso
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(nullable = false, name = "current_price")
-    private Integer currentPrice;
-
     @Column(nullable = false, name = "club_name")
     private String clubName;
+    @Column(nullable = false, name = "league")
+    private String league;
+    @Column(nullable = false, name = "current_price")
+    private Integer currentPrice;
 
     @Column(nullable = false, name = "goals")
     private Integer goals;
@@ -71,6 +70,7 @@ public class PlayerJPADTO {
         PlayerJPADTO dto = new PlayerJPADTO();
         dto.setId(player.getId());
         dto.setName(player.getName());
+        dto.setLeague(player.getLeague());
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setClubName(player.getClubName());
@@ -93,6 +93,7 @@ public class PlayerJPADTO {
         player.setId(this.id);
         player.setExternalId(this.getExternalId());
         player.setName(this.name);
+        player.setLeague(this.league);
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
         player.setClubName(this.clubName);

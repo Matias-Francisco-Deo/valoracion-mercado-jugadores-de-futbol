@@ -80,7 +80,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
                 .flatMap(
                         team ->
                                 team.squad().stream().map(player ->
-                                new PlayerDraftDTO(player.name(), team.name()
+                                new PlayerDraftDTO(player.name(), team.name(), competition.name()
                                 ))).toList();
 
         return Optional.of(players);

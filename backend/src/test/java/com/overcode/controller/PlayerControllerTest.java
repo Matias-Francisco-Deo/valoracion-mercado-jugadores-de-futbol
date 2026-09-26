@@ -22,6 +22,8 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -218,11 +220,6 @@ public class PlayerControllerTest {
             .toBodilessEntity());
     }
 
-    private Player getJugadorConNombre(String name) {
-        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, 2.0, 5);
-    }
 
-    private Player getJugadorConRating(String name, Double rating) {
-        return new Player(name, "Club", 0, 10, 5, 20, 3, 2, 0, rating, 5);
-    }
+
 }
