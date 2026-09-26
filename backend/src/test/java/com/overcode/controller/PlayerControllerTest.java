@@ -129,8 +129,33 @@ public class PlayerControllerTest {
 
         assertNotNull(players);
         assertEquals(2, players.size());
-        assertSame(players.get(0).id(), player1.getId());
-        assertSame(players.get(1).id(), player2.getId());
+        assertEquals(players.get(0).id(), player1.getId());
+        assertEquals(players.get(1).id(), player2.getId());
+
+    }
+
+    @Test
+    public void listarTopJugadoresTrae5AunqueHayaMas() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConRating("jugador1", 9.5D));
+        playerService.crear(getJugadorConRating("jugador2", 8.5D));
+        playerService.crear(getJugadorConRating("jugador3", 7.5D));
+        playerService.crear(getJugadorConRating("jugador4", 6.5D));
+        playerService.crear(getJugadorConRating("jugador5", 5.5D));
+        playerService.crear(getJugadorConRating("jugador6", 5.5D));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players/top")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+
+        assertNotNull(players);
+        assertEquals(5, players.size());
 
     }
 

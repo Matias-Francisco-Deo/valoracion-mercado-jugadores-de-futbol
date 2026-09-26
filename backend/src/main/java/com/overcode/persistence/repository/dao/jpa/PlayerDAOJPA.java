@@ -56,7 +56,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     Optional<PlayerJPADTO> findByExternalId(Long externalId);
 
     @Query(
-            "from player p order by p.rating desc"
+            "from player p order by p.rating desc limit 5"
     )
     List<PlayerJPADTO> listarTop5JugadoresPorRating();
 }
