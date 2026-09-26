@@ -2,7 +2,7 @@ package com.overcode.controller.dto.player;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
-import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class PlayerFilterByLeague extends PlayerFilter{
     }
 
     @Override
-    public List<Player> getFilteredPlayers(PlayerDAOJPA playerDAOJPA) {
-        return playerDAOJPA.listarJugadoresPorLiga(this.getFilterContent()).stream().map(PlayerJPADTO::aModelo).toList();
+    public List<Player> getFilteredPlayers(PlayerRepository playerRepository) {
+        return playerRepository.listarJugadoresPorLiga(this.getFilterContent()).stream().map(PlayerJPADTO::aModelo).toList();
     }
 }
