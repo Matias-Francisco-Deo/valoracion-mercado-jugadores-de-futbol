@@ -1,19 +1,26 @@
 package com.overcode.controller.dto.player;
 
-import com.overcode.model.Player;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Getter
-public abstract class PlayerFilter {
+@NoArgsConstructor
+public class PlayerFilter {
 
-    private final String filterContent;
+    private String clubName;
+    private String league;
 
-    public PlayerFilter(String filterContent) {
-        this.filterContent = filterContent;
+
+    public PlayerFilter(String clubName, String league) {
+        this.clubName = clubName;
+        this.league = league;
     }
 
-    public abstract List<Player> getFilteredPlayers(PlayerRepository playerRepository);
+    public static PlayerFilter withClubname(String clubName) {
+        return new PlayerFilter(clubName, null);
+    }
+
+    public static PlayerFilter withLeague(String league) {
+        return new PlayerFilter(null, league);
+    }
 }

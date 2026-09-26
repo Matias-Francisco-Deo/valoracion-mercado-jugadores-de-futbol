@@ -16,23 +16,25 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     Optional<PlayerJPADTO> findByNameIgnoreCase(String name);
 
-    List<PlayerJPADTO> findAllByOrderByIdAsc();
+    String FIND_BY_CLUBNAME = "unaccent(LOWER(p.club_name)) LIKE unaccent(CONCAT(LOWER(CAST(:clubName AS text)), '%'))";
 
-//    @Query( // TODO hay que hacer un filtrado por posición, no todavía
-//            "from player p where p.rating=:rating order by p.id asc"
-//    )
-//    List<PlayerJPADTO> listarJugadoresPorRating(@Param("rating") Double rating);
+    String FIND_BY_LEAGUE = "unaccent(LOWER(p.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%'))";
 
-    @Query(
-            "from player p where p.league=:league order by p.id asc"
-    )
-    List<PlayerJPADTO> listarJugadoresPorLiga(@Param("league") String league);
+    String FIND_BY_FILTRO_QUERY =
+            "FROM players p " +
+                    "WHERE " + FIND_BY_CLUBNAME + " " +
+                    "AND " + FIND_BY_LEAGUE ;
 
     @Query(
-            "from player p where p.clubName=:clubName order by p.id asc"
-    )
-    List<PlayerJPADTO> listarJugadoresPorClub(@Param("clubName") String clubName);
+            value = "SELECT * " + FIND_BY_FILTRO_QUERY,
+            countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY,
+            nativeQuery = true)
+    List<PlayerJPADTO> listarJugadores(
+            @Param("clubName") String clubName,
+            @Param("league") String league
+    );
 
+// TODO hay que hacer un filtrado por posición, no todavía
 
     @Modifying
     @Transactional

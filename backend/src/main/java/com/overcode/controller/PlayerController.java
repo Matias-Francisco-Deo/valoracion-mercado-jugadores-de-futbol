@@ -1,15 +1,13 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.player.PlayerNoFilter;
+import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.controller.dto.player.PlayerFilterDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,9 +22,15 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/")
-    public List<PlayerResponseDTO> listPlayers() {
-        return playerService.recuperarTodosConFiltro(new PlayerNoFilter()).stream()
+    @GetMapping({"", "/"})
+    public List<PlayerResponseDTO> listPlayers(
+            @RequestParam(required = false) String league,
+            @RequestParam(required = false) String clubName
+    ) {
+        PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(league, clubName);
+
+        PlayerFilter filter = playerFilterDTO.aModelo();
+        return playerService.recuperarTodosConFiltro(filter).stream()
                 .map(PlayerResponseDTO::desdeModelo)
                 .toList();
     }

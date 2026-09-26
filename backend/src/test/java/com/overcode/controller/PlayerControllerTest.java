@@ -119,7 +119,7 @@ public class PlayerControllerTest {
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players")
+                .uri("/players?clubname=Club1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -130,7 +130,26 @@ public class PlayerControllerTest {
         assertNotNull(players);
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
 
+    @Test
+    public void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
+        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
+
+        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+                .uri("/players?clubName=Club1")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<PlayerResponseDTO> players = response.getBody();
+        assertNotNull(players);
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
     }
 
     @Test
@@ -140,7 +159,7 @@ public class PlayerControllerTest {
         playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players")
+                .uri("/players?league=Liga1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {

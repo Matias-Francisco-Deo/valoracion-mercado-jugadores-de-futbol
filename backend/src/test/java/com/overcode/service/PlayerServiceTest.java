@@ -1,7 +1,6 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.player.PlayerFilterByClub;
-import com.overcode.controller.dto.player.PlayerFilterByLeague;
+import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -90,7 +89,7 @@ class PlayerServiceTest {
         playerService.crear(JUGADOR_1);
         playerService.crear(JUGADOR_2);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro();
+        List<Player> jugadores = playerService.recuperarTodos();
 
         assertEquals(2, jugadores.size());
         assertTrue(jugadores.stream().anyMatch(player -> player.getName().equals("Messi")));
@@ -99,7 +98,7 @@ class PlayerServiceTest {
 
     @Test
     void listaVaciaCuandoNoHayJugadores() {
-        assertTrue(playerService.recuperarTodosConFiltro().isEmpty());
+        assertTrue(playerService.recuperarTodos().isEmpty());
     }
 
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
@@ -194,7 +193,7 @@ class PlayerServiceTest {
         Player jugador5 = getJugadorConClub("Jugador5", "Club2");
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"));
         List<Player> expectedPlayers = List.of(jugador1, jugador2);
 
 
@@ -222,7 +221,7 @@ class PlayerServiceTest {
         Player jugador5 = getJugadorConLiga("Jugador5", "Liga2");
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByLeague("Liga1"));
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"));
         List<Player> expectedPlayers = List.of(jugador1, jugador2);
 
 
@@ -235,14 +234,14 @@ class PlayerServiceTest {
 
     @Test
     void listarJugadoresConFiltroLigaSinJugadoresDaVacio() {
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByLeague("Liga1"));
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"));
         assertTrue(jugadores.isEmpty());
 
     }
 
     @Test
     void listarJugadoresConFiltroClubSinJugadoresDaVacio() {
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"));
         assertTrue(jugadores.isEmpty());
 
     }

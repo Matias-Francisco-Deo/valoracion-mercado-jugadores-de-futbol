@@ -12,7 +12,7 @@ public interface PlayerService {
     Player recuperar(Long id);
 
     List<Player> recuperarTodosConFiltro(PlayerFilter filter);
-    List<Player> recuperarTodosConFiltro();
+    List<Player> recuperarTodos();
 
     List<Player> actualizarDatosJugadores();
 
