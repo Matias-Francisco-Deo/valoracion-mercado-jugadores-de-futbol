@@ -8,7 +8,6 @@ import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final Integer MAX_PLAYERS_TO_RETRIEVE = null;
+    static private final Integer MAX_PLAYERS_TO_RETRIEVE = null;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;

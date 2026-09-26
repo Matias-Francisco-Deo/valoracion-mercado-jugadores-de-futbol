@@ -40,11 +40,11 @@ public class Player {
     }
 
     private List<Token> getInitialTokens() {
-        List<Token> tokens = new java.util.ArrayList<>(List.of());
+        List<Token> newTokens = new java.util.ArrayList<>(List.of());
         for (int i = 0; i < 100; i++) {
-            tokens.add(new Token(this));
+            newTokens.add(new Token(this));
         }
-        return tokens;
+        return newTokens;
     }
 
     public Player(String name) {
