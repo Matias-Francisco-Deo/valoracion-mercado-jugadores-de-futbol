@@ -2,67 +2,93 @@ package com.overcode.persistence.repository.dao.external.scrapper.http;
 
 import com.microsoft.playwright.*;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScraperHttpClient {
 
+    private Playwright playwright;
+    private Browser browser;
+
+    @PostConstruct
+    public void init() {
+        this.playwright = Playwright.create();
+        
+        BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
+                .setHeadless(true);
+
+        this.browser = playwright.chromium().launch(launchOptions);
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        if (browser != null) {
+            browser.close();
+        }
+        if (playwright != null) {
+            playwright.close();
+        }
+    }
+
     /**
-     * Utiliza Playwright para levantar un navegador Chromium real en modo "headless" (invisible).
-     * Esto permite ejecutar el JavaScript de WhoScored y pasar la validación Anti-Bot de Cloudflare
-     * antes de extraer el código HTML resultante.
-     * 
-     * Nota Arquitectónica: Este método está sincronizado por simplicidad (Playwright no es thread-safe).
-     * En un entorno de altísima concurrencia, esto debería migrarse a un Pool de navegadores.
-     * 
-     * @param url La URL objetivo a scrapear.
-     * @return El String del HTML renderizado final.
+     * Utiliza Playwright para ejecutar el JavaScript de WhoScored y pasar la validación Anti-Bot.
+     * Sigue estando sincronizado para evitar consumir toda la memoria si llegan muchos requests juntos.
+     * Para procesar 2500 jugadores rápido, podrías sacar el synchronized y usar un pool de contexts, 
+     * pero con el browser singleton ya bajaste el tiempo radicalmente.
      */
     public synchronized String getHtml(String url) {
         int maxRetries = 2;
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
-            try (Playwright playwright = Playwright.create()) {
-                String content = getHtmlPlaywright(url, playwright, attempt, maxRetries);
+            try {
+                String content = getHtmlPlaywright(url, attempt, maxRetries);
                 if (content != null) return content;
             } catch (Exception e) {
                 if (attempt == maxRetries) {
                     throw new ScraperExtractionException("Error fatal ejecutando Playwright para la URL: " + url, e);
                 }
             }
-
         }
         throw new ScraperExtractionException("Fallo inesperado obteniendo HTML para: " + url);
     }
 
-    private static String getHtmlPlaywright(String url, Playwright playwright, int attempt, int maxRetries) {
-        BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
-                .setHeadless(true);
-
+    private String getHtmlPlaywright(String url, int attempt, int maxRetries) {
         Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-                        .setUserAgent(
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                                        + "AppleWebKit/537.36 (KHTML, like Gecko) "
-                                        + "Chrome/117.0.0.0 Safari/537.36");
+                .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
 
-        try (Browser browser = playwright.chromium().launch(launchOptions);
-             BrowserContext context = browser.newContext(contextOptions);
-             Page page = context.newPage()) { // TODO mejorar trys?
+        try (BrowserContext context = browser.newContext(contextOptions);
+             Page page = context.newPage()) {
 
-//            Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-//                    .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
-
-//            context = browser.newContext(contextOptions);
-//            page = context.newPage();
+            // Interceptamos y abortamos las peticiones de basura gráfica para acelerar la carga por 10
+            page.route("**/*", route -> {
+                String type = route.request().resourceType();
+                String requestUrl = route.request().url().toLowerCase();
+                
+                if ("image".equals(type) || "stylesheet".equals(type) || "font".equals(type) || "media".equals(type) ||
+                    requestUrl.contains("google-analytics") || requestUrl.contains("doubleclick") || 
+                    requestUrl.contains("ads") || requestUrl.contains("tracker") || requestUrl.contains("pixel")) {
+                    route.abort();
+                } else {
+                    route.resume();
+                }
+            });
 
             page.navigate(url);
 
-            // Esperamos 5 segundos para darle tiempo a Cloudflare Y a las llamadas AJAX de WhoScored
-            page.waitForTimeout(5000);
+            // Ahora esperamos solo a que se arme el HTML, no nos importa que terminen de cargar cosas de red.
+            try {
+                page.waitForLoadState(com.microsoft.playwright.options.LoadState.DOMCONTENTLOADED, 
+                    new Page.WaitForLoadStateOptions().setTimeout(5000));
+            } catch (TimeoutError e) {
+                // Timeout ignorado
+            }
 
             String content = page.content();
+            
             if (content.contains("Cloudflare") && content.contains("Checking your browser")) {
                 if (attempt == maxRetries) {
-                    throw new ScraperExtractionException("Cloudflare challenge no superado en 5s para la URL: " + url);
+                    throw new ScraperExtractionException("Cloudflare challenge no superado para la URL: " + url);
                 }
                 return null;
             }

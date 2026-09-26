@@ -1,7 +1,6 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.Player;
-import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -17,12 +16,10 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
-    private final ExternalPlayerDataDAO metricsProvider;
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, ExternalPlayerDataDAO metricsProvider) {
+    public PlayerServiceImpl(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
-        this.metricsProvider = metricsProvider;
     }
 
     @Override
@@ -52,6 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private void validarJugador(Player player) {
         if (playerRepository.existsByName(player.getName())) {
+            log.error("Jugador ya existe: {}", player.getName());
             throw new NombreRepetidoException("El nombre del jugador ya existe: " + player.getName());
         }
 

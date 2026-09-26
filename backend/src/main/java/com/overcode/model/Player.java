@@ -19,18 +19,16 @@ public class Player {
     private String clubName;
 
     private Integer goals;
-    private Integer assists; // no
+    private Integer assists; // no se muestra
     private Integer shotsOnTarget;
     private Integer passes;
 
     private Integer interceptions;
     private Integer tackles;
-    private Integer keyPasses; // no
+    private Integer keyPasses; // no se muestra
     private Double rating;
 
-//    private Integer wasDribbled;
     private Integer successfulDribbles;
-//    private Integer gamesPlayed; TODO pal futuro?
 
     private List<Token> tokens;
 
@@ -63,10 +61,4 @@ public class Player {
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
     }
-
-//    public void actualizarMetricas(WeeklyMetrics newMetrics) {
-//        if (newMetrics != null) {
-//            this.metrics = newMetrics;
-//        }
-//    }
 }

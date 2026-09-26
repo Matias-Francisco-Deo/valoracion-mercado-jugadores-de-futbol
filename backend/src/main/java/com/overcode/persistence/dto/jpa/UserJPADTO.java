@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -70,7 +69,7 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
-        user.setTokens(this.tokens.stream().map(token -> token.aModelo(user)).collect(Collectors.toList()));
+        user.setTokens(this.tokens.stream().map(token -> token.aModelo(user)).toList());
         return user;
     }
 

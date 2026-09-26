@@ -8,6 +8,7 @@ const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const PlayerPage = lazy(() => import('@/pages/PlayerPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const CatalogoPage = lazy(() => import('@/pages/CatalogoPage'))
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ export const AppRoutes: React.FC = () => {
       </Route>
       <Route Component={ProtectedLayout}>{/*layout general*/}
           <Route path="/" Component={HomePage} />
+          <Route path="/catalogo" Component={CatalogoPage} />
           <Route path="/p/:playerId" Component={PlayerPage} />
           <Route path="*" Component={NotFoundPage} errorElement/>
       </Route>

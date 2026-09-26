@@ -12,7 +12,5 @@ public interface PlayerService {
 
     List<Player> recuperarTodos();
 
-//    void sincronizarMetricas();
-
     List<Player> actualizarDatosJugadores();
 }

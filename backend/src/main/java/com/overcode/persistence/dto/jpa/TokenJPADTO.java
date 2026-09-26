@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity(name="token")
 @Table(name = "tokens")
@@ -70,12 +69,12 @@ public class TokenJPADTO {
 
     public static List<TokenJPADTO> desdeModelo(List<Token> tokens, PlayerJPADTO player) {
         if (tokens == null) return new java.util.ArrayList<>();
-        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, player)).collect(java.util.stream.Collectors.toList());
+        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, player)).toList();
     }
 
     public static List<TokenJPADTO> desdeModelo(List<Token> tokens, UserJPADTO user) {
         if (tokens == null) return new java.util.ArrayList<>();
-        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, user)).collect(Collectors.toList());
+        return tokens.stream().map(token -> TokenJPADTO.desdeModelo(token, user)).toList();
     }
 
     public Token aModelo(User user) {

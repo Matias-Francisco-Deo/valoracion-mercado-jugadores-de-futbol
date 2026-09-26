@@ -1,6 +1,4 @@
 package com.overcode.model.security;
-
-import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 
 import java.time.Instant;

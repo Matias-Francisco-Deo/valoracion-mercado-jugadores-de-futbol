@@ -25,20 +25,5 @@ class PlayerTest {
         assertEquals(1, player.getCurrentPrice());
     }
 
-//    @Test
-//    void actualizarMetricasActualizaElEstadoSiNoEsNulo() {
-//        Player player = new Player(1L, "leo");
-//        WeeklyMetrics metrics = new WeeklyMetrics();
-//        metrics.setGoals(2);
-//        player.actualizarMetricas(metrics);
-//        assertEquals(2, player.getMetrics().getGoals());
-//    }
-//
-//    @Test
-//    void actualizarMetricasIgnoraSiEsNulo() {
-//        Player player = new Player(1L, "leo");
-//        player.actualizarMetricas(null);
-//        org.junit.jupiter.api.Assertions.assertNull(player.getMetrics());
-//    }
 
 }

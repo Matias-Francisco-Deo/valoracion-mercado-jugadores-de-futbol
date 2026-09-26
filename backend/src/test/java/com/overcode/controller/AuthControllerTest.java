@@ -65,7 +65,6 @@ public class AuthControllerTest {
 
         assert response.getBody() != null;
         assertEquals(0, response.getBody().user().creditBalance());
-//        assertEquals(0, response.getBody().user().tokens().size());
     }
 
     @Test
