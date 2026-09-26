@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/players")
 @Tag(name = "Player", description = "Endpoints for retrieving football players")
 public class PlayerController {
 
@@ -24,21 +24,21 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/players")
+    @GetMapping("/")
     public List<PlayerResponseDTO> listPlayers() {
         return playerService.recuperarTodosConFiltro(new PlayerNoFilter()).stream()
                 .map(PlayerResponseDTO::desdeModelo)
                 .toList();
     }
 
-    @GetMapping("/players/top")
+    @GetMapping("/top")
     public List<PlayerResponseDTO> listTopPlayers() {
         return playerService.listarTop5JugadoresPorRating().stream()
                 .map(PlayerResponseDTO::desdeModelo)
                 .toList();
     }
 
-    @GetMapping("/players/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> getPlayer(@PathVariable Long id) {
         Player player = playerService.recuperar(id);
         return ResponseEntity.ok().body(PlayerResponseDTO.desdeModelo(player));
