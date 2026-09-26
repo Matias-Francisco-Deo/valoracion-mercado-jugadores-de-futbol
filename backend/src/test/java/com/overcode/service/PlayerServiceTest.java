@@ -1,6 +1,7 @@
 package com.overcode.service;
 
 import com.overcode.controller.dto.player.PlayerFilterByClub;
+import com.overcode.controller.dto.player.PlayerFilterByLeague;
 import com.overcode.model.Player;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.overcode.testUtils.TestPlayerUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
@@ -23,8 +25,8 @@ class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
-    private final Player JUGADOR_1 = new Player("Messi", "Barcelona", 0, 10, 5, 20, 3, 2, 0, 8.5, 5);
-    private final Player JUGADOR_2 = new Player("Mbappe", "PSG", 0, 15, 8, 25, 4, 3, 0, 9.0, 7);
+    private final Player JUGADOR_1 = new Player("Messi", "Barcelona", "Liga1", 0, 10, 5, 20, 3, 2, 0, 8.5, 5);
+    private final Player JUGADOR_2 = new Player("Mbappe", "PSG", "Liga1", 0, 15, 8, 25, 4, 3, 0, 9.0, 7);
 
     @Autowired
     private TestService testService;
@@ -36,7 +38,7 @@ class PlayerServiceTest {
 
     @Test
     void crearJugadorValidoExitosamente() {
-        Player nuevo = new Player("Messi", "Barcelona",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
 
         Player guardado = playerService.crear(nuevo);
 
@@ -48,7 +50,7 @@ class PlayerServiceTest {
 
     @Test
     void jugadorNuevoTiene100TokensYValeExactamente1() {
-        Player nuevo = new Player("Messi", "Barcelona",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
 
         Player guardado = playerService.crear(nuevo);
 
@@ -176,7 +178,7 @@ class PlayerServiceTest {
     }
 
     @Test
-    void listaJugadoresPorClub() {
+    void listarJugadoresPorClub() {
         Player jugador1 = getJugadorConClub("Jugador1", "Club1");
         playerService.crear(jugador1);
 
@@ -203,13 +205,42 @@ class PlayerServiceTest {
 
     }
 
-    private Player getJugadorConRating(String name, Double rating) {
-        return new Player(name, "Club",0, 10, 5, 20, 3, 2, 0, rating, 5);
+    @Test
+    void listarJugadoresPorLiga() {
+        Player jugador1 = getJugadorConLiga("Jugador1", "Liga1");
+        playerService.crear(jugador1);
+
+        Player jugador2 = getJugadorConLiga("Jugador2", "Liga1");
+        playerService.crear(jugador2);
+
+        Player jugador3 = getJugadorConLiga("Jugador3", "Liga2");
+        playerService.crear(jugador3);
+
+        Player jugador4 = getJugadorConLiga("Jugador4", "Liga2");
+        playerService.crear(jugador4);
+
+        Player jugador5 = getJugadorConLiga("Jugador5", "Liga2");
+        playerService.crear(jugador5);
+
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByLeague("Liga1"));
+        List<Player> expectedPlayers = List.of(jugador1, jugador2);
+
+
+        assertEquals(jugadores.size(), expectedPlayers.size());
+        for (int i = 0; i < jugadores.size(); i++) {
+            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        }
+
     }
 
-            private Player getJugadorConClub(String name, String club) {
-        return new Player(name, club,0, 10, 5, 20, 3, 2, 0, 5.0, 5);
+    @Test
+    void listarJugadoresConfIltroSinJugadoresDaVacio() {
+        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilterByClub("Club1"));
+        assertTrue(jugadores.isEmpty());
+
     }
+
+
 
     @AfterEach
     void tearDown() {

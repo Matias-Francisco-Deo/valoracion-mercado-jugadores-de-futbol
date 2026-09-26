@@ -17,6 +17,7 @@ public class Player {
     private String name;
     private Integer currentPrice;
     private String clubName;
+    private String league;
 
     private Integer goals;
     private Integer assists; // no se muestra
@@ -32,7 +33,7 @@ public class Player {
 
     private List<Token> tokens;
 
-    public Player(Long id, String name, String clubName,
+    public Player(Long id, String name, String clubName, String league,
                   Integer goals,
                   Integer shotsOnTarget, Integer passes,
                   Integer interceptions, Integer keyPasses,
@@ -40,6 +41,7 @@ public class Player {
                   Double rating, Integer successfulDribbles) {
         setId(id);
         setName(name);
+        setLeague(league);
         setClubName(clubName);
 
         setAssists(assists);
@@ -64,13 +66,13 @@ public class Player {
         return newTokens;
     }
 
-    public Player(String name, String clubName,
+    public Player(String name, String clubName, String league,
                   Integer goals,
                   Integer shotsOnTarget, Integer passes,
                   Integer interceptions, Integer keyPasses,
                   Integer assists, Integer tackles,
                   Double rating, Integer successfulDribbles) {
-        this(null, name, clubName, goals, shotsOnTarget, passes, interceptions, keyPasses, assists, tackles, rating, successfulDribbles);
+        this(null, name, clubName, league, goals, shotsOnTarget, passes, interceptions, keyPasses, assists, tackles, rating, successfulDribbles);
     }
 
 
