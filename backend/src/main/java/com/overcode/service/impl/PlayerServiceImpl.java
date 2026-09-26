@@ -38,6 +38,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Player> recuperarTodosConFiltro(PlayerFilter filter) {
         return playerRepository.listarJugadores(filter);
     }

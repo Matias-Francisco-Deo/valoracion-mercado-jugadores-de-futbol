@@ -27,7 +27,7 @@ public class PlayerController {
             @RequestParam(required = false) String league,
             @RequestParam(required = false) String clubName
     ) {
-        PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(league, clubName);
+        PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(clubName, league);
 
         PlayerFilter filter = playerFilterDTO.aModelo();
         return playerService.recuperarTodosConFiltro(filter).stream()
