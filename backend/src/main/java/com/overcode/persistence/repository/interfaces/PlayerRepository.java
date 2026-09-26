@@ -1,5 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
+import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 
 import java.util.List;
@@ -13,8 +14,9 @@ public interface PlayerRepository {
 
     Optional<Player> recuperar(Long id);
 
-    List<Player> listarTodos();
+    List<Player> listarJugadores(PlayerFilter filtro);
 
     List<Player> actualizarDatosJugadores();
 
+    List<Player> listarTop5JugadoresPorRating();
 }
