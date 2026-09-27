@@ -26,7 +26,7 @@ import static com.overcode.testUtils.TestPlayerUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PlayerControllerTest {
+class PlayerControllerTest {
 
     private static final String DEFAULT_USERNAME = "playerTestUser";
     private static final String DEFAULT_EMAIL = "playertest@example.com";
@@ -135,11 +135,11 @@ public class PlayerControllerTest {
     @Test
     public void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
-        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
+        playerService.crear(getJugadorConClub(PLAYER_NAME, "ClubUno"));
+        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players?clubName=Club1")
+                .uri("/players?clubName=ClubUno")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {

@@ -2,10 +2,8 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
-import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
-import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -18,16 +16,13 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
 
     private final WhoScoredIdResolver whoScoredIdResolver;
     private final ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapper;
-    private final PlayerDAOJPA playerDAOJPA;
 
     private static final Logger log = LoggerFactory.getLogger(ExternalPlayerDAOWhoScoredImpl.class);
 
     public ExternalPlayerDAOWhoScoredImpl(WhoScoredIdResolver whoScoredIdResolver,
-                                          ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapper,
-                                          PlayerDAOJPA playerDAOJPA) {
+                                          ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapper) {
         this.whoScoredIdResolver = whoScoredIdResolver;
         this.externalPlayerWhoScoredScrapper = externalPlayerWhoScoredScrapper;
-        this.playerDAOJPA = playerDAOJPA;
     }
 
     @Override
