@@ -78,7 +78,7 @@ export default function HomePage() {
 
   useEffect(()=>{
     getAllPlayers()
-    .then((players) => setPlayers(players.slice(0, 5)))//agarro 5 de la lista
+    .then((players) => setPlayers(players.slice(0, 5)))
     .catch((e: HttpError) =>setError(e))
     .finally(() => setLoading(false))
   },[]);

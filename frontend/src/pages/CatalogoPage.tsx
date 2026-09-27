@@ -38,7 +38,7 @@ export default function CatalogoPage() {
     }, []);
 
     if (loading) return <Loading text="Cargando catálogo..." />
-    //if (error) return <ServerErrorComponent />
+    if (error) return <ServerErrorComponent />
 
     return (
         <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
