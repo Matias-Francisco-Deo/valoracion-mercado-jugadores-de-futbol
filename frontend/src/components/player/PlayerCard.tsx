@@ -38,13 +38,13 @@ export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => 
 
             {/* Centro (Imagen con círculo) */}
             <div className="relative flex justify-center items-center py-6">
-                <div className="absolute w-40 h-40 bg-gray-500/30 rounded-full blur-xl group-hover:bg-gray-500/50 transition-colors" />
-                <div className="absolute w-32 h-32 bg-gray-500/40 rounded-full shadow-inner" />
+                <div className="absolute w-40 h-40 bg-gray-500/30 rounded-b-full blur-xl group-hover:bg-gray-500/50 transition-colors" />
+                <div className="absolute w-32 h-32 bg-gray-500/40 rounded-b-full shadow-inner" />
                 
                 <img 
                     src="src/assets/pelota.jpg" 
                     alt="Pelota"
-                    className="relative z-10 w-28 h-28 object-cover rounded-full shadow-md border-4 border-gray-400"
+                    className="relative z-10 w-28 h-28 object-cover rounded-b-full shadow-[0_8px_30px_rgba(0,0,0,0.25)] border-4 border-gray-400"
                 />
             </div>
 

@@ -40,14 +40,14 @@ export const MainPlayerInfo = ({player, className, ...props }: MainPlayerInfoPro
                 
                 {/* Avatar (Izquierda) */}
                 <div className="relative shrink-0 flex items-center justify-center">
-                    <div className="absolute w-48 h-48 bg-gray-500/30 rounded-full blur-xl" />
-                    <div className="absolute w-40 h-40 bg-gray-500/40 rounded-full shadow-inner" />
+                    <div className="absolute w-48 h-48 bg-gray-500/30 rounded-b-full blur-xl" />
+                    <div className="absolute w-40 h-40 bg-gray-500/40 rounded-b-full shadow-inner" />
                     <img 
                         src={pelota} 
                         alt={player.name} 
                         className={cn(
                             "relative z-10 w-32 h-32 md:w-40 md:h-40 object-cover",
-                            "rounded-full border-4 border-gray-400 shadow-md"
+                            "rounded-b-full border-4 border-gray-400 shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
                         )} 
                     />
                 </div>
