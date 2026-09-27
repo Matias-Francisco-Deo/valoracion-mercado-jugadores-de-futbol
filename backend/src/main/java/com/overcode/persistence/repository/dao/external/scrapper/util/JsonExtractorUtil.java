@@ -2,17 +2,7 @@ package com.overcode.persistence.repository.dao.external.scrapper.util;
 
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class JsonExtractorUtil {
-
-    // Coincide con la asignación específica de JavaScript y extrae el objeto JSON.
-    // Pattern.DOTALL permite que el '.' coincida con los caracteres de salto de línea.
-    private static final Pattern ARGS_JSON_PATTERN = Pattern.compile(
-            "require\\.config\\.params\\['?\"?args'?\"?]\\s*=\\s*(\\{.*?\\});.*?</script>",
-            Pattern.DOTALL | Pattern.CASE_INSENSITIVE
-    );
 
     private JsonExtractorUtil() {
         // Utility class
@@ -20,6 +10,8 @@ public class JsonExtractorUtil {
 
     /**
      * Extrae el bloque JSON asignado a require.config.params['args'] del HTML sin procesar.
+     * Utiliza búsqueda de cadenas (O(N)) para evitar problemas de super-linear backtracking 
+     * en expresiones regulares evaluadas por SonarCloud o motores de análisis estático.
      *
      * @param html La cadena HTML sin procesar de WhoScored.
      * @return La cadena JSON pura.
@@ -30,12 +22,37 @@ public class JsonExtractorUtil {
             throw new ScraperExtractionException("HTML content is null or empty.");
         }
 
-        Matcher matcher = ARGS_JSON_PATTERN.matcher(html);
-        if (matcher.find()) {
-            // Group 1 contains the actual JSON object block
-            return matcher.group(1).trim();
+        int keyIndex = html.indexOf("require.config.params['args']");
+        if (keyIndex == -1) {
+            keyIndex = html.indexOf("require.config.params[\"args\"]");
+        }
+        
+        if (keyIndex == -1) {
+            throw new ScraperExtractionException("Could not find require.config.params['args'] in HTML.");
         }
 
-        throw new ScraperExtractionException("Could not find the JSON block for player stats in the HTML.");
+        int startJson = html.indexOf("{", keyIndex);
+        if (startJson == -1) {
+            throw new ScraperExtractionException("Could not find JSON opening brace.");
+        }
+
+        int endScript = html.indexOf("</script>", startJson);
+        if (endScript == -1) {
+            // WhoScored HTML is heavily standardized, but just in case:
+            endScript = html.toLowerCase().indexOf("</script>", startJson);
+        }
+
+        if (endScript == -1) {
+            throw new ScraperExtractionException("Could not find closing script tag.");
+        }
+
+        String scriptContent = html.substring(startJson, endScript);
+
+        int lastBrace = scriptContent.lastIndexOf("}");
+        if (lastBrace == -1) {
+            throw new ScraperExtractionException("Could not find JSON closing brace.");
+        }
+
+        return scriptContent.substring(0, lastBrace + 1).trim();
     }
 }
