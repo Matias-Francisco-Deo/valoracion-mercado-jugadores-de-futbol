@@ -3,7 +3,7 @@ import type {Player} from "@/types/player.ts";
 import {PageLink} from "@/components/ui/PageLink.tsx";
 import { useEffect, useState } from "react";
 import type { HttpError } from "@/lib/http-error";
-import { getAllPlayers } from "@/services/PlayerService";
+import { getTopPlayers } from "@/services/PlayerService";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { MessajeBox } from "@/components/common/MessageBox";
 import { Loading } from "@/components/common/Loading";
@@ -77,10 +77,11 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
-    getAllPlayers()
-    .then((players) => setPlayers(players.slice(0, 5)))
+    getTopPlayers()
+    .then(setPlayers)
     .catch((e: HttpError) =>setError(e))
     .finally(() => setLoading(false))
+    
   },[]);
 
   if (loading) return <Loading text="Cargando..." />
