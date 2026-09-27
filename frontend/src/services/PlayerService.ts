@@ -18,6 +18,17 @@ export async function getTopPlayers() {
 }
 
 export async function getFiltredPlayers(filter:PlayerFilter) {
-    const response = futbolApi.get<Player[]>(`/players`);
+    const params = new URLSearchParams();
+    if (filter.clubName) {
+        params.set("clubName", filter.clubName);
+    }
+
+    if (filter.league) {
+        params.set("league", filter.league);
+    }
+
+    const query = params.toString();
+
+    const response = futbolApi.get<Player[]>(`/players${query ? `?${query}` : ""}`);
     return response;
 }

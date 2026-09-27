@@ -8,6 +8,7 @@ import type { HttpError } from "@/lib/http-error";
 import { MessajeBox } from '@/components/common/MessageBox';
 import { FilterSearch } from '@/components/common/FilterSearch';
 import type { PlayerFilter } from '@/types/PlayerFilter';
+import { useSearchParams } from 'react-router-dom';
 
 const filtroPlaceholder = {
     clubName: "",
@@ -15,14 +16,27 @@ const filtroPlaceholder = {
 }
 
 export default function CatalogoPage() {
+    const [filter,setFilter] = useState<PlayerFilter>(filtroPlaceholder);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [players, setPlayers] = useState<Player[]>([]);
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const [filter,setFilter] = useState<PlayerFilter>(filtroPlaceholder);
-
     const handleSearch = (filtro:PlayerFilter) => {
         setLoading(true)
+
+        const params: Record<string, string> = {};
+
+        if (filtro.clubName) {
+            params.clubName = filtro.clubName;
+        }
+
+        if (filtro.league) {
+            params.league = filtro.league;
+        }
+
+        setSearchParams(params);
 
         getFiltredPlayers(filtro)
         .then(setPlayers)
@@ -54,7 +68,7 @@ export default function CatalogoPage() {
                         },
                     ]}
                     className='absolute z-10 right-0 -top-5'/>
-            {players.length == 0 ? (
+            {players.length > 0 ? (
                 <>
                     <div className="flex justify-center gap-8 flex-wrap">
                         {players.map(player => (

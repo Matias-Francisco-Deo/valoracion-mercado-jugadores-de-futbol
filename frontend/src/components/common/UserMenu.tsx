@@ -30,7 +30,7 @@ export const UserMenu = ({user, onLogout, ...props}: UserMenuProps) => {
             {isMenuOpen && (
                 <div
                 role="menu"
-                className="absolute border right-0 top-full z-20 mt-2 w-64 max-w-[calc(100vw-2rem)] rounded-md bg-[#E58600] p-3 shadow-xl">
+                className="absolute border right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-2rem)] rounded-md bg-[#E58600] p-3 shadow-xl">
                     <div className=" border-gray-200 px-2 pb-3">
                         <p className="truncate font-semibold capitalize">{user.username}</p>
                         <p className="wrap-break-word text-sm">{user.email}</p>
