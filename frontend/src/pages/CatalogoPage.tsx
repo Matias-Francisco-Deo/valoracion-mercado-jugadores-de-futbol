@@ -21,10 +21,12 @@ export default function CatalogoPage() {
 
     const [players, setPlayers] = useState<Player[]>([]);
     const [error, setError] = useState<HttpError | null>(null);
-    const [loading, setLoading] = useState(true);
+
+    const [initialLoading, setInitialLoading] = useState(true);
+    const [searchLoading, setSearchLoading] = useState(false);
 
     const handleSearch = (filtro:PlayerFilter) => {
-        setLoading(true)
+        setSearchLoading(true)
 
         const params: Record<string, string> = {};
 
@@ -41,17 +43,17 @@ export default function CatalogoPage() {
         getFiltredPlayers(filtro)
         .then(setPlayers)
         .catch((error: HttpError) => setError(error))
-        .finally(()=>setLoading(false));
+        .finally(()=>setSearchLoading(false));
     };
 
     useEffect(() => {
         getAllPlayers()
             .then((data) => setPlayers(data))
             .catch((error: HttpError) => setError(error))
-            .finally(() => setLoading(false));
+            .finally(() => setInitialLoading(false));
     }, []);
 
-    if (loading) return <Loading text="Cargando catálogo..." />
+    if (initialLoading) return <Loading text="Cargando catálogo..." />
     if (error) return <ServerErrorComponent />
 
     return (
@@ -68,7 +70,9 @@ export default function CatalogoPage() {
                         },
                     ]}
                     className='absolute z-10 right-0 -top-5'/>
-            {players.length > 0 ? (
+            {searchLoading ? (
+                <Loading text="Buscando jugadores..." />
+            ):( players.length > 0 ? (
                 <>
                     <div className="flex justify-center gap-8 flex-wrap">
                         {players.map(player => (
@@ -79,10 +83,11 @@ export default function CatalogoPage() {
                         ))}
                     </div>
                 </>
-            ) : (
-                <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
-                className='items-center'/>
-            )}
+                ) : (
+                    <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
+                    className='items-center'/>
+            ))}
+            
         </div>
     );
 }
