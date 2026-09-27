@@ -19,7 +19,7 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
       ...(session?.token && { 'Authorization': `Bearer ${session.token}` }),
     }
   }).catch(() => {
-    throw new HttpError(0, 'No se pudo conectar con el servidor.');
+    throw new HttpError(500, 'No se pudo conectar con el servidor.');
   });
 
     if (!response.ok) {

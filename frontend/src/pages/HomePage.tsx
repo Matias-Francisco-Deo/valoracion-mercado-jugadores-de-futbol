@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { HttpError } from "@/lib/http-error";
 import { getAllPlayers } from "@/services/PlayerService";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
+import { MessajeBox } from "@/components/common/MessageBox";
 import { Loading } from "@/components/common/Loading";
 
     const datosJugadores: Player[] = [
@@ -90,11 +91,15 @@ export default function HomePage() {
       <div className="flex flex-col gap-10 ">
         <p className="text-2xl">Top 5 Jugadores</p>
         <div className="text-center text-3xl flex flex-col gap-10 min-h-[320px] sm:min-h-[425px]">
-          <div className="flex justify-center gap-8 flex-wrap ">
-          {players.map(player =>
-            <PlayerCard player={player}/>
-          )}
-          </div>
+          {players.length === 0 ? (
+            <MessajeBox title="No hay jugadores disponibles en este momento."/>
+          ) : (
+        <div className="flex justify-center gap-8 flex-wrap">
+          {players.map(player => (
+            <PlayerCard key={player.id} player={player} />
+          ))}
+        </div>
+        )}
         </div>
           <div>
             <PageLink className="bg-brand-orange text-lg" to="/catalogo"> Ver más </PageLink>

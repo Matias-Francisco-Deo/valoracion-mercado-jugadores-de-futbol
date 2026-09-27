@@ -23,7 +23,7 @@ export const UserMenu = ({user, onLogout, ...props}: UserMenuProps) => {
             <Button 
             onClick={() => setIsMenuOpen((open) => !open)}
             aria-expanded={isMenuOpen}
-            className="flex max-w-[calc(100vw-8rem)] items-center gap-2 rounded px-3 py-1.5 text-base font-medium text-white transition-colors hover:bg-[#e08500]">
+            className="flex max-w-[calc(100vw-8rem)] items-center gap-2 rounded px-3 py-1.5 text-base font-medium transition-colors hover:bg-hover-orange">
                 <span aria-hidden="true">●</span>
                 <span className="truncate capitalize">{user.username}</span>
             </Button>

@@ -5,7 +5,7 @@ export const Button = ({ className, ...props }: React.ComponentProps<'button'>) 
     <button
       type="button"
       className={cn(
-        'bg-brand-orange text-primary-foreground rounded-lg px-4 py-2 transition',
+        'bg-brand-orange text-primary-foreground rounded-lg px-4 py-2 transition hover:bg-hover-orange',
 
         'enabled:hover:opacity-90 enabled:active:scale-95',
 
