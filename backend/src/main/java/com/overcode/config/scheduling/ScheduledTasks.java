@@ -23,7 +23,7 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 0 * * MON")
 	public void actualizarJugadores() {
 		log.info("Actualizando datos de jugadores...");
-		List<Player> players = playerService.actualizarDatosJugadores();
+		List<Player> players = playerService.actualizarDatosJugadores(null);
 		log.info("Se actualizaron {} jugadores", players.size());
 	}
 }

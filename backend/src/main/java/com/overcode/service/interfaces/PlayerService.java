@@ -14,7 +14,7 @@ public interface PlayerService {
     List<Player> recuperarTodosConFiltro(PlayerFilter filter);
     List<Player> recuperarTodos();
 
-    List<Player> actualizarDatosJugadores();
+    List<Player> actualizarDatosJugadores(Integer limit);
 
     List<Player> listarTop5JugadoresPorRating();
 }

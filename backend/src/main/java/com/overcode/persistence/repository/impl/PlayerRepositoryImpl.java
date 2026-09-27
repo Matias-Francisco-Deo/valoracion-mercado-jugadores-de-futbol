@@ -45,8 +45,8 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public List<Player> actualizarDatosJugadores() {
-        return externalPlayerRepository.buscarYGuardarJugadores().orElse(List.of());
+    public List<Player> actualizarDatosJugadores(Integer limit) {
+        return externalPlayerRepository.buscarYGuardarJugadores(limit).orElse(List.of());
     }
 
     @Override

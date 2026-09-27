@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/players/**").permitAll()
-                    .requestMatchers("/users/*").permitAll()
+                .requestMatchers("/users/*").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -48,7 +48,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174"));
         configuration.setAllowedMethods(List.of(
                 "GET",
                 "POST",

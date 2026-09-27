@@ -21,7 +21,7 @@ public class ExternalPlayerRepositoryImplTest {
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerRepositoryImpl.buscarYGuardarJugadores();
+        Optional<List<Player>> optionalPlayers = externalPlayerRepositoryImpl.buscarYGuardarJugadores(null);
 
         assertTrue(optionalPlayers.isPresent());
         assertFalse(optionalPlayers.get().isEmpty());

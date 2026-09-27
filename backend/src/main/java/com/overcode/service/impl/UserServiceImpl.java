@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.overcode.security.PasswordHasher;
 import java.util.Optional;
 
 @Service
@@ -20,8 +21,10 @@ public class UserServiceImpl implements UserService {
     public String superuserPassword;
 
     private final UserRepository userRepository;
+    private final PasswordHasher passwordHasher;
 
     public UserServiceImpl(UserRepository userRepository,
+                           PasswordHasher passwordHasher,
                            @Value("${superuser.name}") String superuserName,
                            @Value("${superuser.password}") String superuserPassword,
                            @Value("${superuser.email}") String superuserEmail
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
         this.superuserEmail = superuserEmail;
         this.superuserPassword = superuserPassword;
         this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class UserServiceImpl implements UserService {
             return optionalSuperuser.get();
         }
 
-        User superuser = new User(superuserName, superuserEmail, superuserPassword);
+        User superuser = new User(superuserName, superuserEmail, passwordHasher.hash(superuserPassword));
         return userRepository.guardar(superuser);
     }
 

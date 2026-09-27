@@ -18,7 +18,6 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    static private final Integer MAX_PLAYERS_TO_RETRIEVE = null;
 
     public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
@@ -27,8 +26,8 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    public Optional<List<Player>> buscarYGuardarJugadores() {
-        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(MAX_PLAYERS_TO_RETRIEVE);
+    public Optional<List<Player>> buscarYGuardarJugadores(Integer limit) {
+        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(limit);
 
         if (playerDraftDTOS.isEmpty()) return Optional.empty();
 

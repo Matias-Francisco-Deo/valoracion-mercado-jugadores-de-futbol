@@ -50,8 +50,8 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<Player> actualizarDatosJugadores() {
-        return playerRepository.actualizarDatosJugadores();
+    public List<Player> actualizarDatosJugadores(Integer limit) {
+        return playerRepository.actualizarDatosJugadores(limit);
     }
 
     @Override

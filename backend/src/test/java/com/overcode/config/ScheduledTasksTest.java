@@ -52,7 +52,7 @@ class ScheduledTasksTest {
 
     @Test
     void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {
-        when(playerService.actualizarDatosJugadores()).thenReturn(List.of());
+        when(playerService.actualizarDatosJugadores(null)).thenReturn(List.of());
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
     }

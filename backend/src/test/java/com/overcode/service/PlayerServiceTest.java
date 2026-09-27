@@ -104,7 +104,7 @@ class PlayerServiceTest {
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void actualizarDatosDeJugadoresTraeDatos() {
-        List<Player> players = playerService.actualizarDatosJugadores();
+        List<Player> players = playerService.actualizarDatosJugadores(null);
         assertFalse(players.isEmpty());
     }
 
