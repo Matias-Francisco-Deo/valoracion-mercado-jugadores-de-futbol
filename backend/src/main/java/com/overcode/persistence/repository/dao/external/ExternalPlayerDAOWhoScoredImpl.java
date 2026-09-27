@@ -35,16 +35,11 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
         try {
             Long playerId = null;
             
-            // 1. Check if we already resolved this player's ID before
-            Optional<PlayerJPADTO> existingPlayer = playerDAOJPA.findByNameIgnoreCase(playerDraftDTO.name());
-            if (existingPlayer.isPresent() && existingPlayer.get().getExternalId() != null) {
-                playerId = existingPlayer.get().getExternalId();
-                log.info("Jugador {} ya conocido (ID: {}). Salteando búsqueda...", playerDraftDTO.name(), playerId);
-            } else {
-                // 2. Fallback to searching WhoScored if new
-                playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.name());
-                log.info("Buscando nuevo jugador: {}", playerDraftDTO.name());
-            }
+
+            // 2. Fallback to searching WhoScored if new
+            playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.name());
+            log.info("Buscando nuevo jugador: {}", playerDraftDTO.name());
+
 
             return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, playerDraftDTO);
         } catch (Exception e) {
