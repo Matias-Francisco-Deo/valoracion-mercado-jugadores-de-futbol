@@ -38,24 +38,24 @@ export default function CatalogoPage() {
     }, []);
 
     if (loading) return <Loading text="Cargando catálogo..." />
-    if (error) return <ServerErrorComponent />
+    //if (error) return <ServerErrorComponent />
 
     return (
         <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
-            {players.length > 0 ? (
+            <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
+                    filterOptions={[
+                        {
+                            key: "clubName",
+                            label: "Equipo",
+                        },
+                        {
+                            key: "league",
+                            label: "Liga",
+                        },
+                    ]}
+                    className='absolute z-10 right-0 -top-5'/>
+            {players.length == 0 ? (
                 <>
-                    <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
-                        filterOptions={[
-                            {
-                                key: "clubName",
-                                label: "Equipo",
-                            },
-                            {
-                                key: "league",
-                                label: "Liga",
-                            },
-                        ]}
-                        className='absolute z-10 right-0 -top-5'/>
                     <div className="flex justify-center gap-8 flex-wrap">
                         {players.map(player => (
                             <PlayerCard

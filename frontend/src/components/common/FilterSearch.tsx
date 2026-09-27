@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ComponentProps } from "react";
 import type { PlayerFilter } from "@/types/PlayerFilter";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,12 @@ export const FilterSearch = ({filter,filterOptions,onChange,onSearch,position = 
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
 
     const handleChange = (value: string) => {
         setValue(value);
@@ -72,7 +78,7 @@ export const FilterSearch = ({filter,filterOptions,onChange,onSearch,position = 
                 )}
             </div>
 
-            <Input value={value} placeholder={`Buscar por ${selectedFilter.label}`}
+            <Input value={value} placeholder={`Buscar por ${selectedFilter.label}`} ref={inputRef}
                 onChange={(event) =>
                     handleChange(event.target.value)
                 }
