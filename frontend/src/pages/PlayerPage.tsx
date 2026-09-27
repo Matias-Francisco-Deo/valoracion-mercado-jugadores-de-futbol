@@ -41,29 +41,9 @@ export default function PlayerPage(){
     if (error?.status === 404) return <NotFoundPage />
     if ((error?.status && error.status >= 500) || !player) return <ServerErrorComponent/>
 
-    const metrics = [
-        { title: "Goles", value: player.goals },
-        { title: "Tiros al arco", value: player.shotsOnTarget },
-        { title: "Pases", value: player.passes },
-        { title: "Entradas", value: player.tackles },
-        { title: "Intercepciones", value: player.interceptions },
-    ];
-
     return(
         <div className="w-full max-w-[700px] flex flex-col self-center bg-gray-400 p-4 rounded-3xl">
-
             <MainPlayerInfo player={player} />
-            <div className="flex flex-wrap justify-center gap-4">
-            {metrics.map((metric) => (
-                <MetricBox
-                    key={metric.title}
-                    title={metric.title}
-                    value={metric.value}
-                    className="w-full max-w-[180px] aspect-square bg-gray-500"
-                />
-            ))}
-        </div>
-
         </div>
     )
 }
