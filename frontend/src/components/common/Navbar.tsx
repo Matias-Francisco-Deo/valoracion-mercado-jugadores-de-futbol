@@ -14,7 +14,7 @@ export const Navbar: React.FC = () => {
 
 
   return (
-    <header className="h-16 w-full shrink-0 bg-brand-orange shadow-md z-10">
+    <header className="h-16 w-full shrink-0 bg-brand-orange shadow-md">
       <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <nav className="flex items-center gap-6">
           <Link  to="/"

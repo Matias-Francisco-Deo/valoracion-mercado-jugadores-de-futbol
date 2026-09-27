@@ -8,6 +8,7 @@ import type { HttpError } from "@/lib/http-error";
 import { MessajeBox } from '@/components/common/MessageBox';
 import { FilterSearch } from '@/components/common/FilterSearch';
 import type { PlayerFilter } from '@/types/PlayerFilter';
+import { useSearchParams } from 'react-router-dom';
 
 const filtroPlaceholder = {
     clubName: "",
@@ -15,47 +16,64 @@ const filtroPlaceholder = {
 }
 
 export default function CatalogoPage() {
+    const [filter,setFilter] = useState<PlayerFilter>(filtroPlaceholder);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [players, setPlayers] = useState<Player[]>([]);
     const [error, setError] = useState<HttpError | null>(null);
-    const [loading, setLoading] = useState(true);
 
-    const [filter,setFilter] = useState<PlayerFilter>(filtroPlaceholder);
+    const [initialLoading, setInitialLoading] = useState(true);
+    const [searchLoading, setSearchLoading] = useState(false);
 
     const handleSearch = (filtro:PlayerFilter) => {
-        setLoading(true)
+        setSearchLoading(true)
+
+        const params: Record<string, string> = {};
+
+        if (filtro.clubName) {
+            params.clubName = filtro.clubName;
+        }
+
+        if (filtro.league) {
+            params.league = filtro.league;
+        }
+
+        setSearchParams(params);
 
         getFiltredPlayers(filtro)
         .then(setPlayers)
         .catch((error: HttpError) => setError(error))
-        .finally(()=>setLoading(false));
+        .finally(()=>setSearchLoading(false));
     };
 
     useEffect(() => {
         getAllPlayers()
             .then((data) => setPlayers(data))
             .catch((error: HttpError) => setError(error))
-            .finally(() => setLoading(false));
+            .finally(() => setInitialLoading(false));
     }, []);
 
-    if (loading) return <Loading text="Cargando catálogo..." />
+    if (initialLoading) return <Loading text="Cargando catálogo..." />
     if (error) return <ServerErrorComponent />
 
     return (
         <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
-            {players.length > 0 ? (
+            <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
+                    filterOptions={[
+                        {
+                            key: "clubName",
+                            label: "Equipo",
+                        },
+                        {
+                            key: "league",
+                            label: "Liga",
+                        },
+                    ]}
+                    className='absolute z-10 right-0 -top-5'/>
+            {searchLoading ? (
+                <Loading text="Buscando jugadores..." />
+            ):( players.length > 0 ? (
                 <>
-                    <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
-                        filterOptions={[
-                            {
-                                key: "clubName",
-                                label: "Equipo",
-                            },
-                            {
-                                key: "league",
-                                label: "Liga",
-                            },
-                        ]}
-                        className='absolute z-10 right-0 -top-5'/>
                     <div className="flex justify-center gap-8 flex-wrap">
                         {players.map(player => (
                             <PlayerCard
@@ -65,10 +83,11 @@ export default function CatalogoPage() {
                         ))}
                     </div>
                 </>
-            ) : (
-                <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
-                className='items-center'/>
-            )}
+                ) : (
+                    <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
+                    className='items-center'/>
+            ))}
+            
         </div>
     );
 }

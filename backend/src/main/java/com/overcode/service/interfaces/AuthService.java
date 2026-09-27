@@ -1,6 +1,5 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.model.User;
 import com.overcode.model.security.Auth;
 
