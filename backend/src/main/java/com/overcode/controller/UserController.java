@@ -1,0 +1,30 @@
+package com.overcode.controller;
+
+import com.overcode.controller.dto.user.UserResponseDTO;
+import com.overcode.model.User;
+import com.overcode.service.interfaces.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@Tag(name = "Users", description = "Endpoints for user information")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
+        User user = userService.recuperar(id);
+        UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+}
