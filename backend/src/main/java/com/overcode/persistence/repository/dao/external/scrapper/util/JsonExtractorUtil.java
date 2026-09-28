@@ -7,7 +7,6 @@ public class JsonExtractorUtil {
     private JsonExtractorUtil() {
         // Utility class
     }
-
     /**
      * Extrae el bloque JSON asignado a require.config.params['args'] del HTML sin procesar.
      * Utiliza búsqueda de cadenas (O(N)) para evitar problemas de super-linear backtracking 
