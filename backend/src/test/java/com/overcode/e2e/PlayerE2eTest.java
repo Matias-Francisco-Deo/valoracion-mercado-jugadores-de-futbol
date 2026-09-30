@@ -1,4 +1,4 @@
-package com.overcode.controller;
+package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
@@ -26,7 +26,7 @@ import static com.overcode.testUtils.TestPlayerUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PlayerControllerTest {
+class PlayerE2eTest {
 
     private static final String DEFAULT_USERNAME = "playerTestUser";
     private static final String DEFAULT_EMAIL = "playertest@example.com";
@@ -60,6 +60,7 @@ class PlayerControllerTest {
             .retrieve()
             .toEntity(AuthResponse.class);
 
+        assert response.getBody() != null;
         return response.getBody().token();
     }
 
@@ -78,14 +79,15 @@ class PlayerControllerTest {
     // ------------------------------ Tests de listado de jugadores ------------------------------
 
     @Test
-    public void listarJugadoresConBaseVaciaDevuelveListaVacia() {
+    void listarJugadoresConBaseVaciaDevuelveListaVacia() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
-            .toEntity(new ParameterizedTypeReference<List<PlayerResponseDTO>>() {});
+            .toEntity(new ParameterizedTypeReference<>() {
+            });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -93,7 +95,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() {
+    void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConNombre(PLAYER_NAME));
         playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
@@ -113,7 +115,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesConFiltroPorClubDevuelveDeEseClub() {
+    void listarJugadoresConJugadoresExistentesConFiltroPorClubDevuelveDeEseClub() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
@@ -133,7 +135,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
+    void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConClub(PLAYER_NAME, "ClubUno"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
@@ -153,7 +155,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
+    void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConLiga(PLAYER_NAME, "Liga1"));
         playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
@@ -173,7 +175,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void ligarJugadoresPorVariosFiltros() {
+    void ligarJugadoresPorVariosFiltros() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
         playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
@@ -194,7 +196,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarTopJugadoresTraeOrdenadosPorRating() {
+    void listarTopJugadoresTraeOrdenadosPorRating() {
         String token = obtainAuthToken();
         Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
         Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
@@ -218,7 +220,7 @@ class PlayerControllerTest {
 
 
     @Test
-    public void listarTopJugadoresTrae5AunqueHayaMas() {
+    void listarTopJugadoresTrae5AunqueHayaMas() {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConRating("jugador1", 9.5D));
         playerService.crear(getJugadorConRating("jugador2", 8.5D));
@@ -243,7 +245,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void listarTopJugadoresSinJugadoresDaVacio() {
+    void listarTopJugadoresSinJugadoresDaVacio() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
@@ -264,7 +266,7 @@ class PlayerControllerTest {
     // ------------------------------ Tests de consulta de jugador por ID ------------------------------
 
     @Test
-    public void obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos() {
+    void obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos() {
         String token = obtainAuthToken();
         Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
 
@@ -283,7 +285,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void obtenerJugadorPorIdInexistenteLanzaNotFound() {
+    void obtenerJugadorPorIdInexistenteLanzaNotFound() {
         String token = obtainAuthToken();
 
         assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()
@@ -294,7 +296,7 @@ class PlayerControllerTest {
     }
 
     @Test
-    public void syncMetricsSinTokenLanzaForbidden() {
+    void syncMetricsSinTokenLanzaForbidden() {
         assertThrows(HttpClientErrorException.Forbidden.class, () -> restClient.post()
             .uri("/players/sync-metrics")
             .retrieve()

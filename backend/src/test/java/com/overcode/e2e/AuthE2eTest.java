@@ -1,4 +1,4 @@
-package com.overcode.controller;
+package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.LoginRequest;
@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClient;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
- class AuthControllerTest {
+ class AuthE2eTest {
 
     @LocalServerPort
     private int port;

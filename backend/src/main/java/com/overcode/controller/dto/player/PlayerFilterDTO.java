@@ -1,7 +1,7 @@
 package com.overcode.controller.dto.player;
 
 public record PlayerFilterDTO(
-        String clubName, // TODO validaciones?
+        String clubName,
         String league
 ) {
     public PlayerFilter aModelo() {

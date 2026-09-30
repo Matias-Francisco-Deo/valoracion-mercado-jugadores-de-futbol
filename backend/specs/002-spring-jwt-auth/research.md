@@ -44,7 +44,7 @@
 
 ## Open implementation notes
 
-- `AuthController` should sit under `com.overcode.controller`.
+- `AuthController` should sit under `e2e`.
 - `AuthService` and `AuthServiceImpl` should stay under `com.overcode.service.interfaces` and `com.overcode.service.impl`.
 - Repositories should remain under `com.overcode.persistence.repository.*` and may be extended only if the current `UserRepository` does not already provide the required lookup methods.
 - Registration should validate required inputs, detect duplicate emails, hash the password, and create the user through the existing repository/service flow.

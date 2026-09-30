@@ -3,8 +3,8 @@ package com.overcode.controller.dto.auth;
 import com.overcode.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
         @NotBlank(message = "El usuario es obligatorio")

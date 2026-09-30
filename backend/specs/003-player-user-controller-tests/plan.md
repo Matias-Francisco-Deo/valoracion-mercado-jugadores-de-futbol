@@ -6,7 +6,7 @@
 
 ## Summary
 
-Implement an automated test suite covering `PlayerController` and `UserController` inside the backend. The suite uses the exact same architecture and pattern as `AuthControllerTest`: `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)` with Spring's fluent `RestClient`. All test methods are named in Latin-American Spanish, reusable test inputs/objects are declared as `private static final` constants, assertions target specific `HttpClientErrorException` subclasses (avoiding generic exception assertions), and each test verifies a single, isolated scenario. In accordance with project instructions, zero production code will be modified, and any test that reveals an existing backend limitation or unexpected status will be tagged with `// TODO SDD TEST FAILURE`.
+Implement an automated test suite covering `PlayerController` and `UserController` inside the backend. The suite uses the exact same architecture and pattern as `AuthE2eTest`: `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)` with Spring's fluent `RestClient`. All test methods are named in Latin-American Spanish, reusable test inputs/objects are declared as `private static final` constants, assertions target specific `HttpClientErrorException` subclasses (avoiding generic exception assertions), and each test verifies a single, isolated scenario. In accordance with project instructions, zero production code will be modified, and any test that reveals an existing backend limitation or unexpected status will be tagged with `// TODO SDD TEST FAILURE`.
 
 ## Technical Context
 
@@ -26,7 +26,7 @@ Implement an automated test suite covering `PlayerController` and `UserControlle
 
 **Constraints**:
 - Zero changes to production source code (`src/main/`)
-- Test format identical to `AuthControllerTest` (`@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestClient`)
+- Test format identical to `AuthE2eTest` (`@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestClient`)
 - Test names in Latin-American Spanish (`<accion><Condicion><ResultadoEsperado>`)
 - Centralized `private static final` constants for test objects and fixtures
 - Specific exception assertions only (`HttpClientErrorException.NotFound`, `BadRequest`, `Forbidden`)
@@ -39,7 +39,7 @@ Implement an automated test suite covering `PlayerController` and `UserControlle
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Layered Architecture**: PASS. Test classes are placed strictly under `com.overcode.controller` in `src/test/java`, interacting only through HTTP REST calls via `RestClient`.
+- **Layered Architecture**: PASS. Test classes are placed strictly under `e2e` in `src/test/java`, interacting only through HTTP REST calls via `RestClient`.
 - **Rich Model**: PASS. No domain logic or new domain models are introduced.
 - **Validation at Every Layer**: PASS. Tests explicitly verify HTTP responses for DTO serialization, missing/malformed path variables, and exception mapping.
 - **Testing as a Delivery Gate**: PASS. Tests are ordered logically from standard happy paths to border and security cases. Existing tests are untouched.
@@ -91,12 +91,12 @@ backend/
 └── specs/
 ```
 
-**Structure Decision**: The test classes `PlayerControllerTest.java` and `UserControllerTest.java` will be placed directly in `src/test/java/com/overcode/controller/`, mirroring the location and structure of `AuthControllerTest.java`. Reusable test utilities (`TestService`) are already available in `com.overcode.testUtils`.
+**Structure Decision**: The test classes `PlayerControllerTest.java` and `UserControllerTest.java` will be placed directly in `e2e`, mirroring the location and structure of `AuthControllerTest.java`. Reusable test utilities (`TestService`) are already available in `com.overcode.testUtils`.
 
 ## Phase 0: Research & Design Decisions
 
-1. **Test Architecture**: Replicated from `AuthControllerTest` using `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)` and `RestClient`.
-2. **Suite Separation**: Divided into `PlayerControllerTest` and `UserControllerTest` for clear separation of concerns.
+1. **Test Architecture**: Replicated from `AuthE2eTest` using `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)` and `RestClient`.
+2. **Suite Separation**: Divided into `PlayerE2eTest` and `UserE2eTest` for clear separation of concerns.
 3. **Naming & Language**: Latin-American Spanish method names (`listarJugadoresConBaseVaciaDevuelveListaVacia`, `obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos`, etc.).
 4. **Fixture Constants**: Declared as `private static final` in each test class (`DEFAULT_USERNAME`, `DEFAULT_EMAIL`, `PLAYER_NAME`, `NON_EXISTENT_ID`, `MALFORMED_ID`, `INVALID_BEARER_TOKEN`).
 5. **Specific Throws**: Strict assertion on `HttpClientErrorException.NotFound.class`, `BadRequest.class`, and `Forbidden.class`.
