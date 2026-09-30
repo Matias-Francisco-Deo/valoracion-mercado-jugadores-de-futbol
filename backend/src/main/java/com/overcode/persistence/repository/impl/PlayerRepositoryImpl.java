@@ -4,8 +4,8 @@ import com.overcode.e2e.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
-import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.service.interfaces.ExternalPlayerService;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,11 +15,11 @@ import java.util.Optional;
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerDAOJPA playerDAOJPA;
-    private final ExternalPlayerRepository externalPlayerRepository;
+    private final ExternalPlayerService externalPlayerService;
 
-    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA, ExternalPlayerRepository externalPlayerRepository) {
+    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA, ExternalPlayerService externalPlayerService) {
         this.playerDAOJPA = playerDAOJPA;
-        this.externalPlayerRepository = externalPlayerRepository;
+        this.externalPlayerService = externalPlayerService;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     public List<Player> actualizarDatosJugadores(Integer limit) {
-        return externalPlayerRepository.buscarYGuardarJugadores(limit).orElse(List.of());
+        return externalPlayerService.buscarYGuardarJugadores(limit).orElse(List.of());
     }
 
     @Override
