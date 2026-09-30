@@ -1,8 +1,8 @@
 package com.overcode.e2e;
 
-import com.overcode.e2e.dto.auth.AuthResponse;
-import com.overcode.e2e.dto.auth.LoginRequest;
-import com.overcode.e2e.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.LoginRequest;
+import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;

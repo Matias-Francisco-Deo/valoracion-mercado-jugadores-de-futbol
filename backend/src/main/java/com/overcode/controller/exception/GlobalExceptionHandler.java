@@ -1,4 +1,4 @@
-package com.overcode.e2e.exception;
+package com.overcode.controller.exception;
 
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         FieldError error = ex.getBindingResult()
                 .getFieldErrors()
-                .get(0);
+                .getFirst();
 
         return new ErrorResponseDTO(error.getDefaultMessage());
     }

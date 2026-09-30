@@ -1,8 +1,8 @@
 package com.overcode.e2e;
 
-import com.overcode.e2e.dto.auth.AuthResponse;
-import com.overcode.e2e.dto.auth.RegisterRequest;
-import com.overcode.e2e.dto.player.PlayerResponseDTO;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
@@ -60,6 +60,7 @@ class PlayerE2eTest {
             .retrieve()
             .toEntity(AuthResponse.class);
 
+        assert response.getBody() != null;
         return response.getBody().token();
     }
 
@@ -85,7 +86,8 @@ class PlayerE2eTest {
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
-            .toEntity(new ParameterizedTypeReference<List<PlayerResponseDTO>>() {});
+            .toEntity(new ParameterizedTypeReference<>() {
+            });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

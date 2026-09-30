@@ -1,8 +1,8 @@
-package com.overcode.e2e;
+package com.overcode.controller;
 
-import com.overcode.e2e.dto.player.PlayerFilter;
-import com.overcode.e2e.dto.player.PlayerFilterDTO;
-import com.overcode.e2e.dto.player.PlayerResponseDTO;
+import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.controller.dto.player.PlayerFilterDTO;
+import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
 import io.swagger.v3.oas.annotations.tags.Tag;

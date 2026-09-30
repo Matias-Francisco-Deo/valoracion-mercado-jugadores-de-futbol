@@ -1,8 +1,8 @@
-package com.overcode.e2e;
+package com.overcode.controller;
 
-import com.overcode.e2e.dto.auth.AuthResponse;
-import com.overcode.e2e.dto.auth.LoginRequest;
-import com.overcode.e2e.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponse;
+import com.overcode.controller.dto.auth.LoginRequest;
+import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.model.security.Auth;
 import com.overcode.service.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;

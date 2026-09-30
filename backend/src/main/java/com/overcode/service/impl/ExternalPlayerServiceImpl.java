@@ -20,7 +20,7 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
     }
 
     @Override
-    public Optional<List<Player>> buscarYGuardarJugadores(Integer limit) {
+    public Optional<List<Player>> actualizarJugadores(Integer limit) {
         Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalPlayerRepository.listarJugadores(limit);
 
         if (playerDraftDTOS.isEmpty()) return Optional.empty();

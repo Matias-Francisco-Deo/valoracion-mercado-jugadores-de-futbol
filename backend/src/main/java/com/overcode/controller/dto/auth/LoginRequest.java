@@ -1,4 +1,4 @@
-package com.overcode.e2e.dto.auth;
+package com.overcode.controller.dto.auth;
 
 import com.overcode.model.User;
 import jakarta.validation.constraints.Email;

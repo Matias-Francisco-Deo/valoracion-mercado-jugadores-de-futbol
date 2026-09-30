@@ -1,4 +1,4 @@
-package com.overcode.e2e.dto.player;
+package com.overcode.controller.dto.player;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

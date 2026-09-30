@@ -1,6 +1,6 @@
-package com.overcode.e2e.dto.auth;
+package com.overcode.controller.dto.auth;
 
-import com.overcode.e2e.dto.user.UserResponseDTO;
+import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.security.Auth;
 
 import java.time.Instant;

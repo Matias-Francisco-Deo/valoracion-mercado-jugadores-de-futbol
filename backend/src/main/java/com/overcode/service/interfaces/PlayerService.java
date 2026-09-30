@@ -1,6 +1,6 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.e2e.dto.player.PlayerFilter;
+import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 
 import java.util.List;
@@ -13,8 +13,6 @@ public interface PlayerService {
 
     List<Player> recuperarTodosConFiltro(PlayerFilter filter);
     List<Player> recuperarTodos();
-
-    List<Player> actualizarDatosJugadores(Integer limit);
 
     List<Player> listarTop5JugadoresPorRating();
 }

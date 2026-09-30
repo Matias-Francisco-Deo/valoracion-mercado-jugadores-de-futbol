@@ -1,10 +1,9 @@
-package com.overcode.e2e.dto.player;
+package com.overcode.controller.dto.player;
 
-import com.overcode.e2e.dto.token.TokenResponseDTO;
+import com.overcode.controller.dto.token.TokenResponseDTO;
 import com.overcode.model.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record PlayerResponseDTO(Long id,
                                 String name,
@@ -31,7 +30,7 @@ public record PlayerResponseDTO(Long id,
                 player.getInterceptions(),
                 player.getTackles(),
                 player.getRating(),
-                player.getTokens().stream().map(TokenResponseDTO::desdeModelo).collect(Collectors.toList())
+                player.getTokens().stream().map(TokenResponseDTO::desdeModelo).toList()
         );
     }
 }

@@ -1,6 +1,6 @@
-package com.overcode.e2e;
+package com.overcode.controller;
 
-import com.overcode.e2e.dto.user.UserResponseDTO;
+import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,4 +1,4 @@
-package com.overcode.persistence.repository;
+package com.overcode.service;
 
 import com.overcode.model.Player;
 import com.overcode.service.impl.ExternalPlayerServiceImpl;
@@ -21,7 +21,7 @@ class ExternalPlayerServiceImplTest {
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.buscarYGuardarJugadores(null);
+        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(null);
 
         assertTrue(optionalPlayers.isPresent());
         assertFalse(optionalPlayers.get().isEmpty());
