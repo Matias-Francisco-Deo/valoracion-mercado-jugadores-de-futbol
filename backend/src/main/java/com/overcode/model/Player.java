@@ -16,8 +16,15 @@ public class Player {
 
     private String name;
     private Integer currentPrice;
+    private Double rating;
+    private List<Token> tokens;
+
+    // Team -> League
+
     private String clubName;
     private String league;
+
+    // PlayerGameData?
 
     private Integer goals;
     private Integer assists; // no se muestra
@@ -27,11 +34,9 @@ public class Player {
     private Integer interceptions;
     private Integer tackles;
     private Integer keyPasses; // no se muestra
-    private Double rating;
-
     private Integer successfulDribbles;
 
-    private List<Token> tokens;
+
 
     public Player(Long id, String name, String clubName, String league,
                   Integer goals,
