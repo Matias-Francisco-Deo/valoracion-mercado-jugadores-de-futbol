@@ -29,11 +29,11 @@ public class Player {
     private Integer goals;
     private Integer assists; // no se muestra
     private Integer shotsOnTarget;
-    private Integer passes;
-
-    private Integer interceptions;
-    private Integer tackles;
+    private Integer passes; // sacar
     private Integer keyPasses; // no se muestra
+
+    private Integer interceptions; // sacar
+    private Integer tackles;
     private Integer successfulDribbles;
 
 
