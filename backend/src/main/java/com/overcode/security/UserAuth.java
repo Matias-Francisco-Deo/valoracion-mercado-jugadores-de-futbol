@@ -1,7 +1,5 @@
 package com.overcode.security;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.model.security.Auth;
 import com.overcode.service.exception.AuthenticationException;

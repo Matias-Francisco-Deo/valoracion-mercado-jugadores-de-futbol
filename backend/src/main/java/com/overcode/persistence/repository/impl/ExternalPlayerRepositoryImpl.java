@@ -26,28 +26,20 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    public Optional<List<Player>> buscarYGuardarJugadores(Integer limit) {
-        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalDraftPlayerDAO.listarJugadores(limit);
-
-        if (playerDraftDTOS.isEmpty()) return Optional.empty();
-
-        List<PlayerJPADTO> upsertedPlayers = new java.util.ArrayList<>();
-        for (PlayerDraftDTO draftDTO : playerDraftDTOS.get()) {
-            Optional<Player> player = externalPlayerDataDAO.getDatosDeJugador(draftDTO);
-            if (player.isPresent()) {
-                upsertedPlayers.add(upsertPlayer(player.get()));
-            }
-        }
-
-        if (upsertedPlayers.isEmpty()) return Optional.empty();
-
-        return Optional.of(upsertedPlayers.stream().map(PlayerJPADTO::aModelo).toList());
+    public Optional<List<PlayerDraftDTO>> listarJugadores(Integer maxPlayers) {
+        return externalDraftPlayerDAO.listarJugadores(maxPlayers);
     }
 
-    private PlayerJPADTO upsertPlayer(Player player) {
+    @Override
+    public Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
+        return externalPlayerDataDAO.getDatosDeJugador(playerDraftDTO);
+    }
+
+    @Override
+    public Player upsertPlayerByExternalId(Player player) {
         boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
         if (!existsOnDB) {
-            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player));
+            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)).aModelo();
         }
         playerDAOJPA.updateWithExternalId(
                 player.getExternalId(),
@@ -66,9 +58,8 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
         );
         Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
 
-        if (optionalPlayerJPADTO.isEmpty()) return
-                PlayerJPADTO.desdeModelo(player);
+        if (optionalPlayerJPADTO.isEmpty()) return player;
 
-        return optionalPlayerJPADTO.get();
+        return optionalPlayerJPADTO.get().aModelo();
     }
 }

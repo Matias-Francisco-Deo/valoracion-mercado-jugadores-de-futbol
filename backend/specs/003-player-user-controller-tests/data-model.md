@@ -30,7 +30,7 @@ Reuses existing `com.overcode.model.User` and its serialized representation `Use
 
 ### 3. Error Response
 
-Reuses existing `com.overcode.controller.exception.ErrorResponseDTO`.
+Reuses existing `e2e`.
 
 | Field | Type | Description |
 |---|---|---|

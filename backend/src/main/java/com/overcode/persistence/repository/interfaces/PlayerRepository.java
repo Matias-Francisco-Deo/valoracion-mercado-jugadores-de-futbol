@@ -16,7 +16,5 @@ public interface PlayerRepository {
 
     List<Player> listarJugadores(PlayerFilter filtro);
 
-    List<Player> actualizarDatosJugadores(Integer limit);
-
     List<Player> listarTop5JugadoresPorRating();
 }

@@ -4,7 +4,6 @@ import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
-import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +14,9 @@ import java.util.Optional;
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerDAOJPA playerDAOJPA;
-    private final ExternalPlayerRepository externalPlayerRepository;
 
-    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA, ExternalPlayerRepository externalPlayerRepository) {
+    public PlayerRepositoryImpl(PlayerDAOJPA playerDAOJPA) {
         this.playerDAOJPA = playerDAOJPA;
-        this.externalPlayerRepository = externalPlayerRepository;
     }
 
     @Override
@@ -44,10 +41,6 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague()).stream().map(PlayerJPADTO::aModelo).toList();
     }
 
-    @Override
-    public List<Player> actualizarDatosJugadores(Integer limit) {
-        return externalPlayerRepository.buscarYGuardarJugadores(limit).orElse(List.of());
-    }
 
     @Override
     public List<Player> listarTop5JugadoresPorRating() {

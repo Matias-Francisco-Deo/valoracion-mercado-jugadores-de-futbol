@@ -1,7 +1,7 @@
 package com.overcode.config;
 
 import com.overcode.config.scheduling.ScheduledTasks;
-import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.ExternalPlayerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Optional;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.*;
@@ -48,11 +49,11 @@ class ScheduledTasksTest {
     ScheduledTasks tasks;
 
     @MockitoBean
-    PlayerService playerService;
+    ExternalPlayerService externalPlayerService;
 
     @Test
     void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {
-        when(playerService.actualizarDatosJugadores(null)).thenReturn(List.of());
+        when(externalPlayerService.actualizarJugadores(null)).thenReturn(Optional.of(List.of()));
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
     }
