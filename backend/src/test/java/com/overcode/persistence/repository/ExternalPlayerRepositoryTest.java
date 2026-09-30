@@ -36,6 +36,7 @@ class ExternalPlayerRepositoryTest {
     }
 
     @Test
+    @Disabled("Use to test manually given its connected to an external API")
     void listarJugadoresMuestraUnJugador() {
         Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
 
@@ -59,6 +60,7 @@ class ExternalPlayerRepositoryTest {
     }
 
     @Test
+    @Disabled("Use to test manually given its connected to an external API")
     void seObtienenLosDatosCompletosDeUnJugador() {
         Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
 
