@@ -50,11 +50,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<Player> actualizarDatosJugadores(Integer limit) {
-        return playerRepository.actualizarDatosJugadores(limit);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<Player> listarTop5JugadoresPorRating() {
         return playerRepository.listarTop5JugadoresPorRating();

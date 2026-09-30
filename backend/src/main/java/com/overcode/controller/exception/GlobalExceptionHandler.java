@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         FieldError error = ex.getBindingResult()
                 .getFieldErrors()
-                .get(0);
+                .getFirst();
 
         return new ErrorResponseDTO(error.getDefaultMessage());
     }
