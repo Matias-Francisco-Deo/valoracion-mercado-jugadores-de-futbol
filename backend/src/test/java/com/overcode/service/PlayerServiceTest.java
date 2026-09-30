@@ -1,6 +1,6 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.e2e.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;

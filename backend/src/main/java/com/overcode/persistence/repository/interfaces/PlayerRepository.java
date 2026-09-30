@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.e2e.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 
 import java.util.List;

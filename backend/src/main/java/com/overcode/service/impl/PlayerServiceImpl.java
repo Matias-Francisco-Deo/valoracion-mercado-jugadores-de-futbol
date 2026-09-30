@@ -1,6 +1,6 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.e2e.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;

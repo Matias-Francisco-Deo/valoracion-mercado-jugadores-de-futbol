@@ -32,7 +32,7 @@ Implement JWT-based registration and login using the existing `User` model and t
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- Layered architecture: PASS. This feature will keep controller DTO mappings in `com.overcode.controller`, business logic in `com.overcode.service`, and persistence access in `com.overcode.persistence.repository`.
+- Layered architecture: PASS. This feature will keep controller DTO mappings in `e2e`, business logic in `com.overcode.service`, and persistence access in `com.overcode.persistence.repository`.
 - Rich model: PASS with constraint. No new domain model is created; the existing `User` model is reused, and the JWT is not persisted as an attribute on the entity.
 - Validation at every layer: PASS. Request validation belongs in DTO and controller validation, with service-level validation for duplicate emails, invalid credentials, and user lookup rules.
 - Testing as a delivery gate: PASS. The feature requires registration/login success and failure coverage, plus authorization checks for protected routes.
@@ -118,8 +118,8 @@ backend/
 
 ### 3. DTO and controller design
 
-- Add DTOs under `com.overcode.controller.dto` for registration and login requests/responses.
-- Define `AuthController` in `com.overcode.controller` as the HTTP entry point for `/auth/register` and `/auth/login`.
+- Add DTOs under `e2e` for registration and login requests/responses.
+- Define `AuthController` in `e2e` as the HTTP entry point for `/auth/register` and `/auth/login`.
 - Keep controller methods thin: validate request payloads, delegate to `AuthService`, and return `ResponseEntity` with correct status codes.
 - Map invalid credentials and validation errors to the existing `ApiError`/`GlobalExceptionHandler` pattern.
 

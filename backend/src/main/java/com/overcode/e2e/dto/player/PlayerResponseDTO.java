@@ -1,6 +1,6 @@
-package com.overcode.controller.dto.player;
+package com.overcode.e2e.dto.player;
 
-import com.overcode.controller.dto.token.TokenResponseDTO;
+import com.overcode.e2e.dto.token.TokenResponseDTO;
 import com.overcode.model.Player;
 
 import java.util.List;

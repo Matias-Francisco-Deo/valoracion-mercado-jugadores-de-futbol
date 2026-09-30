@@ -1,4 +1,4 @@
-package com.overcode.controller.dto.user;
+package com.overcode.e2e.dto.user;
 
 import com.overcode.model.User;
 

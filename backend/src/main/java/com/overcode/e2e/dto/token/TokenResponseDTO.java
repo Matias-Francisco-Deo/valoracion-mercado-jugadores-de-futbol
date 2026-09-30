@@ -1,4 +1,4 @@
-package com.overcode.controller.dto.token;
+package com.overcode.e2e.dto.token;
 
 import com.overcode.model.Token;
 

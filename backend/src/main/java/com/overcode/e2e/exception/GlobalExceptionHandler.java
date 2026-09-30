@@ -1,4 +1,4 @@
-package com.overcode.controller.exception;
+package com.overcode.e2e.exception;
 
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;

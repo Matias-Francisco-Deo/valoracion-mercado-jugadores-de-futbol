@@ -1,20 +1,19 @@
-package com.overcode.controller;
+package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.LoginRequest;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.e2e.dto.auth.AuthResponse;
+import com.overcode.e2e.dto.auth.LoginRequest;
+import com.overcode.e2e.dto.auth.RegisterRequest;
 import com.overcode.model.security.Auth;
 import com.overcode.service.interfaces.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/auth")

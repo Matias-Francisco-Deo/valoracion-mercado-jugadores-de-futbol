@@ -1,8 +1,8 @@
-package com.overcode.controller;
+package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
-import com.overcode.controller.dto.user.UserResponseDTO;
+import com.overcode.e2e.dto.auth.AuthResponse;
+import com.overcode.e2e.dto.auth.RegisterRequest;
+import com.overcode.e2e.dto.user.UserResponseDTO;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClient;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
- class UserControllerTest {
+ class UserE2eTest {
 
     private static final String DEFAULT_USERNAME = "userTestUser";
     private static final String DEFAULT_EMAIL = "usertest@example.com";
