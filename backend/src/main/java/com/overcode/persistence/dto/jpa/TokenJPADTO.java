@@ -34,17 +34,6 @@ public class TokenJPADTO {
         setPlayer(playerJPADTO);
     }
 
-    public static TokenJPADTO desdeModelo(Token token) {
-        if (token == null) {
-            return null;
-        }
-        return new TokenJPADTO(
-            token.getId(),
-            UserJPADTO.desdeModelo(token.getOwner()),
-            PlayerJPADTO.desdeModelo(token.getPlayer(), dto)
-        );
-    }
-
     public static TokenJPADTO desdeModelo(Token token, PlayerJPADTO player) {
         if (token == null) {
             return null;
@@ -63,7 +52,7 @@ public class TokenJPADTO {
         return new TokenJPADTO(
                 token.getId(),
                 user,
-                PlayerJPADTO.desdeModelo(token.getPlayer(), dto)
+                PlayerJPADTO.desdeModelo(token.getPlayer())
         );
     }
 
@@ -81,7 +70,7 @@ public class TokenJPADTO {
         Token token = new Token();
         token.setId(getId());
         token.setOwner(user);
-        token.setPlayer(getPlayer().aModelo(team));
+        token.setPlayer(getPlayer().aModelo());
         return token;
     }
 

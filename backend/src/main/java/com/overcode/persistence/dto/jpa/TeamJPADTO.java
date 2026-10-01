@@ -25,16 +25,16 @@ public class TeamJPADTO {
     @Column(nullable = false)
     private String league;
 
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "team")
-    private List<PlayerJPADTO> players;
+//    @Column(nullable = false)
+//    @OneToMany(mappedBy = "team")
+//    private List<PlayerJPADTO> players;
 
 
     public TeamJPADTO(Long id, String name, String league, List<PlayerJPADTO> players) {
         setId(id);
         setName(name);
         setLeague(league);
-        setPlayers(players);
+//        setPlayers(players);
     }
 
     public static TeamJPADTO desdeModelo(Team team) {
@@ -45,7 +45,7 @@ public class TeamJPADTO {
         dto.setId(team.getId());
         dto.setName(team.getName());
         dto.setLeague(team.getLeague());
-        dto.setPlayers(team.getPlayers().stream().map(player -> PlayerJPADTO.desdeModelo(player, dto)).toList());
+//        dto.setPlayers(team.getPlayers().stream().map(player -> PlayerJPADTO.desdeModelo(player, dto)).toList());
         return dto;
     }
 
@@ -54,7 +54,7 @@ public class TeamJPADTO {
         team.setId(this.id);
         team.setName(this.name);
         team.setLeague(this.league);
-        team.setPlayers(this.players.stream().map(playerJPADTO -> playerJPADTO.aModelo(team)).toList());
+//        team.setPlayers(this.players.stream().map(playerJPADTO -> playerJPADTO.aModelo(team)).toList());
         return team;
     }
 }
