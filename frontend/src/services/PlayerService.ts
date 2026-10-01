@@ -27,6 +27,11 @@ export async function getFiltredPlayers(filter:PlayerFilter) {
         params.set("league", filter.league);
     }
 
+    /*if (filter.position) {
+        params.set("position", filter.position);
+    }*/
+
+
     const query = params.toString();
 
     const response = futbolApi.get<Player[]>(`/players${query ? `?${query}` : ""}`);

@@ -36,10 +36,9 @@ const [values, setValues] = useState<PlayerFilter>(filter);
     };
 
     const clearFiltersAndSearch = () => {
-        const emptyFilter: PlayerFilter = {
-            clubName: "",
-            league: "",
-        };
+        const emptyFilter = Object.fromEntries(
+            Object.keys(filter).map((key) => [key, ""])
+        ) as PlayerFilter;
 
         setValues(emptyFilter);
         onChange(emptyFilter);
