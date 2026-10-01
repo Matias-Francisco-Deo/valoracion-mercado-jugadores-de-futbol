@@ -45,7 +45,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, and exclusion of non-Top-5 tournaments in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [ ] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, preservation of player draft metadata (name, club, league, externalId), and exclusion of non-Top-5 tournaments in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
 - [ ] T008 [US1] Implement test `calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` verifying weighted average rating and rounded pass accuracy in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
 - [ ] T009 [US1] Validate User Story 1 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
 
@@ -117,8 +117,8 @@
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories.
-- **User Story 3 (P1)**: Can start after Foundational (Phase 2) - Operates on `ScraperHttpClientTest.java`, fully independent of US1/US2.
-- **User Story 2 (P2)**: Extends `ExternalPlayerWhoScoredScrapperTest.java` created in US1 - Depends on US1 completion.
+- **User Story 3 (P1)**: Can start after Foundational (Phase 2) - Operates on `ScraperHttpClientTest.java`, fully independent of US1/US2. Scheduled in Phase 4 ahead of User Story 2 because US3 is priority P1.
+- **User Story 2 (P2)**: Extends `ExternalPlayerWhoScoredScrapperTest.java` created in US1 - Depends on US1 completion and scheduled in Phase 5 due to P2 priority.
 
 ### Within Each User Story
 

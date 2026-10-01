@@ -11,7 +11,7 @@ Develop a comprehensive automated test suite for [`ExternalPlayerWhoScoredScrapp
 ## Technical Context
 
 **Language/Version**: Java 21  
-**Primary Dependencies**: Spring Boot 4.1.1, Playwright 1.48.0, Jackson 2.18, OkHttp3 MockWebServer 4.12.0  
+**Primary Dependencies**: Spring Boot 4.1.1, Playwright 1.40.0, Jackson 2.18, OkHttp3 MockWebServer 4.12.0  
 **Storage**: N/A (Tests operate purely in-memory with mocked HTTP responses or local loopback server)  
 **Testing**: JUnit 5, Spring Boot Test (`@SpringBootTest`), Mockito (`@MockBean`), OkHttp MockWebServer  
 **Target Platform**: Cross-platform JVM (Windows/Linux/macOS)  
@@ -66,7 +66,8 @@ backend/
     ├── http/
     │   └── ScraperHttpClientTest.java           # New: MockWebServer-based tests for Playwright client
     └── whoscored/
-        └── ExternalPlayerWhoScoredScrapperTest.java # Replaces empty stub: @SpringBootTest with @MockBean
+        ├── ExternalPlayerWhoScoredScrapperTest.java # Replaces empty stub: @SpringBootTest with @MockBean
+        └── WhoScoredTestFixtures.java               # Shared mock HTML and JSON statistics fixtures
 ```
 
 **Structure Decision**: Test classes are placed in packages exactly mirroring the production classes (`com.overcode.persistence.repository.dao.external.scrapper.whoscored` and `com.overcode.persistence.repository.dao.external.scrapper.http`), satisfying standard Maven directory conventions.
