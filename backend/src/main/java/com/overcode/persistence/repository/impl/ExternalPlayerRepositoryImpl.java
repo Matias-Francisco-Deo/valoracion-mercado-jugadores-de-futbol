@@ -8,11 +8,10 @@ import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
@@ -42,7 +41,7 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     public Player upsertPlayerByExternalId(Player player) {
         boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
         if (!existsOnDB) {
-            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)).aModelo();
+            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player, dto)).aModelo(team);
         }
         playerDAOJPA.updateWithExternalId(
                 player.getExternalId(),
@@ -63,6 +62,6 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
         if (optionalPlayerJPADTO.isEmpty()) return player;
 
-        return optionalPlayerJPADTO.get().aModelo();
+        return optionalPlayerJPADTO.get().aModelo(team);
     }
 }

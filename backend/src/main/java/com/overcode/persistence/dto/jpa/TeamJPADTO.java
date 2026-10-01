@@ -45,7 +45,7 @@ public class TeamJPADTO {
         dto.setId(team.getId());
         dto.setName(team.getName());
         dto.setLeague(team.getLeague());
-        dto.setPlayers(team.getPlayers().stream().map(PlayerJPADTO::desdeModelo).toList()); // TODO recursion
+        dto.setPlayers(team.getPlayers().stream().map(player -> PlayerJPADTO.desdeModelo(player, dto)).toList());
         return dto;
     }
 
@@ -54,7 +54,7 @@ public class TeamJPADTO {
         team.setId(this.id);
         team.setName(this.name);
         team.setLeague(this.league);
-        team.setPlayers(this.players.stream().map(PlayerJPADTO::aModelo).toList()); // TODO recursion
+        team.setPlayers(this.players.stream().map(playerJPADTO -> playerJPADTO.aModelo(team)).toList());
         return team;
     }
 }

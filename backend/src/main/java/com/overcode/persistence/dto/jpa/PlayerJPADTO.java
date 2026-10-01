@@ -1,6 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
 import com.overcode.model.Player;
+import com.overcode.model.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,7 @@ public class PlayerJPADTO {
         setTokens(tokens);
     }
 
-    public static PlayerJPADTO desdeModelo(Player player) {
+    public static PlayerJPADTO desdeModelo(Player player, TeamJPADTO teamJPADTO) {
         if (player == null) {
             return null;
         }
@@ -56,13 +57,13 @@ public class PlayerJPADTO {
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setExternalId(player.getExternalId());
 
-        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData()));
-        dto.setTeam(TeamJPADTO.desdeModelo(player.getTeam()));
+        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
+        dto.setTeam(teamJPADTO);
 
         return dto;
     }
 
-    public Player aModelo() {
+    public Player aModelo(Team team) {
         Player player = new Player();
         player.setId(this.id);
         player.setExternalId(this.getExternalId());
@@ -70,8 +71,8 @@ public class PlayerJPADTO {
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
 
-        player.setPlayerGameData(this.playerGameData.aModelo());
-        player.setTeam(this.team.aModelo());
+        player.setPlayerGameData(this.playerGameData.aModelo(player));
+        player.setTeam(team);
         return player;
     }
 }

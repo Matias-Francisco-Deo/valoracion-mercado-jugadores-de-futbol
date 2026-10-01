@@ -18,25 +18,10 @@ public class Player {
     private Integer currentPrice;
     private List<Token> tokens;
 
-    // Team -> League
-
     private Team team;
-//    private String clubName;
-//    private String league;
-
-    // PlayerGameData?
 
     private PlayerGameData playerGameData;
 
-//    private Integer goals;
-//    private Integer assists; // no se muestra
-//    private Integer shotsOnTarget;
-//    private Integer passes; // sacar
-//    private Integer keyPasses; // no se muestra
-//
-//    private Integer interceptions; // sacar
-//    private Integer tackles;
-//    private Integer successfulDribbles;
 
 
 

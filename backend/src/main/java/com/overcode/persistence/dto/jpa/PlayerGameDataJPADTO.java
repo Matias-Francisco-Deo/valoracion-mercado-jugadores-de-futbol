@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.Player;
 import com.overcode.model.PlayerGameData;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -56,12 +57,12 @@ public class PlayerGameDataJPADTO {
         setSuccessfulDribbles(successfulDribbles);
     }
 
-    public static PlayerGameDataJPADTO desdeModelo(PlayerGameData playerGameData) {
+    public static PlayerGameDataJPADTO desdeModelo(PlayerGameData playerGameData, PlayerJPADTO playerJPADTO) {
         if (playerGameData == null) {
             return null;
         }
         PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO();
-        dto.setPlayer(PlayerJPADTO.desdeModelo(playerGameData.getPlayer())); // TODO ver recursión
+        dto.setPlayer(playerJPADTO);
         dto.setId(playerGameData.getId());
         dto.setGoals(playerGameData.getGoals());
         dto.setAssists(playerGameData.getAssists());
@@ -73,7 +74,7 @@ public class PlayerGameDataJPADTO {
         return dto;
     }
 
-    public PlayerGameData aModelo() {
+    public PlayerGameData aModelo(Player player) {
         PlayerGameData playerGameData = new PlayerGameData();
         playerGameData.setId(this.id);
         playerGameData.setGoals(this.goals);
@@ -83,6 +84,9 @@ public class PlayerGameDataJPADTO {
         playerGameData.setKeyPasses(this.keyPasses);
         playerGameData.setRating(this.rating);
         playerGameData.setSuccessfulDribbles(this.successfulDribbles);
+
+        playerGameData.setPlayer(player);
+
         return playerGameData;
     }
 }

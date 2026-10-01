@@ -26,26 +26,26 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     public Player guardar(Player player) {
-        PlayerJPADTO dto = PlayerJPADTO.desdeModelo(player);
+        PlayerJPADTO dto = PlayerJPADTO.desdeModelo(player, dto);
         PlayerJPADTO playerDto = playerDAOJPA.save(dto);
-        return playerDto.aModelo();
+        return playerDto.aModelo(team);
     }
 
     @Override
     public Optional<Player> recuperar(Long id) {
-        return playerDAOJPA.findById(id).map(PlayerJPADTO::aModelo);
+        return playerDAOJPA.findById(id).map(playerJPADTO -> playerJPADTO.aModelo(team));
     }
 
     @Override
     public List<Player> listarJugadores(PlayerFilter filtro) {
-        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague()).stream().map(PlayerJPADTO::aModelo).toList();
+        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague()).stream().map(playerJPADTO -> playerJPADTO.aModelo(team)).toList();
     }
 
 
     @Override
     public List<Player> listarTop5JugadoresPorRating() {
         return playerDAOJPA.listarTop5JugadoresPorRating().stream()
-            .map(PlayerJPADTO::aModelo)
+            .map(playerJPADTO -> playerJPADTO.aModelo(team))
             .toList();
     }
 }

@@ -41,7 +41,7 @@ public class TokenJPADTO {
         return new TokenJPADTO(
             token.getId(),
             UserJPADTO.desdeModelo(token.getOwner()),
-            PlayerJPADTO.desdeModelo(token.getPlayer())
+            PlayerJPADTO.desdeModelo(token.getPlayer(), dto)
         );
     }
 
@@ -63,7 +63,7 @@ public class TokenJPADTO {
         return new TokenJPADTO(
                 token.getId(),
                 user,
-                PlayerJPADTO.desdeModelo(token.getPlayer())
+                PlayerJPADTO.desdeModelo(token.getPlayer(), dto)
         );
     }
 
@@ -81,7 +81,7 @@ public class TokenJPADTO {
         Token token = new Token();
         token.setId(getId());
         token.setOwner(user);
-        token.setPlayer(getPlayer().aModelo());
+        token.setPlayer(getPlayer().aModelo(team));
         return token;
     }
 
