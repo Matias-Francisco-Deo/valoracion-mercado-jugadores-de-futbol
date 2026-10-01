@@ -4,6 +4,7 @@ import com.overcode.model.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
+import com.overcode.testUtils.WhoScoredTestFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +16,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ExternalPlayerWhoScoredScrapperTest {
+class ExternalPlayerWhoScoredScrapperTest {
 
     @Mock
     private ScraperHttpClient httpClient;

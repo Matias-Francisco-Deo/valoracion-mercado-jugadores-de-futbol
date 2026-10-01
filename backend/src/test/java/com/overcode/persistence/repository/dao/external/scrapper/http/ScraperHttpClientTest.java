@@ -1,18 +1,20 @@
 package com.overcode.persistence.repository.dao.external.scrapper.http;
 
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
-import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredTestFixtures;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ScraperHttpClientTest {
+class ScraperHttpClientTest {
 
     private static MockWebServer mockWebServer;
     private static ScraperHttpClient client;
@@ -26,12 +28,6 @@ public class ScraperHttpClientTest {
         client.init();
     }
 
-    @BeforeEach
-    void clearRequests() throws InterruptedException {
-        while (mockWebServer.takeRequest(10, TimeUnit.MILLISECONDS) != null) {
-            // limpiar requests pendientes
-        }
-    }
 
     @AfterAll
     static void tearDownAll() throws IOException {

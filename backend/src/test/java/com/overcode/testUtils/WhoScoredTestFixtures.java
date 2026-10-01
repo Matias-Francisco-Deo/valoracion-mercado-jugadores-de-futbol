@@ -1,48 +1,10 @@
-package com.overcode.persistence.repository.dao.external.scrapper.whoscored;
+package com.overcode.testUtils;
 
 public final class WhoScoredTestFixtures {
 
     private WhoScoredTestFixtures() {
         // Utility class
     }
-
-    public static final String CLOUDFLARE_CHALLENGE_HTML = """
-            <!DOCTYPE html>
-            <html>
-            <head><title>Just a moment...</title></head>
-            <body>
-            <h1>Cloudflare</h1>
-            <p>Checking your browser before accessing the website.</p>
-            </body>
-            </html>
-            """;
-
-    public static final String SIMPLE_MOCK_HTML = """
-            <!DOCTYPE html>
-            <html>
-            <head><title>Mock Page</title></head>
-            <body>
-            <h1>Hello WhoScored Mock</h1>
-            </body>
-            </html>
-            """;
-
-    public static final String ASSETS_MOCK_HTML = """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Assets Test Page</title>
-                <link rel="stylesheet" href="/style.css">
-                <link rel="stylesheet" href="/font.woff2">
-            </head>
-            <body>
-                <h1>Testing Resource Interception</h1>
-                <img src="/player.jpg" alt="Player">
-                <img src="/tracker.gif?pixel=1" alt="Tracker">
-                <script src="/valid-script.js"></script>
-            </body>
-            </html>
-            """;
 
     public static String createHtmlWithArgsJson(String jsonBody) {
         return """
