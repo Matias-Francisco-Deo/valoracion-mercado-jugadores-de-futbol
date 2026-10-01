@@ -180,7 +180,7 @@ public final class WhoScoredTestFixtures {
                 <head><title>Corrupted</title></head>
                 <body>
                 <script type="text/javascript">
-                require.config.params['args'] = { tournaments: [ { TournamentId: 4, brokenSyntax...
+                require.config.params['args'] = { "tournaments": [ { "TournamentId": 4, brokenSyntax } ] };
                 </script>
                 </body>
                 </html>
