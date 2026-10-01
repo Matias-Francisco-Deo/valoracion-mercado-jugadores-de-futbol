@@ -23,8 +23,8 @@ class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
-    private final Player JUGADOR_1 = new Player("Messi", "Barcelona", "Liga1", 0, 10, 5, 20, 3, 2, 0, 8.5, 5);
-    private final Player JUGADOR_2 = new Player("Mbappe", "PSG", "Liga1", 0, 15, 8, 25, 4, 3, 0, 9.0, 7);
+    private final Player JUGADOR_1 = new Player("Messi", getTeam(), getPlayerData());
+    private final Player JUGADOR_2 = new Player("Mbappe", getTeam(), getPlayerData());
 
     @Autowired
     private TestService testService;
@@ -36,7 +36,7 @@ class PlayerServiceTest {
 
     @Test
     void crearJugadorValidoExitosamente() {
-        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = new Player("Messi", getTeam(), getPlayerData());
 
         Player guardado = playerService.crear(nuevo);
 
@@ -48,7 +48,7 @@ class PlayerServiceTest {
 
     @Test
     void jugadorNuevoTiene100TokensYValeExactamente1() {
-        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = new Player("Messi", getTeam(), getPlayerData());
 
         Player guardado = playerService.crear(nuevo);
 

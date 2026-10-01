@@ -12,7 +12,7 @@ public class TestPlayerUtil {
                 getPlayerDataConRating(rating));
     }
 
-    private static @NonNull Team getTeam() {
+    public static @NonNull Team getTeam() {
         return new Team("Club", "Liga1");
     }
 
@@ -28,7 +28,7 @@ public class TestPlayerUtil {
         return new Team(name, "Liga1");
     }
 
-    private static @NonNull PlayerGameData getPlayerData() {
+    public static @NonNull PlayerGameData getPlayerData() {
         return new PlayerGameData(1L, 0, 0, 0, 0, 0, 0, 1.0);
     }
 
