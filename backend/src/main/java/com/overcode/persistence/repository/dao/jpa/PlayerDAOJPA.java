@@ -51,7 +51,8 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
                     "p.tackles = :tackles," +
                     "p.keyPasses = :keyPasses," +
                     "p.rating = :rating," +
-                    "p.successfulDribbles = :successfulDribbles " +
+                    "p.successfulDribbles = :successfulDribbles, " +
+                    "p.position = :position " +
                     "where p.externalId = :externalId"
     )
     void updateWithExternalId(
@@ -67,7 +68,8 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             @Param("tackles") Integer tackles,
             @Param("keyPasses") Integer keyPasses,
             @Param("rating") Double rating,
-            @Param("successfulDribbles") Integer successfulDribbles
+            @Param("successfulDribbles") Integer successfulDribbles,
+            @Param("position") String position
     );
 
     boolean existsByExternalId(Long externalId);

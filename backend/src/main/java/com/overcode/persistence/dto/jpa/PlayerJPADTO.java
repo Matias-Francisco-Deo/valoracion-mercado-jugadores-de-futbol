@@ -50,7 +50,8 @@ public class PlayerJPADTO {
     private Double rating;
     @Column(nullable = false, name = "successful_dribbles")
     private Integer successfulDribbles;
-
+    @Column(name = "position")
+    private String position;
 
     @Column(name = "tokens", nullable = false)
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -84,6 +85,7 @@ public class PlayerJPADTO {
         dto.setKeyPasses(player.getKeyPasses());
         dto.setRating(player.getRating());
         dto.setSuccessfulDribbles(player.getSuccessfulDribbles());
+        dto.setPosition(player.getPosition());
 
         return dto;
     }
@@ -106,6 +108,7 @@ public class PlayerJPADTO {
         player.setKeyPasses(this.keyPasses);
         player.setRating(this.rating);
         player.setSuccessfulDribbles(this.successfulDribbles);
+        player.setPosition(this.position);
         return player;
     }
 }

@@ -47,6 +47,7 @@ public class ExternalPlayerWhoScoredScrapper {
 
         // Aislamos el JSON crudo del estado inicial de la página
         String rawJson = JsonExtractorUtil.extractPlayerStatsJson(html);
+        String position = JsonExtractorUtil.extractPlayerPosition(html);
 
         try {
             JsonNode rootNode = objectMapper.readTree(rawJson);
@@ -126,6 +127,9 @@ public class ExternalPlayerWhoScoredScrapper {
             player.setKeyPasses(totalKeyPasses);
             player.setSuccessfulDribbles(totalSuccessfulDribbles);
             player.setRating(Math.round(finalRating * 100.0) / 100.0);
+            if (position != null) {
+                player.setPosition(position);
+            }
 
             return Optional.of(player);
 

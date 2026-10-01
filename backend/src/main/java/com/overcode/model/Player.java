@@ -23,6 +23,7 @@ public class Player {
 
     private String clubName;
     private String league;
+    private String position;
 
     // PlayerGameData?
 

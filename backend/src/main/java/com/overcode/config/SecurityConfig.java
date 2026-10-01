@@ -15,18 +15,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import com.overcode.security.ApiKeyAuthFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ApiKeyAuthFilter apiKeyAuthFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthFilter apiKeyAuthFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.apiKeyAuthFilter = apiKeyAuthFilter;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> {})
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -35,8 +39,10 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
+                .requestMatchers("/api/admin/scraper/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
