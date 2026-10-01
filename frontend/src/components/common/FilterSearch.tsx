@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import type { ComponentProps } from "react";
-import type { PlayerFilter } from "@/types/PlayerFilter";
 import { cn } from "@/lib/utils";
-import { Input } from "../ui/Input";
+import type { PlayerFilter } from "@/types/PlayerFilter";
+import { useState, type ComponentProps } from "react";
 import { Button } from "../ui/Button";
-import { ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
+import { Field } from "../ui/Field";
 
 type FilterOption = {
     key: keyof PlayerFilter;
@@ -20,98 +19,86 @@ type FilterSearchProps = ComponentProps<"div"> & {
 };
 
 export const FilterSearch = ({filter,filterOptions,onChange,onSearch,position = "right",className,...props}: FilterSearchProps) => {
-    const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);
-
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState("");
+const [values, setValues] = useState<PlayerFilter>(filter);
 
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
-
-    const handleChange = (value: string) => {
-        setValue(value);
-        onChange({ 
-            ...filter,
-            [selectedFilter.key]: value,
-        });
+    const handleChange = (key: keyof PlayerFilter,value: string) => {
+        setValues((current) => ({
+            ...current,
+            [key]: value,
+        }));
     };
 
     const handleSearch = () => {
-        onSearch(filter);
+        onChange(values);
+        onSearch(values);
+        setOpen(false);
     };
 
-        const clearFilterAndSearch = () => {
-        setValue("");
+    const clearFiltersAndSearch = () => {
+        const emptyFilter: PlayerFilter = {
+            clubName: "",
+            league: "",
+        };
+
+        setValues(emptyFilter);
+        onChange(emptyFilter);
+        onSearch(emptyFilter);
         setOpen(false);
-        onChange({ clubName: "", league: "" });
-        onSearch({ clubName: "", league: "" });
-    }
+    };
 
     return (
-        <div className={cn("flex max-w-md",position === "right" && "flex-row-reverse",className)}{...props}>
-            <div className="relative shrink-0 min-w-21">
-                <Button
-                    type="button"
-                    onClick={() => setOpen((current) => !current)}
-                    className={cn("w-full h-full flex px-2 rounded-none",
-                        position === "left"
-                            ? "left-full rounded-l-md"
-                            : "right-full rounded-r-md")}
-                >
-                    {selectedFilter.label}
-                    <ChevronDown/>
-                </Button>
-                {open && (
-                    <div className={cn("absolute top-full z-10 min-w-full border rounded-b-md bg-brand-orange shadow-md",
-                            position === "left"
-                                ? "left-0"
-                                : "right-0"
-                        )}
-                    >
-                        
-                        {filterOptions.map((option) => (
-                            <Button
-                                key={option.key}
-                                type="button"
-                                onClick={() => {
-                                    setSelectedFilter(option);
-                                    setValue("");
-                                    setOpen(false);
-                                    onChange({clubName:"",league:""});
-                                }}
-                                className={cn("block w-full whitespace-nowrap px-3 py-2 text-center text-sm")
-                                }>
-                                {option.label}
-                            </Button>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            <Input value={value} placeholder={`Buscar por ${selectedFilter.label}`} ref={inputRef}
-                onChange={(event) =>
-                    handleChange(event.target.value)
-                }
-                onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                        handleSearch();
-                    }
-                }}
-                className={cn("min-w-0 max-w-50 flex-1 bg-brand-orange border-y-0 rounded-none"
-                )}
-            />
-            <Button onClick={clearFilterAndSearch} title="Buscar jugadores sin filtros"
-                className={cn("absolute top-0 h-full rounded-none",
+        <div className={cn( "relative flex",
+                position === "left"
+                    ? "justify-start"
+                    : "justify-end",
+                className
+            )} {...props}>
+            <Button onClick={() => setOpen((current) => !current)}
+                className={cn("flex h-10 items-center gap-2 bg-brand-orange px-3",
                     position === "left"
-                        ? "left-full rounded-r-md"
-                        : "right-full rounded-l-md"
-                )}
-            >
-                Todos
+                        ? "rounded-r-md"
+                        : "flex-row-reverse rounded-l-md"
+                )}>
+                <Menu className="h-5 w-5" />
+                <span>Filtros</span>
             </Button>
+
+            {open && (
+                <div className={cn("flex flex-col gap-2 absolute top-full z-50 w-72 border bg-brand-orange p-4 shadow-md",
+                        position === "left"
+                            ? "left-0 rounded-b-md rounded-r-md"
+                            : "right-0 rounded-b-md rounded-l-md"
+                    )}>
+                    {filterOptions.map((option) => (
+                        <Field  key={option.key}
+                            label={option.label}
+                            value={values[option.key] ?? ""}
+                            onChange={(event) =>
+                                handleChange(
+                                    option.key,
+                                    event.target.value
+                                )
+                            }
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                    handleSearch();
+                                }
+                            }}
+                            inputClassName="bg-[#faa42b]"/>
+                    ))}
+
+                    <div className="flex gap-2">
+                        <Button onClick={clearFiltersAndSearch} className="flex-1 bg-[#faa42b]">
+                            Limpiar
+                        </Button>
+
+                        <Button onClick={handleSearch} className="flex-1 bg-[#faa42b]">
+                            Buscar
+                        </Button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -54,7 +54,7 @@ export default function CatalogoPage() {
     }, []);
 
     if (initialLoading) return <Loading text="Cargando catálogo..." />
-    if (error) return <ServerErrorComponent />
+    //if (error) return <ServerErrorComponent />
 
     return (
         <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
@@ -69,7 +69,7 @@ export default function CatalogoPage() {
                             label: "Liga",
                         },
                     ]}
-                    className='absolute z-10 right-0 -top-5'/>
+                    className='absolute z-50 right-0 -top-5'/>
             {searchLoading ? (
                 <Loading text="Buscando jugadores..." />
             ):( players.length > 0 ? (
