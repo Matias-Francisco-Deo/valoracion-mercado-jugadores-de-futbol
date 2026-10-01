@@ -28,6 +28,7 @@ public class ExternalPlayerWhoScoredScrapper {
         22 (Ligue 1)
     * */
     private static final Set<Integer> TOP_5_LEAGUES_IDS = Set.of(2, 4, 5, 3, 22);
+    public static final String PAGE_URL = "https://www.whoscored.com";
 
     private final ScraperHttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -41,7 +42,7 @@ public class ExternalPlayerWhoScoredScrapper {
     }
 
     public Optional<Player> getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
-        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/"; // TODO externalizar URL
+        String playerUrl = PAGE_URL + "/players/" + playerId + "/show/";
         String html = httpClient.getHtml(playerUrl);
 
         // Aislamos el JSON crudo del estado inicial de la página
@@ -110,7 +111,7 @@ public class ExternalPlayerWhoScoredScrapper {
             double passSuccess = totalPasses > 0 ? (totalAccuratePasses / totalPasses) * 100 : 0.0;
 
             // 5. Guardamos en el DTO
-            Player player = new Player(); // TODO usar constructores?
+            Player player = new Player();
             player.setExternalId(playerId);
             player.setName(playerDraftDTO.name());
             player.setClubName(playerDraftDTO.clubName());
