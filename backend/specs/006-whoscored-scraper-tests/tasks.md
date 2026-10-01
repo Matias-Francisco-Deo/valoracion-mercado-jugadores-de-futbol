@@ -17,9 +17,9 @@
 
 **Purpose**: Verify dependencies, clean up deprecated stubs, and prepare package directory structure
 
-- [ ] T001 Verify test dependencies and Playwright/MockWebServer test configuration in `pom.xml`
-- [ ] T002 [P] Remove obsolete empty stub test file `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/ExternalPlayerWhoScoredScrapper.java` per FR-014 permission
-- [ ] T003 [P] Create package directories for new test classes in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/` and `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/`
+- [X] T001 Verify test dependencies and Playwright/MockWebServer test configuration in `pom.xml`
+- [X] T002 [P] Remove obsolete empty stub test file `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/ExternalPlayerWhoScoredScrapper.java` per FR-014 permission
+- [X] T003 [P] Create package directories for new test classes in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/` and `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/`
 
 ---
 
@@ -29,9 +29,9 @@
 
 **⚠️ CRITICAL**: Foundational fixtures must be available before user story tests can execute
 
-- [ ] T004 [P] Implement mock HTML and JSON payload fixtures in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/WhoScoredTestFixtures.java`
-- [ ] T005 [P] Initialize `@SpringBootTest` test class skeleton with `@MockBean ScraperHttpClient` in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [ ] T006 [P] Initialize Playwright test class skeleton with `MockWebServer` lifecycle setup and teardown in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
+- [X] T004 [P] Implement mock HTML and JSON payload fixtures in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/WhoScoredTestFixtures.java`
+- [X] T005 [P] Initialize `@SpringBootTest` test class skeleton with `@MockBean ScraperHttpClient` in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T006 [P] Initialize Playwright test class skeleton with `MockWebServer` lifecycle setup and teardown in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
 
 **Checkpoint**: Shared test fixtures and skeletons ready - user story testing can now begin
 
@@ -45,9 +45,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, preservation of player draft metadata (name, club, league, externalId), and exclusion of non-Top-5 tournaments in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [ ] T008 [US1] Implement test `calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` verifying weighted average rating and rounded pass accuracy in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [ ] T009 [US1] Validate User Story 1 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, preservation of player draft metadata (name, club, league, externalId), and exclusion of non-Top-5 tournaments in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T008 [US1] Implement test `calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` verifying weighted average rating and rounded pass accuracy in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T009 [US1] Validate User Story 1 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently (MVP complete)
 
