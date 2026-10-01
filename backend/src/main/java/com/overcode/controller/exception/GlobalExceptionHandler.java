@@ -23,12 +23,6 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(ConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponseDTO handleConflict(ConflictException ex) {
-        return new ErrorResponseDTO(ex.getMessage());
-    }
-
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDTO handleAuthentication(AuthenticationException ex) {
