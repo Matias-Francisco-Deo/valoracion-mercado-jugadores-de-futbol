@@ -12,17 +12,17 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
-    String FIND_BY_CLUBNAME = "unaccent(LOWER(p.team.name)) LIKE unaccent(CONCAT(LOWER(CAST(:teamName AS text)), '%'))";
+    String FIND_BY_CLUBNAME = "(:teamName IS NULL OR unaccent(LOWER(t.name)) LIKE unaccent(CONCAT(LOWER(CAST(:teamName AS text)), '%')))";
 
-    String FIND_BY_LEAGUE = "unaccent(LOWER(p.team.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%'))";
+    String FIND_BY_LEAGUE = "(:league IS NULL OR unaccent(LOWER(t.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%')))";
 
     String FIND_BY_FILTRO_QUERY =
-            "FROM players p " +
+            "FROM players p LEFT JOIN teams t ON p.team_id = t.id " +
                     "WHERE " + FIND_BY_CLUBNAME + " " +
                     "AND " + FIND_BY_LEAGUE ;
 
     @Query(
-            value = "SELECT * " + FIND_BY_FILTRO_QUERY,
+            value = "SELECT p.* " + FIND_BY_FILTRO_QUERY,
             countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY,
             nativeQuery = true)
     List<PlayerJPADTO> listarJugadores(

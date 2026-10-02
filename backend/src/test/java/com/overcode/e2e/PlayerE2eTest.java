@@ -66,13 +66,13 @@ class PlayerE2eTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
     }
 

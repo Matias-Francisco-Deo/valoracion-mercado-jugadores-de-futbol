@@ -39,7 +39,7 @@ public class TestService {
 
     }
 
-    public void eliminarJugadores() {
+    public void eliminarJugadoresYEquipos() {
         playerDAO.deleteAll();
         eliminarEquipos();
         eliminarDatosJugadores();

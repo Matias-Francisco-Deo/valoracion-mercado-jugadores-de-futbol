@@ -32,7 +32,7 @@ class ExternalPlayerRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
     }
 
     @Test
