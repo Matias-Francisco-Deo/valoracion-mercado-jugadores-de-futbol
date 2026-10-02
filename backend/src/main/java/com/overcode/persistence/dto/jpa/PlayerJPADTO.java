@@ -35,7 +35,7 @@ public class PlayerJPADTO {
     @ManyToOne(fetch = FetchType.EAGER)
     private TeamJPADTO team;
 
-    @OneToOne(mappedBy = "player", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PlayerGameDataJPADTO playerGameData;
 
 
@@ -58,6 +58,23 @@ public class PlayerJPADTO {
         dto.setExternalId(player.getExternalId());
 
         dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
+        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModelo(player.getTeam()) : null);
+
+        return dto;
+    }
+
+    public static PlayerJPADTO desdeModelo(Player player, PlayerGameDataJPADTO playerGameDataJPADTO) {
+        if (player == null) {
+            return null;
+        }
+        PlayerJPADTO dto = new PlayerJPADTO();
+        dto.setId(player.getId());
+        dto.setName(player.getName());
+        dto.setCurrentPrice(player.getCurrentPrice());
+        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
+        dto.setExternalId(player.getExternalId());
+
+        dto.setPlayerGameData(playerGameDataJPADTO);
         dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModelo(player.getTeam()) : null);
 
         return dto;

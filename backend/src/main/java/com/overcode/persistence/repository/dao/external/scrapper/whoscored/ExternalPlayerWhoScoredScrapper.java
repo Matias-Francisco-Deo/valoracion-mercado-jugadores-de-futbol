@@ -120,6 +120,8 @@ public class ExternalPlayerWhoScoredScrapper {
                     playerGameData
             );
 
+            playerGameData.setPlayer(player);
+
             return Optional.of(player);
 
         } catch (JsonProcessingException e) {

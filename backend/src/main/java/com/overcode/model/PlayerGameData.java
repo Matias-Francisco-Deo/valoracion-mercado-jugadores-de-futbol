@@ -10,6 +10,8 @@ import lombok.Setter;
 public class PlayerGameData {
     private Long id;
 
+    private Player player;
+
     private Integer goals;
     private Integer assists; // no se muestra
     private Integer shotsOnTarget;
@@ -19,11 +21,13 @@ public class PlayerGameData {
     private Integer successfulDribbles;
     private Double rating;
 
-    public PlayerGameData(Long id, Integer goals, Integer assists,
+    public PlayerGameData(Long id, Player player,
+                          Integer goals, Integer assists,
                           Integer shotsOnTarget, Integer keyPasses,
                          Integer tackles, Integer successfulDribbles,
                           Double rating) {
         setId(id);
+        setPlayer(player);
         setGoals(goals);
         setAssists(assists);
         setShotsOnTarget(shotsOnTarget);
@@ -33,11 +37,18 @@ public class PlayerGameData {
         setRating(rating);
     }
 
+    public PlayerGameData(Player player, Integer goals, Integer assists,
+                          Integer shotsOnTarget, Integer keyPasses,
+                          Integer tackles, Integer successfulDribbles,
+                          Double rating) {
+        this(null, player, goals, assists, shotsOnTarget, keyPasses, tackles, successfulDribbles, rating);
+    }
+
     public PlayerGameData(Integer goals, Integer assists,
                           Integer shotsOnTarget, Integer keyPasses,
                           Integer tackles, Integer successfulDribbles,
                           Double rating) {
-        this(null, goals, assists, shotsOnTarget, keyPasses, tackles, successfulDribbles, rating);
+        this(null, null, goals, assists, shotsOnTarget, keyPasses, tackles, successfulDribbles, rating);
     }
 }
 

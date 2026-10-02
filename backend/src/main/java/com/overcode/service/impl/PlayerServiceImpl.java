@@ -2,7 +2,6 @@ package com.overcode.service.impl;
 
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
 import com.overcode.model.Team;
 import com.overcode.persistence.repository.interfaces.PlayerGameDataRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -37,11 +37,11 @@ public class PlayerServiceImpl implements PlayerService {
         validarJugador(player);
 
         Team team = player.getTeam();
-        PlayerGameData playerGameData = player.getPlayerGameData();
 
-        teamRepository.guardar(team);
-        playerGameDataRepository.guardar(playerGameData);
+        Optional<Team> teamOptional = teamRepository.recuperarPorNombre(team.getName());
+        Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
 
+        player.setTeam(teamGuardado);
         return playerRepository.guardar(player);
     }
 

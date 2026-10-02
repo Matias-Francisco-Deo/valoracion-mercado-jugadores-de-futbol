@@ -27,4 +27,9 @@ public class TeamRepositoryImpl implements TeamRepository {
     public Optional<Team> recuperar(Long id) {
         return teamDAOJPA.findById(id).map(TeamJPADTO::aModelo);
     }
+
+    @Override
+    public Optional<Team> recuperarPorNombre(String name) {
+        return teamDAOJPA.findByName(name).map(TeamJPADTO::aModelo);
+    }
 }

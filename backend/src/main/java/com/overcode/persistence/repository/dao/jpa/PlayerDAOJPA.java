@@ -12,11 +12,9 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
-    Optional<PlayerJPADTO> findByNameIgnoreCase(String name);
+    String FIND_BY_CLUBNAME = "unaccent(LOWER(p.team.name)) LIKE unaccent(CONCAT(LOWER(CAST(:teamName AS text)), '%'))";
 
-    String FIND_BY_CLUBNAME = "unaccent(LOWER(p.club_name)) LIKE unaccent(CONCAT(LOWER(CAST(:clubName AS text)), '%'))";
-
-    String FIND_BY_LEAGUE = "unaccent(LOWER(p.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%'))";
+    String FIND_BY_LEAGUE = "unaccent(LOWER(p.team.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%'))";
 
     String FIND_BY_FILTRO_QUERY =
             "FROM players p " +
@@ -28,7 +26,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY,
             nativeQuery = true)
     List<PlayerJPADTO> listarJugadores(
-            @Param("clubName") String clubName,
+            @Param("teamName") String teamName,
             @Param("league") String league
     );
 

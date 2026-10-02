@@ -18,6 +18,9 @@ public class PlayerGameDataJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private PlayerJPADTO player;
+
     @Column(nullable = false, name = "goals")
     private Integer goals;
 
@@ -51,6 +54,7 @@ public class PlayerGameDataJPADTO {
         setKeyPasses(keyPasses);
         setRating(rating);
         setSuccessfulDribbles(successfulDribbles);
+
     }
 
     public static PlayerGameDataJPADTO desdeModelo(PlayerGameData playerGameData, PlayerJPADTO playerJPADTO) {
@@ -75,6 +79,7 @@ public class PlayerGameDataJPADTO {
         }
         PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO();
         dto.setId(playerGameData.getId());
+        dto.setPlayer(playerGameData.getPlayer() != null ? PlayerJPADTO.desdeModelo(playerGameData.getPlayer(), dto) : null);
         dto.setGoals(playerGameData.getGoals());
         dto.setAssists(playerGameData.getAssists());
         dto.setShotsOnTarget(playerGameData.getShotsOnTarget());
@@ -96,7 +101,7 @@ public class PlayerGameDataJPADTO {
         playerGameData.setRating(this.rating);
         playerGameData.setSuccessfulDribbles(this.successfulDribbles);
 
-//        playerGameData.setPlayer(player);
+        playerGameData.setPlayer(player);
 
         return playerGameData;
     }
