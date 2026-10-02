@@ -50,7 +50,7 @@ export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => 
 
             {/* Estadísticas (Bottom) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 bg-gray-500/20 mt-auto">
-                {stats.map((stat, index) => (
+                {stats.map((stat) => (
                     <div 
                         key={stat.label} 
                         className="flex flex-col items-center justify-center py-4 px-2 gap-1"

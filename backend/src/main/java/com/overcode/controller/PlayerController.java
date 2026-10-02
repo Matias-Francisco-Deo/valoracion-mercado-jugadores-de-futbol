@@ -1,11 +1,11 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.controller.dto.player.PlayerFilterDTO;
-import com.overcode.controller.dto.player.PlayerResponseDTO;
+import com.overcode.controller.dto.player.*;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +23,20 @@ public class PlayerController {
     }
 
     @GetMapping({"", "/"})
-    public List<PlayerResponseDTO> listPlayers(
+    public PlayerPageResponseDTO listPlayers(
             @RequestParam(required = false) String league,
-            @RequestParam(required = false) String clubName
+            @RequestParam(required = false) String clubName,
+            Pageable pageable
     ) {
         PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(clubName, league);
 
         PlayerFilter filter = playerFilterDTO.aModelo();
-        return playerService.recuperarTodosConFiltro(filter).stream()
-                .map(PlayerResponseDTO::desdeModelo)
-                .toList();
+
+        Page<PlayerResponseDTO> page = playerService
+                .recuperarTodosConFiltro(filter, pageable)
+                .map(PlayerResponseDTO::desdeModelo);
+
+        return PlayerPageResponseDTO.desdeModelo(page);
     }
 
     @GetMapping("/top")

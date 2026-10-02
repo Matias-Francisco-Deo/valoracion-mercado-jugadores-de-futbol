@@ -5,6 +5,8 @@ import com.overcode.model.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,8 +39,13 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public List<Player> listarJugadores(PlayerFilter filtro) {
-        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague()).stream().map(PlayerJPADTO::aModelo).toList();
+    public Page<Player> listarJugadores(PlayerFilter filtro, Pageable pageable) {
+        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague(),pageable).map(PlayerJPADTO::aModelo);
+    }
+
+    @Override//temporal hasta preguntar si necesitamos traer todos sin paginar
+    public List<Player> listarTodos() {
+        return playerDAOJPA.findAll().stream().map(PlayerJPADTO::aModelo).toList();
     }
 
 

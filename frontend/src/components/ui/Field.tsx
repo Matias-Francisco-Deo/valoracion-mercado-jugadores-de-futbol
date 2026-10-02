@@ -6,9 +6,10 @@ interface FieldProps extends Omit<React.ComponentProps<'input'>, 'placeholder'> 
   label: string
   placeholder?: string;
   error?: string
+  inputClassName?: string;
 }
 
-export const Field = ({ label, placeholder, error, className, ...props }: FieldProps) => {
+export const Field = ({ label, placeholder, error, inputClassName, className, ...props }: FieldProps) => {
   const id = useId()
   const errorId = `${id}-error`
 
@@ -24,7 +25,7 @@ export const Field = ({ label, placeholder, error, className, ...props }: FieldP
         placeholder={placeholder ?? ""}
         aria-invalid={Boolean(error)}
         aria-describedby={hasError ? errorId : undefined}
-        className={'form-input-base '} 
+        className={cn('form-input-base bg-white ',inputClassName)} 
         {...props}
       />
       {error && (

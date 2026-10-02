@@ -51,11 +51,11 @@ class ExternalPlayerRepositoryTest {
     @Test
     @Disabled("Use to test manually given its connected to an external API")
     void listarJugadoresMuestraTantosJugadoresComoSeLePida() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(3);
+        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(10);
 
         if (optionalJugador.isEmpty()) return;
 
-        assertEquals(3, optionalJugador.get().size());
+        assertEquals(10, optionalJugador.get().size());
 
     }
 

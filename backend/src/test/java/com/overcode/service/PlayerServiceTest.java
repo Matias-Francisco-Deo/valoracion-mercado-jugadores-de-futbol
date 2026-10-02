@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -185,13 +187,13 @@ class PlayerServiceTest {
         Player jugador5 = getJugadorConClub("Jugador5", "Club2");
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"),PageRequest.of(0, 10));
+
         List<Player> expectedPlayers = List.of(jugador1, jugador2);
 
-
-        assertEquals(jugadores.size(), expectedPlayers.size());
-        for (int i = 0; i < jugadores.size(); i++) {
-            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        assertEquals(jugadores.getContent().size(), expectedPlayers.size());
+        for (int i = 0; i < jugadores.getContent().size(); i++) {
+            assertEquals(jugadores.getContent().get(i).getName(), expectedPlayers.get(i).getName());
         }
 
     }
@@ -213,13 +215,13 @@ class PlayerServiceTest {
         Player jugador5 = getJugadorConLiga("Jugador5", "Liga2");
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"),PageRequest.of(0, 10));
         List<Player> expectedPlayers = List.of(jugador1, jugador2);
 
 
-        assertEquals(jugadores.size(), expectedPlayers.size());
-        for (int i = 0; i < jugadores.size(); i++) {
-            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        assertEquals(jugadores.getContent().size(), expectedPlayers.size());
+        for (int i = 0; i < jugadores.getContent().size(); i++) {
+            assertEquals(jugadores.getContent().get(i).getName(), expectedPlayers.get(i).getName());
         }
 
     }
@@ -241,28 +243,32 @@ class PlayerServiceTest {
         Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club1");
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1"));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1"),PageRequest.of(0, 10));
         List<Player> expectedPlayers = List.of(jugador1);
 
 
-        assertEquals(jugadores.size(), expectedPlayers.size());
-        for (int i = 0; i < jugadores.size(); i++) {
-            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+        assertEquals(jugadores.getContent().size(), expectedPlayers.size());
+        for (int i = 0; i < jugadores.getContent().size(); i++) {
+            assertEquals(jugadores.getContent().get(i).getName(), expectedPlayers.get(i).getName());
         }
 
     }
 
     @Test
     void listarJugadoresConFiltroLigaSinJugadoresDaVacio() {
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"),PageRequest.of(0, 10));
         assertTrue(jugadores.isEmpty());
+        assertEquals(0, jugadores.getTotalElements());
+        assertEquals(0, jugadores.getTotalPages());
 
     }
 
     @Test
     void listarJugadoresConFiltroClubSinJugadoresDaVacio() {
-        List<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"),PageRequest.of(0, 10));
         assertTrue(jugadores.isEmpty());
+        assertEquals(0, jugadores.getTotalElements());
+        assertEquals(0, jugadores.getTotalPages());
 
     }
 
