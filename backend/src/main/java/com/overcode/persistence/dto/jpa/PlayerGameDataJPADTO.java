@@ -18,9 +18,6 @@ public class PlayerGameDataJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "player", fetch = FetchType.EAGER)
-    private PlayerJPADTO player;
-
     @Column(nullable = false, name = "goals")
     private Integer goals;
 
@@ -47,7 +44,6 @@ public class PlayerGameDataJPADTO {
                                 Integer shotsOnTarget, Integer tackles,
                                 Integer keyPasses, Double rating, Integer successfulDribbles) {
         setId(id);
-        setPlayer(player);
         setGoals(goals);
         setAssists(assists);
         setShotsOnTarget(shotsOnTarget);
@@ -62,7 +58,22 @@ public class PlayerGameDataJPADTO {
             return null;
         }
         PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO();
-        dto.setPlayer(playerJPADTO);
+        dto.setId(playerGameData.getId());
+        dto.setGoals(playerGameData.getGoals());
+        dto.setAssists(playerGameData.getAssists());
+        dto.setShotsOnTarget(playerGameData.getShotsOnTarget());
+        dto.setTackles(playerGameData.getTackles());
+        dto.setKeyPasses(playerGameData.getKeyPasses());
+        dto.setRating(playerGameData.getRating());
+        dto.setSuccessfulDribbles(playerGameData.getSuccessfulDribbles());
+        return dto;
+    }
+
+    public static PlayerGameDataJPADTO desdeModelo(PlayerGameData playerGameData) {
+        if (playerGameData == null) {
+            return null;
+        }
+        PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO();
         dto.setId(playerGameData.getId());
         dto.setGoals(playerGameData.getGoals());
         dto.setAssists(playerGameData.getAssists());
@@ -85,7 +96,7 @@ public class PlayerGameDataJPADTO {
         playerGameData.setRating(this.rating);
         playerGameData.setSuccessfulDribbles(this.successfulDribbles);
 
-        playerGameData.setPlayer(player);
+//        playerGameData.setPlayer(player);
 
         return playerGameData;
     }

@@ -10,8 +10,6 @@ import lombok.Setter;
 public class PlayerGameData {
     private Long id;
 
-    private Player player;
-
     private Integer goals;
     private Integer assists; // no se muestra
     private Integer shotsOnTarget;

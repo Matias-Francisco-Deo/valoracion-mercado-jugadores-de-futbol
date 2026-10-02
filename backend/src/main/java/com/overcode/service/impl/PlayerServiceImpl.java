@@ -2,7 +2,11 @@ package com.overcode.service.impl;
 
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
+import com.overcode.model.PlayerGameData;
+import com.overcode.model.Team;
+import com.overcode.persistence.repository.interfaces.PlayerGameDataRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
@@ -17,16 +21,27 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final PlayerGameDataRepository playerGameDataRepository;
+    private final TeamRepository teamRepository;
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerGameDataRepository playerGameDataRepository, TeamRepository teamRepository) {
         this.playerRepository = playerRepository;
+        this.playerGameDataRepository = playerGameDataRepository;
+        this.teamRepository=teamRepository;
     }
 
     @Override
     @Transactional
     public Player crear(Player player) {
         validarJugador(player);
+
+        Team team = player.getTeam();
+        PlayerGameData playerGameData = player.getPlayerGameData();
+
+        teamRepository.guardar(team);
+        playerGameDataRepository.guardar(playerGameData);
+
         return playerRepository.guardar(player);
     }
 

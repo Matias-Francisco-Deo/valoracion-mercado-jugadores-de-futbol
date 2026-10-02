@@ -35,7 +35,7 @@ public class PlayerJPADTO {
     @ManyToOne(fetch = FetchType.EAGER)
     private TeamJPADTO team;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "player", fetch = FetchType.EAGER)
     private PlayerGameDataJPADTO playerGameData;
 
 
