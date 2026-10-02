@@ -22,7 +22,7 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                     "pgd.successfulDribbles = :successfulDribbles " +
                     "where pgd.player.externalId = :externalId"
     )
-    void updateWithExternalPlayerId(@Param("playerId") Long playerId,
+    void updateWithExternalPlayerId(@Param("externalId") Long externalId,
                                     @Param("goals") Integer goals,
                                     @Param("assists") Integer assists,
                                     @Param("shotsOnTarget") Integer shotsOnTarget,

@@ -3,7 +3,6 @@ package com.overcode.service.impl;
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
 import com.overcode.model.Team;
-import com.overcode.persistence.repository.interfaces.PlayerGameDataRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -21,13 +20,11 @@ import java.util.Optional;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
-    private final PlayerGameDataRepository playerGameDataRepository;
     private final TeamRepository teamRepository;
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, PlayerGameDataRepository playerGameDataRepository, TeamRepository teamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository) {
         this.playerRepository = playerRepository;
-        this.playerGameDataRepository = playerGameDataRepository;
         this.teamRepository=teamRepository;
     }
 

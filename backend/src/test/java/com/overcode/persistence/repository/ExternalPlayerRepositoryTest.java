@@ -1,9 +1,11 @@
 package com.overcode.persistence.repository;
 
 import com.overcode.model.Player;
+import com.overcode.model.Team;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -29,6 +31,8 @@ class ExternalPlayerRepositoryTest {
 
     @Autowired
     private TestService testService;
+    @Autowired
+    private TeamRepository teamRepository;
 
     @BeforeEach
     void setUp() {
@@ -92,13 +96,15 @@ class ExternalPlayerRepositoryTest {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
 
+        Team team = teamRepository.guardar(pepito.getTeam());
+        pepito.setTeam(team);
         playerRepository.guardar(pepito);
 
-        pepito.setName("Pepito Actualizado");
+        pepito.getPlayerGameData().setRating(9.0);
 
         Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
 
         assertNotNull(jugadorRecuperado.getId());
-        assertEquals("Pepito Actualizado", jugadorRecuperado.getName());
+        assertEquals(9.0, jugadorRecuperado.getPlayerGameData().getRating(), 0.1);
     }
 }

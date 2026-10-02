@@ -2,6 +2,7 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.persistence.dto.external.FootballDataAPI.*;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -79,9 +80,12 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
         List<PlayerDraftDTO> players = optionalTeams.get().stream()
                 .flatMap(
                         team ->
-                                team.squad().stream().map(player ->
-                                new PlayerDraftDTO(player.name(), team.toTeamDraftDTO(competition.name())
-                                ))).toList();
+                        {
+                            TeamDraftDTO teamDraftDto = team.toTeamDraftDTO(competition.name());
+                            return team.squad().stream().map(player ->
+                                    new PlayerDraftDTO(player.name(), teamDraftDto));
+                        }
+                ).toList();
 
         return Optional.of(players);
     }
