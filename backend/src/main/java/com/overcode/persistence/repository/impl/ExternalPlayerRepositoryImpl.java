@@ -1,11 +1,13 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.Player;
+import com.overcode.model.PlayerGameData;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
+import com.overcode.persistence.repository.dao.jpa.PlayerGameDataDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +20,13 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
 
     private final ExternalDraftPlayerDAO externalDraftPlayerDAO;
     private final PlayerDAOJPA playerDAOJPA;
+    private final PlayerGameDataDAOJPA playerGameDataDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
 
-    public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
+    public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, PlayerGameDataDAOJPA playerGameDataDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
         this.playerDAOJPA = playerDAOJPA;
+        this.playerGameDataDAOJPA = playerGameDataDAOJPA;
         this.externalPlayerDataDAO = externalPlayerDataDAO;
     }
 
@@ -41,27 +45,25 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     public Player upsertPlayerByExternalId(Player player) {
         boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
         if (!existsOnDB) {
-            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player, dto)).aModelo(team);
+            return playerDAOJPA.save(PlayerJPADTO.desdeModelo(player)).aModelo();
         }
-        playerDAOJPA.updateWithExternalId(
+
+        PlayerGameData playerGameData = player.getPlayerGameData();
+        playerGameDataDAOJPA.updateWithExternalPlayerId(
                 player.getExternalId(),
-                player.getName(),
-                player.getGoals(),
-                player.getCurrentPrice(),
-                player.getAssists(),
-                player.getClubName(),
-                player.getShotsOnTarget(),
-                player.getPasses(),
-                player.getInterceptions(),
-                player.getTackles(),
-                player.getKeyPasses(),
-                player.getRating(),
-                player.getSuccessfulDribbles()
+                playerGameData.getGoals(),
+                playerGameData.getAssists(),
+                playerGameData.getShotsOnTarget(),
+                playerGameData.getTackles(),
+                playerGameData.getKeyPasses(),
+                playerGameData.getRating(),
+                playerGameData.getSuccessfulDribbles()
         );
+
         Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
 
         if (optionalPlayerJPADTO.isEmpty()) return player;
 
-        return optionalPlayerJPADTO.get().aModelo(team);
+        return optionalPlayerJPADTO.get().aModelo();
     }
 }

@@ -18,7 +18,7 @@ public class PlayerGameDataJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "player")
+    @OneToOne(mappedBy = "player", fetch = FetchType.EAGER)
     private PlayerJPADTO player;
 
     @Column(nullable = false, name = "goals")

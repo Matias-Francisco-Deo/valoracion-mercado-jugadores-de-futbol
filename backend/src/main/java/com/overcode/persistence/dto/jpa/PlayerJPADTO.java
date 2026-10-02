@@ -32,10 +32,10 @@ public class PlayerJPADTO {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private TeamJPADTO team;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private PlayerGameDataJPADTO playerGameData;
 
 
@@ -44,6 +44,23 @@ public class PlayerJPADTO {
         setName(name);
         setCurrentPrice(currentPrice);
         setTokens(tokens);
+    }
+
+    public static PlayerJPADTO desdeModelo(Player player) {
+        if (player == null) {
+            return null;
+        }
+        PlayerJPADTO dto = new PlayerJPADTO();
+        dto.setId(player.getId());
+        dto.setName(player.getName());
+        dto.setCurrentPrice(player.getCurrentPrice());
+        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
+        dto.setExternalId(player.getExternalId());
+
+        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
+        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModelo(player.getTeam()) : null);
+
+        return dto;
     }
 
     public static PlayerJPADTO desdeModelo(Player player, TeamJPADTO teamJPADTO) {
@@ -63,22 +80,22 @@ public class PlayerJPADTO {
         return dto;
     }
 
-    public static PlayerJPADTO desdeModelo(Player player) {
-        if (player == null) {
-            return null;
-        }
-        PlayerJPADTO dto = new PlayerJPADTO();
-        dto.setId(player.getId());
-        dto.setName(player.getName());
-        dto.setCurrentPrice(player.getCurrentPrice());
-        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
-        dto.setExternalId(player.getExternalId());
-
-        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
-//        dto.setTeam(teamJPADTO);
-
-        return dto;
-    }
+//    public static PlayerJPADTO desdeModelo(Player player) {
+//        if (player == null) {
+//            return null;
+//        }
+//        PlayerJPADTO dto = new PlayerJPADTO();
+//        dto.setId(player.getId());
+//        dto.setName(player.getName());
+//        dto.setCurrentPrice(player.getCurrentPrice());
+//        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
+//        dto.setExternalId(player.getExternalId());
+//
+//        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
+////        dto.setTeam(teamJPADTO);
+//
+//        return dto;
+//    }
 
     public Player aModelo(Team team) {
         Player player = new Player();
