@@ -17,7 +17,7 @@ export async function getTopPlayers() {
     return response;
 }
 
-export async function getFiltredPlayers(filter:PlayerFilter,page=0,size=10) {
+export async function getFiltredPlayers(filter:PlayerFilter,page=0,size=20) {
     const params = new URLSearchParams();
     if (filter.clubName) {
         params.set("clubName", filter.clubName);
