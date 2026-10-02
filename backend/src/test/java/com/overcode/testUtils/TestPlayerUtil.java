@@ -18,7 +18,7 @@ public class TestPlayerUtil {
     }
 
     private static @NonNull PlayerGameData getPlayerDataConRating(Double rating, Player player) {
-        return new PlayerGameData(1L, player, 0, 0, 0, 0, 0, 0, rating);
+        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, rating);
     }
 
     public static Player getJugadorConClub(String name, String club) {

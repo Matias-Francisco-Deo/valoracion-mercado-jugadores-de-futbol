@@ -229,23 +229,23 @@ class PlayerServiceTest {
         Player jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club2");
+        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club4");
         playerService.crear(jugador2);
 
-        Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club1");
+        Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
         playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConLigaYClub("Jugador4", "Liga2", "Club2");
         playerService.crear(jugador4);
 
-        Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club1");
+        Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club3");
         playerService.crear(jugador5);
 
         List<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1"));
         List<Player> expectedPlayers = List.of(jugador1);
 
 
-        assertEquals(jugadores.size(), expectedPlayers.size());
+        assertEquals(expectedPlayers.size(), jugadores.size());
         for (int i = 0; i < jugadores.size(); i++) {
             assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
         }

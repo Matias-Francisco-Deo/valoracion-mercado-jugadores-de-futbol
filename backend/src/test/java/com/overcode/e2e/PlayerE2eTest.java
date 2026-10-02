@@ -157,8 +157,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConLiga(PLAYER_NAME, "Liga1"));
-        playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
+        playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
+        playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
                 .uri("/players?league=Liga1")
@@ -179,7 +179,7 @@ class PlayerE2eTest {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
         playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
-        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club1"));
+        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club3"));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
                 .uri("/players?clubName=Club1&league=Liga1")
