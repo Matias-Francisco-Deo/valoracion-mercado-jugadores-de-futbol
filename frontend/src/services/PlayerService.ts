@@ -27,6 +27,11 @@ export async function getFiltredPlayers(filter:PlayerFilter,page=0,size=20) {
         params.set("league", filter.league);
     }
 
+    /*if (filter.position) {
+        params.set("position", filter.position);
+    }*/
+
+
     params.set("page", page.toString());
     params.set("size", size.toString());
 

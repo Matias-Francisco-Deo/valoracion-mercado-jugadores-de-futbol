@@ -24,7 +24,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/catalogo">
-            Catalogo 
+            Catálogo 
           </PageLink>
         </nav>
         

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PlayerCard } from "@/components/player/PlayerCard.tsx";
 import type { Player } from "@/types/player";
-import { getAllPlayers, getFiltredPlayers } from "@/services/PlayerService";
+import { getFiltredPlayers } from "@/services/PlayerService";
 import { Loading } from "@/components/common/Loading";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import type { HttpError } from "@/lib/http-error";
@@ -13,6 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 const filtroPlaceholder = {
     clubName: "",
     league: "",
+    position: "",
 }
 
 export default function CatalogoPage() {
@@ -26,7 +27,6 @@ export default function CatalogoPage() {
     const [searchLoading, setSearchLoading] = useState(false);
 
     const handleSearch = (filtro:PlayerFilter) => {
-        setSearchLoading(true)
 
         const params: Record<string, string> = {};
 
@@ -38,20 +38,30 @@ export default function CatalogoPage() {
             params.league = filtro.league;
         }
 
-        setSearchParams(params);
+        /*if (filtro.position) {
+            params.position = filtro.position;
+        }*/
 
-        getFiltredPlayers(filtro)
-        .then((data) => setPlayers(data.content))
-        .catch((error: HttpError) => setError(error))
-        .finally(()=>setSearchLoading(false));
+        setSearchParams(params);
     };
 
     useEffect(() => {
-        getAllPlayers()
-            .then((data) => setPlayers(data))
+        const filtro: PlayerFilter = {
+            clubName: searchParams.get("clubName") || "",
+            league: searchParams.get("league") || "",
+            position: searchParams.get("position") || "",
+        };
+        setFilter(filtro);
+        setSearchLoading(true);
+
+        getFiltredPlayers(filtro)
+            .then((data) => setPlayers(data.content))
             .catch((error: HttpError) => setError(error))
-            .finally(() => setInitialLoading(false));
-    }, []);
+            .finally(() => {
+                setSearchLoading(false);
+                setInitialLoading(false);
+            });
+    }, [searchParams]);
 
     if (initialLoading) return <Loading text="Cargando catálogo..." />
     if (error) return <ServerErrorComponent />
@@ -60,16 +70,11 @@ export default function CatalogoPage() {
         <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
             <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
                     filterOptions={[
-                        {
-                            key: "clubName",
-                            label: "Equipo",
-                        },
-                        {
-                            key: "league",
-                            label: "Liga",
-                        },
+                        {key: "clubName",label: "Equipo",},
+                        {key: "league",label: "Liga",},
+                        {key: "position",label: "Posición",},
                     ]}
-                    className='absolute z-10 right-0 -top-5'/>
+                    className='absolute z-50 right-0 -top-5'/>
             {searchLoading ? (
                 <Loading text="Buscando jugadores..." />
             ):( players.length > 0 ? (

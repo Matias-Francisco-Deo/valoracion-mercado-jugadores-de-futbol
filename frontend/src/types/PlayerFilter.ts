@@ -3,6 +3,7 @@ import type { Player } from "./player";
 export interface PlayerFilter {
     clubName?: string;
     league?: string;
+    position?: string;
 }
 
 export interface PlayerPageResponse {
