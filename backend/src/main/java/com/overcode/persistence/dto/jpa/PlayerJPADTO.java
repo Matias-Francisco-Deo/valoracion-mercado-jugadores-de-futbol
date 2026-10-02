@@ -97,23 +97,6 @@ public class PlayerJPADTO {
         return dto;
     }
 
-//    public static PlayerJPADTO desdeModelo(Player player) {
-//        if (player == null) {
-//            return null;
-//        }
-//        PlayerJPADTO dto = new PlayerJPADTO();
-//        dto.setId(player.getId());
-//        dto.setName(player.getName());
-//        dto.setCurrentPrice(player.getCurrentPrice());
-//        dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
-//        dto.setExternalId(player.getExternalId());
-//
-//        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
-////        dto.setTeam(teamJPADTO);
-//
-//        return dto;
-//    }
-
     public Player aModelo(Team team) {
         Player player = new Player();
         player.setId(this.id);

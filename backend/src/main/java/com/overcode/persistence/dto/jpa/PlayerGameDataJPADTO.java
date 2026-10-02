@@ -63,6 +63,8 @@ public class PlayerGameDataJPADTO {
         }
         PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO();
         dto.setId(playerGameData.getId());
+        dto.setPlayer(playerJPADTO);
+
         dto.setGoals(playerGameData.getGoals());
         dto.setAssists(playerGameData.getAssists());
         dto.setShotsOnTarget(playerGameData.getShotsOnTarget());
