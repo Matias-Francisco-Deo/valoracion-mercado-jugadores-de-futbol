@@ -26,6 +26,7 @@ public class Player {
 
 
     public Player(Long id,
+                  Long externalId,
                   String name,
                   Team team,
                   PlayerGameData playerGameData)
@@ -39,6 +40,10 @@ public class Player {
 
     }
 
+    public Player(String name, Team team, PlayerGameData playerGameData) {
+        this(null, null, name, team, playerGameData);
+    }
+
     private List<Token> getInitialTokens() {
         List<Token> newTokens = new java.util.ArrayList<>(List.of());
         for (int i = 0; i < 100; i++) {
@@ -48,9 +53,10 @@ public class Player {
     }
 
     public Player(String name,
+                  Long externalId,
                   Team team,
                   PlayerGameData playerGameData) {
-        this(null, name, team, playerGameData);
+        this(null, externalId, name, team, playerGameData);
     }
 
 

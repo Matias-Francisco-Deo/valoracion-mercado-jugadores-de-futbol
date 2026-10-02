@@ -2,7 +2,7 @@ package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionAreaDTO;
 import com.overcode.persistence.dto.external.FootballDataAPI.CompetitionDTO;
-import com.overcode.persistence.dto.external.FootballDataAPI.TeamDraftDTO;
+import com.overcode.persistence.dto.external.FootballDataAPI.TeamDraftFootballDataDTO;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -94,7 +94,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .setBody(json));
 
-        Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
+        Optional<List<TeamDraftFootballDataDTO>> equipos = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
 
         assertTrue(equipos.isPresent());
         assertFalse(equipos.get().isEmpty());
@@ -157,7 +157,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
         jugadores.get().forEach(jugador -> {
             assertNotNull(jugador.name());
-            assertNotNull(jugador.clubName());
+            assertNotNull(jugador.team());
         });
         assertFalse(jugadores.get().isEmpty());
     }
@@ -177,7 +177,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Disabled("Use manually since it can fail if the API is down")
     @Test
     void encuentraTodosLosEquiposDeUnaCompetencia()  {
-        Optional<List<TeamDraftDTO>> equipos = externalPlayerDAOFootballDataAPIImpl.getTeamsOfCompetition(COMPETITION_1);
+        Optional<List<TeamDraftFootballDataDTO>> equipos = externalPlayerDAOFootballDataAPIImpl.getTeamsOfCompetition(COMPETITION_1);
 
         equipos.get().forEach(equipo -> {
             assertNotNull(equipo.id());
@@ -205,7 +205,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
     @Test
     void noEncuentraJugadoresDeCompetenciasPorFalloDeApiEntoncesDaEmpty()  {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500));
-        Optional<List<TeamDraftDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
+        Optional<List<TeamDraftFootballDataDTO>> ligas = externalPlayerDAOFootballDataAPIImplMock.getTeamsOfCompetition(COMPETITION_1);
 
         assertTrue(ligas.isEmpty());
     }

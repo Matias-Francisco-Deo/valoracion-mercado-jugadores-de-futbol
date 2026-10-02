@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overcode.model.Player;
+import com.overcode.model.PlayerGameData;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
@@ -41,7 +42,7 @@ public class ExternalPlayerWhoScoredScrapper {
     }
 
     public Optional<Player> getDatosDeJugador(Long playerId, PlayerDraftDTO playerDraftDTO) {
-        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/"; // TODO externalizar URL
+        String playerUrl = "https://www.whoscored.com/players/" + playerId + "/show/";
         String html = httpClient.getHtml(playerUrl);
 
         // Aislamos el JSON crudo del estado inicial de la página
@@ -58,14 +59,10 @@ public class ExternalPlayerWhoScoredScrapper {
             int totalGoals = 0;
             int totalAssists = 0;
             int totalShotsOnTarget = 0;
-            int totalInterceptions = 0;
             int totalTackles = 0;
             int totalKeyPasses = 0;
             int totalSuccessfulDribbles = 0;
             int totalGamesPlayed = 0;
-
-            double totalPasses = 0.0;
-            double totalAccuratePasses = 0.0;
 
             double sumRating = 0.0;
             int ratingAppsCount = 0;
@@ -81,16 +78,12 @@ public class ExternalPlayerWhoScoredScrapper {
                 totalGoals += tournament.path("Goals").asInt(0);
                 totalAssists += tournament.path("Assists").asInt(0);
                 totalShotsOnTarget += tournament.path("ShotsOnTarget").asInt(0);
-                totalInterceptions += tournament.path("Interceptions").asInt(0);
                 totalTackles += tournament.path("TotalTackles").asInt(0);
                 totalKeyPasses += tournament.path("KeyPasses").asInt(0);
                 totalSuccessfulDribbles += tournament.path("Dribbles").asInt(0);
 
                 int apps = tournament.path("GameStarted").asInt(0) + tournament.path("SubOn").asInt(0);
                 totalGamesPlayed += apps;
-
-                totalPasses += tournament.path("TotalPasses").asDouble(0.0);
-                totalAccuratePasses += tournament.path("AccuratePasses").asDouble(0.0);
 
                 // Para el Rating hacemos un promedio ponderado según los partidos jugados en ESE equipo/liga
                 double rating = tournament.path("Rating").asDouble(0.0);
@@ -107,24 +100,25 @@ public class ExternalPlayerWhoScoredScrapper {
 
             // 4. Cálculos finales de porcentajes y promedios
             double finalRating = ratingAppsCount > 0 ? (sumRating / ratingAppsCount) : 0.0;
-            double passSuccess = totalPasses > 0 ? (totalAccuratePasses / totalPasses) * 100 : 0.0;
+            double roundedRating = Math.round(finalRating * 100.0) / 100.0;
+
+            PlayerGameData playerGameData = new PlayerGameData(
+                    totalGoals,
+                    totalAssists,
+                    totalShotsOnTarget,
+                    totalKeyPasses,
+                    totalTackles,
+                    totalSuccessfulDribbles,
+                    roundedRating
+            );
 
             // 5. Guardamos en el DTO
-            Player player = new Player(); // TODO usar constructores?
-            player.setExternalId(playerId);
-            player.setName(playerDraftDTO.name());
-            player.setClubName(playerDraftDTO.clubName());
-            player.setLeague(playerDraftDTO.league());
-            player.setCurrentPrice(1);
-            player.setGoals(totalGoals);
-            player.setAssists(totalAssists);
-            player.setShotsOnTarget(totalShotsOnTarget);
-            player.setPasses((int) Math.round(passSuccess));
-            player.setInterceptions(totalInterceptions);
-            player.setTackles(totalTackles);
-            player.setKeyPasses(totalKeyPasses);
-            player.setSuccessfulDribbles(totalSuccessfulDribbles);
-            player.setRating(Math.round(finalRating * 100.0) / 100.0);
+            Player player = new Player(
+                    playerDraftDTO.name(),
+                    playerId,
+                    playerDraftDTO.team().aModelo(),
+                    playerGameData
+            );
 
             return Optional.of(player);
 

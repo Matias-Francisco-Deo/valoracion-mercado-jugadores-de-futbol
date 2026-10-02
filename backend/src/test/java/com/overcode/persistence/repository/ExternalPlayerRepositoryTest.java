@@ -43,7 +43,7 @@ class ExternalPlayerRepositoryTest {
         if (optionalJugador.isEmpty()) return;
 
         assertNotNull(optionalJugador.get());
-        assertNotNull(optionalJugador.get().getFirst().league());
+        assertNotNull(optionalJugador.get().getFirst().team());
         assertNotNull(optionalJugador.get().getFirst().name());
 
     }
@@ -72,10 +72,9 @@ class ExternalPlayerRepositoryTest {
 
         assertNotNull(jugador.get());
         assertNotNull(jugador.get().getName());
-        assertNotNull(jugador.get().getLeague());
         assertNotNull(jugador.get().getExternalId());
-        assertNotNull(jugador.get().getClubName());
-        assertNotNull(jugador.get().getRating());
+        assertNotNull(jugador.get().getPlayerGameData());
+        assertNotNull(jugador.get().getTeam());
     }
 
     @Test
@@ -95,11 +94,11 @@ class ExternalPlayerRepositoryTest {
 
         playerRepository.guardar(pepito);
 
-        pepito.setGoals(100);
+        pepito.setName("Pepito Actualizado");
 
         Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
 
         assertNotNull(jugadorRecuperado.getId());
-        assertEquals(100L, jugadorRecuperado.getGoals().longValue());
+        assertEquals("Pepito Actualizado", jugadorRecuperado.getName());
     }
 }

@@ -72,7 +72,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
     }
 
     private Optional<List<PlayerDraftDTO>> getPlayersOfCompetition(CompetitionDTO competition) {
-        Optional<List<TeamDraftDTO>> optionalTeams = getTeamsOfCompetition(competition);
+        Optional<List<TeamDraftFootballDataDTO>> optionalTeams = getTeamsOfCompetition(competition);
 
         if (optionalTeams.isEmpty()) return Optional.empty();
 
@@ -80,14 +80,14 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
                 .flatMap(
                         team ->
                                 team.squad().stream().map(player ->
-                                new PlayerDraftDTO(player.name(), team.name(), competition.name()
+                                new PlayerDraftDTO(player.name(), team.toTeamDraftDTO(competition.name())
                                 ))).toList();
 
         return Optional.of(players);
     }
 
     @SneakyThrows
-    public Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition){
+    public Optional<List<TeamDraftFootballDataDTO>> getTeamsOfCompetition(CompetitionDTO competition){
 
         Thread.sleep(5000);
 

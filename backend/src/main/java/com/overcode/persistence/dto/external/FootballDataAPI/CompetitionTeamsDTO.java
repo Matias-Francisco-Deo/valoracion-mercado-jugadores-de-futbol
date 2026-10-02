@@ -6,6 +6,6 @@ import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CompetitionTeamsDTO(List<TeamDraftDTO> teams) {
+public record CompetitionTeamsDTO(List<TeamDraftFootballDataDTO> teams) {
 
 }
