@@ -1,9 +1,6 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.player.PageResponse;
-import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.controller.dto.player.PlayerFilterDTO;
-import com.overcode.controller.dto.player.PlayerResponseDTO;
+import com.overcode.controller.dto.player.*;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +23,7 @@ public class PlayerController {
     }
 
     @GetMapping({"", "/"})
-    public PageResponse listPlayers(
+    public PlayerPageResponseDTO listPlayers(
             @RequestParam(required = false) String league,
             @RequestParam(required = false) String clubName,
             Pageable pageable
@@ -39,7 +36,7 @@ public class PlayerController {
                 .recuperarTodosConFiltro(filter, pageable)
                 .map(PlayerResponseDTO::desdeModelo);
 
-        return PageResponse.desdeModelo(page);
+        return PlayerPageResponseDTO.desdeModelo(page);
     }
 
     @GetMapping("/top")

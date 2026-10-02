@@ -41,7 +41,7 @@ export default function CatalogoPage() {
         setSearchParams(params);
 
         getFiltredPlayers(filtro)
-        .then(setPlayers)
+        .then((data) => setPlayers(data.content))
         .catch((error: HttpError) => setError(error))
         .finally(()=>setSearchLoading(false));
     };

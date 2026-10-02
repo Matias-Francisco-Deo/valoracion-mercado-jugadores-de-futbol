@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public record PageResponse(
+public record PlayerPageResponseDTO(
         List<PlayerResponseDTO> content,
         int number,//pagina actual
         int size,//jugadores por pagina
@@ -12,8 +12,8 @@ public record PageResponse(
         long totalElements//total de jugadores
 ) {
 
-    public static PageResponse desdeModelo(Page<PlayerResponseDTO> page) {
-        return new PageResponse(
+    public static PlayerPageResponseDTO desdeModelo(Page<PlayerResponseDTO> page) {
+        return new PlayerPageResponseDTO(
                 page.getContent(),
                 page.getNumber(),
                 page.getSize(),

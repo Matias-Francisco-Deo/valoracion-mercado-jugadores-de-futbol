@@ -2,7 +2,7 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
-import com.overcode.controller.dto.player.PageResponse;
+import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
@@ -84,7 +84,7 @@ class PlayerE2eTest {
     void listarJugadoresConBaseVaciaDevuelveListaVacia() {
         String token = obtainAuthToken();
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
@@ -105,7 +105,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConNombre(PLAYER_NAME));
         playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
@@ -127,7 +127,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -151,7 +151,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConClub(PLAYER_NAME, "ClubUno"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=ClubUno")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -172,7 +172,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConLiga(PLAYER_NAME, "Liga1"));
         playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?league=Liga1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -194,7 +194,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
         playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club1"));
 
-        ResponseEntity<PageResponse> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1&league=Liga1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
