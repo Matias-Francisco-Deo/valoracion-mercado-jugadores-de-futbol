@@ -85,6 +85,7 @@ class ExternalPlayerRepositoryTest {
     }
 
     @Test
+    @Disabled("Este comportamiento ya no se espera de update")
     void seUpserteaUnJugadorInexistenteYSeGuarda() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);

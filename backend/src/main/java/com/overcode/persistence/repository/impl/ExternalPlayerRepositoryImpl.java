@@ -10,8 +10,6 @@ import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.dao.jpa.PlayerGameDataDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.TeamRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +23,12 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     private final PlayerDAOJPA playerDAOJPA;
     private final PlayerGameDataDAOJPA playerGameDataDAOJPA;
     private final ExternalPlayerDataDAO externalPlayerDataDAO;
-    private final PlayerRepository playerRepository;
-    private final TeamRepository teamRepository;
 
-    public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, PlayerGameDataDAOJPA playerGameDataDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO, PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public ExternalPlayerRepositoryImpl(ExternalDraftPlayerDAO externalDraftPlayerDAO, PlayerDAOJPA playerDAOJPA, PlayerGameDataDAOJPA playerGameDataDAOJPA, ExternalPlayerDataDAO externalPlayerDataDAO) {
         this.externalDraftPlayerDAO = externalDraftPlayerDAO;
         this.playerDAOJPA = playerDAOJPA;
         this.playerGameDataDAOJPA = playerGameDataDAOJPA;
         this.externalPlayerDataDAO = externalPlayerDataDAO;
-        this.playerRepository = playerRepository;
-        this.teamRepository = teamRepository;
     }
 
     @Override
@@ -52,13 +46,6 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     public Player updatePlayerByExternalId(Player player) {
         boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
         if (!existsOnDB) {
-//            Team team = player.getTeam();
-//
-//            Optional<Team> teamOptional = teamRepository.recuperarPorNombre(team.getName());
-//            Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
-//
-//            player.setTeam(teamGuardado);
-//            return playerRepository.guardar(player);
             return player;
         }
 

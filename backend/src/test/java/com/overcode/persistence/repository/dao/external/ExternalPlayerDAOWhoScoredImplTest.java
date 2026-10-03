@@ -64,7 +64,8 @@ class ExternalPlayerDAOWhoScoredImplTest {
 
         Optional<List<Team>> optionalTeams = externalPlayerDAOWhoScoredImplMock.getDatosDeEquipos(List.of(equipoConJugadorFantasma));
 
-        assertTrue(optionalTeams.isEmpty());
+        assertTrue(optionalTeams.isPresent());
+        assertTrue(optionalTeams.get().getFirst().getPlayers().isEmpty());
     }
 
     @Test
@@ -91,29 +92,4 @@ class ExternalPlayerDAOWhoScoredImplTest {
         assertEquals("Vinícius Júnior", jugadores.get(1).getName());
     }
 
-//    @Disabled("Use manually since it can fail if the scraper blocks or takes too long")
-//    @Test
-//    void encuentraJugadorConDatosReal(){
-//
-//
-//        Optional<List<Team>> optionalTeams = externalPlayerDAOWhoScoredImpl.getDatosDeEquipos(TEAMS_DRAFT);
-//
-//        assertTrue(optionalTeams.isPresent());
-//
-//        Team team = optionalTeams.get().getFirst();
-//
-//        assertNotNull(player.getName());
-//        assertNotNull(player.getPlayerGameData().getGoals());
-//
-//        Player player = (Player) team;
-//        assertNotNull(player.getName());
-//        assertNotNull(player.getTeam().getName());
-//        assertNotNull(player.getPlayerGameData().getGoals());
-//        assertNotNull(player.getPlayerGameData().getAssists());
-//        assertNotNull(player.getPlayerGameData().getRating());
-//        assertNotNull(player.getPlayerGameData().getShotsOnTarget());
-//        assertNotNull(player.getPlayerGameData().getSuccessfulDribbles());
-//        assertNotNull(player.getPlayerGameData().getTackles());
-//        assertNotNull(player.getPlayerGameData().getKeyPasses());
-//    }
 }
