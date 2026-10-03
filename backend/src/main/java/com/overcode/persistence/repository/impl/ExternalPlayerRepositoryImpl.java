@@ -3,7 +3,6 @@ package com.overcode.persistence.repository.impl;
 import com.overcode.model.Player;
 import com.overcode.model.PlayerGameData;
 import com.overcode.model.Team;
-import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
@@ -44,22 +43,23 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    public Optional<List<Player>> getDatosDeEquipos(PlayerDraftDTO playerDraftDTO) {
-        return externalPlayerDataDAO.getDatosDeEquipos(playerDraftDTO);
+    public Optional<List<Team>> getDatosDeEquipos(List<TeamDraftDTO> teamDraftDTOS) {
+        return externalPlayerDataDAO.getDatosDeEquipos(teamDraftDTOS);
     }
 
     @Override
     @Transactional
-    public Player upsertPlayerByExternalId(Player player) {
+    public Player updatePlayerByExternalId(Player player) {
         boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
         if (!existsOnDB) {
-            Team team = player.getTeam();
-
-            Optional<Team> teamOptional = teamRepository.recuperarPorNombre(team.getName());
-            Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
-
-            player.setTeam(teamGuardado);
-            return playerRepository.guardar(player);
+//            Team team = player.getTeam();
+//
+//            Optional<Team> teamOptional = teamRepository.recuperarPorNombre(team.getName());
+//            Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
+//
+//            player.setTeam(teamGuardado);
+//            return playerRepository.guardar(player);
+            return player;
         }
 
         PlayerGameData playerGameData = player.getPlayerGameData();

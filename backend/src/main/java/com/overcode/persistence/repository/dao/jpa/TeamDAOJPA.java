@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface TeamDAOJPA extends JpaRepository<TeamJPADTO, Long> {
     Optional<TeamJPADTO> findByName(String name);
     Optional<TeamJPADTO> findByNameAndLeague(String name, String league);
+
+    boolean existsByNameAndLeague(String league, String name);
 }

@@ -42,10 +42,8 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
 
     private Optional<Player> getDatosDeJugador(PlayerDraftDTO player) {
         try {
-            Long playerId = null;
+            Long playerId;
 
-
-            // 2. Fallback to searching WhoScored if new
             playerId = whoScoredIdResolver.resolvePlayerId(player.name());
             log.info("Buscando nuevo jugador: {}", player.name());
 

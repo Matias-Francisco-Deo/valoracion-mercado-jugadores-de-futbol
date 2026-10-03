@@ -85,7 +85,7 @@ class ExternalPlayerRepositoryTest {
     void seUpserteaUnJugadorInexistenteYSeGuarda() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
-        Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
+        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
 
         assertNotNull(jugadorRecuperado.getId());
         assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
@@ -102,7 +102,7 @@ class ExternalPlayerRepositoryTest {
 
         pepito.getPlayerGameData().setRating(9.0);
 
-        Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
+        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
 
         assertNotNull(jugadorRecuperado.getId());
         assertEquals(9.0, jugadorRecuperado.getPlayerGameData().getRating(), 0.1);
