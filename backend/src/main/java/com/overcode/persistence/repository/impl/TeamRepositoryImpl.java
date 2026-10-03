@@ -20,16 +20,21 @@ public class TeamRepositoryImpl implements TeamRepository {
     @Override
     public Team guardar(Team team) {
         TeamJPADTO dto = TeamJPADTO.desdeModelo(team);
-        return teamDAOJPA.save(dto).aModelo();
+        return teamDAOJPA.save(dto).aModeloConJugadores();
     }
 
     @Override
     public Optional<Team> recuperar(Long id) {
-        return teamDAOJPA.findById(id).map(TeamJPADTO::aModelo);
+        return teamDAOJPA.findById(id).map(TeamJPADTO::aModeloConJugadores);
     }
 
     @Override
     public Optional<Team> recuperarPorNombre(String name) {
-        return teamDAOJPA.findByName(name).map(TeamJPADTO::aModelo);
+        return teamDAOJPA.findByName(name).map(TeamJPADTO::aModeloConJugadores);
+    }
+
+    @Override
+    public Optional<Team> recuperarPorNombreYLiga(String name, String league) {
+        return teamDAOJPA.findByNameAndLeague(name, league).map(TeamJPADTO::aModeloConJugadores);
     }
 }

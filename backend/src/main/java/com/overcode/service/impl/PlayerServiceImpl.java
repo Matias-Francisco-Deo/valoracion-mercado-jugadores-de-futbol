@@ -35,7 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         Team team = player.getTeam();
 
-        Optional<Team> teamOptional = teamRepository.recuperarPorNombre(team.getName());
+        Optional<Team> teamOptional = teamRepository.recuperarPorNombreYLiga(team.getName(), team.getLeague());
         Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
 
         player.setTeam(teamGuardado);

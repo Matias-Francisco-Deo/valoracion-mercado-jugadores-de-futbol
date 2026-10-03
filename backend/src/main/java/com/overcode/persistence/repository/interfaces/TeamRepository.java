@@ -11,4 +11,6 @@ public interface TeamRepository {
     Optional<Team> recuperar(Long id);
 
     Optional<Team> recuperarPorNombre(String name);
+    
+    Optional<Team> recuperarPorNombreYLiga(String name, String league);
 }

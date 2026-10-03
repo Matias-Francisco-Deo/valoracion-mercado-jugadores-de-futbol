@@ -58,7 +58,7 @@ public class PlayerJPADTO {
         dto.setExternalId(player.getExternalId());
 
         dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
-        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModelo(player.getTeam()) : null);
+        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModeloSinJugadores(player.getTeam()) : null);
 
         return dto;
     }
@@ -75,7 +75,7 @@ public class PlayerJPADTO {
         dto.setExternalId(player.getExternalId());
 
         dto.setPlayerGameData(playerGameDataJPADTO);
-        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModelo(player.getTeam()) : null);
+        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModeloSinJugadores(player.getTeam()) : null);
 
         return dto;
     }
