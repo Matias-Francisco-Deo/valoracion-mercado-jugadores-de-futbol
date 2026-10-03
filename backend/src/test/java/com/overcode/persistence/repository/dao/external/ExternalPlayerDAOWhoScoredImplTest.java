@@ -49,7 +49,7 @@ class ExternalPlayerDAOWhoScoredImplTest {
         when(whoScoredIdResolverMock.resolvePlayerId("Kylian Mbappé")).thenReturn(11119L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(11119L, JUGADOR_DRAFT_1)).thenReturn(Optional.of(mockPlayer));
 
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(JUGADOR_DRAFT_1);
+        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeEquipos(JUGADOR_DRAFT_1);
 
         assertTrue(playerOpt.isPresent());
         Player player = playerOpt.get();
@@ -66,7 +66,7 @@ class ExternalPlayerDAOWhoScoredImplTest {
         when(whoScoredIdResolverMock.resolvePlayerId(anyString())).thenReturn(null);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(null, jugadorFantasma)).thenReturn(Optional.empty());
 
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(jugadorFantasma);
+        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeEquipos(jugadorFantasma);
 
         assertTrue(playerOpt.isEmpty());
     }
@@ -98,7 +98,7 @@ class ExternalPlayerDAOWhoScoredImplTest {
     @Disabled("Use manually since it can fail if the scraper blocks or takes too long")
     @Test
     void encuentraJugadorConDatosReal(){
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImpl.getDatosDeJugador(JUGADOR_DRAFT_1);
+        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImpl.getDatosDeEquipos(JUGADOR_DRAFT_1);
 
         assertTrue(playerOpt.isPresent());
         Player player = playerOpt.get();

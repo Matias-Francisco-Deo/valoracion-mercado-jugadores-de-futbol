@@ -1,9 +1,12 @@
 package com.overcode.persistence.dto.external;
 
+import com.overcode.model.Player;
 import com.overcode.model.Team;
 
-public record TeamDraftDTO(String name, String league) {
-    public Team aModelo() {
-        return new Team(name, league);
+import java.util.List;
+
+public record TeamDraftDTO(String name, String league, List<PlayerDraftDTO> players) {
+    public Team aModelo(List<Player> players) {
+        return new Team(name, league, players);
     }
 }

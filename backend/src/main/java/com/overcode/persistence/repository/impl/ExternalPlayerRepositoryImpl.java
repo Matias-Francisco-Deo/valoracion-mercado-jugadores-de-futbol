@@ -4,6 +4,7 @@ import com.overcode.model.Player;
 import com.overcode.model.PlayerGameData;
 import com.overcode.model.Team;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
@@ -38,13 +39,13 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
-    public Optional<List<PlayerDraftDTO>> listarJugadores(Integer maxPlayers) {
-        return externalDraftPlayerDAO.listarJugadores(maxPlayers);
+    public Optional<List<TeamDraftDTO>> listarEquiposDeJugadores(Integer maxPlayers) {
+        return externalDraftPlayerDAO.listarEquiposDeJugadores(maxPlayers);
     }
 
     @Override
-    public Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
-        return externalPlayerDataDAO.getDatosDeJugador(playerDraftDTO);
+    public Optional<List<Player>> getDatosDeEquipos(PlayerDraftDTO playerDraftDTO) {
+        return externalPlayerDataDAO.getDatosDeEquipos(playerDraftDTO);
     }
 
     @Override

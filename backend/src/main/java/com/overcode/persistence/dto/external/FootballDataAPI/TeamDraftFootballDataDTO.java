@@ -9,6 +9,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TeamDraftFootballDataDTO(Long id, String name, List<FootballDataPlayerDraftDTO> squad) {
     public TeamDraftDTO toTeamDraftDTO(String league) {
-        return new TeamDraftDTO(name, league);
+        return new TeamDraftDTO(name, league, squad.stream()
+                .map(FootballDataPlayerDraftDTO::toPlayerDraftDTO).toList());
+
     }
 }

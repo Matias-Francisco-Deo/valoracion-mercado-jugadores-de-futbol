@@ -21,13 +21,13 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
     @Override
     public Optional<List<Player>> actualizarJugadores(Integer limit) {
-        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalPlayerRepository.listarJugadores(limit);
+        Optional<List<PlayerDraftDTO>> playerDraftDTOS = externalPlayerRepository.listarEquiposDeJugadores(limit);
 
         if (playerDraftDTOS.isEmpty()) return Optional.empty();
 
         List<Player> upsertedPlayers = new java.util.ArrayList<>();
         for (PlayerDraftDTO draftDTO : playerDraftDTOS.get()) {
-            Optional<Player> player = externalPlayerRepository.getDatosDeJugador(draftDTO);
+            Optional<Player> player = externalPlayerRepository.getDatosDeEquipos(draftDTO);
             player.ifPresent(value -> upsertedPlayers
                     .add(externalPlayerRepository.upsertPlayerByExternalId(value)));
         }

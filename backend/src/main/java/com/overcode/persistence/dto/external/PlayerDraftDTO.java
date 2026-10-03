@@ -1,4 +1,4 @@
 package com.overcode.persistence.dto.external;
 
-public record PlayerDraftDTO(String name, TeamDraftDTO team) {
+public record PlayerDraftDTO(String name) {
 }

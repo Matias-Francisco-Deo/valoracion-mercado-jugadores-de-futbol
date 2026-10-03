@@ -30,6 +30,13 @@ public class Team {
         setLeague(league);
     }
 
+    public Team(String name, String league, List<Player> players) {
+        setId(null);
+        setName(name);
+        setLeague(league);
+        setPlayers(players);
+    }
+
     public void addPlayer(Player player) {
         players.add(player);
         player.setTeam(this);

@@ -42,7 +42,7 @@ class ExternalPlayerRepositoryTest {
     @Test
     @Disabled("Use to test manually given its connected to an external API")
     void listarJugadoresMuestraUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
+        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(1);
 
         if (optionalJugador.isEmpty()) return;
 
@@ -55,7 +55,7 @@ class ExternalPlayerRepositoryTest {
     @Test
     @Disabled("Use to test manually given its connected to an external API")
     void listarJugadoresMuestraTantosJugadoresComoSeLePida() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(3);
+        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(3);
 
         if (optionalJugador.isEmpty()) return;
 
@@ -66,11 +66,11 @@ class ExternalPlayerRepositoryTest {
     @Test
     @Disabled("Use to test manually given its connected to an external API")
     void seObtienenLosDatosCompletosDeUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
+        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(1);
 
         if (optionalJugador.isEmpty()) return;
 
-        Optional<Player> jugador = externalPlayerRepository.getDatosDeJugador(optionalJugador.get().getFirst());
+        Optional<Player> jugador = externalPlayerRepository.getDatosDeEquipos(optionalJugador.get().getFirst());
 
         if (jugador.isEmpty()) return;
 
