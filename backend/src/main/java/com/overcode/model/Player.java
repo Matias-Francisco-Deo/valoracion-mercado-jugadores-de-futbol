@@ -45,8 +45,8 @@ public class Player {
         this(null, null, name, team, playerGameData);
     }
 
-    public Player(String name, PlayerGameData playerGameData) {
-        this(null, null, name, null, playerGameData);
+    public Player(String name, Long externalId, PlayerGameData playerGameData) {
+        this(null, externalId, name, null, playerGameData);
     }
 
     private List<Token> getInitialTokens() {

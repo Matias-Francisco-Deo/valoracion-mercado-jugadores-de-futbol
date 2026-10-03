@@ -112,9 +112,10 @@ public class ExternalPlayerWhoScoredScrapper {
                     roundedRating
             );
 
-            // 5. Guardamos en el DTO
+
             Player player = new Player(
                     playerDraftDTO.name(),
+                    playerId,
                     playerGameData
             );
 

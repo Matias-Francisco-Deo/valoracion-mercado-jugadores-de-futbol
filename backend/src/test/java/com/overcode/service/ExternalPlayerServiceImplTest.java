@@ -24,9 +24,10 @@ class ExternalPlayerServiceImplTest {
         Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(1);
 
         assertTrue(optionalPlayers.isPresent());
-        assertFalse(optionalPlayers.get().isEmpty());
+        List<Player> players = optionalPlayers.get();
+        assertFalse(players.isEmpty());
 
-        optionalPlayers.get().forEach((player -> {
+        players.forEach((player -> {
             assertNotNull(player.getId());
             assertNotNull(player.getTokens());
             assertNotNull(player.getName());
