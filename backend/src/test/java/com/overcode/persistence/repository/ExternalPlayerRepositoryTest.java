@@ -2,7 +2,7 @@ package com.overcode.persistence.repository;
 
 import com.overcode.model.Player;
 import com.overcode.model.Team;
-import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
@@ -41,44 +41,47 @@ class ExternalPlayerRepositoryTest {
 
     @Test
     @Disabled("Use to test manually given its connected to an external API")
-    void listarJugadoresMuestraUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(1);
+    void listarJugadoresMuestraUnEquipo() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(1);
 
-        if (optionalJugador.isEmpty()) return;
+        if (optionalTeams.isEmpty()) return;
 
-        assertNotNull(optionalJugador.get());
-        assertNotNull(optionalJugador.get().getFirst().team());
-        assertNotNull(optionalJugador.get().getFirst().name());
-
-    }
-
-    @Test
-    @Disabled("Use to test manually given its connected to an external API")
-    void listarJugadoresMuestraTantosJugadoresComoSeLePida() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(3);
-
-        if (optionalJugador.isEmpty()) return;
-
-        assertEquals(3, optionalJugador.get().size());
+        assertNotNull(optionalTeams.get());
+        assertNotNull(optionalTeams.get().getFirst().league());
+        assertNotNull(optionalTeams.get().getFirst().name());
+        assertNotNull(optionalTeams.get().getFirst().players());
 
     }
 
     @Test
     @Disabled("Use to test manually given its connected to an external API")
-    void seObtienenLosDatosCompletosDeUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarEquiposDeJugadores(1);
+    void listarJugadoresMuestraTantosEquiposComoSeLePida() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(3);
 
-        if (optionalJugador.isEmpty()) return;
+        if (optionalTeams.isEmpty()) return;
 
-        Optional<Player> jugador = externalPlayerRepository.getDatosDeEquipos(optionalJugador.get().getFirst());
+        assertEquals(3, optionalTeams.get().size());
 
-        if (jugador.isEmpty()) return;
+    }
 
-        assertNotNull(jugador.get());
-        assertNotNull(jugador.get().getName());
-        assertNotNull(jugador.get().getExternalId());
-        assertNotNull(jugador.get().getPlayerGameData());
-        assertNotNull(jugador.get().getTeam());
+    @Test
+    @Disabled("Use to test manually given its connected to an external API")
+    void seObtienenLosDatosCompletosDeJugadoresDeUnEquipo() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(1);
+
+        if (optionalTeams.isEmpty()) return;
+
+        Optional<List<Team>> equipos = externalPlayerRepository.getDatosDeEquipos(optionalTeams.get());
+
+        if (equipos.isEmpty()) return;
+
+        assertNotNull(equipos.get());
+        equipos.get().getFirst().getPlayers().forEach(player -> {
+            assertNotNull(player.getName());
+            assertNotNull(player.getExternalId());
+            assertNotNull(player.getPlayerGameData());
+            assertNotNull(player.getTeam());
+        });
     }
 
     @Test
