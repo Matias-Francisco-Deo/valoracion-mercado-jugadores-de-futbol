@@ -40,13 +40,16 @@ public class TeamRepositoryImpl implements TeamRepository {
 
     @Override
     public Team upsertTeam(Team team) {
-        if (!teamDAOJPA.existsByNameAndLeague(team.getLeague(), team.getName())) {
+        if (!teamDAOJPA.existsByNameAndLeague(team.getName(), team.getLeague())) {
             // si no existe el equipo, lo guarda junto a todos los jugadores
             return teamDAOJPA.save(TeamJPADTO.desdeModelo(team)).aModelo();
         }
         // si existe, actualizo sus datos (por ahora no tiene más) y actualizo sus jugadores
 
-        Team teamPersistido = teamDAOJPA.findByNameAndLeague(team.getName(), team.getLeague()).get().aModelo();
+        Optional<TeamJPADTO> optionalTeamJPADTO = teamDAOJPA.findByNameAndLeague(team.getName(), team.getLeague());
+        if (optionalTeamJPADTO.isEmpty()) return team;
+
+        Team teamPersistido = optionalTeamJPADTO.get().aModelo();
         List<Player> updatedPlayers = team.getPlayers().stream().map(externalPlayerRepository::updatePlayerByExternalId).toList();
         teamPersistido.setPlayers(updatedPlayers);
         // guardo al team con todos los datos actualizados

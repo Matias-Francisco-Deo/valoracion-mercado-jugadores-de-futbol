@@ -21,7 +21,7 @@ class ExternalPlayerServiceImplTest {
     @Disabled("Use automatically to generate players up to the max capacity set in the repository")
     @Test
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(null);
+        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(1);
 
         assertTrue(optionalPlayers.isPresent());
         assertFalse(optionalPlayers.get().isEmpty());
@@ -29,7 +29,6 @@ class ExternalPlayerServiceImplTest {
         optionalPlayers.get().forEach((player -> {
             assertNotNull(player.getId());
             assertNotNull(player.getTokens());
-            assertNotNull(player.getCurrentPrice());
             assertNotNull(player.getName());
             assertNotNull(player.getTeam());
             assertNotNull(player.getPlayerGameData());

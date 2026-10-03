@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ExternalDraftPlayerDAO {
 
-    Optional<List<TeamDraftDTO>> listarEquiposDeJugadores(Integer maxPlayers);
+    Optional<List<TeamDraftDTO>> listarEquiposDeJugadores(Integer maxTeams);
 }

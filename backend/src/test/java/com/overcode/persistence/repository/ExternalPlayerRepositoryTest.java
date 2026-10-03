@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -92,6 +93,16 @@ class ExternalPlayerRepositoryTest {
         Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
 
         assertNotNull(jugadorRecuperado.getId());
+        assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
+    }
+
+    @Test
+    void seActualizaUnJugadorQueNoExisteYSeDevuelveTalCual() {
+        Player pepito = getJugadorConNombre("Pepito");
+        pepito.setExternalId(5L);
+        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
+
+        assertNull(jugadorRecuperado.getId());
         assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
     }
 

@@ -24,8 +24,8 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
     }
 
     @Override
-    public Optional<List<Player>> actualizarJugadores(Integer limit) {
-        Optional<List<TeamDraftDTO>> teamDraftDTOS = externalPlayerRepository.listarEquiposDeJugadores(limit);
+    public Optional<List<Player>> actualizarJugadores(Integer maxTeams) {
+        Optional<List<TeamDraftDTO>> teamDraftDTOS = externalPlayerRepository.listarEquiposDeJugadores(maxTeams);
 
         if (teamDraftDTOS.isEmpty()) return Optional.empty();
 
@@ -35,15 +35,6 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
         List<Team> teams = optionalTeams.get().stream()
                 .map(teamRepository::upsertTeam).toList();
-
-//        List<Player> upsertedPlayers = new java.util.ArrayList<>();
-//        for (PlayerDraftDTO draftDTO : playerDraftDTOS.get()) {
-//            Optional<Player> player = externalPlayerRepository.getDatosDeEquipos(draftDTO);
-//            player.ifPresent(value -> upsertedPlayers
-//                    .add(externalPlayerRepository.upsertPlayerByExternalId(value)));
-//        }
-
-//        if (upsertedPlayers.isEmpty()) return Optional.empty();
 
         return Optional.of(teams.stream().flatMap(team -> team.getPlayers().stream()).toList());
     }

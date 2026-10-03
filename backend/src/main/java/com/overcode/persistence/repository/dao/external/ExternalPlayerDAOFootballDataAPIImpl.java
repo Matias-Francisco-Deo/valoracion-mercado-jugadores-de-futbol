@@ -44,7 +44,7 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
     }
 
     @Override
-    public Optional<List<TeamDraftDTO>> listarEquiposDeJugadores(Integer maxPlayers) {
+    public Optional<List<TeamDraftDTO>> listarEquiposDeJugadores(Integer maxTeams) {
 
         Optional<List<CompetitionDTO>> optionalCompetitionDTOS = getCompetitions();
 
@@ -56,7 +56,9 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
         return Optional.of(teams.stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .flatMap(List::stream).toList());
+                .flatMap(List::stream)
+                .limit(maxTeams)
+                .toList());
     }
 
     private Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {
