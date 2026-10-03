@@ -34,11 +34,6 @@ public class TeamRepositoryImpl implements TeamRepository {
     }
 
     @Override
-    public Optional<Team> recuperarPorNombre(String name) {
-        return teamDAOJPA.findByName(name).map(TeamJPADTO::aModeloConJugadores);
-    }
-
-    @Override
     public Optional<Team> recuperarPorNombreYLiga(String name, String league) {
         return teamDAOJPA.findByNameAndLeague(name, league).map(TeamJPADTO::aModeloConJugadores);
     }

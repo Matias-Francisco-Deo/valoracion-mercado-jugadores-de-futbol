@@ -32,6 +32,7 @@ public class Player {
                   PlayerGameData playerGameData)
     {
         setId(id);
+        setExternalId(externalId);
         setName(name);
         setTeam(team);
         setPlayerGameData(playerGameData);
@@ -42,6 +43,10 @@ public class Player {
 
     public Player(String name, Team team, PlayerGameData playerGameData) {
         this(null, null, name, team, playerGameData);
+    }
+
+    public Player(String name, PlayerGameData playerGameData) {
+        this(null, null, name, null, playerGameData);
     }
 
     private List<Token> getInitialTokens() {

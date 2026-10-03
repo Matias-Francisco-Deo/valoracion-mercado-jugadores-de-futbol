@@ -115,8 +115,6 @@ public class ExternalPlayerWhoScoredScrapper {
             // 5. Guardamos en el DTO
             Player player = new Player(
                     playerDraftDTO.name(),
-                    playerId,
-                    playerDraftDTO.team().aModelo(),
                     playerGameData
             );
 
