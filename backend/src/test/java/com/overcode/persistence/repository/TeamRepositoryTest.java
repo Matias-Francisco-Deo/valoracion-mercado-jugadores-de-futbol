@@ -72,7 +72,6 @@ class TeamRepositoryTest {
 
     @Test
     @Transactional
-    @Disabled("Hay que arreglar este test")
     void upsertearUnEquipoLoGuardaJuntoASusJugadores() {
         Player player1 = getJugadorConNombre("player1");
         Team team = new Team("team2", "league2", List.of(player1));
@@ -109,7 +108,7 @@ class TeamRepositoryTest {
     @Disabled("Hay que arreglar este test")
     void upsertearUnEquipoIntroduceJugadoresNuevosDeSerNecesario() {
         Player player1 = getJugadorConNombre("player1");
-        Team team = new Team("team2", "league2", List.of(player1));
+        Team team = new Team("team2", "league2", (List.of(player1)));
         player1.setTeam(team);
         Team teamRecuperado =teamRepository.guardar(team);
 
