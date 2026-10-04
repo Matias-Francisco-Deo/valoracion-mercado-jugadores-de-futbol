@@ -6,12 +6,14 @@ import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.interfaces.ExternalPlayerService;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
+@Transactional
 public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
     private final ExternalPlayerRepository externalPlayerRepository;

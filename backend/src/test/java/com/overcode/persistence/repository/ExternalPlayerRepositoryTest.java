@@ -7,17 +7,19 @@ import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.testUtils.TestService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -34,6 +36,9 @@ class ExternalPlayerRepositoryTest {
     private TestService testService;
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
@@ -85,41 +90,33 @@ class ExternalPlayerRepositoryTest {
         });
     }
 
+
     @Test
-    @Disabled("Este comportamiento ya no se espera de update")
-    void seUpserteaUnJugadorInexistenteYSeGuarda() {
+    void seActualizaUnJugadorQueNoExisteYNoHaceNada() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
-        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
+        externalPlayerRepository.updatePlayerByExternalId(pepito);
 
-        assertNotNull(jugadorRecuperado.getId());
-        assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
+        assertFalse(externalPlayerRepository.existsByExternalId(pepito));
     }
 
     @Test
-    void seActualizaUnJugadorQueNoExisteYSeDevuelveTalCual() {
-        Player pepito = getJugadorConNombre("Pepito");
-        pepito.setExternalId(5L);
-        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
-
-        assertNull(jugadorRecuperado.getId());
-        assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
-    }
-
-    @Test
-    void seUpserteaUnJugadorPreexistentePorIdExternaYSeActualiza() {
+    @Transactional
+    void seActualizaUnJugadorPreexistentePorIdExterna() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
 
         Team team = teamRepository.guardar(pepito.getTeam());
         pepito.setTeam(team);
-        playerRepository.guardar(pepito);
+        Player pepitoGuardado = playerRepository.guardar(pepito);
 
-        pepito.getPlayerGameData().setRating(9.0);
+        pepitoGuardado.getPlayerGameData().setRating(9.0);
 
-        Player jugadorRecuperado = externalPlayerRepository.updatePlayerByExternalId(pepito);
+        entityManager.flush();
+        externalPlayerRepository.updatePlayerByExternalId(pepitoGuardado);
+        entityManager.clear();
 
-        assertNotNull(jugadorRecuperado.getId());
-        assertEquals(9.0, jugadorRecuperado.getPlayerGameData().getRating(), 0.1);
+        Player pepitoRecuperado = playerRepository.recuperar(pepitoGuardado.getId()).orElseThrow();
+        assertEquals(9.0, pepitoRecuperado.getPlayerGameData().getRating(), 0.001);
     }
 }

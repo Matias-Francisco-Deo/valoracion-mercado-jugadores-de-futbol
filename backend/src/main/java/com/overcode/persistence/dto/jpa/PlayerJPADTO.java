@@ -119,7 +119,7 @@ public class PlayerJPADTO {
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
 
         player.setPlayerGameData(this.playerGameData.aModelo(player));
-        player.setTeam(this.team.aModelo());
+        player.setTeam(this.team.aModeloConJugadores());
         return player;
     }
 }

@@ -13,5 +13,7 @@ public interface ExternalPlayerRepository {
 
     Optional<List<Team>> getDatosDeEquipos(List<TeamDraftDTO> teamDraftDTOS);
 
-    Player updatePlayerByExternalId(Player player);
+    boolean existsByExternalId(Player player);
+
+    void updatePlayerByExternalId(Player player);
 }
