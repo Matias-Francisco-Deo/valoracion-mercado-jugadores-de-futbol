@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -10,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.overcode.security.PasswordHasher;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     public String superuserName;
@@ -37,7 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User guardar(User user) {
         validarUsuarioNuevo(user);
 
@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User crearSuperusuario() {
 
         Optional<User> optionalSuperuser = userRepository.findByUsername(superuserName);

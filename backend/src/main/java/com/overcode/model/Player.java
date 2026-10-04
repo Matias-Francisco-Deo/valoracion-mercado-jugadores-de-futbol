@@ -16,51 +16,37 @@ public class Player {
 
     private String name;
     private Integer currentPrice;
-    private Double rating;
     private List<Token> tokens;
 
-    // Team -> League
+    private Team team;
 
-    private String clubName;
-    private String league;
-
-    // PlayerGameData?
-
-    private Integer goals;
-    private Integer assists; // no se muestra
-    private Integer shotsOnTarget;
-    private Integer passes; // sacar
-    private Integer keyPasses; // no se muestra
-
-    private Integer interceptions; // sacar
-    private Integer tackles;
-    private Integer successfulDribbles;
+    private PlayerGameData playerGameData;
 
 
 
-    public Player(Long id, String name, String clubName, String league,
-                  Integer goals,
-                  Integer shotsOnTarget, Integer passes,
-                  Integer interceptions, Integer keyPasses,
-                  Integer assists, Integer tackles,
-                  Double rating, Integer successfulDribbles) {
+
+    public Player(Long id,
+                  Long externalId,
+                  String name,
+                  Team team,
+                  PlayerGameData playerGameData)
+    {
         setId(id);
+        setExternalId(externalId);
         setName(name);
-        setLeague(league);
-        setClubName(clubName);
-
-        setAssists(assists);
-        setTackles(tackles);
-        setGoals(goals);
-        setShotsOnTarget(shotsOnTarget);
-        setPasses(passes);
-        setInterceptions(interceptions);
-        setKeyPasses(keyPasses);
-        setRating(rating);
-        setSuccessfulDribbles(successfulDribbles);
+        setTeam(team);
+        setPlayerGameData(playerGameData);
         setCurrentPrice(1);
         setTokens(getInitialTokens());
 
+    }
+
+    public Player(String name, Team team, PlayerGameData playerGameData) {
+        this(null, null, name, team, playerGameData);
+    }
+
+    public Player(String name, Long externalId, PlayerGameData playerGameData) {
+        this(null, externalId, name, null, playerGameData);
     }
 
     private List<Token> getInitialTokens() {
@@ -71,13 +57,11 @@ public class Player {
         return newTokens;
     }
 
-    public Player(String name, String clubName, String league,
-                  Integer goals,
-                  Integer shotsOnTarget, Integer passes,
-                  Integer interceptions, Integer keyPasses,
-                  Integer assists, Integer tackles,
-                  Double rating, Integer successfulDribbles) {
-        this(null, name, clubName, league, goals, shotsOnTarget, passes, interceptions, keyPasses, assists, tackles, rating, successfulDribbles);
+    public Player(String name,
+                  Long externalId,
+                  Team team,
+                  PlayerGameData playerGameData) {
+        this(null, externalId, name, team, playerGameData);
     }
 
 

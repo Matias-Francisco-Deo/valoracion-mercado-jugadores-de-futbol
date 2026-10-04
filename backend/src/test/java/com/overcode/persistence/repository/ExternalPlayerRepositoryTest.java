@@ -1,20 +1,25 @@
 package com.overcode.persistence.repository;
 
 import com.overcode.model.Player;
-import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.model.Team;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.testUtils.TestService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -29,77 +34,89 @@ class ExternalPlayerRepositoryTest {
 
     @Autowired
     private TestService testService;
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
     }
 
     @Test
     @Disabled("Use to test manually given its connected to an external API")
-    void listarJugadoresMuestraUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
+    void listarJugadoresMuestraUnEquipo() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(1);
 
-        if (optionalJugador.isEmpty()) return;
+        if (optionalTeams.isEmpty()) return;
 
-        assertNotNull(optionalJugador.get());
-        assertNotNull(optionalJugador.get().getFirst().league());
-        assertNotNull(optionalJugador.get().getFirst().name());
-
-    }
-
-    @Test
-    @Disabled("Use to test manually given its connected to an external API")
-    void listarJugadoresMuestraTantosJugadoresComoSeLePida() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(10);
-
-        if (optionalJugador.isEmpty()) return;
-
-        assertEquals(10, optionalJugador.get().size());
+        assertNotNull(optionalTeams.get());
+        assertNotNull(optionalTeams.get().getFirst().league());
+        assertNotNull(optionalTeams.get().getFirst().name());
+        assertNotNull(optionalTeams.get().getFirst().players());
 
     }
 
     @Test
     @Disabled("Use to test manually given its connected to an external API")
-    void seObtienenLosDatosCompletosDeUnJugador() {
-        Optional<List<PlayerDraftDTO>> optionalJugador = externalPlayerRepository.listarJugadores(1);
+    void listarJugadoresMuestraTantosEquiposComoSeLePida() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(3);
 
-        if (optionalJugador.isEmpty()) return;
+        if (optionalTeams.isEmpty()) return;
 
-        Optional<Player> jugador = externalPlayerRepository.getDatosDeJugador(optionalJugador.get().getFirst());
+        assertEquals(3, optionalTeams.get().size());
 
-        if (jugador.isEmpty()) return;
-
-        assertNotNull(jugador.get());
-        assertNotNull(jugador.get().getName());
-        assertNotNull(jugador.get().getLeague());
-        assertNotNull(jugador.get().getExternalId());
-        assertNotNull(jugador.get().getClubName());
-        assertNotNull(jugador.get().getRating());
     }
 
     @Test
-    void seUpserteaUnJugadorInexistenteYSeGuarda() {
+    @Disabled("Use to test manually given its connected to an external API")
+    void seObtienenLosDatosCompletosDeJugadoresDeUnEquipo() {
+        Optional<List<TeamDraftDTO>> optionalTeams = externalPlayerRepository.listarEquiposDeJugadores(1);
+
+        if (optionalTeams.isEmpty()) return;
+
+        Optional<List<Team>> equipos = externalPlayerRepository.getDatosDeEquipos(optionalTeams.get());
+
+        if (equipos.isEmpty()) return;
+
+        assertNotNull(equipos.get());
+        equipos.get().getFirst().getPlayers().forEach(player -> {
+            assertNotNull(player.getName());
+            assertNotNull(player.getExternalId());
+            assertNotNull(player.getPlayerGameData());
+            assertNotNull(player.getTeam());
+        });
+    }
+
+
+    @Test
+    void seActualizaUnJugadorQueNoExisteYNoHaceNada() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
-        Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
+        externalPlayerRepository.updatePlayerByExternalId(pepito);
 
-        assertNotNull(jugadorRecuperado.getId());
-        assertEquals(5L, jugadorRecuperado.getExternalId().longValue());
+        assertFalse(externalPlayerRepository.existsByExternalId(pepito));
     }
 
     @Test
-    void seUpserteaUnJugadorPreexistentePorIdExternaYSeActualiza() {
+    @Transactional
+    void seActualizaUnJugadorPreexistentePorIdExterna() {
         Player pepito = getJugadorConNombre("Pepito");
         pepito.setExternalId(5L);
 
-        playerRepository.guardar(pepito);
+        Team team = teamRepository.guardar(pepito.getTeam());
+        pepito.setTeam(team);
+        Player pepitoGuardado = playerRepository.guardar(pepito);
 
-        pepito.setGoals(100);
+        pepitoGuardado.getPlayerGameData().setRating(9.0);
 
-        Player jugadorRecuperado = externalPlayerRepository.upsertPlayerByExternalId(pepito);
+        entityManager.flush();
+        externalPlayerRepository.updatePlayerByExternalId(pepitoGuardado);
+        entityManager.clear();
 
-        assertNotNull(jugadorRecuperado.getId());
-        assertEquals(100L, jugadorRecuperado.getGoals().longValue());
+        Player pepitoRecuperado = playerRepository.recuperar(pepitoGuardado.getId()).orElseThrow();
+        assertEquals(9.0, pepitoRecuperado.getPlayerGameData().getRating(), 0.001);
     }
 }

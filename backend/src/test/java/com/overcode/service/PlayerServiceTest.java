@@ -25,20 +25,20 @@ class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
-    private final Player JUGADOR_1 = new Player("Messi", "Barcelona", "Liga1", 0, 10, 5, 20, 3, 2, 0, 8.5, 5);
-    private final Player JUGADOR_2 = new Player("Mbappe", "PSG", "Liga1", 0, 15, 8, 25, 4, 3, 0, 9.0, 7);
+    private final Player JUGADOR_1 = getJugadorConNombre("Messi");
+    private final Player JUGADOR_2 = getJugadorConNombre("Mbappe");
 
     @Autowired
     private TestService testService;
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
     }
 
     @Test
     void crearJugadorValidoExitosamente() {
-        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = getJugadorConNombre("Messi");
 
         Player guardado = playerService.crear(nuevo);
 
@@ -50,7 +50,7 @@ class PlayerServiceTest {
 
     @Test
     void jugadorNuevoTiene100TokensYValeExactamente1() {
-        Player nuevo = new Player("Messi", "Barcelona", "Liga1",0, 10, 5, 20, 3, 2,0, 8.5, 5);
+        Player nuevo = getJugadorConNombre("Messi");
 
         Player guardado = playerService.crear(nuevo);
 
@@ -200,19 +200,19 @@ class PlayerServiceTest {
 
     @Test
     void listarJugadoresPorLiga() {
-        Player jugador1 = getJugadorConLiga("Jugador1", "Liga1");
+        Player jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConLiga("Jugador2", "Liga1");
+        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club1");
         playerService.crear(jugador2);
 
-        Player jugador3 = getJugadorConLiga("Jugador3", "Liga2");
+        Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
         playerService.crear(jugador3);
 
-        Player jugador4 = getJugadorConLiga("Jugador4", "Liga2");
+        Player jugador4 = getJugadorConLigaYClub("Jugador4", "Liga2", "Club2");
         playerService.crear(jugador4);
 
-        Player jugador5 = getJugadorConLiga("Jugador5", "Liga2");
+        Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club2");
         playerService.crear(jugador5);
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"),PageRequest.of(0, 10));
@@ -231,16 +231,16 @@ class PlayerServiceTest {
         Player jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club2");
+        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club4");
         playerService.crear(jugador2);
 
-        Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club1");
+        Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
         playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConLigaYClub("Jugador4", "Liga2", "Club2");
         playerService.crear(jugador4);
 
-        Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club1");
+        Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club3");
         playerService.crear(jugador5);
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1"),PageRequest.of(0, 10));
@@ -275,6 +275,6 @@ class PlayerServiceTest {
 
     @AfterEach
     void tearDown() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
     }
 }

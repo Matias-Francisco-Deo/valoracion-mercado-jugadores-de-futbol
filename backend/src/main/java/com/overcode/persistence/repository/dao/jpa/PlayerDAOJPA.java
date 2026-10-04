@@ -16,29 +16,28 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
-    Optional<PlayerJPADTO> findByNameIgnoreCase(String name);
+    String FIND_BY_CLUBNAME = "(:teamName IS NULL OR unaccent(LOWER(t.name)) LIKE unaccent(CONCAT(LOWER(CAST(:teamName AS text)), '%')))";
 
-    String FIND_BY_CLUBNAME = "unaccent(LOWER(p.club_name)) LIKE unaccent(CONCAT(LOWER(CAST(:clubName AS text)), '%'))";
-
-    String FIND_BY_LEAGUE = "unaccent(LOWER(p.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%'))";
+    String FIND_BY_LEAGUE = "(:league IS NULL OR unaccent(LOWER(t.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%')))";
 
     String FIND_BY_FILTRO_QUERY =
-            "FROM players p " +
+            "FROM players p LEFT JOIN teams t ON p.team_id = t.id " +
                     "WHERE " + FIND_BY_CLUBNAME + " " +
                     "AND " + FIND_BY_LEAGUE ;
 
     @Query(
-            value = "SELECT * " + FIND_BY_FILTRO_QUERY,
+            value = "SELECT p.* " + FIND_BY_FILTRO_QUERY,
             countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY,
             nativeQuery = true)
     Page<PlayerJPADTO> listarJugadores(
-            @Param("clubName") String clubName,
+            @Param("teamName") String teamName,
             @Param("league") String league,
             Pageable pageable
     );
 
-// TODO hay que hacer un filtrado por posición, no todavía
-
+    // TODO hay que hacer un filtrado por posición, no todavía
+    //esto modifica o se borra?
+/*
     @Modifying
     @Transactional
     @Query(
@@ -72,13 +71,13 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             @Param("rating") Double rating,
             @Param("successfulDribbles") Integer successfulDribbles
     );
-
+*/
     boolean existsByExternalId(Long externalId);
 
     Optional<PlayerJPADTO> findByExternalId(Long externalId);
 
     @Query(
-            "from player p order by p.rating desc limit 5"
+            "from player p order by p.playerGameData.rating desc limit 5"
     )
     List<PlayerJPADTO> listarTop5JugadoresPorRating();
 }

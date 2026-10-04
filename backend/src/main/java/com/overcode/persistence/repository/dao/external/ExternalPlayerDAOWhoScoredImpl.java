@@ -1,7 +1,9 @@
 package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
+import com.overcode.model.Team;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
 import org.slf4j.Logger;
@@ -26,24 +28,33 @@ public class ExternalPlayerDAOWhoScoredImpl implements ExternalPlayerDataDAO {
     }
 
     @Override
-    public Optional<Player> getDatosDeJugador(PlayerDraftDTO playerDraftDTO) {
+    public Optional<List<Team>> getDatosDeEquipos(List<TeamDraftDTO> teams) {
+        return Optional.of(teams.stream().map(this::getDatosDeEquipo)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList());
+    }
+
+    private Optional<Team> getDatosDeEquipo(TeamDraftDTO team) {
+        Optional<List<Player>> optionalPlayers = getDatosJugadores(team.players());
+        return optionalPlayers.map(team::aModelo);
+    }
+
+    private Optional<Player> getDatosDeJugador(PlayerDraftDTO player) {
         try {
-            Long playerId = null;
-            
+            Long playerId;
 
-            // 2. Fallback to searching WhoScored if new
-            playerId = whoScoredIdResolver.resolvePlayerId(playerDraftDTO.name());
-            log.info("Buscando nuevo jugador: {}", playerDraftDTO.name());
+            playerId = whoScoredIdResolver.resolvePlayerId(player.name());
+            log.info("Buscando nuevo jugador: {}", player.name());
 
 
-            return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, playerDraftDTO);
+            return externalPlayerWhoScoredScrapper.getDatosDeJugador(playerId, player);
         } catch (Exception e) {
-            log.error("Saltando jugador {}: {}", playerDraftDTO.name(), e.getMessage());
+            log.error("Saltando jugador {}: {}", player.name(), e.getMessage());
             return Optional.empty();
         }
     }
 
-    @Override
     public Optional<List<Player>> getDatosJugadores(List<PlayerDraftDTO> playerDraftDTOS) {
         return Optional.of(playerDraftDTOS.stream().map(this::getDatosDeJugador).flatMap(Optional::stream).toList());
     }
