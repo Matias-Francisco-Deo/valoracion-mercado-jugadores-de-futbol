@@ -97,6 +97,7 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
         label="Contraseña"
         type="password"
         name="password"
+        placeholder='Contraseña'
         autoComplete="current-password"
         value={formData.password}
         onChange={handleChange('password')}

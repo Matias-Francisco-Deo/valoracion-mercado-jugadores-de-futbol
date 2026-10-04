@@ -5,23 +5,8 @@ import { useParams } from "react-router-dom";
 import {ServerErrorComponent} from "@/components/ServerErrorComponent";
 import { Loading } from "@/components/common/Loading";
 import NotFoundPage from "./NotFoundPage";
-import { MetricBox } from "@/components/player/MetricBox";
 import type { HttpError } from "@/lib/http-error";
 import { getPlayerById } from "@/services/PlayerService";
-
-//TODO borrar placeholder
-    const placeholder = {
-            id: 1,
-            currentPrice: 120000000,
-            clubName: "Inter Miami",
-            name: "Leonel Messi",
-            goals: 30,
-            shotsOnTarget: 45,
-            passes: 80,
-            tackles: 12,
-            rating: 9.8,
-            interceptions: 6,
-        }
 
 export default function PlayerPage(){
     const { playerId } = useParams();

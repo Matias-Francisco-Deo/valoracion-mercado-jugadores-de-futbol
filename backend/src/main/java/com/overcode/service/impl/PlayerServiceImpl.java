@@ -10,6 +10,8 @@ import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,14 +53,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Player> recuperarTodosConFiltro(PlayerFilter filter) {
-        return playerRepository.listarJugadores(filter);
+    public Page<Player> recuperarTodosConFiltro(PlayerFilter filter, Pageable pageable) {
+        return playerRepository.listarJugadores(filter, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Player> recuperarTodos() {
-        return playerRepository.listarJugadores(new PlayerFilter());
+        return playerRepository.listarTodos();
     }
 
     @Override
