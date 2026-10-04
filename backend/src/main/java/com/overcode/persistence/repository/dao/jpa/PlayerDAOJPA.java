@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.dao.jpa;
 
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,14 +29,15 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             value = "SELECT p.* " + FIND_BY_FILTRO_QUERY,
             countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY,
             nativeQuery = true)
-    List<PlayerJPADTO> listarJugadores(
+    Page<PlayerJPADTO> listarJugadores(
             @Param("teamName") String teamName,
             @Param("league") String league,
             Pageable pageable
     );
 
     // TODO hay que hacer un filtrado por posición, no todavía
-
+    //esto modifica o se borra?
+/*
     @Modifying
     @Transactional
     @Query(
@@ -69,7 +71,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             @Param("rating") Double rating,
             @Param("successfulDribbles") Integer successfulDribbles
     );
-
+*/
     boolean existsByExternalId(Long externalId);
 
     Optional<PlayerJPADTO> findByExternalId(Long externalId);
