@@ -7,6 +7,7 @@ import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.interfaces.ExternalPlayerService;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
     }
 
     @Override
+    @Transactional
     public Optional<List<Player>> actualizarJugadores(Integer maxTeams) {
         Optional<List<TeamDraftDTO>> teamDraftDTOS = externalPlayerRepository.listarEquiposDeJugadores(maxTeams);
 

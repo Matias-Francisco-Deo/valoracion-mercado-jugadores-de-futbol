@@ -42,7 +42,7 @@ public class TeamRepositoryImpl implements TeamRepository {
     public Team upsertTeam(Team team) {
         if (!teamDAOJPA.existsByNameAndLeague(team.getName(), team.getLeague())) {
             // si no existe el equipo, lo guarda junto a todos los jugadores
-            return teamDAOJPA.save(TeamJPADTO.desdeModelo(team)).aModelo();
+            return teamDAOJPA.save(TeamJPADTO.desdeModelo(team)).aModeloConJugadores();
         }
         // si existe, actualizo sus datos (por ahora no tiene más) y actualizo sus jugadores
 
