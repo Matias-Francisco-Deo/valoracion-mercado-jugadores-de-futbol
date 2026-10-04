@@ -53,12 +53,12 @@ public class ExternalPlayerDAOFootballDataAPIImpl implements ExternalDraftPlayer
         List<Optional<List<TeamDraftDTO>>> teams =
                 optionalCompetitionDTOS.get().stream().map(this::getTeamsOfCompetition).toList();
 
-        return Optional.of(teams.stream()
+        List<TeamDraftDTO> finalTeams = teams.stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .flatMap(List::stream)
-                .limit(maxTeams)
-                .toList());
+                .toList();
+        return Optional.of(maxTeams == null ? finalTeams : finalTeams.stream().limit(maxTeams).toList());
     }
 
     private Optional<List<TeamDraftDTO>> getTeamsOfCompetition(CompetitionDTO competition) {

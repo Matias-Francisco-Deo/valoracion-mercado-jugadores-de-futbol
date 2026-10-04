@@ -42,6 +42,11 @@ public class Team {
         player.setTeam(this);
     }
 
+    public void addPlayers(List<Player> playersList) {
+        players.addAll(playersList);
+        playersList.forEach(player -> player.setTeam(this));
+    }
+
     public void removePlayer(Player player) {
         players.remove(player);
         player.setTeam(null);

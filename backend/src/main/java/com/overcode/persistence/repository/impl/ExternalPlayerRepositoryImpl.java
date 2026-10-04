@@ -4,7 +4,6 @@ import com.overcode.model.Player;
 import com.overcode.model.PlayerGameData;
 import com.overcode.model.Team;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
-import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
@@ -42,11 +41,16 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
     }
 
     @Override
+    public boolean existsByExternalId(Player player) {
+        return player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
+    }
+
+
+    @Override
     @Transactional
-    public Player updatePlayerByExternalId(Player player) {
-        boolean existsOnDB = player.getExternalId() != null && playerDAOJPA.existsByExternalId(player.getExternalId());
-        if (!existsOnDB) {
-            return player;
+    public void updatePlayerByExternalId(Player player) {
+        if (!existsByExternalId(player)) {
+            return;
         }
 
         PlayerGameData playerGameData = player.getPlayerGameData();
@@ -61,10 +65,11 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
                 playerGameData.getSuccessfulDribbles()
         );
 
-        Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
-
-        if (optionalPlayerJPADTO.isEmpty()) return player;
-
-        return optionalPlayerJPADTO.get().aModelo();
+//        Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
+//
+//        if (optionalPlayerJPADTO.isEmpty()) return player;
+//
+//        return optionalPlayerJPADTO.get().aModelo();
     }
+
 }

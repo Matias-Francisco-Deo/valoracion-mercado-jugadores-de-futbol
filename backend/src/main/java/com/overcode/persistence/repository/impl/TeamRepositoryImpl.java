@@ -49,9 +49,11 @@ public class TeamRepositoryImpl implements TeamRepository {
         Optional<Team> optionalTeam = recuperarPorNombreYLiga(team.getName(), team.getLeague());
         if (optionalTeam.isEmpty()) return team;
 
-        List<Player> updatedPlayers = team.getPlayers().stream().map(externalPlayerRepository::updatePlayerByExternalId).toList();
         Team teamToUpdate = optionalTeam.get();
-        teamToUpdate.setPlayers(updatedPlayers);
+        List<Player> players = team.getPlayers();
+        players.forEach(externalPlayerRepository::updatePlayerByExternalId);
+        List<Player> newPlayers = players.stream().filter(player -> !externalPlayerRepository.existsByExternalId(player)).toList();
+        teamToUpdate.addPlayers(newPlayers);
         // guardo al team con todos los datos actualizados
 
         return teamDAOJPA.save(TeamJPADTO.desdeModelo(teamToUpdate)).aModeloConJugadores();

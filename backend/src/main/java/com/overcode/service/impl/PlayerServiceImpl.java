@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
@@ -29,7 +30,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    @Transactional
     public Player crear(Player player) {
         validarJugador(player);
 
