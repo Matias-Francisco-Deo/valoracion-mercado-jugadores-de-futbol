@@ -54,4 +54,65 @@ public class JsonExtractorUtil {
 
         return scriptContent.substring(0, lastBrace + 1).trim();
     }
+
+    /**
+     * Extrae la posicion del jugador del HTML.
+     */
+    public static String extractPlayerPosition(String html) {
+        if (html == null || html.isEmpty()) {
+            return null;
+        }
+        
+        try {
+            java.nio.file.Files.writeString(java.nio.file.Paths.get("debug_html.txt"), html);
+        } catch (Exception e) {}
+
+        // Primero intentamos buscar en la meta description que es mas estandar
+        int descIndex = html.indexOf("<meta name=\"description\"");
+        if (descIndex != -1) {
+            int endDesc = html.indexOf(">", descIndex);
+            if (endDesc != -1) {
+                String desc = html.substring(descIndex, endDesc).toLowerCase();
+                if (desc.contains("defender")) return "Defender";
+                if (desc.contains("goalkeeper")) return "Goalkeeper";
+                if (desc.contains("midfielder")) return "Midfielder";
+                if (desc.contains("forward") || desc.contains("attacker")) return "Forward";
+            }
+        }
+
+        // Fallback al HTML de la vista
+        String searchKey = "Positions:";
+        int keyIndex = html.indexOf(searchKey);
+        if (keyIndex == -1) {
+            searchKey = "Position:";
+            keyIndex = html.indexOf(searchKey);
+            if (keyIndex == -1) {
+                return null;
+            }
+        }
+
+        String spanStyle = "inline-block";
+        int startSpan = html.indexOf(spanStyle, keyIndex);
+        if (startSpan == -1) {
+            return null;
+        }
+        
+        startSpan = html.indexOf(">", startSpan);
+        if (startSpan == -1) {
+            return null;
+        }
+        startSpan += 1;
+
+        int endSpan = html.indexOf("</span>", startSpan);
+        if (endSpan == -1) {
+            return null;
+        }
+
+        String fullPosition = html.substring(startSpan, endSpan).trim();
+        int parenthesisIndex = fullPosition.indexOf("(");
+        if (parenthesisIndex != -1) {
+            return fullPosition.substring(0, parenthesisIndex).trim();
+        }
+        return fullPosition;
+    }
 }

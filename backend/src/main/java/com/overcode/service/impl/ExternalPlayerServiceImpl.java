@@ -41,5 +41,11 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
         return Optional.of(teams.stream().flatMap(team -> team.getPlayers().stream()).toList());
     }
 
-
+    @Override
+    @org.springframework.scheduling.annotation.Async
+    public void actualizarJugadoresAsync() {
+        System.out.println("Iniciando actualizacion asincrona manual...");
+        actualizarJugadores(null);
+        System.out.println("Finalizo la actualizacion asincrona manual.");
+    }
 }

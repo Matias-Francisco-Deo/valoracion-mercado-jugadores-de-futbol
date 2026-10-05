@@ -28,6 +28,9 @@ public class PlayerJPADTO {
     @Column(nullable = false, name = "current_price")
     private Integer currentPrice;
 
+    @Column(name = "position")
+    private String position;
+
     @Column(name = "tokens", nullable = false)
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
@@ -56,6 +59,7 @@ public class PlayerJPADTO {
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setExternalId(player.getExternalId());
+        dto.setPosition(player.getPosition());
 
         dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
         dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModeloSinJugadores(player.getTeam()) : null);
@@ -73,6 +77,7 @@ public class PlayerJPADTO {
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setExternalId(player.getExternalId());
+        dto.setPosition(player.getPosition());
 
         dto.setPlayerGameData(playerGameDataJPADTO);
         dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModeloSinJugadores(player.getTeam()) : null);
@@ -90,6 +95,7 @@ public class PlayerJPADTO {
         dto.setCurrentPrice(player.getCurrentPrice());
         dto.setTokens(TokenJPADTO.desdeModelo(player.getTokens(), dto));
         dto.setExternalId(player.getExternalId());
+        dto.setPosition(player.getPosition());
 
         dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
         dto.setTeam(teamJPADTO);
@@ -101,6 +107,7 @@ public class PlayerJPADTO {
         Player player = new Player();
         player.setId(this.id);
         player.setExternalId(this.getExternalId());
+        player.setPosition(this.position);
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
@@ -114,6 +121,7 @@ public class PlayerJPADTO {
         Player player = new Player();
         player.setId(this.id);
         player.setExternalId(this.getExternalId());
+        player.setPosition(this.position);
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());

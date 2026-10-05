@@ -21,6 +21,8 @@ public class Player {
     private Team team;
 
     private PlayerGameData playerGameData;
+    
+    private String position;
 
 
 

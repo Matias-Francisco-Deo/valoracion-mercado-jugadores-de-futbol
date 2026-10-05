@@ -65,6 +65,10 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
                 playerGameData.getSuccessfulDribbles()
         );
 
+        if (player.getPosition() != null) {
+            playerDAOJPA.updatePosition(player.getExternalId(), player.getPosition());
+        }
+
 //        Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
 //
 //        if (optionalPlayerJPADTO.isEmpty()) return player;
