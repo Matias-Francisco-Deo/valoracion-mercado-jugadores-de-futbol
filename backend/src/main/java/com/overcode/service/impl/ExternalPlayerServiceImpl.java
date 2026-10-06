@@ -6,11 +6,15 @@ import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.interfaces.ExternalPlayerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -18,6 +22,7 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
     private final ExternalPlayerRepository externalPlayerRepository;
     private final TeamRepository teamRepository;
+    private static final Logger log = LoggerFactory.getLogger(ExternalPlayerServiceImpl.class);
 
     public ExternalPlayerServiceImpl(ExternalPlayerRepository externalPlayerRepository, TeamRepository teamRepository) {
         this.externalPlayerRepository = externalPlayerRepository;
@@ -42,10 +47,11 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
     }
 
     @Override
-    @org.springframework.scheduling.annotation.Async
-    public void actualizarJugadoresAsync() {
-        System.out.println("Iniciando actualizacion asincrona manual...");
+    @Async
+    public CompletableFuture<Void> actualizarJugadoresAsync() {
+        log.info("Iniciando actualizacion asincrona manual...");
         actualizarJugadores(null);
-        System.out.println("Finalizo la actualizacion asincrona manual.");
+        log.info("Finalizo la actualizacion asincrona manual.");
+        return CompletableFuture.completedFuture(null);
     }
 }

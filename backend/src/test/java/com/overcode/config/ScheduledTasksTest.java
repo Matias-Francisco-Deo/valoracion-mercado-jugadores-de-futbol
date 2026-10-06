@@ -57,4 +57,11 @@ class ScheduledTasksTest {
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
     }
+
+    @Test
+    void cuandoSeNoSePuedenActualizarJugadoresNoDaExcepcion() {
+        when(externalPlayerService.actualizarJugadores(null)).thenReturn(Optional.empty());
+
+        await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
+    }
 }

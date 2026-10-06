@@ -18,12 +18,6 @@ public class Team {
 
     private List<Player> players = new ArrayList<>();
 
-    public Team(Long id, String name, String league) {
-        setId(id);
-        setName(name);
-        setLeague(league);
-    }
-
     public Team(String name, String league) {
         setId(null);
         setName(name);
