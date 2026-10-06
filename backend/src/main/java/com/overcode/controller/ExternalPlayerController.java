@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/scraper")
-@Tag(name = "Admin Scraper", description = "Endpoints de administración para gatillar manualmente el scraper (requiere X-API-KEY)")
-public class ScraperAdminController {
+@RequestMapping("/api/admin/players")
+@Tag(name = "Admin Players", description = "Endpoints de administración para gatillar manualmente la actualización de jugadores (requiere X-API-KEY)")
+public class ExternalPlayerController {
 
     private final ExternalPlayerService externalPlayerService;
 
-    public ScraperAdminController(ExternalPlayerService externalPlayerService) {
+    public ExternalPlayerController(ExternalPlayerService externalPlayerService) {
         this.externalPlayerService = externalPlayerService;
     }
 
-    @PostMapping("/run")
-    @Operation(summary = "Ejecutar scraper", description = "Dispara el scraper de jugadores de forma asíncrona. Retorna 202 inmediatamente.")
-    public ResponseEntity<String> runScraper() {
+    @PostMapping("/actualizar-jugadores")
+    @Operation(summary = "Ejecutar scrapper", description = "Dispara el scrapper de jugadores de forma asíncrona. Retorna 202 inmediatamente.")
+    public ResponseEntity<String> runScrapper() {
         externalPlayerService.actualizarJugadoresAsync();
         return ResponseEntity.accepted().body("Scraper manual iniciado en background. Este proceso puede tardar varias horas.");
     }
