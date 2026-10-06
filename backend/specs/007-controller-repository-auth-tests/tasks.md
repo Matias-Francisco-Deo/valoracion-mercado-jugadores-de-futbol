@@ -12,9 +12,9 @@
 
 **Purpose**: Confirm the backend test harness and fixture structure before covering the four responsibilities.
 
-- [ ] T001 Create the required test package structure under backend/src/test/java/com/overcode/e2e/, backend/src/test/java/com/overcode/security/, backend/src/test/java/com/overcode/persistence/repository/, and backend/src/test/java/com/overcode/testUtils/
-- [ ] T002 [P] Verify backend/pom.xml includes JUnit 5, Spring Boot test support, MockMvc, Mockito, and Testcontainers needed by the targeted suite
-- [ ] T003 [P] Add deterministic fixture helpers for HTML payloads and sample player data under backend/src/test/java/com/overcode/testUtils/
+- [X] T001 Create the required test package structure under backend/src/test/java/com/overcode/e2e/, backend/src/test/java/com/overcode/security/, backend/src/test/java/com/overcode/persistence/repository/, and backend/src/test/java/com/overcode/testUtils/
+- [X] T002 [P] Verify backend/pom.xml includes JUnit 5, Spring Boot test support, MockMvc, Mockito, and Testcontainers needed by the targeted suite
+- [X] T003 [P] Add deterministic fixture helpers for HTML payloads and sample player data under backend/src/test/java/com/overcode/testUtils/
 
 ---
 
@@ -24,10 +24,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Configure a reusable Spring Boot test context for the admin controller and filter boundary in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
-- [ ] T005 [P] Create the repository test container setup and entity fixture scaffold for backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
-- [ ] T006 [P] Create parser HTML fixtures covering valid, empty, malformed, and fallback-position cases in backend/src/test/java/com/overcode/testUtils/HtmlFixtures.java
-- [ ] T007 Add the shared API-key test harness and mocked request setup for backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
+- [X] T004 Configure a reusable Spring Boot test context for the admin controller and filter boundary in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
+- [X] T005 [P] Create the repository test container setup and entity fixture scaffold for backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
+- [X] T006 [P] Create parser HTML fixtures covering valid, empty, malformed, and fallback-position cases in backend/src/test/java/com/overcode/testUtils/HtmlFixtures.java
+- [X] T007 Add the shared API-key test harness and mocked request setup for backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
 
 **Checkpoint**: Foundation ready - the boundary tests for controller, repository, security, and parser can now proceed independently.
 
@@ -41,13 +41,13 @@
 
 ### Tests for User Story 1
 
-- [ ] T008 [P] [US1] Add controller happy-path test for accepted 202 response and single async call in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
-- [ ] T009 [P] [US1] Add controller failure-path test for service exception handling in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
+- [X] T008 [P] [US1] Add controller happy-path test for accepted 202 response and single async call in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
+- [X] T009 [P] [US1] Add controller failure-path test for service exception handling in backend/src/test/java/com/overcode/e2e/ExternalPlayerControllerE2eTest.java
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Confirm or adjust the admin endpoint contract in backend/src/main/java/com/overcode/controller/ExternalPlayerController.java to return 202 Accepted with the required message and invoke externalPlayerService.actualizarJugadoresAsync() exactly once
-- [ ] T011 [US1] Ensure the mocked service path preserves the response body and does not mask exceptions at the controller boundary in backend/src/main/java/com/overcode/controller/ExternalPlayerController.java
+- [X] T010 [US1] Confirm or adjust the admin endpoint contract in backend/src/main/java/com/overcode/controller/ExternalPlayerController.java to return 202 Accepted with the required message and invoke externalPlayerService.actualizarJugadoresAsync() exactly once
+- [X] T011 [US1] Ensure the mocked service path preserves the response body and does not mask exceptions at the controller boundary in backend/src/main/java/com/overcode/controller/ExternalPlayerController.java
 
 **Checkpoint**: At this point, User Story 1 is functionally validated at the HTTP boundary and remains independent from persistence or parser tests.
 
@@ -61,14 +61,14 @@
 
 ### Tests for User Story 2
 
-- [ ] T012 [P] [US2] Add repository save test asserting model-to-JPA mapping preserves required stats in backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
-- [ ] T013 [P] [US2] Add repository retrieval test for existing and missing records in backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
+- [X] T012 [P] [US2] Add repository save test asserting model-to-JPA mapping preserves required stats in backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
+- [X] T013 [P] [US2] Add repository retrieval test for existing and missing records in backend/src/test/java/com/overcode/persistence/repository/PlayerGameDataRepositoryTest.java
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Implement the repository save path in backend/src/main/java/com/overcode/persistence/repository/impl/PlayerGameDataRepositoryImpl.java using PlayerGameDataJPADTO.desdeModelo(playerGameData)
-- [ ] T015 [US2] Implement the repository retrieval path in backend/src/main/java/com/overcode/persistence/repository/impl/PlayerGameDataRepositoryImpl.java so it returns Optional.empty() when no record exists and existing values when present
-- [ ] T016 [US2] Validate that persistence mapping preserves all required fields defined in backend/specs/007-controller-repository-auth-tests/data-model.md for PlayerGameData and PlayerGameDataJPADTO
+- [X] T014 [US2] Implement the repository save path in backend/src/main/java/com/overcode/persistence/repository/impl/PlayerGameDataRepositoryImpl.java using PlayerGameDataJPADTO.desdeModelo(playerGameData)
+- [X] T015 [US2] Implement the repository retrieval path in backend/src/main/java/com/overcode/persistence/repository/impl/PlayerGameDataRepositoryImpl.java so it returns Optional.empty() when no record exists and existing values when present
+- [X] T016 [US2] Validate that persistence mapping preserves all required fields defined in backend/specs/007-controller-repository-auth-tests/data-model.md for PlayerGameData and PlayerGameDataJPADTO
 
 **Checkpoint**: User Story 2 is independently testable through the repository boundary without depending on the controller or scraper flow.
 
@@ -82,14 +82,14 @@
 
 ### Tests for User Story 3
 
-- [ ] T017 [P] [US3] Add filter test for missing and invalid X-API-KEY values in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
-- [ ] T018 [P] [US3] Add filter test for valid key requests to the scraper admin route in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
-- [ ] T019 [P] [US3] Add filter test ensuring non-scraper routes bypass API-key enforcement in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
+- [X] T017 [P] [US3] Add filter test for missing and invalid X-API-KEY values in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
+- [X] T018 [P] [US3] Add filter test for valid key requests to the scraper admin route in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
+- [X] T019 [P] [US3] Add filter test ensuring non-scraper routes bypass API-key enforcement in backend/src/test/java/com/overcode/security/ApiKeyAuthFilterTest.java
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Confirm or fix the path guard and header validation in backend/src/main/java/com/overcode/security/ApiKeyAuthFilter.java to reject only authorized scraper admin routes with 401 Unauthorized and the exact message
-- [ ] T021 [US3] Ensure the filter continues the chain for valid requests and unrelated routes without forcing API-key checks outside /api/admin/players in backend/src/main/java/com/overcode/security/ApiKeyAuthFilter.java
+- [X] T020 [US3] Confirm or fix the path guard and header validation in backend/src/main/java/com/overcode/security/ApiKeyAuthFilter.java to reject only authorized scraper admin routes with 401 Unauthorized and the exact message
+- [X] T021 [US3] Ensure the filter continues the chain for valid requests and unrelated routes without forcing API-key checks outside /api/admin/players in backend/src/main/java/com/overcode/security/ApiKeyAuthFilter.java
 
 **Checkpoint**: User Story 3 is complete when the admin scraper route is secured and non-admin traffic remains unaffected.
 
@@ -103,14 +103,14 @@
 
 ### Tests for User Story 4
 
-- [ ] T022 [P] [US4] Add success-path parser test for valid require.config.params['args'] payload extraction in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
-- [ ] T023 [P] [US4] Add failure-path parser test for null, empty, and malformed HTML in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
-- [ ] T024 [P] [US4] Add position-extraction tests for recognized values and unsupported or absent markers in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
+- [X] T022 [P] [US4] Add success-path parser test for valid require.config.params['args'] payload extraction in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
+- [X] T023 [P] [US4] Add failure-path parser test for null, empty, and malformed HTML in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
+- [X] T024 [P] [US4] Add position-extraction tests for recognized values and unsupported or absent markers in backend/src/test/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtilTest.java
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Harden backend/src/main/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtil.java to throw ScraperExtractionException when HTML is null, empty, or missing the JSON block
-- [ ] T026 [US4] Ensure the position parser in backend/src/main/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtil.java normalizes valid metadata and returns null for unsupported or absent markers without crashing
+- [X] T025 [US4] Harden backend/src/main/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtil.java to throw ScraperExtractionException when HTML is null, empty, or missing the JSON block
+- [X] T026 [US4] Ensure the position parser in backend/src/main/java/com/overcode/persistence/repository/dao/external/scrapper/util/JsonExtractorUtil.java normalizes valid metadata and returns null for unsupported or absent markers without crashing
 
 **Checkpoint**: User Story 4 is ready when the utility behaves correctly on both valid and malformed HTML without changing the boundary contract.
 
@@ -120,10 +120,10 @@
 
 **Purpose**: Final validation, cleanup, and boundary review across all four test suites.
 
-- [ ] T027 [P] Run the focused validation command from backend/specs/007-controller-repository-auth-tests/quickstart.md: `./mvnw test -Dtest='*ExternalPlayerControllerE2eTest,*PlayerGameDataRepositoryTest,*ApiKeyAuthFilterTest,*JsonExtractorUtilTest'`
-- [ ] T028 Review the four targeted test files for naming consistency in Spanish latinoamericano and ensure each test targets exactly one responsibility boundary
-- [ ] T029 [P] Confirm the repository, controller, security, and parser assertions remain isolated to their correct layers and no unrelated feature scope was broadened
-- [ ] T030 Final cleanup of fixture names, assertions, and comments in backend/src/test/java/com/overcode/ before closing the feature
+- [X] T027 [P] Run the focused validation command from backend/specs/007-controller-repository-auth-tests/quickstart.md: `./mvnw test -Dtest='*ExternalPlayerControllerE2eTest,*PlayerGameDataRepositoryTest,*ApiKeyAuthFilterTest,*JsonExtractorUtilTest'`
+- [X] T028 Review the four targeted test files for naming consistency in Spanish latinoamericano and ensure each test targets exactly one responsibility boundary
+- [X] T029 [P] Confirm the repository, controller, security, and parser assertions remain isolated to their correct layers and no unrelated feature scope was broadened
+- [X] T030 Final cleanup of fixture names, assertions, and comments in backend/src/test/java/com/overcode/ before closing the feature
 
 ---
 
