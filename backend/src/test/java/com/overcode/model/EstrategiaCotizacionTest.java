@@ -79,6 +79,7 @@ class EstrategiaCotizacionTest {
     void testEstrategiaDebeTenerValorBaseMayorOIgualACero() {
 
         assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaConValorBase(-0.1));
+        assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaConValorBase(null));
         assertDoesNotThrow(() -> getEstrategiaConValorBase(0.0));
         assertDoesNotThrow(() -> getEstrategiaConValorBase(0.1));
 
@@ -89,6 +90,7 @@ class EstrategiaCotizacionTest {
 
         assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaCotizacionConFactorEscala(-0.1));
         assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaCotizacionConFactorEscala(0.0));
+        assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaCotizacionConFactorEscala(null));
         assertDoesNotThrow(() -> getEstrategiaCotizacionConFactorEscala(0.1));
 
     }

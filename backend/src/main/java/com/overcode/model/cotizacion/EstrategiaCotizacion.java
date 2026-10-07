@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public abstract class EstrategiaCotizacion {
 
+    private Long id;
     private Double valorBase;
     private Double factorEscala;
 
@@ -36,12 +37,12 @@ public abstract class EstrategiaCotizacion {
     public abstract Double calcularScore(Player player);
 
     public void setFactorEscala(Double factorEscala) {
-        if (factorEscala <= 0) throw new EstrategiaInvalidaException();
+        if (factorEscala == null || factorEscala <= 0) throw new EstrategiaInvalidaException();
         this.factorEscala = factorEscala;
     }
 
     public void setValorBase(Double valorBase) {
-        if (valorBase < 0) throw new EstrategiaInvalidaException();
+        if (valorBase == null || valorBase < 0) throw new EstrategiaInvalidaException();
         this.valorBase = valorBase;
     }
 }
