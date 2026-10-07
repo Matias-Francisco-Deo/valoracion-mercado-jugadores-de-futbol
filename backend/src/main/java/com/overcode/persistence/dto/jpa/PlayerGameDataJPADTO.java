@@ -3,6 +3,7 @@ package com.overcode.persistence.dto.jpa;
 import com.overcode.model.Player;
 import com.overcode.model.PlayerGameData;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class PlayerGameDataJPADTO {
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @NotNull
     private PlayerJPADTO player;
 
     @Column(nullable = false, name = "goals")
@@ -47,6 +49,7 @@ public class PlayerGameDataJPADTO {
                                 Integer shotsOnTarget, Integer tackles,
                                 Integer keyPasses, Double rating, Integer successfulDribbles) {
         setId(id);
+        setPlayer(player);
         setGoals(goals);
         setAssists(assists);
         setShotsOnTarget(shotsOnTarget);
