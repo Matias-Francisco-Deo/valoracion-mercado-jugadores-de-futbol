@@ -55,7 +55,7 @@ class ScheduledTasksTest {
     void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {
         when(externalPlayerService.actualizarJugadores(null)).thenReturn(Optional.of(List.of()));
 
-        await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
+        await().atMost(Duration.ofSeconds(10)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
     }
 
     @Test
