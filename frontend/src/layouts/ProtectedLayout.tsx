@@ -1,25 +1,27 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { Navbar } from '../components/common/Navbar';
-import {Footer} from "@/components/common/Footer.tsx";
-import {PageWindow} from "@/components/common/PageWindow.tsx";
-import pasto from "@/assets/pasto.jpg";
+import { Outlet, Navigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { Navbar } from '@/components/common/Navbar';
+import { Footer } from '@/components/common/Footer';
+import cancha from '@/assets/cancha.avif';
 
 export const ProtectedLayout: React.FC = () => {
-  return (
+  const { isAuthenticated } = useAuth();
 
-      <div className="h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
-          <Navbar />
-          <main className="flex-1 flex flex-col p-6 bg-pitch-green bg-center overflow-y-scroll"
-                style={{ backgroundImage: `url(${pasto})`,
-                    backgroundSize: '60% 100%'
-          }}
-          >
-              <PageWindow>
-                  <Outlet/>
-              </PageWindow>
-          </main>
-          <Footer/>
-      </div>
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
+      <Navbar />
+      <main
+        className="flex-1 flex flex-col p-3 sm:p-6 bg-pitch-green bg-cover bg-center overflow-y-auto"
+        style={{ backgroundImage: `url(${cancha})` }}
+      >
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   );
 };
