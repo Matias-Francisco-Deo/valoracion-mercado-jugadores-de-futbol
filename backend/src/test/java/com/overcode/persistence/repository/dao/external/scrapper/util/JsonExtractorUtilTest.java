@@ -4,6 +4,7 @@ import com.overcode.persistence.repository.dao.external.scrapper.exception.Scrap
 import com.overcode.testUtils.HtmlFixtures;
 import org.junit.jupiter.api.Test;
 
+import static com.overcode.persistence.repository.dao.external.scrapper.util.JsonExtractorUtil.stripQuotes;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonExtractorUtilTest {
@@ -55,17 +56,57 @@ class JsonExtractorUtilTest {
     }
 
     @Test
-    void noExtraePosicionSiEsNull() {
-        assertNull(JsonExtractorUtil.extractPlayerPosition(null));
+    void extraePosicionDesdeElAtributoContentDeLaMetaDescription() {
+        assertEquals("Goalkeeper",
+                JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConMetaDescriptionContentDeArquero()));
     }
 
     @Test
-    void extraePosicionDelanteroDesdeDescripcion() {
-        assertEquals("Forward", JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConMetaDescriptionDeDelantero()));
+    void extraePosicionHastaElCierreDelSpan() {
+        assertEquals("Defender", JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConPosicionEnSpan()));
+    }
+
+    @Test
+    void extraePosicionHastaLaSiguienteEtiquetaCuandoNoHayCierreDelSpan() {
+        assertEquals("Midfielder",
+                JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConPosicionSinSpanPeroConOtroTag()));
+    }
+
+    @Test
+    void devuelveNullSiLaPosicionNoTieneDelimitadorDeCierre() {
+        assertNull(JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConPosicionSinDelimitador()));
+    }
+
+    @Test
+    void stripQuotesRemueveComillasDobles(){
+        assertEquals("Defender", stripQuotes("\"Defender\""));
+    }
+
+    @Test
+    void stripQuotesRemueveComillasSimples(){
+        assertEquals("Forward", stripQuotes("'Forward'"));
+    }
+
+    @Test
+    void stripQuotesRecortaEspaciosSinComillas(){
+        assertEquals("Midfielder", stripQuotes("  Midfielder  "));
+    }
+
+    @Test
+    void stripQuotesDevuelveVacioParaValorNullOVacio(){
+        assertEquals("", stripQuotes(null));
+        assertEquals("", stripQuotes("  "));
+    }
+
+    @Test
+    void noExtraePosicionSiEsNull() {
+        assertNull(JsonExtractorUtil.extractPlayerPosition(null));
     }
 
     @Test
     void retornaNullCuandoNoHayMarcador() {
         assertNull(JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlSinPosicion()));
     }
+
+
 }

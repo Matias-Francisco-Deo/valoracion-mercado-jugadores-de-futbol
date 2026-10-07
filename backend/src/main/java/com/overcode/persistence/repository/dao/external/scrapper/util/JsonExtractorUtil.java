@@ -133,7 +133,7 @@ public class JsonExtractorUtil {
         return null;
     }
 
-    private static String stripQuotes(String value) {
+    public static String stripQuotes(String value) {
         if (value == null || value.isBlank()) {
             return "";
         }
