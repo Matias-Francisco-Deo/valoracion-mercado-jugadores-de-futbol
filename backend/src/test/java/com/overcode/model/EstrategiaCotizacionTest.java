@@ -93,6 +93,32 @@ class EstrategiaCotizacionTest {
 
     }
 
+    @Test
+    void testEstrategiaDebeDar1SiElValorDeCotizacionEs0() {
+
+        List<Player> players = List.of(JUGADOR_1);
+
+        EstrategiaCotizacion estrategia = getEstrategiaCotizacionConFactorEscalaYValorConstante(1.0, -10D);
+
+        estrategia.cotizar(players);
+
+        assertEquals(1, players.getFirst().getCurrentPrice());
+
+    }
+
+    @Test
+    void testEstrategiaDebeDar1SiElValorDeCotizacionEsMenorA1() {
+
+        List<Player> players = List.of(JUGADOR_1);
+
+        EstrategiaCotizacion estrategia = getEstrategiaCotizacionConFactorEscalaYValorConstante(1.0, 0D);
+
+        estrategia.cotizar(players);
+
+        assertEquals(1, players.getFirst().getCurrentPrice());
+
+    }
+
     EstrategiaCotizacion getEstrategiaCotizacionConFactorEscalaYValorConstante(Double factorEscala, Double valorConstante) {
         return new EstrategiaCotizacionConValorConstante(valorConstante, factorEscala);
     }

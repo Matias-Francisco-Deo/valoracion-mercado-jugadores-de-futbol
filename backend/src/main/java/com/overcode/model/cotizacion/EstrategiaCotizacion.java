@@ -30,7 +30,7 @@ public abstract class EstrategiaCotizacion {
 
     public Double calcularCotizacion(Player player) {
         Double score = calcularScore(player);
-        return getValorBase() + (score * getFactorEscala());
+        return Math.max(getValorBase() + (score * getFactorEscala()), 1);
     }
 
     public abstract Double calcularScore(Player player);
