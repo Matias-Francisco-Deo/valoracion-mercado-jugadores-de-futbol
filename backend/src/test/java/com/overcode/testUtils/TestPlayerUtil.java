@@ -60,4 +60,8 @@ public class TestPlayerUtil {
         player.setPlayerGameData(playerGameData);
         return player;
     }
+
+    public static Player getJugadorConGameData(String name, PlayerGameData data) {
+        return new Player(name, getTeam(), data);
+    }
 }

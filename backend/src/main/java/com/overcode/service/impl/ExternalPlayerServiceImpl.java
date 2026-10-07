@@ -51,7 +51,7 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
     public CompletableFuture<Void> actualizarJugadoresAsync() {
         log.info("Iniciando actualizacion asincrona manual...");
         actualizarJugadores(null);
-        log.info("Finalizo la actualizacion asincrona manual.");
+        log.info("Finalizó la actualización asíncrona manual.");
         return CompletableFuture.completedFuture(null);
     }
 }

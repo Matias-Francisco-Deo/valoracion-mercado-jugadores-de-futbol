@@ -40,9 +40,10 @@ public class TeamJPADTO {
         dto.setLeague(team.getLeague());
         
         if (team.getPlayers() != null) {
-            dto.setPlayers(team.getPlayers().stream()
+            List<PlayerJPADTO> players = team.getPlayers().stream()
                     .map(p -> PlayerJPADTO.desdeModelo(p, dto))
-                    .toList());
+                    .toList();
+            dto.setPlayers(new ArrayList<>(players));
         }
         return dto;
     }

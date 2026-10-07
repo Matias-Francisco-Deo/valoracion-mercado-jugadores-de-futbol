@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO, Long> {
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query(
             "update player_game_data pgd " +
