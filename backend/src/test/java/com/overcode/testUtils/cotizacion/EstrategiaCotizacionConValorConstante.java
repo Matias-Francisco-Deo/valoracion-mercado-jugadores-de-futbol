@@ -16,6 +16,11 @@ public class EstrategiaCotizacionConValorConstante extends EstrategiaCotizacion 
         setValorConstante(valorConstante);
     }
 
+    public EstrategiaCotizacionConValorConstante(Double valorBase) {
+        super(valorBase, 1.0);
+        setValorConstante(0.0);
+    }
+
     @Override
     public Double calcularScore(Player player) {
         return getValorConstante();

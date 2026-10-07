@@ -1,6 +1,7 @@
 package com.overcode.model.cotizacion;
 
 import com.overcode.model.Player;
+import com.overcode.model.exception.EstrategiaInvalidaException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,4 +35,13 @@ public abstract class EstrategiaCotizacion {
 
     public abstract Double calcularScore(Player player);
 
+    public void setFactorEscala(Double factorEscala) {
+        if (factorEscala <= 0) throw new EstrategiaInvalidaException();
+        this.factorEscala = factorEscala;
+    }
+
+    public void setValorBase(Double valorBase) {
+        if (valorBase < 0) throw new EstrategiaInvalidaException();
+        this.valorBase = valorBase;
+    }
 }
