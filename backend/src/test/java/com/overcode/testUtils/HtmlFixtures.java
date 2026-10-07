@@ -53,6 +53,30 @@ public final class HtmlFixtures {
                 """;
     }
 
+    public static String htmlConMetaDescriptionContentDeArquero() {
+        return """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta name="description" content="This player is a Goalkeeper">
+                </head>
+                <body></body>
+                </html>
+                """;
+    }
+
+    public static String htmlConPosicionEnSpan() {
+        return "<span>Position: Defender</span>";
+    }
+
+    public static String htmlConPosicionSinSpanPeroConOtroTag() {
+        return "<div>Position: Midfielder</div>";
+    }
+
+    public static String htmlConPosicionSinDelimitador() {
+        return "Position: Forward";
+    }
+
     public static String htmlSinPosicion() {
         return """
                 <!DOCTYPE html>
@@ -62,4 +86,41 @@ public final class HtmlFixtures {
                 </html>
                 """;
     }
+
+    public static String htmlConJsonValidoSinCerrar() {
+        return """
+                <!DOCTYPE html>
+                <html>
+                <body>
+                    <div>No JSON block here.</div>
+                </body>
+                </html>
+                <script>
+                """;
+    }
+
+    public static String htmlConJsonQueNoCierra() {
+        return """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta name="description" content="Position: Defender">
+                </head>
+                <body>
+                <script type="text/javascript">
+                    require.config.params['args'] = {
+                        "goals": 10,
+                        "assists": 5,
+                        "shotsOnTarget": 8,
+                        "tackles": 12,
+                        "keyPasses": 6,
+                        "rating": 7.8,
+                        "successfulDribbles": 9
+                    ;
+                </script>
+                </body>
+                </html>
+                """;
+    }
+
 }
