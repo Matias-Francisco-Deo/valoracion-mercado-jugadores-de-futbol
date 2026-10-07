@@ -23,7 +23,7 @@ class ExternalPlayerServiceImplTest {
     @Autowired
     private PlayerService playerService;
 
-    @Disabled("Use automatically to generate players up to the max capacity set in the repository")
+    @Disabled("Use automatically to generate players up to the limit set in the method")
     @Test
     void encuentraJugadoresConDatos(){
         Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(1);
@@ -38,11 +38,14 @@ class ExternalPlayerServiceImplTest {
             assertNotNull(player.getName());
             assertNotNull(player.getTeam());
             assertNotNull(player.getPlayerGameData());
+            assertNotNull(player.getPlayerGameData().getRating());
+            assertNotNull(player.getPlayerGameData().getAssists());
+            assertNotNull(player.getPosition());
         }
         ));
     }
 
-    @Disabled("Use automatically to generate players up to the max capacity set in the repository")
+    @Disabled("Use automatically to generate players up to the limit set in the method")
     @Test
     void encuentraJugadoresConDatosAsync(){
         CompletableFuture<Void> future = externalPlayerServiceImpl.actualizarJugadoresAsync();
