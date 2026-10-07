@@ -1,6 +1,9 @@
 package com.overcode.testUtils;
 
-import com.overcode.persistence.repository.dao.jpa.*;
+import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
+import com.overcode.persistence.repository.dao.jpa.PlayerGameDataDAOJPA;
+import com.overcode.persistence.repository.dao.jpa.TeamDAOJPA;
+import com.overcode.persistence.repository.dao.jpa.UserDAOJPA;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
