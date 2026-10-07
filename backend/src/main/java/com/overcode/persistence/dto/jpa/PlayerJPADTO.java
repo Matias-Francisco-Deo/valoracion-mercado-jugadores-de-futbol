@@ -126,8 +126,8 @@ public class PlayerJPADTO {
         player.setCurrentPrice(this.currentPrice);
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
 
-        player.setPlayerGameData(this.playerGameData.aModelo(player));
-        player.setTeam(this.team.aModeloConJugadores());
+        player.setPlayerGameData(this.playerGameData != null ? this.playerGameData.aModelo(player) : null);
+        player.setTeam(this.team != null ? this.team.aModeloConJugadores() : null);
         return player;
     }
 }

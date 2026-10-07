@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
-import static org.junit.Assert.assertFalse;
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

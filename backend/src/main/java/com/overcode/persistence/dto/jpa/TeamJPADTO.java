@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.Player;
 import com.overcode.model.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,12 +29,6 @@ public class TeamJPADTO {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlayerJPADTO> players = new ArrayList<>();
-
-    public TeamJPADTO(Long id, String name, String league) {
-        setId(id);
-        setName(name);
-        setLeague(league);
-    }
 
     public static TeamJPADTO desdeModelo(Team team) {
         if (team == null) {
@@ -77,9 +72,10 @@ public class TeamJPADTO {
         team.setName(this.name);
         team.setLeague(this.league);
         if (this.players != null) {
-            team.setPlayers(this.players.stream()
+            List<Player> playerList = this.players.stream()
                     .map(p -> p.aModelo(team))
-                    .toList());
+                    .toList();
+            team.setPlayers(new ArrayList<>(playerList));
         }
         return team;
     }

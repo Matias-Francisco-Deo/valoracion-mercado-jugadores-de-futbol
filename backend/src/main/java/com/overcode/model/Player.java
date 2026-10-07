@@ -52,7 +52,7 @@ public class Player {
     }
 
     private List<Token> getInitialTokens() {
-        List<Token> newTokens = new java.util.ArrayList<>(List.of());
+        List<Token> newTokens = new java.util.ArrayList<>();
         for (int i = 0; i < 100; i++) {
             newTokens.add(new Token(this));
         }
