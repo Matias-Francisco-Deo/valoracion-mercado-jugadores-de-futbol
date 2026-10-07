@@ -65,4 +65,8 @@ public class Player {
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
     }
+
+    public void recalcularCotizacion(Double cotizacion) {
+        setCurrentPrice(cotizacion.intValue());
+    }
 }
