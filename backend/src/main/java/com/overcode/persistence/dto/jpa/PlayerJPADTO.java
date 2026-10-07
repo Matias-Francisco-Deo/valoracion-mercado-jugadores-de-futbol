@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(name="player")
 @Table(name = "players")
@@ -104,7 +105,7 @@ public class PlayerJPADTO {
         player.setExternalId(this.getExternalId());
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
-        player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
+        player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).collect(Collectors.toCollection(ArrayList::new)));
 
         player.setPlayerGameData(this.playerGameData.aModelo(player));
         player.setTeam(team);
@@ -117,7 +118,8 @@ public class PlayerJPADTO {
         player.setExternalId(this.getExternalId());
         player.setName(this.name);
         player.setCurrentPrice(this.currentPrice);
-        player.setTokens(this.tokens.stream().map(token -> token.aModelo(player)).toList());
+        player.setTokens(this.tokens.stream().map(token -> token.aModelo(player))
+                .collect(Collectors.toCollection(ArrayList::new)));
 
         player.setPlayerGameData(this.playerGameData != null ? this.playerGameData.aModelo(player) : null);
         player.setTeam(this.team != null ? this.team.aModeloConJugadores() : null);

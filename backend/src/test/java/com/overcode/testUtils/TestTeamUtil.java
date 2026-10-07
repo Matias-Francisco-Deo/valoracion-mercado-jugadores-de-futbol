@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TestTeamUtil {
     public static Team getTeam() {
-        return getTeamConNombreYLiga("Club", "Liga1");
+        return getTeamConNombreYLiga("Club1", "Liga1");
     }
 
     public static Team getTeamConNombreYLiga(String name, String league) {
@@ -15,6 +15,6 @@ public class TestTeamUtil {
     }
 
     public static Team getTeamConJugadores(List<Player> players) {
-        return new Team("Club", "Liga1", players);
+        return new Team("Club1", "Liga1", players);
     }
 }

@@ -34,6 +34,7 @@ class ExternalPlayerRepositoryTest {
 
     @Autowired
     private TestService testService;
+
     @Autowired
     private TeamRepository teamRepository;
 

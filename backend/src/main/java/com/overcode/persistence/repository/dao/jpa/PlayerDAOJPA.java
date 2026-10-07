@@ -35,46 +35,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             Pageable pageable
     );
 
-    // TODO hay que hacer un filtrado por posición, no todavía
-    //esto modifica o se borra?
-/*
-    @Modifying
-    @Transactional
-    @Query(
-            "update player p " +
-                    "set p.currentPrice=:currentPrice," +
-                    "p.assists = :assists, " +
-                    "p.name = :name," +
-                    "p.goals = :goals," +
-                    "p.clubName = :clubName," +
-                    "p.shotsOnTarget = :shotsOnTarget," +
-                    "p.passes = :passes," +
-                    "p.interceptions = :interceptions," +
-                    "p.tackles = :tackles," +
-                    "p.keyPasses = :keyPasses," +
-                    "p.rating = :rating," +
-                    "p.successfulDribbles = :successfulDribbles, " +
-                    "p.position = :position " +
-                    "where p.externalId = :externalId"
-    )
-    void updateWithExternalId(
-            @Param("externalId") Long externalId,
-            @Param("name") String name,
-            @Param("goals") Integer goals,
-            @Param("currentPrice") Integer currentPrice,
-            @Param("assists") Integer assists,
-            @Param("clubName") String clubName,
-            @Param("shotsOnTarget") Integer shotsOnTarget,
-            @Param("passes") Integer passes,
-            @Param("interceptions") Integer interceptions,
-            @Param("tackles") Integer tackles,
-            @Param("keyPasses") Integer keyPasses,
-            @Param("rating") Double rating,
-            @Param("successfulDribbles") Integer successfulDribbles,
-            @Param("position") String position
-    );
-*/
-    
+
 
     boolean existsByExternalId(Long externalId);
 

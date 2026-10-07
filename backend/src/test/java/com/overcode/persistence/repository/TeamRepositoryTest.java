@@ -8,15 +8,16 @@ import com.overcode.testUtils.TestService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static com.overcode.testUtils.TestTeamUtil.getTeamConJugadores;
 import static junit.framework.TestCase.*;
 
 
@@ -55,6 +56,16 @@ class TeamRepositoryTest {
     }
 
     @Test
+    @Transactional
+    void recuperarPorIdTraeAlEquipo() {
+        Team team = getTeamConJugadores(List.of());
+        Team teamPersistido = teamRepository.guardar(team);
+
+        assertTrue(teamRepository.recuperar(teamPersistido.getId()).isPresent());
+
+    }
+
+    @Test
     void recuperarPorNombreYLigaNoDevuelveNingunEquipoSiNoExiste() {
         assertTrue(teamRepository.recuperarPorNombreYLiga("team2", "league2").isEmpty());
 
@@ -87,9 +98,9 @@ class TeamRepositoryTest {
 
     @Test
     @Transactional
-    @Disabled("Hay que arreglar este test")
     void upsertearUnEquipoActualizaLosDatosDeSusJugadores() {
         Player player1 = getJugadorConNombre("player1");
+        player1.setExternalId(1L);
         Team team = new Team("team2", "league2", List.of(player1));
         player1.setTeam(team);
         Team teamRecuperado =teamRepository.guardar(team);
@@ -97,7 +108,7 @@ class TeamRepositoryTest {
         Player player1Recuperado = teamRecuperado.getPlayers().getFirst();
         player1Recuperado.getPlayerGameData().setRating(9.0);
 
-        Team teamActualizado = teamRepository.upsertTeam(team);
+        Team teamActualizado = teamRepository.upsertTeam(teamRecuperado);
         Player player1Actualizado = teamActualizado.getPlayers().getFirst();
         assertEquals(9.0, player1Actualizado.getPlayerGameData().getRating());
 
@@ -105,17 +116,19 @@ class TeamRepositoryTest {
 
     @Test
     @Transactional
-    @Disabled("Hay que arreglar este test")
-    void upsertearUnEquipoIntroduceJugadoresNuevosDeSerNecesario() {
+    void upsertearUnEquipoIntroduceJugadoresNuevos() {
         Player player1 = getJugadorConNombre("player1");
-        Team team = new Team("team2", "league2", (List.of(player1)));
+        player1.setExternalId(1L);
+        Team team = new Team("team2", "league2", new ArrayList<>(List.of(player1)));
         player1.setTeam(team);
         Team teamRecuperado =teamRepository.guardar(team);
+
+        entityManager.flush();
 
         Player player2 = getJugadorConNombre("player2");
         teamRecuperado.addPlayer(player2);
 
-        Team teamActualizado = teamRepository.upsertTeam(team);
+        Team teamActualizado = teamRepository.upsertTeam(teamRecuperado);
 
         assertTrue(teamActualizado.getPlayers().stream().anyMatch(p -> p.getName().equals("player2")));
         assertTrue(teamActualizado.getPlayers().stream().anyMatch(p -> p.getName().equals("player1")));
