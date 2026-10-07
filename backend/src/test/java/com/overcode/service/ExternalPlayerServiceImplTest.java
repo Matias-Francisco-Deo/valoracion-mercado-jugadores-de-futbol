@@ -40,7 +40,7 @@ class ExternalPlayerServiceImplTest {
             assertNotNull(player.getPlayerGameData());
             assertNotNull(player.getPlayerGameData().getRating());
             assertNotNull(player.getPlayerGameData().getAssists());
-            assertNotNull(player.getPosition());
+            assertNotNull(player.getPlayerGameData().getPosition());
         }
         ));
     }

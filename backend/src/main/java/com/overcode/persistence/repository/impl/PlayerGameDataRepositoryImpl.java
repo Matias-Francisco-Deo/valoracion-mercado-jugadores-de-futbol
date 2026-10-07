@@ -45,7 +45,6 @@ public class PlayerGameDataRepositoryImpl implements PlayerGameDataRepository {
         player.setExternalId(playerJPADTO.getExternalId());
         player.setName(playerJPADTO.getName());
         player.setCurrentPrice(playerJPADTO.getCurrentPrice());
-        player.setPosition(playerJPADTO.getPosition());
         player.setTeam(playerJPADTO.getTeam() != null ? playerJPADTO.getTeam().aModelo() : null);
         player.setPlayerGameData(playerJPADTO.getPlayerGameData() != null ? playerJPADTO.getPlayerGameData().aModelo(player) : null);
         return player;

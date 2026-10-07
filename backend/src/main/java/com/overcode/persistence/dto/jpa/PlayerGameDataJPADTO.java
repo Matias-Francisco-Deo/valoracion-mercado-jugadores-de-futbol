@@ -42,11 +42,15 @@ public class PlayerGameDataJPADTO {
     @Column(nullable = false, name = "successful_dribbles")
     private Integer successfulDribbles;
 
+    @Column(nullable = false, name = "position")
+    private String position;
+
 
     public PlayerGameDataJPADTO(Long id, PlayerJPADTO player, Integer goals, Integer assists,
                                 Integer shotsOnTarget, Integer tackles,
-                                Integer keyPasses, Double rating, Integer successfulDribbles) {
+                                Integer keyPasses, Double rating, Integer successfulDribbles, String position) {
         setId(id);
+        setPosition(position);
         setGoals(goals);
         setAssists(assists);
         setShotsOnTarget(shotsOnTarget);
@@ -72,6 +76,7 @@ public class PlayerGameDataJPADTO {
         dto.setKeyPasses(playerGameData.getKeyPasses());
         dto.setRating(playerGameData.getRating());
         dto.setSuccessfulDribbles(playerGameData.getSuccessfulDribbles());
+        dto.setPosition(playerGameData.getPosition());
         return dto;
     }
 
@@ -89,6 +94,7 @@ public class PlayerGameDataJPADTO {
         dto.setKeyPasses(playerGameData.getKeyPasses());
         dto.setRating(playerGameData.getRating());
         dto.setSuccessfulDribbles(playerGameData.getSuccessfulDribbles());
+        dto.setPosition(playerGameData.getPosition());
         return dto;
     }
 
@@ -102,6 +108,7 @@ public class PlayerGameDataJPADTO {
         playerGameData.setKeyPasses(this.keyPasses);
         playerGameData.setRating(this.rating);
         playerGameData.setSuccessfulDribbles(this.successfulDribbles);
+        playerGameData.setPosition(this.position);
 
         playerGameData.setPlayer(player);
 

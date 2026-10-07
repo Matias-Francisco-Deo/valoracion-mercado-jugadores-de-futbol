@@ -19,7 +19,8 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                     "pgd.tackles = :tackles," +
                     "pgd.keyPasses = :keyPasses," +
                     "pgd.rating = :rating," +
-                    "pgd.successfulDribbles = :successfulDribbles " +
+                    "pgd.successfulDribbles = :successfulDribbles, " +
+                    "pgd.position = :position " +
                     "where pgd.player.externalId = :externalId"
     )
     void updateWithExternalPlayerId(@Param("externalId") Long externalId,
@@ -29,5 +30,6 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                                     @Param("tackles") Integer tackles,
                                     @Param("keyPasses") Integer keyPasses,
                                     @Param("rating") Double rating,
-                                    @Param("successfulDribbles") Integer successfulDribbles);
+                                    @Param("successfulDribbles") Integer successfulDribbles,
+                                    @Param("position") String position);
 }

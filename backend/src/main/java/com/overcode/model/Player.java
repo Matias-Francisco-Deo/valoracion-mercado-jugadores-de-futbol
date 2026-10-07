@@ -21,11 +21,6 @@ public class Player {
     private Team team;
 
     private PlayerGameData playerGameData;
-    
-    private String position;
-
-
-
 
     public Player(Long id,
                   Long externalId,

@@ -18,7 +18,7 @@ public class TestPlayerUtil {
     }
 
     private static @NonNull PlayerGameData getPlayerDataConRating(Double rating, Player player) {
-        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, rating);
+        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, rating, "Forward");
     }
 
     public static Player getJugadorConClub(String name, String club) {
@@ -33,7 +33,7 @@ public class TestPlayerUtil {
     }
 
     public static @NonNull PlayerGameData getPlayerData(Player player) {
-        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0);
+        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0, "Forward");
     }
 
     public static Player getJugadorConLiga(String name, String liga) {

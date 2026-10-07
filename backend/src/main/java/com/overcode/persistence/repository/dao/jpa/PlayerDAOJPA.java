@@ -74,10 +74,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             @Param("position") String position
     );
 */
-    @Modifying
-    @Transactional
-    @Query("update player p set p.position = :position where p.externalId = :externalId")
-    void updatePosition(@Param("externalId") Long externalId, @Param("position") String position);
+    
 
     boolean existsByExternalId(Long externalId);
 

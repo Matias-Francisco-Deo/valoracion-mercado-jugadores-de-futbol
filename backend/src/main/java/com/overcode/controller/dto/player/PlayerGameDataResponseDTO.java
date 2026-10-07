@@ -8,7 +8,8 @@ public record PlayerGameDataResponseDTO(
                                         Integer goals,
                                         Integer shotsOnTarget,
                                         Integer tackles,
-                                        Double rating
+                                        Double rating,
+                                        String position
 ) {
 
     public static PlayerGameDataResponseDTO desdeModelo(PlayerGameData playerGameData, Long playerId) {
@@ -19,7 +20,8 @@ public record PlayerGameDataResponseDTO(
                 playerGameData.getGoals(),
                 playerGameData.getShotsOnTarget(),
                 playerGameData.getTackles(),
-                playerGameData.getRating()
+                playerGameData.getRating(),
+                playerGameData.getPosition()
         );
     }
 }

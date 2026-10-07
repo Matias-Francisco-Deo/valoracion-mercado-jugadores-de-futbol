@@ -36,7 +36,8 @@ class PlayerGameDataRepositoryTest {
                 623,
                 914,
                 838,
-                9.91
+                9.91,
+                "Midfielder"
         );
 
         PlayerGameData resultado = playerGameDataRepository.guardar(playerGameData);
@@ -59,6 +60,7 @@ class PlayerGameDataRepositoryTest {
         assertEquals(914, persistido.getTackles());
         assertEquals(838, persistido.getSuccessfulDribbles());
         assertEquals(9.91, persistido.getRating());
+        assertEquals("Midfielder", persistido.getPosition());
 
         Optional<PlayerGameData> recuperado = playerGameDataRepository.recuperar(persistido.getId());
         assertTrue(recuperado.isPresent());
@@ -69,6 +71,7 @@ class PlayerGameDataRepositoryTest {
         assertEquals(914, recuperado.get().getTackles());
         assertEquals(838, recuperado.get().getSuccessfulDribbles());
         assertEquals(9.91, recuperado.get().getRating());
+        assertEquals("Midfielder", recuperado.get().getPosition());
     }
 
     @Test
