@@ -2,6 +2,7 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.service.interfaces.PlayerService;
@@ -66,13 +67,13 @@ class PlayerE2eTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarJugadores();
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
     }
 
@@ -82,7 +83,7 @@ class PlayerE2eTest {
     void listarJugadoresConBaseVaciaDevuelveListaVacia() {
         String token = obtainAuthToken();
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
@@ -91,7 +92,10 @@ class PlayerE2eTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().isEmpty());
+        assertTrue(response.getBody().content().isEmpty());
+
+        assertEquals(0, response.getBody().totalElements());
+        assertEquals(0, response.getBody().totalPages());
     }
 
     @Test
@@ -100,7 +104,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConNombre(PLAYER_NAME));
         playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
             .uri("/players")
             .header("Authorization", "Bearer " + token)
             .retrieve()
@@ -109,9 +113,11 @@ class PlayerE2eTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().size());
-        assertTrue(response.getBody().stream().anyMatch(p -> PLAYER_NAME.equals(p.name())));
-        assertTrue(response.getBody().stream().anyMatch(p -> SECOND_PLAYER_NAME.equals(p.name())));
+
+        List<PlayerResponseDTO> players = response.getBody().content();
+        assertEquals(2, players.size());
+        assertTrue(players.stream().anyMatch(p -> PLAYER_NAME.equals(p.name())));
+        assertTrue(players.stream().anyMatch(p -> SECOND_PLAYER_NAME.equals(p.name())));
     }
 
     @Test
@@ -120,7 +126,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -128,10 +134,14 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-        assertNotNull(players);
+        assertNotNull(response.getBody());
+        List<PlayerResponseDTO> players = response.getBody().content();
+
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
+
+        assertEquals(1, response.getBody().totalElements());
+        assertEquals(1, response.getBody().totalPages());
     }
 
     @Test
@@ -140,7 +150,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConClub(PLAYER_NAME, "ClubUno"));
         playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=ClubUno")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -148,8 +158,9 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-        assertNotNull(players);
+        assertNotNull(response.getBody());
+        List<PlayerResponseDTO> players = response.getBody().content();
+
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
     }
@@ -157,10 +168,10 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConLiga(PLAYER_NAME, "Liga1"));
-        playerService.crear(getJugadorConLiga(SECOND_PLAYER_NAME, "Liga2"));
+        playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
+        playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?league=Liga1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -168,8 +179,9 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-        assertNotNull(players);
+        assertNotNull(response.getBody());
+        List<PlayerResponseDTO> players = response.getBody().content();
+
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
     }
@@ -179,9 +191,9 @@ class PlayerE2eTest {
         String token = obtainAuthToken();
         playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
         playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
-        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club1"));
+        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club3"));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1&league=Liga1")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -189,8 +201,9 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-        assertNotNull(players);
+        assertNotNull(response.getBody());
+        List<PlayerResponseDTO> players = response.getBody().content();
+
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
     }

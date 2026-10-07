@@ -8,13 +8,8 @@ import java.util.List;
 public record PlayerResponseDTO(Long id,
                                 String name,
                                 Integer currentPrice,
-                                String clubName,
-                                Integer goals,
-                                Integer shotsOnTarget,
-                                Integer passes,
-                                Integer interceptions,
-                                Integer tackles,
-                                Double rating,
+                                TeamResponseDTO team,
+                                PlayerGameDataResponseDTO playerGameData,
                                 List<TokenResponseDTO> tokens) {
 
     public static PlayerResponseDTO desdeModelo(Player player) {
@@ -23,13 +18,8 @@ public record PlayerResponseDTO(Long id,
                 player.getId(),
                 player.getName(),
                 player.getCurrentPrice(),
-                player.getClubName(),
-                player.getGoals(),
-                player.getShotsOnTarget(),
-                player.getPasses(),
-                player.getInterceptions(),
-                player.getTackles(),
-                player.getRating(),
+                TeamResponseDTO.desdeModelo(player.getTeam()),
+                PlayerGameDataResponseDTO.desdeModelo(player.getPlayerGameData(), player.getId()),
                 player.getTokens().stream().map(TokenResponseDTO::desdeModelo).toList()
         );
     }

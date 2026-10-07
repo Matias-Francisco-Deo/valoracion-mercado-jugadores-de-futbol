@@ -5,10 +5,8 @@ import {
     Star, 
     Coins, 
     Goal, 
-    Crosshair, 
-    ArrowRightLeft, 
-    ShieldAlert, 
-    Radar 
+    Crosshair,
+    ShieldAlert 
 } from 'lucide-react'
 
 export type MainPlayerInfoProps = {
@@ -17,11 +15,9 @@ export type MainPlayerInfoProps = {
 
 export const MainPlayerInfo = ({player, className, ...props }: MainPlayerInfoProps) => {
     const stats = [
-        { label: 'Goles', value: player.goals, icon: Goal },
-        { label: 'Tiros al arco', value: player.shotsOnTarget, icon: Crosshair },
-        { label: 'Pases', value: player.passes, icon: ArrowRightLeft },
-        { label: 'Entradas', value: player.tackles, icon: ShieldAlert },
-        { label: 'Intercepciones', value: player.interceptions, icon: Radar },
+        { label: 'Goles', value: player.playerGameData.goals, icon: Goal },
+        { label: 'Tiros al arco', value: player.playerGameData.shotsOnTarget, icon: Crosshair },
+        { label: 'Entradas', value: player.playerGameData.tackles, icon: ShieldAlert },
         { label: 'Precio', value: `$${player.currentPrice}`, icon: Coins },
     ];
 
@@ -58,7 +54,7 @@ export const MainPlayerInfo = ({player, className, ...props }: MainPlayerInfoPro
                         {player.name}
                     </h2>
                     <span className="text-lg font-medium text-gray-700 tracking-wide uppercase mt-1">
-                        {player.clubName}
+                        {player.team.name}
                     </span>
                 </div>
 
@@ -69,7 +65,7 @@ export const MainPlayerInfo = ({player, className, ...props }: MainPlayerInfoPro
                         Rating
                     </span>
                     <span className="text-2xl font-bold text-gray-900 mt-1 leading-none">
-                        {player.rating}
+                        {player.playerGameData.rating}
                     </span>
                 </div>
             </div>

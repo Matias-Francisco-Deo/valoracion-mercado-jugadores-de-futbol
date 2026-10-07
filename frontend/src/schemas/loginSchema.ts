@@ -9,8 +9,6 @@ export const loginSchema = yup.object({
   password: yup
     .string()
     .required('La contraseña es requerida.')
-    .min(6, 'La contraseña debe tener al menos 6 caracteres.')
-    .max(30, 'La contraseña no puede superar los 30 caracteres.'),
 });
 
 export type LoginFormValues = yup.InferType<typeof loginSchema>;

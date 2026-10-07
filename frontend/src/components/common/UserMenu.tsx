@@ -25,14 +25,14 @@ export const UserMenu = ({user, onLogout, ...props}: UserMenuProps) => {
             aria-expanded={isMenuOpen}
             className="flex max-w-[calc(100vw-8rem)] items-center gap-2 rounded px-3 py-1.5 text-base font-medium transition-colors hover:bg-hover-orange">
                 <span aria-hidden="true">●</span>
-                <span className="truncate capitalize">{user.username}</span>
+                <span className="truncate">{user.username}</span>
             </Button>
             {isMenuOpen && (
                 <div
                 role="menu"
                 className="absolute border right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-2rem)] rounded-md bg-[#E58600] p-3 shadow-xl">
                     <div className=" border-gray-200 px-2 pb-3">
-                        <p className="truncate font-semibold capitalize">{user.username}</p>
+                        <p className="truncate font-semibold">{user.username}</p>
                         <p className="wrap-break-word text-sm">{user.email}</p>
                     </div>
                     <Button

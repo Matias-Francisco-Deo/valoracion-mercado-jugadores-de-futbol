@@ -9,9 +9,9 @@ interface PlayerCardProps extends Omit<LinkProps, 'to'> {
 
 export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => {
     const stats = [
-        { label: 'Goles', value: player.goals, icon: Goal },
-        { label: 'Pases', value: player.passes, icon: ArrowRightLeft },
-        { label: 'Rating', value: player.rating, icon: Star },
+        { label: 'Goles', value: player.playerGameData.goals, icon: Goal },
+        { label: 'Tackles', value: player.playerGameData.tackles, icon: ArrowRightLeft },//cambiar por otro atributo?
+        { label: 'Rating', value: player.playerGameData.rating, icon: Star },
         { label: 'Precio', value: player.currentPrice, icon: DollarSign },
     ];
 
@@ -32,7 +32,7 @@ export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => 
                     {player.name}
                 </h2>
                 <span className="text-sm font-medium text-gray-700 mt-1">
-                    {player.clubName}
+                    {player.team.name}
                 </span>
             </div>
 
@@ -50,7 +50,7 @@ export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => 
 
             {/* Estadísticas (Bottom) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 bg-gray-500/20 mt-auto">
-                {stats.map((stat, index) => (
+                {stats.map((stat) => (
                     <div 
                         key={stat.label} 
                         className="flex flex-col items-center justify-center py-4 px-2 gap-1"

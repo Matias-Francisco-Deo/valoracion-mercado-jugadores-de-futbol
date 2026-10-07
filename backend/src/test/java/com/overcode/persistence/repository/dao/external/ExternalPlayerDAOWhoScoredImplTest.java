@@ -1,11 +1,12 @@
 package com.overcode.persistence.repository.dao.external;
 
 import com.overcode.model.Player;
+import com.overcode.model.Team;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
+import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.WhoScoredIdResolver;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +28,9 @@ class ExternalPlayerDAOWhoScoredImplTest {
     private ExternalPlayerDAOWhoScoredImpl externalPlayerDAOWhoScoredImplMock;
     private WhoScoredIdResolver whoScoredIdResolverMock;
     private ExternalPlayerWhoScoredScrapper externalPlayerWhoScoredScrapperMock;
-
-    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé", "Real Madrid CF", "La Liga");
+    private final PlayerDraftDTO JUGADOR_DRAFT_1 = new PlayerDraftDTO("Kylian Mbappé");
+    private final TeamDraftDTO TEAM_DRAFT_1 = new TeamDraftDTO("Real Madrid CF", "La Liga", List.of(JUGADOR_DRAFT_1));
+    private final List<TeamDraftDTO> TEAMS_DRAFT = List.of(TEAM_DRAFT_1);
 
     @BeforeEach
     void setUp() {
@@ -41,39 +43,35 @@ class ExternalPlayerDAOWhoScoredImplTest {
     void encuentraJugadorConDatosMock() {
         Player mockPlayer = new Player();
         mockPlayer.setName("Kylian Mbappé");
-        mockPlayer.setClubName("Real Madrid CF");
-        mockPlayer.setGoals(15);
-        mockPlayer.setRating(8.5);
 
         when(whoScoredIdResolverMock.resolvePlayerId("Kylian Mbappé")).thenReturn(11119L);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(11119L, JUGADOR_DRAFT_1)).thenReturn(Optional.of(mockPlayer));
 
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(JUGADOR_DRAFT_1);
+        Optional<List<Team>> teamOptional = externalPlayerDAOWhoScoredImplMock.getDatosDeEquipos(TEAMS_DRAFT);
 
-        assertTrue(playerOpt.isPresent());
-        Player player = playerOpt.get();
+        assertTrue(teamOptional.isPresent());
+        Player player = teamOptional.get().getFirst().getPlayers().getFirst();
         assertEquals("Kylian Mbappé", player.getName());
-        assertEquals("Real Madrid CF", player.getClubName());
-        assertEquals(15, player.getGoals());
-        assertEquals(8.5, player.getRating());
     }
 
     @Test
     void noEncuentraJugadorInexistenteYDevuelveVacioMock() {
-        PlayerDraftDTO jugadorFantasma = new PlayerDraftDTO("Jugador Fantasma", "Club Fantasma", "Liga Fantasma");
+        PlayerDraftDTO jugadorFantasma = new PlayerDraftDTO("JugadorInexistente");
+        TeamDraftDTO equipoConJugadorFantasma = new TeamDraftDTO("Real Madrid CF", "La Liga", List.of(jugadorFantasma));
 
         when(whoScoredIdResolverMock.resolvePlayerId(anyString())).thenReturn(null);
         when(externalPlayerWhoScoredScrapperMock.getDatosDeJugador(null, jugadorFantasma)).thenReturn(Optional.empty());
 
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImplMock.getDatosDeJugador(jugadorFantasma);
+        Optional<List<Team>> optionalTeams = externalPlayerDAOWhoScoredImplMock.getDatosDeEquipos(List.of(equipoConJugadorFantasma));
 
-        assertTrue(playerOpt.isEmpty());
+        assertTrue(optionalTeams.isPresent());
+        assertTrue(optionalTeams.get().getFirst().getPlayers().isEmpty());
     }
 
     @Test
     void encuentraVariosJugadoresMock() {
-        PlayerDraftDTO jugador2 = new PlayerDraftDTO("Vinícius Júnior", "Real Madrid CF", "La Liga");
-        
+        PlayerDraftDTO jugador2 = new PlayerDraftDTO("Vinícius Júnior");
+
         Player mockPlayer1 = new Player();
         mockPlayer1.setName("Kylian Mbappé");
         
@@ -94,22 +92,4 @@ class ExternalPlayerDAOWhoScoredImplTest {
         assertEquals("Vinícius Júnior", jugadores.get(1).getName());
     }
 
-    @Disabled("Use manually since it can fail if the scraper blocks or takes too long")
-    @Test
-    void encuentraJugadorConDatosReal(){
-        Optional<Player> playerOpt = externalPlayerDAOWhoScoredImpl.getDatosDeJugador(JUGADOR_DRAFT_1);
-
-        assertTrue(playerOpt.isPresent());
-        Player player = playerOpt.get();
-        assertNotNull(player.getName());
-        assertNotNull(player.getClubName());
-        assertNotNull(player.getGoals());
-        assertNotNull(player.getAssists());
-        assertNotNull(player.getRating());
-        assertNotNull(player.getInterceptions());
-        assertNotNull(player.getShotsOnTarget());
-        assertNotNull(player.getSuccessfulDribbles());
-        assertNotNull(player.getTackles());
-        assertNotNull(player.getKeyPasses());
-    }
 }
