@@ -22,6 +22,18 @@ class JsonExtractorUtilTest {
     }
 
     @Test
+    void lanzaExcepcionCuandoHtmlNoCierra() {
+        String html = HtmlFixtures.htmlConJsonValidoSinCerrar();
+        assertThrows(ScraperExtractionException.class, () -> JsonExtractorUtil.extractPlayerStatsJson(html));
+    }
+
+    @Test
+    void lanzaExcepcionCuandoJsonNoCierra() {
+        String html = HtmlFixtures.htmlConJsonQueNoCierra();
+        assertThrows(ScraperExtractionException.class, () -> JsonExtractorUtil.extractPlayerStatsJson(html));
+    }
+
+    @Test
     void lanzaExcepcionCuandoHtmlEsVacio() {
         assertThrows(ScraperExtractionException.class, () -> JsonExtractorUtil.extractPlayerStatsJson(""));
     }
@@ -35,6 +47,16 @@ class JsonExtractorUtilTest {
     @Test
     void extraePosicionDefensorDesdeDescripcion() {
         assertEquals("Defender", JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConJsonValido()));
+    }
+
+    @Test
+    void extraePosicionDelanteroDesdeDescripcion() {
+        assertEquals("Forward", JsonExtractorUtil.extractPlayerPosition(HtmlFixtures.htmlConMetaDescriptionDeDelantero()));
+    }
+
+    @Test
+    void noExtraePosicionSiEsNull() {
+        assertNull(JsonExtractorUtil.extractPlayerPosition(null));
     }
 
     @Test
