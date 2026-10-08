@@ -9,5 +9,4 @@ public interface EstrategiaCotizacionRepository {
     EstrategiaCotizacion guardar(EstrategiaCotizacion estrategiaCotizacion);
     Optional<EstrategiaCotizacion> recuperar(Long id);
     List<EstrategiaCotizacion> recuperarTodos();
-    void seleccionarEstrategia(EstrategiaCotizacion estrategiaCotizacion);
 }

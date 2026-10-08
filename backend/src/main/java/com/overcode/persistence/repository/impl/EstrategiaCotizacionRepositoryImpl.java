@@ -38,9 +38,4 @@ public class EstrategiaCotizacionRepositoryImpl implements EstrategiaCotizacionR
                 .map(EstrategiaCotizacionJPADTO::aModelo)
                 .toList();
     }
-
-    @Override
-    public void seleccionarEstrategia(EstrategiaCotizacion estrategiaCotizacion) {
-        // TODO completar
-    }
 }
