@@ -2,6 +2,7 @@ package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,10 +15,10 @@ import lombok.Setter;
 public class ConfiguracionCotizacionesJPADTO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @NotNull
     private EstrategiaCotizacionJPADTO estrategiaCotizacion;
 
     public ConfiguracionCotizaciones aModelo() {

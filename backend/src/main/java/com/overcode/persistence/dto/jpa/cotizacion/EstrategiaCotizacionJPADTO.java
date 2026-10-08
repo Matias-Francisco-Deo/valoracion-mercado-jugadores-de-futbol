@@ -2,6 +2,7 @@ package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,13 @@ public abstract class EstrategiaCotizacionJPADTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "valor_base")
+    @NotNull
     private Double valorBase;
+
+    @Column(name = "factor_escala")
+    @NotNull
     private Double factorEscala;
 
     public abstract EstrategiaCotizacion instanciarEstrategia(Double valorBase, Double factorEscala);

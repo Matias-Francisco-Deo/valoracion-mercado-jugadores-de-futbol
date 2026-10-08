@@ -1,130 +1,116 @@
 package com.overcode.persistence.repository;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
-import com.overcode.persistence.dto.jpa.cotizacion.ConfiguracionCotizacionesJPADTO;
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
-import com.overcode.persistence.repository.dao.jpa.ConfiguracionCotizacionesDAOJPA;
-import com.overcode.persistence.repository.impl.ConfiguracionContizacionesRepositoryImpl;
+import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest()
 class ConfiguracionCotizacionesRepositoryTest {
 
-    @Mock
-    private ConfiguracionCotizacionesDAOJPA dao;
+    @Autowired
+    private ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    @Autowired
+    private TestService testService;
 
-    private ConfiguracionContizacionesRepositoryImpl repository;
 
     @BeforeEach
     void setUp() {
-        repository = new ConfiguracionContizacionesRepositoryImpl(dao);
+        testService.eliminarEstrategiasCotizacion();
+    }
+
+    @AfterEach
+    void tearDown() {
+        testService.eliminarEstrategiasCotizacion();
     }
 
     @Test
-    void recuperarCuandoNoExisteConfiguracionDevuelveConfiguracionVaciaConIdSingleton() {
-        when(dao.findById(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID)).thenReturn(Optional.empty());
-
-        ConfiguracionCotizaciones configuracion = repository.recuperar();
-
-        assertEquals(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID, configuracion.getId());
-        assertNull(configuracion.getEstrategiaCotizacion());
-        verify(dao).findById(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID);
-        verifyNoMoreInteractions(dao);
+    void siempreDebeHaberUnaConfiguracionGuardadaDeLoContrarioTiraError() {
+        assertThrows(EntidadNoEncontradaException.class, () -> configuracionCotizacionesRepository.recuperar());
     }
 
     @Test
-    void recuperarCuandoExisteConfiguracionMapeaLaEntidadConIdSingleton() {
-        var estrategiaDto = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(
-                new EstrategiaCotizacionSiempre2(120.5, 2.5));
-        estrategiaDto.setId(9L);
+    void seCreaUnaConfiguracion() {
+        EstrategiaCotizacion estrategia = new EstrategiaCotizacionSiempre2(1.0, 1.0);
+        EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
+        estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
+        estrategiaDTO.setValorBase(estrategia.getValorBase());
 
-        ConfiguracionCotizacionesJPADTO configuracionDto = new ConfiguracionCotizacionesJPADTO();
-        configuracionDto.setId(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID);
-        configuracionDto.setEstrategiaCotizacion(estrategiaDto);
-        when(dao.findById(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID))
-                .thenReturn(Optional.of(configuracionDto));
+        ConfiguracionCotizaciones configuracionCotizaciones;
+        ConfiguracionCotizaciones configuracionACrear;
 
-        ConfiguracionCotizaciones configuracion = repository.recuperar();
+        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+                    .thenReturn(estrategiaDTO);
 
-        assertEquals(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID, configuracion.getId());
-        assertNotNull(configuracion.getEstrategiaCotizacion());
-        assertEquals(9L, configuracion.getEstrategiaCotizacion().getId());
-        assertEquals(120.5, configuracion.getEstrategiaCotizacion().getValorBase());
-        assertEquals(2.5, configuracion.getEstrategiaCotizacion().getFactorEscala());
-        verify(dao).findById(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID);
-        verifyNoMoreInteractions(dao);
-    }
 
-    @Test
-    void guardarMapeaLaConfiguracionYDevuelveElModeloPersistido() {
-        EstrategiaCotizacionSiempre2 estrategia = new EstrategiaCotizacionSiempre2(80.0, 3.0);
-        estrategia.setId(14L);
-        ConfiguracionCotizaciones configuracion = new ConfiguracionCotizaciones(estrategia);
-        configuracion.setId(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID);
-        EstrategiaCotizacionSiempre2JPADTO estrategiaDto =
-                EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(estrategia);
+            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
+            configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
 
-        try (MockedStatic<TipoEstrategiaCotizacion> tipos = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipos.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(estrategiaDto);
-            when(dao.save(any(ConfiguracionCotizacionesJPADTO.class)))
-                    .thenAnswer(invocation -> invocation.getArgument(0));
-
-            ConfiguracionCotizaciones guardada = repository.guardar(configuracion);
-
-            ArgumentCaptor<ConfiguracionCotizacionesJPADTO> captor =
-                    ArgumentCaptor.forClass(ConfiguracionCotizacionesJPADTO.class);
-            verify(dao).save(captor.capture());
-            ConfiguracionCotizacionesJPADTO persistida = captor.getValue();
-            assertEquals(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID, persistida.getId());
-            assertEquals(14L, persistida.getEstrategiaCotizacion().getId());
-            assertEquals(80.0, persistida.getEstrategiaCotizacion().getValorBase());
-            assertEquals(3.0, persistida.getEstrategiaCotizacion().getFactorEscala());
-
-            assertEquals(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID, guardada.getId());
-            assertEquals(14L, guardada.getEstrategiaCotizacion().getId());
-            assertEquals(80.0, guardada.getEstrategiaCotizacion().getValorBase());
-            assertEquals(3.0, guardada.getEstrategiaCotizacion().getFactorEscala());
         }
+
+        assertNotNull(configuracionCotizaciones);
+        assertNotNull(configuracionCotizaciones.getId());
+        assertEquals(estrategia.getValorBase(), configuracionACrear.getEstrategiaCotizacion().getValorBase());
+
     }
 
     @Test
-    void recuperarPropagaErroresDelDao() {
-        RuntimeException error = new RuntimeException("database unavailable");
-        when(dao.findById(ConfiguracionContizacionesRepositoryImpl.CONFIG_ID)).thenThrow(error);
+    void alGuardarUnaConfiguracionNuevaPisaALaYaExistente() {
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> repository.recuperar());
+        EstrategiaCotizacion estrategia = new EstrategiaCotizacionSiempre2(1.0, 1.0);
+        EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
+        estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
+        estrategiaDTO.setValorBase(estrategia.getValorBase());
+        ConfiguracionCotizaciones configuracionACrear;
 
-        assertSame(error, thrown);
-    }
 
-    @Test
-    void guardarPropagaErroresDelDao() {
-        EstrategiaCotizacionSiempre2 estrategia = new EstrategiaCotizacionSiempre2(80.0, 3.0);
-        ConfiguracionCotizaciones configuracion = new ConfiguracionCotizaciones(estrategia);
-        RuntimeException error = new RuntimeException("database unavailable");
+        EstrategiaCotizacion estrategiaConValorBase = new EstrategiaCotizacionSiempre2(2.0, 1.0);
+        EstrategiaCotizacionJPADTO estrategiaDTOConValorBase = new EstrategiaCotizacionSiempre2JPADTO();
+        estrategiaDTOConValorBase.setFactorEscala(estrategiaConValorBase.getFactorEscala());
+        estrategiaDTOConValorBase.setValorBase(estrategiaConValorBase.getValorBase());
 
-        try (MockedStatic<TipoEstrategiaCotizacion> tipos = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipos.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(estrategia));
-            when(dao.save(any(ConfiguracionCotizacionesJPADTO.class))).thenThrow(error);
+        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+                    .thenReturn(estrategiaDTO).thenReturn(estrategiaDTOConValorBase);
 
-            RuntimeException thrown = assertThrows(RuntimeException.class, () -> repository.guardar(configuracion));
 
-            assertSame(error, thrown);
+
+            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
+            configuracionCotizacionesRepository.guardar(configuracionACrear);
+
+            ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesRepository.recuperar();
+
+            ConfiguracionCotizaciones configuracionCotizacionesNueva = new ConfiguracionCotizaciones();
+            configuracionCotizacionesNueva.setId(2L);
+            configuracionCotizacionesNueva.setEstrategiaCotizacion(estrategiaConValorBase);
+
+            ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionCotizacionesNueva);
+
+            assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizaciones.getId());
+            assertEquals(estrategiaConValorBase.getValorBase(), configuracionCotizaciones.getEstrategiaCotizacion().getValorBase());
+
         }
+
+
     }
+
+
 }

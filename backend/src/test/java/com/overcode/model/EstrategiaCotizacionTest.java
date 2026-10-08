@@ -2,7 +2,6 @@ package com.overcode.model;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionConValorConstante;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre5;
 import org.junit.jupiter.api.AfterEach;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static com.overcode.testUtils.cotizacion.TestEstrategiaCotizacionUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EstrategiaCotizacionTest {
@@ -121,16 +121,6 @@ class EstrategiaCotizacionTest {
 
     }
 
-    EstrategiaCotizacion getEstrategiaCotizacionConFactorEscalaYValorConstante(Double factorEscala, Double valorConstante) {
-        return new EstrategiaCotizacionConValorConstante(valorConstante, factorEscala);
-    }
 
-    EstrategiaCotizacion getEstrategiaCotizacionConFactorEscala(Double factorEscala) {
-        return new EstrategiaCotizacionConValorConstante(1.0, factorEscala);
-    }
-
-    EstrategiaCotizacion getEstrategiaConValorBase(Double valorBase) {
-        return new EstrategiaCotizacionConValorConstante(valorBase);
-    }
 
 }

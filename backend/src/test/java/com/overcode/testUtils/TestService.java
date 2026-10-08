@@ -24,6 +24,9 @@ public class TestService {
     @Autowired
     private EstrategiaCotizacionDAOJPA estrategiaCotizacionDAO;
 
+    @Autowired
+    private ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAO;
+
     public void eliminarUsuarios() {
         userDAO.deleteAll();
 
@@ -46,6 +49,7 @@ public class TestService {
     }
 
     public void eliminarEstrategiasCotizacion() {
+        configuracionCotizacionesDAO.deleteAll();
         estrategiaCotizacionDAO.deleteAll();
     }
 
