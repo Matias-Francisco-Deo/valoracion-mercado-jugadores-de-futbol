@@ -20,14 +20,14 @@ export const AppRoutes: React.FC = () => {
         <Route path="/login" Component={LoginPage} />
         
       </Route>
-      <Route Component={GeneralLayout}>{/*layout general*/}
+      <Route Component={GeneralLayout}>{/*layout general publico*/}
           <Route path="/" Component={HomePage} />
           <Route path="/catalogo" Component={CatalogoPage} />
           <Route path="/p/:playerId" Component={PlayerPage} />
           <Route path="*" Component={NotFoundPage} errorElement/>
       </Route>
       <Route Component={ProtectedLayout}>
-        <Route path="/inventario" Component={InventoryPage} />
+        <Route path="/inventario/:userId" Component={InventoryPage} />
       </Route>
 
     </Routes>

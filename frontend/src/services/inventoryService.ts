@@ -1,18 +1,17 @@
 import { futbolApi } from './api';
 import type {
   UserInventoryResponse,
-  ListTokensRequest,
-  CancelListingRequest,
+  OrderTokensRequest,
 } from '@/types/inventory';
 
 export async function getUserInventory(): Promise<UserInventoryResponse> {
   return futbolApi.get<UserInventoryResponse>('/inventory');
 }
 
-export async function listTokensForSale(payload: ListTokensRequest): Promise<void> {
-  return futbolApi.post<void>('/inventory/listings', payload);
+export async function listTokensForSale(payload: OrderTokensRequest): Promise<void> {
+  return futbolApi.post<void>('/orders/sell', payload);
 }
 
-export async function cancelTokenListing(payload: CancelListingRequest): Promise<void> {
-  return futbolApi.post<void>('/inventory/listings/cancel', payload);
+export async function cancelTokenListing(payload: OrderTokensRequest): Promise<void> {
+  return futbolApi.post<void>('/orders/cancel', payload);
 }

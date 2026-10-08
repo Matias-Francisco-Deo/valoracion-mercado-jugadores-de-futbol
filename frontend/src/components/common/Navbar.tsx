@@ -27,7 +27,7 @@ export const Navbar: React.FC = () => {
             Catálogo 
           </PageLink>
           {isAuthenticated && user && (
-            <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/inventario">
+            <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to={`/inventario/${user.id}`}>
               Inventario
             </PageLink>
           )}

@@ -1,39 +1,22 @@
-export interface PlayerTokenHolding {
-  playerId: string;
-  playerName: string;
-  unlistedTokens: number;
-  listedTokens: number;
-  pricePerToken: number;
-}
-
-export interface TokenSaleListing {
-  listingId: string;
-  playerId: string;
+export interface OrderTokensRequest {
+  playerId: number;
+  userId: string;
   quantity: number;
-  unitPrice: number;
-  totalListingValue: number;
-  createdAt: string;
-  status: 'ACTIVE' | 'CANCELLED' | 'SOLD';
 }
 
 export interface UserInventoryResponse {
-  totalPlayersOwned: number;
-  totalTokensOwned: number;
-  holdings: PlayerTokenHolding[];
-  activeListings: TokenSaleListing[];
+  userId: number;
+  availableTokens:Token[];
+  sellingTokens: Token[];
 }
 
-export interface ListTokensRequest {
-  playerId: string;
+export interface Token {
+  playerId: number;
+  playerName: string;
+  price: number;
+  selling: boolean;
   quantity: number;
 }
-
-export interface CancelListingRequest {
-  playerId: string;
-  quantity: number;
-}
-
-export type InventoryTab = 'available' | 'for_sale';
 
 export interface TokenActionModalState {
   isOpen: boolean;

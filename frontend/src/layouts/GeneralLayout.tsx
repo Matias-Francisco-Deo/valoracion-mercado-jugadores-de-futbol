@@ -11,10 +11,7 @@ export const GeneralLayout: React.FC = () => {
       <div className="h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
           <Navbar />
           <main className="flex-1 flex flex-col p-6 bg-pitch-green bg-center overflow-y-scroll"
-                style={{ backgroundImage: `url(${pasto})`,
-                    backgroundSize: '60% 100%'
-          }}
-          >
+                style={{ backgroundImage: `url(${pasto})`, backgroundSize: '60% 100%'}}>
               <PageWindow>
                   <Outlet/>
               </PageWindow>

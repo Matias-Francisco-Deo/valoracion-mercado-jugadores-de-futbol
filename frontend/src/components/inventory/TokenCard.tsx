@@ -1,28 +1,17 @@
 import { DollarSign, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
+import type { ComponentProps } from 'react';
+import type { Token } from '@/types/inventory';
 
-interface TokenCardProps {
-  playerName: string;
-  tokens: number;
-  tokensLabel: string;
-  pricePerToken: number;
-  actionButtonText: string;
-  onActionClick: () => void;
-  className?: string;
+type  TokenCardProps = ComponentProps<"div"> & {
+    token:Token;
+    onActionClick?: () => void;
 }
 
-export const TokenCard: React.FC<TokenCardProps> = ({
-  playerName,
-  tokens,
-  tokensLabel,
-  pricePerToken,
-  actionButtonText,
-  onActionClick,
-  className,
-}) => {
+export const TokenCard = ({ token, className, onActionClick, ...props }: TokenCardProps) => {
   return (
-    <article
+    <div
       className={cn(
         'flex min-w-0 flex-col rounded-2xl border border-gray-500 bg-gray-400 shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl',
         className,
@@ -33,21 +22,21 @@ export const TokenCard: React.FC<TokenCardProps> = ({
           <Shield className="h-6 w-6" aria-hidden="true" />
         </div>
         <h3 className="break-words text-xl font-bold uppercase tracking-wide text-gray-900">
-          {playerName}
+          {token.playerName}
         </h3>
       </div>
 
       <div className="mt-auto grid grid-cols-2 gap-2 border-t border-gray-500/60 bg-gray-500/20 p-3">
         <div className="flex min-w-0 flex-col items-center rounded-lg px-2 py-3 text-center">
           <span className="text-xs font-semibold uppercase text-gray-700">Tokens</span>
-          <span className="mt-1 break-words text-lg font-bold text-gray-900">{tokens}</span>
-          <span className="text-xs font-medium text-gray-700">{tokensLabel}</span>
+          <span className="mt-1 break-words text-lg font-bold text-gray-900">{token.quantity}</span>
+          <span className="text-xs font-medium text-gray-700">{token.selling ? 'En venta' : 'Disponible'}</span>
         </div>
         <div className="flex min-w-0 flex-col items-center rounded-lg px-2 py-3 text-center">
           <span className="text-xs font-semibold uppercase text-gray-700">Precio</span>
           <span className="mt-1 flex items-center text-lg font-bold text-gray-900">
             <DollarSign className="h-4 w-4" aria-hidden="true" />
-            {pricePerToken}
+            {token.price}
           </span>
           <span className="text-xs font-medium text-gray-700">por token</span>
         </div>
@@ -57,11 +46,11 @@ export const TokenCard: React.FC<TokenCardProps> = ({
         <Button
           className="w-full break-words px-2 py-2.5 text-sm"
           onClick={onActionClick}
-          aria-label={`${actionButtonText}: ${playerName}`}
+          aria-label={`${token.selling ? 'Cancelar venta' : 'Vender'}: ${token.playerName}`}
         >
-          {actionButtonText}
+          {token.selling ? 'Cancelar venta' : 'Vender'}
         </Button>
       </div>
-    </article>
+    </div>
   );
 };

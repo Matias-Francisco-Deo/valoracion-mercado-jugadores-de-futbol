@@ -17,8 +17,7 @@ export const ProtectedLayout: React.FC = () => {
       <Navbar />
       <main
         className="flex-1 flex flex-col p-3 sm:p-6 bg-pitch-green bg-cover bg-center overflow-y-auto"
-        style={{ backgroundImage: `url(${cancha})` }}
-      >
+        style={{ backgroundImage: `url(${cancha})` }}>
         <Outlet />
       </main>
       <Footer />
