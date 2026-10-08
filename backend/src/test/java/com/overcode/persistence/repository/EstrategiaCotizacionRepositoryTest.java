@@ -147,5 +147,15 @@ class EstrategiaCotizacionRepositoryTest {
         assertTrue(estrategiaCotizacionRepository.recuperarTodos().isEmpty());
     }
 
+//    @Test
+//    @Transactional
+//    void sePuedeElegirLaEstrategiaYLaConfiguracionQuedaEstablecidaConElla() {
+//
+//        EstrategiaCotizacion guardada;
+//        guardada = guardarEstrategia1();
+//
+//        assertNotNull(guardada.getId());
+//    }
+
 
 }
