@@ -20,7 +20,7 @@ public abstract class EstrategiaCotizacionJPADTO {
     private Double valorBase;
     private Double factorEscala;
 
-    abstract EstrategiaCotizacion instanciarEstrategia(Double valorBase, Double factorEscala);
+    public abstract EstrategiaCotizacion instanciarEstrategia(Double valorBase, Double factorEscala);
 
     public EstrategiaCotizacion aModelo() {
         EstrategiaCotizacion estrategiaCotizacion = instanciarEstrategia(getValorBase(), getFactorEscala());
