@@ -11,6 +11,7 @@ const PlayerPage = lazy(() => import('@/pages/PlayerPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const CatalogoPage = lazy(() => import('@/pages/CatalogoPage'))
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'))
+const MarketPage = lazy(()=> import('@/pages/MarketPage'))
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ export const AppRoutes: React.FC = () => {
       </Route>
       <Route Component={ProtectedLayout}>
         <Route path="/inventario/:userId" Component={InventoryPage} />
+        <Route path="/market" Component={MarketPage} />
       </Route>
 
     </Routes>

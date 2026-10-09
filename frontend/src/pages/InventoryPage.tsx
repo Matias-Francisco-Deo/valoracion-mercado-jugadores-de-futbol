@@ -5,50 +5,13 @@ import { TokenCard } from "@/components/inventory/TokenCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
 import type { HttpError } from "@/lib/http-error";
-import { cancelTokenListing, getUserInventory, listTokensForSale } from "@/services/inventoryService";
+import { cancelTokenListing, listTokensForSale } from "@/services/ordersService";
 import type { Token } from "@/types/inventory";
 import { useEffect, useState } from "react";
+import {placeholderSellingTokens} from "@/data/mockTokens";//quitar cuando exista endpoint de data
+import { getUserInventory } from "@/services/userService";
 
-const placeholderSellingTokens: Token[] = [
-  {
-    playerId: 0,
-    playerName: "Player Name",
-    price: 0,
-    selling: false,
-    quantity: 0
-  },
-  {
-    playerId: 1,
-    playerName: "Player Name",
-    price: 10000000,
-    selling: false,
-    quantity: 10
-  },
-  {
-    playerId: 2,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  },
-    {
-    playerId: 3,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  },
-    {
-    playerId: 4,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  }
-]
-
-
-export default function InventoryPage(): React.ReactNode {
+export default function InventoryPage() {
   const [tokens, setTokens] = useState<Token[]>(placeholderSellingTokens);
   const [sellingTokens, setSellingTokens] = useState<Token[]>([]);
   const [inventoryTab, setInventoryTab] = useState<'available' | 'for_sale'>('available');
@@ -113,7 +76,8 @@ export default function InventoryPage(): React.ReactNode {
             {inventoryTab === 'available' ? (
               tokens.length > 0 ? (
                 tokens.map((token) => (
-                  <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} />
+                  <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} 
+                  actionType={token.selling ? 'Cancelar venta' : 'Vender'}/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens disponibles.</p>
@@ -121,7 +85,8 @@ export default function InventoryPage(): React.ReactNode {
             ):(
               sellingTokens.length > 0 ? (
                 sellingTokens.map((token) => (
-                  <TokenCard key={token.playerId} token={token} onActionClick={() => handleActionClick(token)} />
+                  <TokenCard key={token.playerId} token={token} onActionClick={() => handleActionClick(token)} 
+                  actionType={token.selling ? 'Cancelar venta' : 'Vender'}/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens en venta.</p>
@@ -134,9 +99,7 @@ export default function InventoryPage(): React.ReactNode {
         </div>
       </div>
       {actionModalOpen && selectedToken && (
-        <TokenActionModal token={selectedToken} actionType={selectedToken.selling ? 'Retirar ' : 'Vender'} title={selectedToken.selling ? 'Retirar de la venta' : 'Vender token'} onConfirm={selectedToken.selling
-        ? cancelTokenListing
-        : listTokensForSale} 
+        <TokenActionModal token={selectedToken} actionType={selectedToken.selling ? 'Retirar' : 'Vender'} title={selectedToken.selling ? 'Retirar de la venta' : 'Vender token'} onConfirm={selectedToken.selling? cancelTokenListing: listTokensForSale}
         onClose={() => {setActionModalOpen(false);setSelectedToken(null)}} />
       )}
     </div>

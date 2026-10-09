@@ -7,9 +7,10 @@ import type { Token } from '@/types/inventory';
 type  TokenCardProps = ComponentProps<"div"> & {
     token:Token;
     onActionClick: () => void;
+    actionType: 'Vender' | 'Cancelar venta' | 'Comprar';
 }
 
-export const TokenCard = ({ token, className, onActionClick, ...props }: TokenCardProps) => {
+export const TokenCard = ({ token, actionType, onActionClick, className, ...props }: TokenCardProps) => {
   return (
     <div className={cn(
         'flex min-w-0 flex-col max-w-67 rounded-2xl border border-gray-500 bg-gray-400 shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl text-black',
@@ -45,8 +46,8 @@ export const TokenCard = ({ token, className, onActionClick, ...props }: TokenCa
       <div className="p-3">
         <Button className="w-full py-2.5 text-sm text-white"
           onClick={onActionClick}
-          aria-label={`${token.selling ? 'Cancelar venta' : 'Vender'}: ${token.playerName}`}>
-          {token.selling ? 'Cancelar venta' : 'Vender'}
+          aria-label={`${actionType}: ${token.playerName}`}>
+          {actionType}
         </Button>
       </div>
     </div>

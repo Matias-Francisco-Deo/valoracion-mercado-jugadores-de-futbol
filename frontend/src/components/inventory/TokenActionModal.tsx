@@ -7,7 +7,7 @@ type TokenActionModalProps = ComponentProps<"div"> &{
   token:Token;
   onConfirm: (OrderRequest: OrderTokensRequest) => Promise<void> | void;
   onClose: () => void;
-  actionType?: 'Vender' | 'Retirar ' | 'Comprar';
+  actionType?: 'Vender' | 'Retirar' | 'Comprar';
   title: string;
 }
 
