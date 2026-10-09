@@ -36,7 +36,7 @@ export const TokenCard = ({ token, actionType, onActionClick, className, ...prop
           <span className="text-xs font-semibold uppercase text-gray-700">Precio</span>
           <span className="mt-1 flex items-center text-lg font-bold text-gray-900">
             <DollarSign className="h-4 w-4" aria-hidden="true" />
-            {token.price}
+            {token.currentPrice}
           </span>
           <span className="text-xs font-medium text-gray-700">por token</span>
         </div>

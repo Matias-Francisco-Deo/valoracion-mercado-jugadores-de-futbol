@@ -4,16 +4,17 @@ import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import { TokenCard } from "@/components/inventory/TokenCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
-import { placeholderSellingTokens } from "@/data/mockTokens";//quitar cuando exista endpoint de data
 import type { HttpError } from "@/lib/http-error";
 import { buyTokens, getTokensOnSale } from "@/services/ordersService";
-import type { Token } from "@/types/inventory";
+import type { Token, TokenPageResponse } from "@/types/inventory";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function MarketPage(){
-    const [tokens, setTokens] = useState<Token[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
     const [selectedToken,setSelectedToken] = useState<Token|null>(null);
     const [actionModalOpen, setActionModalOpen] = useState(false);
+    const [tokenPage, setTokenPage] = useState<TokenPageResponse | null>(null);
 
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
@@ -23,12 +24,20 @@ export default function MarketPage(){
         setActionModalOpen(true);
     }
 
+    const handlePageChange = (page: number) => {
+        const params = new URLSearchParams(searchParams);
+
+        params.set("page", page.toString());
+
+        setSearchParams(params);
+    };
+
     useEffect(() => {
         getTokensOnSale().then((data) => {
-            setTokens(data);
+            setTokenPage(data);
         }).catch((err: HttpError) => {setError(err);})
         .finally(() => {setLoading(false);})
-    }, []);
+    }, [searchParams]);
 
     if (loading) return <Loading text="Cargando catálogo..." />
     //if (error) return <ServerErrorComponent />
@@ -49,8 +58,8 @@ export default function MarketPage(){
                 <div className="flex w-full flex-col gap-6 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
                     <Input className="border-none bg-[#faa42b] shadow-xl max-w-xl" placeholder="Buscar tokens..." />
                     <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                        {tokens.length > 0 ?(
-                            tokens.map((token)=>(
+                        {tokenPage && tokenPage.content.length > 0 ?(
+                            tokenPage.content.map((token)=>(
                                 <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
                             ))
                         ) : (
@@ -58,7 +67,10 @@ export default function MarketPage(){
                         )}
                     </div>
                     <div className="flex w-full justify-center border-t border-gray-200 pt-4">
-                        {/*<Pagination/>*/}
+                        <Pagination
+                        currentPage={tokenPage?.number ?? 0}
+                        totalPages={tokenPage?.totalPages ?? 0}
+                        onPageChange={handlePageChange}/>
                     </div>
                 </div>
             </div>

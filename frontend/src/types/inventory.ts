@@ -13,9 +13,17 @@ export interface UserInventoryResponse {
 export interface Token {
   playerId: number;
   playerName: string;
-  price: number;
+  currentPrice: number;
   selling: boolean;
   quantity: number;
+}
+
+export interface TokenPageResponse {
+    content: Token[];
+    number:number;
+    size:number;
+    totalPages:number;
+    totalElements:number;
 }
 
 export interface TokenActionModalState {

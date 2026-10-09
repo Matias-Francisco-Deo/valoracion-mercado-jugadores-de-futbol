@@ -46,12 +46,12 @@ export default function CatalogoPage() {
     };
 
     const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams);
 
-    params.set("page", page.toString());
+        params.set("page", page.toString());
 
-    setSearchParams(params);
-};
+        setSearchParams(params);
+    };
 
 
     useEffect(() => {
@@ -100,10 +100,9 @@ export default function CatalogoPage() {
                         ))}
                     </div>
                     <Pagination
-            currentPage={playerPage?.number ?? 0}
-            totalPages={playerPage?.totalPages ?? 0}
-            onPageChange={handlePageChange}
-        />
+                        currentPage={playerPage?.number ?? 0}
+                        totalPages={playerPage?.totalPages ?? 0}
+                        onPageChange={handlePageChange}/>
                 </>
                 ) : (
                     <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'

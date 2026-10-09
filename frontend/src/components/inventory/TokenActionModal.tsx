@@ -35,11 +35,11 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType,...props
 
         <div className='flex justify-between'>
           <span className="text-sm">Precio: </span>
-          <span> ${token.price.toFixed(2)}</span>
+          <span> ${token.currentPrice.toFixed(2)}</span>
         </div>
         <div className='flex justify-between border-b pb-1 border-gray-300'>
           <span >Precio total: </span>
-          <span className="text-lg text-[#d66f00] ">${(token.price * quantity).toFixed(2)}</span>
+          <span className="text-lg text-[#d66f00] ">${(token.currentPrice * quantity).toFixed(2)}</span>
         </div>
 
         <div className="flex items-center gap-4 justify-around">
