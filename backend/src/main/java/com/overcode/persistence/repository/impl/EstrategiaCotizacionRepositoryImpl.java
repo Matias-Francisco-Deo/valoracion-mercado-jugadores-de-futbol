@@ -38,4 +38,9 @@ public class EstrategiaCotizacionRepositoryImpl implements EstrategiaCotizacionR
                 .map(EstrategiaCotizacionJPADTO::aModelo)
                 .toList();
     }
+
+    @Override
+    public void actualizar(Long id, Double factorEscala) {
+        estrategiaCotizacionDAOJPA.actualizar(id, factorEscala);
+    }
 }

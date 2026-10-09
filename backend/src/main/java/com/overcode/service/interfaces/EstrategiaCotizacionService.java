@@ -11,4 +11,6 @@ public interface EstrategiaCotizacionService {
     List<EstrategiaCotizacion> recuperarTodos();
 
     void seleccionarEstrategia(Long id);
+
+    void actualizar(Long id, Double factorEscala);
 }

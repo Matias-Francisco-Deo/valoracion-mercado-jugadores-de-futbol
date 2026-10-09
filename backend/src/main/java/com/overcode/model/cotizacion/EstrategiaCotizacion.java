@@ -37,12 +37,12 @@ public abstract class EstrategiaCotizacion {
     public abstract Double calcularScore(Player player);
 
     public void setFactorEscala(Double factorEscala) {
-        if (factorEscala == null || factorEscala <= 0) throw new EstrategiaInvalidaException();
+        if (factorEscala == null || factorEscala <= 0) throw new EstrategiaInvalidaException("El factor escala debe ser mayor a 0");
         this.factorEscala = factorEscala;
     }
 
     public void setValorBase(Double valorBase) {
-        if (valorBase == null || valorBase < 0) throw new EstrategiaInvalidaException();
+        if (valorBase == null || valorBase < 0) throw new EstrategiaInvalidaException("El valor base debe ser 0 o más grande");
         this.valorBase = valorBase;
     }
 }

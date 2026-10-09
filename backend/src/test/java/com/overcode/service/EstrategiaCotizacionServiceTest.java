@@ -2,8 +2,10 @@ package com.overcode.service;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
@@ -17,6 +19,7 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +44,8 @@ class EstrategiaCotizacionServiceTest {
 
     @Autowired
     private TestService testService;
+    @Autowired
+    private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepositoryImpl;
 
     @AfterEach
     void setUp() {
@@ -196,6 +201,37 @@ class EstrategiaCotizacionServiceTest {
         });
 
 
+
+    }
+
+    @Test
+    @Transactional
+    void sePuedeModificarElFactorEscalaDeUnaEstrategia() {
+
+        EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
+
+        estrategiaCotizacionService.actualizar(estrategiaCotizacion.getId(), 3.0);
+
+        EstrategiaCotizacion estrategiaActualizada = estrategiaCotizacionRepositoryImpl.recuperar(estrategiaCotizacion.getId()).get();
+
+        assertEquals(3.0, estrategiaActualizada.getFactorEscala());
+
+    }
+
+        @Test
+    @Transactional
+    void noSePuedeModificarElValorDelFactorANumerosIgualesOMenoresA0() {
+
+        EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
+
+        Long id = estrategiaCotizacion.getId();
+        assertThrows(EstrategiaInvalidaException.class, () -> {
+            estrategiaCotizacionService.actualizar(id, 0.0);
+        });
+
+        assertThrows(EstrategiaInvalidaException.class, () -> {
+            estrategiaCotizacionService.actualizar(id, -1.0);
+        });
 
     }
 

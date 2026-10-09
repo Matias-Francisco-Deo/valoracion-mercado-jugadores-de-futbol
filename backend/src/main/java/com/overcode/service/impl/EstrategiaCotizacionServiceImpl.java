@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
@@ -30,9 +31,6 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         return estrategiaCotizacionRepository.guardar(estrategiaCotizacion);
     }
 
-    // TODO hacer update
-
-
     @Override
     public List<EstrategiaCotizacion> recuperarTodos() {
         return estrategiaCotizacionRepository.recuperarTodos();
@@ -51,7 +49,18 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         configuracionCotizacionesService.guardar(configuracionCotizaciones);
 
+    }
 
+    @Override
+    public void actualizar(Long id, Double factorEscala) {
+
+        verificarFactorEscalaPositivo(factorEscala);
+
+        estrategiaCotizacionRepository.actualizar(id, factorEscala);
+    }
+
+    private static void verificarFactorEscalaPositivo(Double factorEscala) {
+        if (factorEscala == null || factorEscala <= 0) throw new EstrategiaInvalidaException("El factor escala debe ser mayor a 0");
     }
 
 }

@@ -147,15 +147,20 @@ class EstrategiaCotizacionRepositoryTest {
         assertTrue(estrategiaCotizacionRepository.recuperarTodos().isEmpty());
     }
 
-//    @Test
-//    @Transactional
-//    void sePuedeElegirLaEstrategiaYLaConfiguracionQuedaEstablecidaConElla() {
-//
-//        EstrategiaCotizacion guardada;
-//        guardada = guardarEstrategia1();
-//
-//        assertNotNull(guardada.getId());
-//    }
+    @Test
+    @Transactional
+    void sePuedeModificarElFactorEscalaDeUnaEstrategia() {
+
+        EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
+
+        estrategiaCotizacionRepository.actualizar(estrategiaCotizacion.getId(), 3.0);
+
+        EstrategiaCotizacion estrategiaActualizada = estrategiaCotizacionRepository.recuperar(estrategiaCotizacion.getId()).get();
+
+        assertEquals(3.0, estrategiaActualizada.getFactorEscala());
+
+    }
+
 
 
 }
