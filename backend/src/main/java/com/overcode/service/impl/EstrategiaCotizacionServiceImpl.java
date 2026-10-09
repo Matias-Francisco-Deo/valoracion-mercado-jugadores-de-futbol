@@ -5,6 +5,7 @@ import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -21,11 +22,13 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
     private final ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private final PlayerRepository playerRepository;
     private final PlayerService playerService;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, PlayerService playerService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, PlayerRepository playerRepository, PlayerService playerService) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionCotizacionesService = configuracionCotizacionesService;
+        this.playerRepository = playerRepository;
         this.playerService = playerService;
     }
 
@@ -73,7 +76,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         estrategia.cotizar(jugadores);
 
-        playerService.guardarTodos(jugadores);
+        playerRepository.guardarTodos(jugadores);
 
     }
 

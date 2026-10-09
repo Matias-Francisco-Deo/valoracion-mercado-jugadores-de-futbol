@@ -22,5 +22,5 @@ public interface PlayerRepository {
 
     List<Player> listarTodos();
 
-    void guardarTodos(List<Player> jugadores);
+    List<Player> guardarTodos(List<Player> jugadores);
 }

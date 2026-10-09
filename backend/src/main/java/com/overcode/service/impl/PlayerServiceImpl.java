@@ -69,10 +69,6 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.listarTop5JugadoresPorRating();
     }
 
-    @Override
-    public void guardarTodos(List<Player> jugadores) {
-        playerRepository.guardarTodos(jugadores);
-    }
 
     private void validarJugador(Player player) {
         if (playerRepository.existsByName(player.getName())) {
