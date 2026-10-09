@@ -1,9 +1,9 @@
-import { FilterSearch } from "@/components/common/FilterSearch";
 import { Loading } from "@/components/common/Loading";
 import { Pagination } from "@/components/common/Pagination";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import { TokenCard } from "@/components/inventory/TokenCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
+import { Input } from "@/components/ui/Input";
 import { placeholderSellingTokens } from "@/data/mockTokens";//quitar cuando exista endpoint de data
 import type { HttpError } from "@/lib/http-error";
 import { buyTokens, getTokensOnSale } from "@/services/ordersService";
@@ -11,7 +11,7 @@ import type { Token } from "@/types/inventory";
 import { useEffect, useState } from "react";
 
 export default function MarketPage(){
-    const [tokens, setTokens] = useState<Token[]>(placeholderSellingTokens);
+    const [tokens, setTokens] = useState<Token[]>([]);
     const [selectedToken,setSelectedToken] = useState<Token|null>(null);
     const [actionModalOpen, setActionModalOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function MarketPage(){
                 </div>
 
                 <div className="flex w-full flex-col gap-6 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
-                    {/*<FilterSearch />*/}
+                    <Input className="border-none bg-[#faa42b] shadow-xl max-w-xl" placeholder="Buscar tokens..." />
                     <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {tokens.length > 0 ?(
                             tokens.map((token)=>(

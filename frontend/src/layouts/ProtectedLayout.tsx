@@ -8,9 +8,7 @@ import cancha from '@/assets/cancha.avif';
 export const ProtectedLayout: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">

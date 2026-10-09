@@ -10,8 +10,10 @@ import type { Token } from "@/types/inventory";
 import { useEffect, useState } from "react";
 import {placeholderSellingTokens} from "@/data/mockTokens";//quitar cuando exista endpoint de data
 import { getUserInventory } from "@/services/userService";
+import { useParams } from "react-router-dom";
 
 export default function InventoryPage() {
+  const { userId } = useParams()
   const [tokens, setTokens] = useState<Token[]>(placeholderSellingTokens);
   const [sellingTokens, setSellingTokens] = useState<Token[]>([]);
   const [inventoryTab, setInventoryTab] = useState<'available' | 'for_sale'>('available');
@@ -26,15 +28,19 @@ export default function InventoryPage() {
   }
 
   useEffect(() => {
-    getUserInventory().then((data) => {
+    if (!userId) return
+
+    setError(null)
+
+    getUserInventory(userId).then((data) => {
       setTokens(data.availableTokens);
       setSellingTokens(data.sellingTokens);
     }).catch((err: HttpError) => {setError(err);})
     .finally(() => {setLoading(false);})
-  }, []);
+  }, [userId]);
 
       if (loading) return <Loading text="Cargando catálogo..." />
-      if (error) return <ServerErrorComponent />
+      //if (error) return <ServerErrorComponent />
 
   return (
     <div className="flex w-full justify-center px-4 py-8">

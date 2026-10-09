@@ -14,5 +14,5 @@ export async function buyTokens(payload: OrderTokensRequest): Promise<void> {
 }
 
 export async function getTokensOnSale(): Promise<Token[]> {
-  return futbolApi.get<Token[]>('/orders');
+  return futbolApi.get<Token[]>('/orders/for-sale');
 }

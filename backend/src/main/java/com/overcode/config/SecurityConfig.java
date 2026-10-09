@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
                 .requestMatchers("/api/admin/players/**").permitAll() // Protegido por el ApiKeyAuthFilter
+                .requestMatchers(HttpMethod.GET, "/orders/for-sale").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
