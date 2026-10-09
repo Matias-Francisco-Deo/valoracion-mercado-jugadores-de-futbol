@@ -17,4 +17,6 @@ public interface PlayerService {
     List<Player> recuperarTodos();
 
     List<Player> listarTop5JugadoresPorRating();
+
+    void guardarTodos(List<Player> jugadores);
 }

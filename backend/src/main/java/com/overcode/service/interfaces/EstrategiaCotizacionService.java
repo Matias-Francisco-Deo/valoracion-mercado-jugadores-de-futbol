@@ -13,4 +13,6 @@ public interface EstrategiaCotizacionService {
     void seleccionarEstrategia(Long id);
 
     void actualizar(Long id, Double factorEscala);
+
+    void cotizarJugadores();
 }

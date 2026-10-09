@@ -1,5 +1,6 @@
 package com.overcode.service.impl;
 
+import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
@@ -7,6 +8,7 @@ import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionReposi
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
+import com.overcode.service.interfaces.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +21,12 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
     private final ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private final PlayerService playerService;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, PlayerService playerService) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionCotizacionesService = configuracionCotizacionesService;
+        this.playerService = playerService;
     }
 
 
@@ -57,6 +61,20 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         verificarFactorEscalaPositivo(factorEscala);
 
         estrategiaCotizacionRepository.actualizar(id, factorEscala);
+    }
+
+    @Override
+    public void cotizarJugadores() {
+        ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();
+
+        EstrategiaCotizacion estrategia = configuracionCotizaciones.getEstrategiaCotizacion();
+
+        List<Player> jugadores = playerService.recuperarTodos();
+
+        estrategia.cotizar(jugadores);
+
+        playerService.guardarTodos(jugadores);
+
     }
 
     private static void verificarFactorEscalaPositivo(Double factorEscala) {

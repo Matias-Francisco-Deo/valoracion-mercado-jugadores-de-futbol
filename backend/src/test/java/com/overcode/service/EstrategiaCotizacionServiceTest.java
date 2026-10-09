@@ -1,5 +1,6 @@
 package com.overcode.service;
 
+import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
@@ -9,6 +10,8 @@ import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryIm
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
+import com.overcode.service.impl.PlayerServiceImpl;
+import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
@@ -30,10 +34,10 @@ import static org.mockito.Mockito.mockStatic;
 @SpringBootTest()
 class EstrategiaCotizacionServiceTest {
 
-    public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_1 = new EstrategiaCotizacionSiempre2(10.0, 2.0);
+    public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_1 = new EstrategiaCotizacionSiempre2(0.0, 1.0);
     public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_1);
 
-    public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_2 = new EstrategiaCotizacionSiempre2(15.0, 3.0);
+    public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_2 = new EstrategiaCotizacionSiempre2(2.0, 2.0);
     public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO_2 = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_2);
 
     @Autowired
@@ -46,6 +50,10 @@ class EstrategiaCotizacionServiceTest {
     private TestService testService;
     @Autowired
     private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepositoryImpl;
+    @Autowired
+    private PlayerService playerService;
+    @Autowired
+    private PlayerServiceImpl playerServiceImpl;
 
     @AfterEach
     void setUp() {
@@ -218,7 +226,7 @@ class EstrategiaCotizacionServiceTest {
 
     }
 
-        @Test
+    @Test
     @Transactional
     void noSePuedeModificarElValorDelFactorANumerosIgualesOMenoresA0() {
 
@@ -232,6 +240,59 @@ class EstrategiaCotizacionServiceTest {
         assertThrows(EstrategiaInvalidaException.class, () -> {
             estrategiaCotizacionService.actualizar(id, -1.0);
         });
+
+    }
+
+    @Test
+    @Transactional
+    void seActualizanCotizacionesDeJugadoresUsandoEstrategia() {
+
+        Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
+        Player playerPersistido = playerServiceImpl.crear(player);
+
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
+
+            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+
+            estrategiaCotizacionService.cotizarJugadores();
+
+            Player playerRecuperado = playerServiceImpl.recuperar(playerPersistido.getId());
+
+            // estrategia1 es siempre2 con 0 de valor base y 1 de escala = 2
+
+            assertEquals(2.0, Double.valueOf(playerRecuperado.getCurrentPrice()));
+        });
+
+    }
+
+    @Test
+    @Transactional
+    void cotizarNoDaErrorSinJugadores() {
+
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
+
+            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+
+            assertDoesNotThrow(() -> estrategiaCotizacionService.cotizarJugadores());
+        });
+
+    }
+
+    @Test
+    @Transactional
+    void noSePuedeCotizarJugadoresSiNoHayEstrategia() {
+
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.cotizarJugadores());
 
     }
 
