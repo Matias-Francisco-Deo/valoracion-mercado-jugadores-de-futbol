@@ -22,7 +22,6 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -213,7 +212,6 @@ class EstrategiaCotizacionServiceTest {
     }
 
     @Test
-    @Transactional
     void sePuedeModificarElFactorEscalaDeUnaEstrategia() {
 
         EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
@@ -227,7 +225,6 @@ class EstrategiaCotizacionServiceTest {
     }
 
     @Test
-    @Transactional
     void noSePuedeModificarElValorDelFactorANumerosIgualesOMenoresA0() {
 
         EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
@@ -244,7 +241,6 @@ class EstrategiaCotizacionServiceTest {
     }
 
     @Test
-    @Transactional
     void seActualizanCotizacionesDeJugadoresUsandoEstrategia() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
@@ -271,7 +267,6 @@ class EstrategiaCotizacionServiceTest {
     }
 
     @Test
-    @Transactional
     void cotizarNoDaErrorSinJugadores() {
 
         final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
@@ -289,7 +284,6 @@ class EstrategiaCotizacionServiceTest {
     }
 
     @Test
-    @Transactional
     void noSePuedeCotizarJugadoresSiNoHayEstrategia() {
 
         assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.cotizarJugadores());
