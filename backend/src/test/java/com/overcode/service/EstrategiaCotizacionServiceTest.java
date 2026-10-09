@@ -4,6 +4,7 @@ import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.testUtils.TestService;
@@ -176,6 +177,26 @@ class EstrategiaCotizacionServiceTest {
             ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
             assertEquals(estrategiaCotizacionMisma.getId(), config.getEstrategiaCotizacion().getId());
         });
+    }
+
+    @Test
+    void elegirEstrategiaQueNoExisteDaError() {
+
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
+
+            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
+
+            assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.seleccionarEstrategia(-1L));
+        });
+
+
+
     }
 
 
