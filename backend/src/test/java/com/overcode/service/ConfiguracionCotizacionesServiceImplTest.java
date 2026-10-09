@@ -1,10 +1,11 @@
-package com.overcode.persistence.repository;
+package com.overcode.service;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
-import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -15,15 +16,18 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
 
 @SpringBootTest()
-class ConfiguracionCotizacionesRepositoryTest {
+class ConfiguracionCotizacionesServiceImplTest {
 
     @Autowired
-    private ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesService;
+
     @Autowired
     private TestService testService;
 
@@ -39,8 +43,8 @@ class ConfiguracionCotizacionesRepositoryTest {
     }
 
     @Test
-    void siNoHayConfiguracionGuardadaDevuelveVacio() {
-        assertTrue(configuracionCotizacionesRepository.recuperar().isEmpty());
+    void siempreDebeHaberUnaConfiguracionGuardadaDeLoContrarioTiraError() {
+        assertThrows(EntidadNoEncontradaException.class, () -> configuracionCotizacionesService.recuperar());
     }
 
     @Test
@@ -59,7 +63,7 @@ class ConfiguracionCotizacionesRepositoryTest {
 
 
             configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
+            configuracionCotizaciones = configuracionCotizacionesService.guardar(configuracionACrear);
 
         }
 
@@ -91,15 +95,15 @@ class ConfiguracionCotizacionesRepositoryTest {
 
 
             configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizacionesRepository.guardar(configuracionACrear);
+            configuracionCotizacionesService.guardar(configuracionACrear);
 
-            ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesRepository.recuperar().get();
+            ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesService.recuperar();
 
             ConfiguracionCotizaciones configuracionCotizacionesNueva = new ConfiguracionCotizaciones();
             configuracionCotizacionesNueva.setId(2L);
             configuracionCotizacionesNueva.setEstrategiaCotizacion(estrategiaConValorBase);
 
-            ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionCotizacionesNueva);
+            ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.guardar(configuracionCotizacionesNueva);
 
             assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizaciones.getId());
             assertEquals(estrategiaConValorBase.getValorBase(), configuracionCotizaciones.getEstrategiaCotizacion().getValorBase());

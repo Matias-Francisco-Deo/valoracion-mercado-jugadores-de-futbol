@@ -4,8 +4,8 @@ import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
-import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
-import com.overcode.service.interfaces.EstrategiaCotizacionService;
+import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
+import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -33,10 +33,10 @@ class EstrategiaCotizacionServiceTest {
     public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO_2 = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_2);
 
     @Autowired
-    private EstrategiaCotizacionService estrategiaCotizacionService;
+    private EstrategiaCotizacionServiceImpl estrategiaCotizacionService;
 
     @Autowired
-    private ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesService;
 
     @Autowired
     private TestService testService;
@@ -61,6 +61,22 @@ class EstrategiaCotizacionServiceTest {
 
         }
         return guardada;
+    }
+
+    private void contextoConDTODeEstrategia1(Runnable accion) {
+        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+                    .thenReturn(ESTRATEGIA_DTO);
+            accion.run();
+        }
+    }
+
+    private void contextoConDTODeEstrategia2(Runnable accion) {
+        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+                    .thenReturn(ESTRATEGIA_DTO_2);
+            accion.run();
+        }
     }
 
     private EstrategiaCotizacion guardarEstrategia2() {
@@ -92,23 +108,6 @@ class EstrategiaCotizacionServiceTest {
 
         assertThrows(InvalidDataAccessApiUsageException.class, () -> estrategiaCotizacionService.guardar(estrategia));
     }
-
-//    @Test
-//    void recuperarDevuelveLaEstrategia() {
-//
-//        Long id = guardarEstrategia1().getId();
-//
-//        EstrategiaCotizacion recuperada = estrategiaCotizacionService.recuperar(id).get();
-//
-//        assertEquals(id, recuperada.getId());
-//        assertEquals(recuperada.getFactorEscala(), ESTRATEGIA_COTIZACION_1.getFactorEscala());
-//        assertEquals(recuperada.getValorBase(), ESTRATEGIA_COTIZACION_1.getValorBase());
-//    }
-
-//    @Test
-//    void recuperarDevuelveVacioCuandoLaEstrategiaNoExiste() {
-//        assertTrue(estrategiaCotizacionService.recuperar(-1L).isEmpty());
-//    }
 
     @Test
     void recuperarTodosDevuelveEstrategiaGuardada() {
@@ -146,15 +145,37 @@ class EstrategiaCotizacionServiceTest {
 
     @Test
     void sePuedeElegirLaEstrategiaYLaConfiguracionQuedaEstablecidaConElla() {
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacionSiempre2[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion2 = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_2};
 
-        EstrategiaCotizacion guardada;
-        guardada = guardarEstrategia1();
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+        contextoConDTODeEstrategia2(() -> estrategiaCotizacion2[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2));
 
-        estrategiaCotizacionService.seleccionarEstrategia(guardada.getId());
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
+            EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
 
-        ConfiguracionCotizaciones config = configuracionCotizacionesRepository.recuperar();
-        assertEquals(guardada.getId(), config.getEstrategiaCotizacion().getId());
+            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaActual));
+            estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
+            ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
+            assertEquals(estrategiaAUsar.getId(), config.getEstrategiaCotizacion().getId());
+        });
+    }
 
+    @Test
+    void sePuedeElegirLaEstrategiaYaUsadaYSeSigueUsando() {
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
+
+            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
+            ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
+            assertEquals(estrategiaCotizacionMisma.getId(), config.getEstrategiaCotizacion().getId());
+        });
     }
 
 

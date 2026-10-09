@@ -2,9 +2,12 @@ package com.overcode.service.impl;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,6 +25,11 @@ public class ConfiguracionCotizacionesServiceImpl implements ConfiguracionCotiza
 
     @Override
     public ConfiguracionCotizaciones recuperar() {
-        return configuracionCotizacionesRepository.recuperar();
+
+        Optional<ConfiguracionCotizaciones> optionalConfig = configuracionCotizacionesRepository.recuperar();
+
+        if (optionalConfig.isEmpty()) throw new EntidadNoEncontradaException("Configuración de cotizaciones no encontrada");
+
+        return optionalConfig.get();
     }
 }
