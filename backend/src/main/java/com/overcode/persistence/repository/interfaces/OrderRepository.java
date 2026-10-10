@@ -4,6 +4,12 @@ import com.overcode.persistence.repository.dao.jpa.TokenForSaleProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface OrderRepository {
     Page<TokenForSaleProjection> searchTokensForSale(String playerName, Pageable page);
+
+    List<Long> findRandomTokensForUpdate(Long playerId, Integer quantity);
+
+    Integer transferTokens(List<Long> tokenIds, Long userId);
 }

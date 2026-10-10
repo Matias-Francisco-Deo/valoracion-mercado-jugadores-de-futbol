@@ -1,15 +1,15 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.order.OrderBuy;
+import com.overcode.controller.dto.order.OrderBuyRequest;
+import com.overcode.controller.dto.order.OrderBuyResponseDTO;
 import com.overcode.controller.dto.token.TokenPageResponseDTO;
 import com.overcode.controller.dto.token.TokenSearchResponseDTO;
 import com.overcode.service.interfaces.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -31,5 +31,14 @@ public class OrderController {
                 .map(TokenSearchResponseDTO::desdeModelo);
 
         return TokenPageResponseDTO.desdeModelo(page);
+    }
+
+    @PostMapping("/buy")
+    public OrderBuyResponseDTO buyTokens(
+            @RequestBody OrderBuyRequest request
+    ){
+        OrderBuy orderBuy = orderService.buyTokens(request.playerId(), request.quantity());
+
+        return OrderBuyResponseDTO.desdeModelo(orderBuy);
     }
 }

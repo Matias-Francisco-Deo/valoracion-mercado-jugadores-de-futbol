@@ -83,7 +83,7 @@ export default function InventoryPage() {
               tokens.length > 0 ? (
                 tokens.map((token) => (
                   <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} 
-                  actionType={token.selling ? 'Cancelar venta' : 'Vender'}/>
+                  actionType={'Vender'}/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens disponibles.</p>
@@ -92,7 +92,7 @@ export default function InventoryPage() {
               sellingTokens.length > 0 ? (
                 sellingTokens.map((token) => (
                   <TokenCard key={token.playerId} token={token} onActionClick={() => handleActionClick(token)} 
-                  actionType={token.selling ? 'Cancelar venta' : 'Vender'}/>
+                  actionType={'Cancelar venta'}/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens en venta.</p>
