@@ -11,6 +11,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
+import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapADTO;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,6 +79,7 @@ class EstrategiaCotizacionE2eTest {
 
     @BeforeEach
     void setUp() {
+        TipoEstrategiaCotizacion.agregarMapEstrategia(new EstrategiaCotizacionSiempre2MapADTO());
         testService.eliminarJugadoresYEquipos();
         testService.eliminarEstrategiasCotizacion();
     }

@@ -2,29 +2,42 @@ package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 
-public enum TipoEstrategiaCotizacion {
-    ESTRATEGIA_1 {
-        @Override
-        public EstrategiaCotizacionJPADTO instanciarDto(EstrategiaCotizacion estrategiaCotizacion) {
-            // Implementation for Estrategia 1
-            return null;
-        }
-    },
-    ESTRATEGIA_2 {
-        @Override
-        public EstrategiaCotizacionJPADTO instanciarDto(EstrategiaCotizacion estrategiaCotizacion) {
-            // Implementation for Estrategia 2
-            return null;
-        }
-    };
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public enum TipoEstrategiaCotizacion {;
+//    ESTRATEGIA_1 {
+//        @Override
+//        public EstrategiaCotizacionJPADTO instanciarDto(EstrategiaCotizacion estrategiaCotizacion) {
+//            // Implementation for Estrategia 1
+//            return null;
+//        }
+//    },
+//    ESTRATEGIA_2 {
+//        @Override
+//        public EstrategiaCotizacionJPADTO instanciarDto(EstrategiaCotizacion estrategiaCotizacion) {
+//            // Implementation for Estrategia 2
+//            return null;
+//        }
+//    };
+
+    private static final List<MapEstrategiaADTO> maps = new ArrayList<>(); // TODO sirve?
 
     public static EstrategiaCotizacionJPADTO getValueOf(Class<? extends EstrategiaCotizacion> estrategiaClase) {
-        throw switch (estrategiaClase) {
-//            case Angel ignored -> ANGEL;
-//            case Demonio ignored -> DEMONIO;
-            default -> new IllegalStateException("Unexpected value: " + estrategiaClase.getSimpleName());
-        };
+
+        Optional<MapEstrategiaADTO> mapEstrategia = maps.stream().filter(
+                map -> map.esAplicable(estrategiaClase)
+        ).findFirst();
+
+        if (mapEstrategia.isEmpty()) {
+            throw new IllegalStateException("Unexpected value: " + estrategiaClase.getSimpleName());
+        }
+
+        return mapEstrategia.get().getDTO();
     }
 
-    public abstract EstrategiaCotizacionJPADTO instanciarDto(EstrategiaCotizacion estrategiaCotizacion);
+    public static void agregarMapEstrategia(MapEstrategiaADTO estrategiaADTO) {
+        maps.add(estrategiaADTO);
+    }
 }
