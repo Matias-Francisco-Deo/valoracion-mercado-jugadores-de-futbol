@@ -10,10 +10,10 @@
 
 **Purpose**: Create DTO package structure and define request/response data contracts.
 
-- [ ] T001 Create DTO package structure at `src/main/java/com/overcode/controller/dto/cotizacion`
-- [ ] T002 [P] Implement `EstrategiaCotizacionResponseDTO` with factory method `desdeModelo` in `src/main/java/com/overcode/controller/dto/cotizacion/EstrategiaCotizacionResponseDTO.java`
-- [ ] T003 [P] Implement `ActualizarFactorEscalaRequestDTO` with positive validation annotations in `src/main/java/com/overcode/controller/dto/cotizacion/ActualizarFactorEscalaRequestDTO.java`
-- [ ] T004 [P] Implement `CrearEstrategiaCotizacionRequestDTO` with validation annotations and `aModelo` instantiation in `src/main/java/com/overcode/controller/dto/cotizacion/CrearEstrategiaCotizacionRequestDTO.java`
+- [x] T001 Create DTO package structure at `src/main/java/com/overcode/controller/dto/cotizacion`
+- [x] T002 [P] Implement `EstrategiaCotizacionResponseDTO` with factory method `desdeModelo` in `src/main/java/com/overcode/controller/dto/cotizacion/EstrategiaCotizacionResponseDTO.java`
+- [x] T003 [P] Implement `ActualizarFactorEscalaRequestDTO` with positive validation annotations in `src/main/java/com/overcode/controller/dto/cotizacion/ActualizarFactorEscalaRequestDTO.java`
+- [x] T004 [P] Implement `CrearEstrategiaCotizacionRequestDTO` with validation annotations and `aModelo` instantiation in `src/main/java/com/overcode/controller/dto/cotizacion/CrearEstrategiaCotizacionRequestDTO.java`
 
 ---
 
@@ -21,10 +21,10 @@
 
 **Purpose**: Configure security routing, exception handling, and E2E test harness required before implementing user stories.
 
-- [ ] T005 Add `@ExceptionHandler(EstrategiaInvalidaException.class)` returning `400 Bad Request` in `src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java`
-- [ ] T006 Update `ApiKeyAuthFilter` to enforce `X-API-KEY` on `/api/admin/estrategias-cotizacion` in `src/main/java/com/overcode/security/ApiKeyAuthFilter.java`
-- [ ] T007 Update `SecurityConfig` to authorize `/api/admin/estrategias-cotizacion/**` to pass to `ApiKeyAuthFilter` in `src/main/java/com/overcode/config/SecurityConfig.java`
-- [ ] T008 Initialize E2E test harness `EstrategiaCotizacionE2eTest` with random port, `RestClient`, `TestService`, and API key helper in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T005 Add `@ExceptionHandler(EstrategiaInvalidaException.class)` returning `400 Bad Request` in `src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java`
+- [x] T006 Update `ApiKeyAuthFilter` to enforce `X-API-KEY` on `/api/admin/estrategias-cotizacion` in `src/main/java/com/overcode/security/ApiKeyAuthFilter.java`
+- [x] T007 Update `SecurityConfig` to authorize `/api/admin/estrategias-cotizacion/**` to pass to `ApiKeyAuthFilter` in `src/main/java/com/overcode/config/SecurityConfig.java`
+- [x] T008 Initialize E2E test harness `EstrategiaCotizacionE2eTest` with random port, `RestClient`, `TestService`, and API key helper in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 ---
 
@@ -38,11 +38,11 @@
 
 > **NOTE: Write these tests FIRST and verify they fail before implementation**
 
-- [ ] T009 [P] [US1] Add E2E tests in Latin American Spanish for listing pricing strategies (`debeRetornarListaVaciaCuandoNoHayEstrategias` and `debeListarTodasLasEstrategiasCuandoExisten`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T009 [P] [US1] Add E2E tests in Latin American Spanish for listing pricing strategies (`debeRetornarListaVaciaCuandoNoHayEstrategias` and `debeListarTodasLasEstrategiasCuandoExisten`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement `recuperarTodos()` endpoint (`GET /api/admin/estrategias-cotizacion`) delegating to `EstrategiaCotizacionService` in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
+- [x] T010 [US1] Implement `recuperarTodos()` endpoint (`GET /api/admin/estrategias-cotizacion`) delegating to `EstrategiaCotizacionService` in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
 
 **Checkpoint**: User Story 1 is functional and verifiable independently.
 
@@ -56,11 +56,11 @@
 
 ### Tests for User Story 2
 
-- [ ] T011 [P] [US2] Add E2E tests in Latin American Spanish for strategy selection (`debeSeleccionarEstrategiaExitosamente`, `debeMantenerEstrategiaAlSeleccionarLaMisma`, `debeRetornarNotFoundAlSeleccionarEstrategiaInexistente`, and `debeRetornarBadRequestConIdInvalido`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T011 [P] [US2] Add E2E tests in Latin American Spanish for strategy selection (`debeSeleccionarEstrategiaExitosamente`, `debeMantenerEstrategiaAlSeleccionarLaMisma`, `debeRetornarNotFoundAlSeleccionarEstrategiaInexistente`, and `debeRetornarBadRequestConIdInvalido`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 ### Implementation for User Story 2
 
-- [ ] T012 [US2] Implement `seleccionarEstrategia()` endpoint (`POST /api/admin/estrategias-cotizacion/{id}/seleccionar`) delegating to `EstrategiaCotizacionService` in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
+- [x] T012 [US2] Implement `seleccionarEstrategia()` endpoint (`POST /api/admin/estrategias-cotizacion/{id}/seleccionar`) delegating to `EstrategiaCotizacionService` in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
 
 **Checkpoint**: User Stories 1 and 2 are functional and verifiable independently.
 
@@ -80,11 +80,11 @@ This phase was wrong, please skip.
 
 ### Tests for User Story 4
 
-- [ ] T015 [P] [US4] Add E2E tests in Latin American Spanish for updating scale factor (`debeActualizarFactorEscalaExitosamente`, `debeFallarAlActualizarConFactorEscalaCeroONegativo`, and `debeRetornarNotFoundAlActualizarEstrategiaInexistente`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T015 [P] [US4] Add E2E tests in Latin American Spanish for updating scale factor (`debeActualizarFactorEscalaExitosamente`, `debeFallarAlActualizarConFactorEscalaCeroONegativo`, and `debeRetornarNotFoundAlActualizarEstrategiaInexistente`) in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 ### Implementation for User Story 4
 
-- [ ] T016 [US4] Implement `actualizar()` endpoint (`PATCH /api/admin/estrategias-cotizacion/{id}`) with `@Valid` request body in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
+- [x] T016 [US4] Implement `actualizar()` endpoint (`PATCH /api/admin/estrategias-cotizacion/{id}`) with `@Valid` request body in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
 
 **Checkpoint**: User Stories 1 through 4 are functional and verifiable independently.
 
@@ -98,11 +98,11 @@ This phase was wrong, please skip.
 
 ### Tests for User Story 5
 
-- [ ] T017 [P] [US5] Add E2E tests in Latin American Spanish for player quotation recalculation (`debeCotizarJugadoresYActualizarPreciosDeMercado`, `debeCotizarSinErrorCuandoNoHayJugadores`, and `debeRetornarNotFoundAlCotizarSinEstrategiaActiva`) using `PlayerService` for player seeding in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T017 [P] [US5] Add E2E tests in Latin American Spanish for player quotation recalculation (`debeCotizarJugadoresYActualizarPreciosDeMercado`, `debeCotizarSinErrorCuandoNoHayJugadores`, and `debeRetornarNotFoundAlCotizarSinEstrategiaActiva`) using `PlayerService` for player seeding in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 ### Implementation for User Story 5
 
-- [ ] T018 [US5] Implement `cotizarJugadores()` endpoint (`POST /api/admin/estrategias-cotizacion/cotizar`) returning `200 OK` and confirmation text message in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
+- [x] T018 [US5] Implement `cotizarJugadores()` endpoint (`POST /api/admin/estrategias-cotizacion/cotizar`) returning `200 OK` and confirmation text message in `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
 
 **Checkpoint**: User Stories 1 through 5 are functional and verifiable independently.
 
@@ -116,7 +116,7 @@ This phase was wrong, please skip.
 
 ### Tests for User Story 6
 
-- [ ] T019 [P] [US6] Add E2E security tests in Latin American Spanish (`debeRechazarPeticionesSinApiKeyCon401` and `debeRechazarPeticionesConApiKeyInvalidaCon401`) across all strategy endpoints in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
+- [x] T019 [P] [US6] Add E2E security tests in Latin American Spanish (`debeRechazarPeticionesSinApiKeyCon401` and `debeRechazarPeticionesConApiKeyInvalidaCon401`) across all strategy endpoints in `src/test/java/com/overcode/e2e/EstrategiaCotizacionE2eTest.java`
 
 **Checkpoint**: All user stories are fully implemented and verified.
 
@@ -126,9 +126,9 @@ This phase was wrong, please skip.
 
 **Purpose**: Validate build health, test execution, documentation, and verify production enum purity.
 
-- [ ] T020 Run full test suite and verify test execution via `.\mvnw.cmd test -Dtest=EstrategiaCotizacionE2eTest`
-- [ ] T021 [P] Add OpenAPI `@Tag` and `@Operation` annotations to `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
-- [ ] T022 Confirm zero modifications were made to `TipoEstrategiaCotizacion` in `src/main` and execute quickstart validation steps from `specs/008-pricing-strategy-controller/quickstart.md`
+- [x] T020 Run full test suite and verify test execution via `./mvnw.cmd test -Dtest=EstrategiaCotizacionE2eTest`
+- [x] T021 [P] Add OpenAPI `@Tag` and `@Operation` annotations to `src/main/java/com/overcode/controller/EstrategiaCotizacionController.java`
+- [x] T022 Confirm zero modifications were made to `TipoEstrategiaCotizacion` in `src/main` and execute quickstart validation steps from `specs/008-pricing-strategy-controller/quickstart.md`
 
 ---
 
