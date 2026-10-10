@@ -20,18 +20,19 @@ public class StandaloneDbTest {
     @Test
     @Transactional
     public void testDbSave() {
-        // Create user 999 portfolio
-        Portfolio p = new Portfolio(UUID.randomUUID(), 999L, BigDecimal.TEN, null);
+        long testUserId = Math.abs(UUID.randomUUID().getLeastSignificantBits());
+        // Create user portfolio
+        Portfolio p = new Portfolio(UUID.randomUUID(), testUserId, BigDecimal.TEN, null);
         portfolioRepository.save(p);
         
         // Add token holding
-        Portfolio dbP = portfolioRepository.findByUserId(999L).get();
+        Portfolio dbP = portfolioRepository.findByUserId(testUserId).get();
         TokenHolding th = dbP.getOrCreateHoldingForPlayer(555L);
         th.addTokens(10);
         portfolioRepository.save(dbP);
 
         // Fetch again
-        Portfolio fetched = portfolioRepository.findByUserId(999L).get();
+        Portfolio fetched = portfolioRepository.findByUserId(testUserId).get();
         assertEquals(1, fetched.getTokenHoldings().size());
         assertEquals(10, fetched.getTokenHoldings().get(0).getQuantity());
     }
