@@ -1,11 +1,14 @@
 package com.overcode.security;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,44 +18,44 @@ class ApiKeyAuthFilterTest {
 
     @BeforeEach
     void setUp() {
-        filter = new ApiKeyAuthFilter();
-        ReflectionTestUtils.setField(filter, "configuredApiKey", "clave-valida");
+        filter = new ApiKeyAuthFilter("super-secret-key");
     }
 
     @Test
-    void rechazaRutaAdminSinApiKey() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/admin/players/actualizar-jugadores");
+    void debePermitirElPasoSiLaApiKeyEsCorrecta() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("X-API-KEY", "super-secret-key");
         MockHttpServletResponse response = new MockHttpServletResponse();
+        MockFilterChain filterChain = new MockFilterChain();
 
-        FilterChain chain = (req, res) -> fail("No se debe continuar el chain cuando falta la API key");
+        filter.doFilterInternal(request, response, filterChain);
 
-        filter.doFilterInternal(request, response, chain);
-
-        assertEquals(401, response.getStatus());
-        assertTrue(response.getContentAsString().contains("Unauthorized"));
+        assertEquals(200, response.getStatus(), "El status debe ser 200 OK");
+        assertNull(response.getErrorMessage());
     }
 
     @Test
-    void permiteRutaAdminConApiKeyValida() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/admin/players/actualizar-jugadores");
-        request.addHeader("X-API-KEY", "clave-valida");
+    void debeRechazarCon401SiNoHayApiKey() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        final boolean[] continued = {false};
+        MockFilterChain filterChain = new MockFilterChain();
 
-        filter.doFilterInternal(request, response, (req, res) -> continued[0] = true);
+        filter.doFilterInternal(request, response, filterChain);
 
-        assertTrue(continued[0]);
-        assertEquals(200, response.getStatus());
+        assertEquals(401, response.getStatus(), "Debe retornar 401 Unauthorized");
+        assertTrue(response.getContentAsString().contains("Unauthorized: Invalid or missing API Key"));
     }
 
     @Test
-    void permiteRutasNoProtegidasSinApiKey() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/users/1");
+    void debeRechazarCon401SiLaApiKeyEsIncorrecta() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("X-API-KEY", "wrong-key");
         MockHttpServletResponse response = new MockHttpServletResponse();
-        final boolean[] continued = {false};
+        MockFilterChain filterChain = new MockFilterChain();
 
-        filter.doFilterInternal(request, response, (req, res) -> continued[0] = true);
+        filter.doFilterInternal(request, response, filterChain);
 
-        assertTrue(continued[0]);
+        assertEquals(401, response.getStatus(), "Debe retornar 401 Unauthorized");
+        assertTrue(response.getContentAsString().contains("Unauthorized: Invalid or missing API Key"));
     }
 }

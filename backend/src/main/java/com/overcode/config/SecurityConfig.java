@@ -2,8 +2,10 @@ package com.overcode.config;
 
 import com.overcode.security.ApiKeyAuthFilter;
 import com.overcode.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,15 +23,34 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final ApiKeyAuthFilter apiKeyAuthFilter;
+    
+    @Value("${scraper.api.key}")
+    private String configuredApiKey;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, ApiKeyAuthFilter apiKeyAuthFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.apiKeyAuthFilter = apiKeyAuthFilter;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    @Order(1)
+    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/admin/**")
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> {})
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(new ApiKeyAuthFilter(configuredApiKey), UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(authorize -> authorize
+                .anyRequest().permitAll()
+            );
+
+        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> {})
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -38,10 +59,8 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
-                .requestMatchers("/api/admin/players/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));

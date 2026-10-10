@@ -22,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest()
 class PlayerServiceTest {
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+
     @Autowired
     private PlayerService playerService;
 

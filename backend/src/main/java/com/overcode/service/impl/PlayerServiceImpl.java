@@ -24,11 +24,13 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, com.overcode.service.interfaces.TokenEmissionService tokenEmissionService) {
         this.playerRepository = playerRepository;
-        this.teamRepository=teamRepository;
+        this.teamRepository = teamRepository;
+        this.tokenEmissionService = tokenEmissionService;
     }
 
     @Override
@@ -41,7 +43,12 @@ public class PlayerServiceImpl implements PlayerService {
         Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
 
         player.setTeam(teamGuardado);
-        return playerRepository.guardar(player);
+        Player savedPlayer = playerRepository.guardar(player);
+        
+        // Emit tokens automatically for the new player to the SuperAdmin
+        tokenEmissionService.emitTokensForNewPlayer(savedPlayer);
+        
+        return savedPlayer;
     }
 
     @Override

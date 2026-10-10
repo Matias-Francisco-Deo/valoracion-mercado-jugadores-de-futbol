@@ -43,6 +43,9 @@ class ExternalPlayerServiceImplTest {
     @MockitoBean
     private TeamRepository teamRepositoryMock;
 
+    @MockitoBean
+    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+
     @InjectMocks
     private ExternalPlayerServiceImpl mockExternalPlayerServiceImpl;
 
@@ -104,7 +107,7 @@ class ExternalPlayerServiceImplTest {
     @Test
     @Disabled("Use automatically to generate players up to the limit set in the method")
     void encuentraJugadoresConDatosAsync(){
-        CompletableFuture<Void> future = externalPlayerServiceImpl.actualizarJugadoresAsync();
+        CompletableFuture<Void> future = externalPlayerServiceImpl.actualizarJugadoresAsync(null);
 
         future.join();
 
@@ -138,7 +141,7 @@ class ExternalPlayerServiceImplTest {
 
         when(teamRepositoryMock.upsertTeam(team)).thenReturn(team);
 
-        CompletableFuture<Void> future = mockExternalPlayerServiceImpl.actualizarJugadoresAsync();
+        CompletableFuture<Void> future = mockExternalPlayerServiceImpl.actualizarJugadoresAsync(null);
 
         future.join();
 

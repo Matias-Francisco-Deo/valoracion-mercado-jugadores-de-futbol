@@ -74,7 +74,7 @@ public class ScraperHttpClient {
                 }
             });
 
-            page.navigate(url);
+            page.navigate(url, new Page.NavigateOptions().setTimeout(10000));
 
             // Ahora esperamos solo a que se arme el HTML, no nos importa que terminen de cargar cosas de red.
             try {
