@@ -52,4 +52,21 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(com.overcode.service.exception.InsufficientEscrowException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponseDTO handleInsufficientEscrow(com.overcode.service.exception.InsufficientEscrowException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(com.overcode.service.exception.OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleOrderNotFound(com.overcode.service.exception.OrderNotFoundException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleIllegalState(IllegalStateException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
 }
