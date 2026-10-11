@@ -97,7 +97,7 @@ export default function InventoryPage() {
           <PortfolioDataBox title="Valor actual del inventario" value="$3252"/>
           <PortfolioDataBox title="Ganancia/Predida semanal" value="$184.50"/>
         </div>
-
+        {/*extraer a un componente aparte */}
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>
@@ -151,6 +151,7 @@ export default function InventoryPage() {
             {/*<Pagination/>*/}
           </div>
         </div>
+        {/*extraer hasta aca*/}
         <TransactionHistorySection transactions={[]}/>
       </div>
       {actionModalOpen && selectedToken && (

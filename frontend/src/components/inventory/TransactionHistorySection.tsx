@@ -13,7 +13,7 @@ export const TransactionHistorySection = ({ transactions, className, ...props }:
                 <h2 className="text-xl font-medium">Historial de transacciones</h2>
             </div>
             <div className="border border-gray-300 rounded-2xl overflow-x-auto">
-                <table className="w-full whitespace-nowrap border-collapse [&_th]:p-2 [&_th]:text-[9px] [&_th]:text-gray-400 [&_th]:text-start [&_td]:border-t [&_td]:border-gray-300 [&_td]:text-xs [&_td]:p-2 [&_td]:border-collapse" > 
+                <table className="w-full whitespace-nowrap border-collapse [&_th]:p-2 [&_th]:text-[9px] [&_th]:text-gray-400 [&_th]:text-start [&_td]:border-t [&_td]:border-gray-300 [&_td]:text-xs [&_td]:p-2 [&_td]:border-collapse [&_td]:text-start" > 
                     <thead className="bg-[#f1e0d2]">
                         <tr>
                             <th>FECHA</th>
@@ -37,7 +37,7 @@ export const TransactionHistorySection = ({ transactions, className, ...props }:
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6} className="py-6 text-center text-gray-500">
+                            <td colSpan={6} className="py-6 text-center! text-gray-500">
                                 No hay transacciones
                             </td>
                         </tr>
