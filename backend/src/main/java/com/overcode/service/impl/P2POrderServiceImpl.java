@@ -55,13 +55,15 @@ public class P2POrderServiceImpl implements P2POrderService {
         Portfolio portfolio = portfolioRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalStateException("Portfolio not found for user: " + userId));
 
+        P2POrder newOrder = new P2POrder(UUID.randomUUID(), userId, playerId, type, quantity,
+                pricePerToken, OrderStatus.OPEN, Instant.now(), null);
+
         // 1. Escrow (Bloqueo de fondos/tokens)
         if (type == OrderType.BUY) {
-            BigDecimal totalCost = pricePerToken.multiply(BigDecimal.valueOf(quantity));
-            if (!portfolio.hasSufficientCredits(totalCost)) {
+            if (!portfolio.hasSufficientCredits(newOrder.totalValue())) {
                 throw new InsufficientEscrowException("Not enough credits to place BUY order.");
             }
-            portfolio.deductCredits(totalCost);
+            portfolio.deductCredits(newOrder.totalValue());
         } else {
             TokenHolding holding = portfolio.getHoldingForPlayer(playerId)
                     .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player."));
@@ -70,11 +72,10 @@ public class P2POrderServiceImpl implements P2POrderService {
             }
             holding.deductTokens(quantity);
         }
-        
+
         portfolioRepository.save(portfolio);
 
         // 2. Guardar orden
-        P2POrder newOrder = new P2POrder(UUID.randomUUID(), userId, playerId, type, quantity, pricePerToken, OrderStatus.OPEN, Instant.now(), null);
         P2POrder savedOrder = orderRepository.save(newOrder);
 
         // 3. Emitir evento asincrónico
@@ -207,8 +208,7 @@ public class P2POrderServiceImpl implements P2POrderService {
                 .orElseThrow(() -> new IllegalStateException("Portfolio not found for user: " + userId));
 
         if (order.getType() == OrderType.BUY) {
-            BigDecimal refund = order.getPricePerToken().multiply(BigDecimal.valueOf(order.getQuantity()));
-            portfolio.addCredits(refund);
+            portfolio.addCredits(order.totalValue());
         } else {
             TokenHolding holding = portfolio.getOrCreateHoldingForPlayer(order.getPlayerId());
             holding.addTokens(order.getQuantity());
@@ -233,7 +233,7 @@ public class P2POrderServiceImpl implements P2POrderService {
             P2POrder match = matchOpt.get();
 
             // Evitar auto-trading
-            if (order.getUserId().equals(match.getUserId())) {
+            if (order.belongsTo(match.getUserId())) {
                 return;
             }
 
