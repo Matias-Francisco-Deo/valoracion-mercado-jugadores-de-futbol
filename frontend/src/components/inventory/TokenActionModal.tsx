@@ -1,20 +1,29 @@
-import { useEffect, useMemo, useState, type ComponentProps } from 'react';
-import { Minus, Plus, X } from 'lucide-react';
+import { useState, type ComponentProps } from 'react';
+import { Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import type { OrderTokensRequest, Token } from '@/types/inventory';
 
 type TokenActionModalProps = ComponentProps<"div"> &{
   token:Token;
-  onConfirm: (OrderRequest: OrderTokensRequest) => Promise<void> | void;
+  onConfirm: (OrderRequest: OrderTokensRequest) => Promise<void>;
   onClose: () => void;
-  actionType?: 'Vender' | 'Retirar ' | 'Comprar';
+  actionType?: 'Vender' | 'Retirar' | 'Comprar';
   title: string;
+  error?:string;
 }
 
-export const TokenActionModal= ({ token, onConfirm, onClose, actionType,...props}: TokenActionModalProps) => {
+export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error,...props}: TokenActionModalProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = () =>  {
+    setIsSubmitting(true);
+    onConfirm({ playerId: token.playerId, quantity })
+    .finally(()=>{
+      setIsSubmitting(false);
+    }
+    );
+  }
 
 
   return (
@@ -32,24 +41,21 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType,...props
             <Plus size={10}/>
           </Button>
         </div>
-
+        <p className='self-center text-destructive'>{error ?? ""}</p>
         <div className='flex justify-between'>
           <span className="text-sm">Precio: </span>
-          <span> ${token.price.toFixed(2)}</span>
+          <span> ${token.currentPrice .toFixed(2)}</span>
         </div>
         <div className='flex justify-between border-b pb-1 border-gray-300'>
           <span >Precio total: </span>
-          <span className="text-lg text-[#d66f00] ">${(token.price * quantity).toFixed(2)}</span>
+          <span className="text-lg text-[#d66f00] ">${(token.currentPrice  * quantity).toFixed(2)}</span>
         </div>
 
         <div className="flex items-center gap-4 justify-around">
           <Button onClick={onClose} className="bg-transparent border border-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white shadow-md">
             Cancelar
           </Button>
-          <Button onClick={() => {
-            setIsSubmitting(true);
-            onConfirm({ playerId: token.playerId, quantity });
-          }} disabled={isSubmitting}
+          <Button onClick={handleSubmit} disabled={isSubmitting}
           className="text-white hover:bg-[#d66f00] shadow-md">
             {actionType}
           </Button>

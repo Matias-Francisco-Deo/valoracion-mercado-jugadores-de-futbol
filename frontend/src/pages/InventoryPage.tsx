@@ -1,77 +1,83 @@
 import { Loading } from "@/components/common/Loading";
 import { Pagination } from "@/components/common/Pagination";
+import { PortfolioDataBox } from "@/components/inventory/PortfolioDataBox";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import { TokenCard } from "@/components/inventory/TokenCard";
+import { TransactionHistorySection } from "@/components/inventory/TransactionHistorySection";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
+import { placeholderSellingTokens } from "@/data/mocksTokens";
 import type { HttpError } from "@/lib/http-error";
-import { cancelTokenListing, getUserInventory, listTokensForSale } from "@/services/inventoryService";
-import type { Token } from "@/types/inventory";
+import { cancelTokenListing, listTokensForSale } from "@/services/ordersService";
+import { getUserPortfolio } from "@/services/userService";
+import type { OrderTokensRequest, Token } from "@/types/inventory";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const placeholderSellingTokens: Token[] = [
-  {
-    playerId: 0,
-    playerName: "Player Name",
-    price: 0,
-    selling: false,
-    quantity: 0
-  },
-  {
-    playerId: 1,
-    playerName: "Player Name",
-    price: 10000000,
-    selling: false,
-    quantity: 10
-  },
-  {
-    playerId: 2,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  },
-    {
-    playerId: 3,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  },
-    {
-    playerId: 4,
-    playerName: "Player Name",
-    price: 0,
-    selling: true,
-    quantity: 0
-  }
-]
-
-
-export default function InventoryPage(): React.ReactNode {
+export default function InventoryPage() {
+  const { userId } = useParams()
   const [tokens, setTokens] = useState<Token[]>(placeholderSellingTokens);
   const [sellingTokens, setSellingTokens] = useState<Token[]>([]);
+
   const [inventoryTab, setInventoryTab] = useState<'available' | 'for_sale'>('available');
-  const [actionModalOpen, setActionModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+
+  const [actionModalOpen, setActionModalOpen] = useState(false);
+  const [modalError,setModalError] = useState<HttpError | null>(null);
+
   const [error, setError] = useState<HttpError | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleActionClick = (token: Token) => {
+    const handleActionClick = (token: Token) => {
     setSelectedToken(token);
+    setModalError(null);
     setActionModalOpen(true);
   }
 
-  useEffect(() => {
-    getUserInventory().then((data) => {
+  const refreshPortfolio = async () => {
+    if (!userId) return;
+
+    getUserPortfolio(userId).then((data)=>{
       setTokens(data.availableTokens);
       setSellingTokens(data.sellingTokens);
-    }).catch((err: HttpError) => {setError(err);})
+    })
+    .catch((err: HttpError) => {setError(err);})
+  };
+
+  const sellTokens = async  (request:OrderTokensRequest): Promise<void> => {
+    setModalError(null);
+
+    await listTokensForSale(request).then(()=>{
+      setActionModalOpen(false);
+      setSelectedToken(null);
+      refreshPortfolio();
+    })
+    .catch((err: HttpError) => {setModalError(err);});
+  }
+
+  const cancelTokenSell = async (request:OrderTokensRequest):Promise<void> => {
+    setModalError(null);
+
+    cancelTokenListing(request).then(()=>{
+      setActionModalOpen(false);
+      setSelectedToken(null);
+      refreshPortfolio();
+    })
+    .catch((err: HttpError) => {setModalError(err);});
+  }
+
+
+  useEffect(() => {
+    if (!userId) return
+
+    setError(null)
+
+    refreshPortfolio()
     .finally(() => {setLoading(false);})
-  }, []);
+  }, [userId]);
 
       if (loading) return <Loading text="Cargando catálogo..." />
-      if (error) return <ServerErrorComponent />
+      //if (error) return <ServerErrorComponent />
 
   return (
     <div className="flex w-full justify-center px-4 py-8">
@@ -85,35 +91,48 @@ export default function InventoryPage(): React.ReactNode {
             Revisa y gestiona tus tokens
           </span>
         </div>
-
-        <div className="flex w-full flex-col gap-6 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
-          <div className="flex w-full border-b border-gray-200">
-          <button onClick={() => setInventoryTab("available")}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${
-              inventoryTab === "available"
-                ? "border-b-2 border-brand-orange text-brand-orange "
-                : "text-gray-500 hover:text-gray-700"
-            }`}>
-            Disponibles
-          </button>
-
-          <button
-            onClick={() => setInventoryTab("for_sale")}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${
-              inventoryTab === "for_sale"
-                ? "border-b-2 border-brand-orange text-brand-orange"
-                : "text-gray-500 hover:text-gray-700"
-            }`}>
-            En venta
-          </button>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <PortfolioDataBox title="Posición actual" value="#128"/>
+          <PortfolioDataBox title="Precio promedio de compra" value="$87.40" message="Across 32 owned tokens"/>
+          <PortfolioDataBox title="Valor actual del inventario" value="$3252"/>
+          <PortfolioDataBox title="Ganancia/Predida semanal" value="$184.50"/>
         </div>
+
+        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
+          <div className="flex justify-between px-2 text-black">
+            <h3 className="text-xl font-medium">Inventario de Tokens</h3>
+            <div className="flex items-baseline gap-1 ">
+              <span className="text-xl text-hover-orange">{tokens.length + sellingTokens.length}</span>
+              <span className="text-xs text-gray-500">tokens</span>
+            </div>
+          </div>
+          <div className="flex w-full border-b border-gray-200">
+            <button onClick={() => setInventoryTab("available")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                inventoryTab === "available"
+                  ? "border-b-2 border-brand-orange text-brand-orange "
+                  : "text-gray-500 hover:text-gray-700"
+              }`}>
+              Disponibles {tokens.length}
+            </button>
+
+            <button
+              onClick={() => setInventoryTab("for_sale")}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                inventoryTab === "for_sale"
+                  ? "border-b-2 border-brand-orange text-brand-orange"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}>
+              En venta {sellingTokens.length}
+            </button>
+          </div>
           <Input className="border-none bg-[#faa42b] shadow-xl" placeholder="Buscar tokens..." />
           
           <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {inventoryTab === 'available' ? (
               tokens.length > 0 ? (
                 tokens.map((token) => (
-                  <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} />
+                  <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Vender"/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens disponibles.</p>
@@ -121,7 +140,7 @@ export default function InventoryPage(): React.ReactNode {
             ):(
               sellingTokens.length > 0 ? (
                 sellingTokens.map((token) => (
-                  <TokenCard key={token.playerId} token={token} onActionClick={() => handleActionClick(token)} />
+                  <TokenCard key={token.playerId} token={token} onActionClick={() => handleActionClick(token)} actionType="Cancelar venta"/>
                 ))
               ) : (
                 <p className="text-gray-500 col-span-full text-center">No tienes tokens en venta.</p>
@@ -132,11 +151,12 @@ export default function InventoryPage(): React.ReactNode {
             {/*<Pagination/>*/}
           </div>
         </div>
+        <TransactionHistorySection transactions={[]}/>
       </div>
       {actionModalOpen && selectedToken && (
-        <TokenActionModal token={selectedToken} actionType={selectedToken.selling ? 'Retirar ' : 'Vender'} title={selectedToken.selling ? 'Retirar de la venta' : 'Vender token'} onConfirm={selectedToken.selling
-        ? cancelTokenListing
-        : listTokensForSale} 
+        <TokenActionModal token={selectedToken} actionType={selectedToken.selling ? 'Retirar' : 'Vender'} title={selectedToken.selling ? 'Retirar de la venta' : 'Vender token'} error={modalError?.message} onConfirm={selectedToken.selling
+        ? cancelTokenSell
+        : sellTokens} 
         onClose={() => {setActionModalOpen(false);setSelectedToken(null)}} />
       )}
     </div>

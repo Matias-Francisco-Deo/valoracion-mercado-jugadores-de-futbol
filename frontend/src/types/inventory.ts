@@ -4,6 +4,11 @@ export interface OrderTokensRequest {
   quantity: number;
 }
 
+export interface OrderTokensResponse {
+  playerId: number;
+  quantity: number;
+}
+
 export interface UserInventoryResponse {
   userId: number;
   availableTokens:Token[];
@@ -13,9 +18,17 @@ export interface UserInventoryResponse {
 export interface Token {
   playerId: number;
   playerName: string;
-  price: number;
+  currentPrice : number;
   selling: boolean;
   quantity: number;
+}
+
+export interface TokenPageResponse {
+    content: Token[];
+    number:number;
+    size:number;
+    totalPages:number;
+    totalElements:number;
 }
 
 export interface TokenActionModalState {
@@ -25,4 +38,14 @@ export interface TokenActionModalState {
   playerName: string;
   unitPrice: number;
   maxTokens: number;
+}
+
+export interface Transaction {
+  id:number;
+  date:string;
+  playerName:string;
+  type:"buy"|"sell";//sell pending?
+  quantity:number;
+  unitPrice:number;
+  totalAmount:number;
 }
