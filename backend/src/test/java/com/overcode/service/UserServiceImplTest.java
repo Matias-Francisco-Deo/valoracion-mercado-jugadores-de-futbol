@@ -80,7 +80,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void crearSuperusuario() { // TODO testear que tenga todos los tokens
+    void crearSuperusuario() {
         User superuser = userService.crearSuperusuario();
         assertNotNull(superuser.getId());
     }

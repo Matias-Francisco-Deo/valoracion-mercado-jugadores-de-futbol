@@ -99,7 +99,7 @@ class EstrategiaCotizacionE2eTest {
     // ────────────────────────────────────────────────────────────────────────────
 
     private EstrategiaCotizacion guardarEstrategiaEnContexto() {
-        EstrategiaCotizacion[] resultado = new EstrategiaCotizacion[1];
+        EstrategiaCotizacion[] resultado = new EstrategiaCotizacion[1]; // TODO borrar los mockedstatic
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
                     .thenReturn(ESTRATEGIA_DTO_1);
@@ -114,7 +114,7 @@ class EstrategiaCotizacionE2eTest {
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
                     .thenReturn(ESTRATEGIA_DTO_2);
-            resultado[0] = configuracionCotizacionesServiceImpl.guardar(new ConfiguracionCotizaciones(ESTRATEGIA_2))
+            resultado[0] = configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_2))
                     .getEstrategiaCotizacion();
         }
         return resultado[0];
@@ -126,7 +126,7 @@ class EstrategiaCotizacionE2eTest {
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
                     .thenReturn(ESTRATEGIA_DTO_1);
-            resultado[0] = configuracionCotizacionesServiceImpl.guardar(new ConfiguracionCotizaciones(ESTRATEGIA_1))
+            resultado[0] = configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_1))
                     .getEstrategiaCotizacion();
         }
         return resultado[0];
@@ -189,7 +189,7 @@ class EstrategiaCotizacionE2eTest {
             // Seleccionamos la estrategia vía HTTP
             ResponseEntity<Void> respuesta = restClient.post()
                     .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/seleccionar")
-                    .header(HEADER_API_KEY, apiKey) // TODO un endpoint para ver el seleccionado?
+                    .header(HEADER_API_KEY, apiKey)
                     .retrieve()
                     .toBodilessEntity();
 

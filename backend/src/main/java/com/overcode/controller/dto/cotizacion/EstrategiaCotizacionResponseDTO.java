@@ -3,7 +3,7 @@ package com.overcode.controller.dto.cotizacion;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 
 public record EstrategiaCotizacionResponseDTO(
-        // TODO un comentario sobre qué hace el algoritmo? muy innecesario? tal vez el tipo? el nombre de la clase?
+        // TODO un comentario sobre qué hace el algoritmo? muy innecesario? tal vez el tipo? el nombre de la clase? Seh, god Título
         Long id,
         Double valorBase,
         Double factorEscala

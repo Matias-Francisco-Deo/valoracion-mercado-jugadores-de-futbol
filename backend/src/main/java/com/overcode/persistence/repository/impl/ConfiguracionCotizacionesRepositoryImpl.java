@@ -23,7 +23,7 @@ public class ConfiguracionCotizacionesRepositoryImpl implements ConfiguracionCot
     @Override
     public ConfiguracionCotizaciones guardar(ConfiguracionCotizaciones configuracionCotizaciones) {
         ConfiguracionCotizacionesJPADTO dto = ConfiguracionCotizacionesJPADTO.desdeModelo(configuracionCotizaciones);
-        dto.setId(CONFIG_ID);
+        dto.setId(CONFIG_ID); // TODO mover al service
         return configuracionCotizacionesDAOJPA.save(dto).aModelo();
     }
 
@@ -33,5 +33,10 @@ public class ConfiguracionCotizacionesRepositoryImpl implements ConfiguracionCot
 
         return optionalConfig.map(ConfiguracionCotizacionesJPADTO::aModelo);
 
+    }
+
+    @Override
+    public boolean existeConfiguracion() {
+        return configuracionCotizacionesDAOJPA.existsById(CONFIG_ID);
     }
 }

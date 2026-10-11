@@ -1,6 +1,7 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.EstrategiaCotizacionUnoMapADTO;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 
 import java.util.ArrayList;
@@ -9,8 +10,9 @@ import java.util.Optional;
 
 public enum TipoEstrategiaCotizacion {;
 
-    private static final List<MapEstrategiaADTO> maps = new ArrayList<>();
-    // TODO sirve?
+    private static final List<MapEstrategiaADTO> maps = new ArrayList<>(List.of(
+            new EstrategiaCotizacionUnoMapADTO()
+    ));
 
     public static EstrategiaCotizacionJPADTO getValueOf(Class<? extends EstrategiaCotizacion> estrategiaClase) {
 

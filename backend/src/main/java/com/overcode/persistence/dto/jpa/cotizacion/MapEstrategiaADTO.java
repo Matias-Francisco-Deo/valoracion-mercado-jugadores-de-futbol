@@ -15,4 +15,5 @@ public abstract class MapEstrategiaADTO {
     }
 
     public abstract EstrategiaCotizacionJPADTO getDTO(Class<? extends EstrategiaCotizacion> estrategiaClase);
+    // TODO revisarlo :'v
 }

@@ -8,4 +8,5 @@ public interface ConfiguracionCotizacionesRepository {
     ConfiguracionCotizaciones guardar(ConfiguracionCotizaciones configuracionCotizaciones);
     Optional<ConfiguracionCotizaciones> recuperar();
 
+    boolean existeConfiguracion();
 }

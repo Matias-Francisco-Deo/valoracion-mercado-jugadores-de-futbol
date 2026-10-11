@@ -4,6 +4,7 @@ import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -22,12 +23,14 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
     private final ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, PlayerRepository playerRepository, PlayerService playerService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, ConfiguracionCotizacionesRepository configuracionCotizacionesRepository, PlayerRepository playerRepository, PlayerService playerService) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionCotizacionesService = configuracionCotizacionesService;
+        this.configuracionCotizacionesRepository = configuracionCotizacionesRepository;
         this.playerRepository = playerRepository;
         this.playerService = playerService;
     }
@@ -54,7 +57,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         configuracionCotizaciones.cambiarEstrategiaDeCotizacionPor(estrategiaCotizacion);
 
-        configuracionCotizacionesService.guardar(configuracionCotizaciones);
+        configuracionCotizacionesRepository.guardar(configuracionCotizaciones);
 
     }
 
@@ -63,9 +66,9 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         verificarFactorEscalaPositivo(factorEscala);
 
-        if (estrategiaCotizacionRepository.recuperar(id).isEmpty()) {
+        if (estrategiaCotizacionRepository.recuperar(id).isEmpty()) { // TODO testear esto :'v
             throw new EntidadNoEncontradaException("La estrategia a actualizar no existe");
-        } // TODO testear
+        }
 
         estrategiaCotizacionRepository.actualizar(id, factorEscala);
     }

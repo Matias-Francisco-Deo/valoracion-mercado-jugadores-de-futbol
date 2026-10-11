@@ -19,9 +19,12 @@ public class ConfiguracionCotizacionesServiceImpl implements ConfiguracionCotiza
     }
 
     @Override
-    public ConfiguracionCotizaciones guardar(ConfiguracionCotizaciones configuracionCotizaciones) {
+    public ConfiguracionCotizaciones crearConfiguracionSiNoExiste(ConfiguracionCotizaciones configuracionCotizaciones) {
+        if (configuracionCotizacionesRepository.existeConfiguracion()) return this.recuperar();
+
         return configuracionCotizacionesRepository.guardar(configuracionCotizaciones);
     }
+
 
     @Override
     public ConfiguracionCotizaciones recuperar() {

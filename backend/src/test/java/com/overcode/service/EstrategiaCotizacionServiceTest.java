@@ -167,7 +167,7 @@ class EstrategiaCotizacionServiceTest {
             EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
             EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
 
-            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaActual));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaActual));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
             ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
             assertEquals(estrategiaAUsar.getId(), config.getEstrategiaCotizacion().getId());
@@ -183,7 +183,7 @@ class EstrategiaCotizacionServiceTest {
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
             ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
             assertEquals(estrategiaCotizacionMisma.getId(), config.getEstrategiaCotizacion().getId());
@@ -200,7 +200,7 @@ class EstrategiaCotizacionServiceTest {
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
 
             assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.seleccionarEstrategia(-1L));
@@ -252,7 +252,7 @@ class EstrategiaCotizacionServiceTest {
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
 
             estrategiaCotizacionService.cotizarJugadores();
 
@@ -275,7 +275,7 @@ class EstrategiaCotizacionServiceTest {
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.guardar(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
 
             assertDoesNotThrow(() -> estrategiaCotizacionService.cotizarJugadores());
         });

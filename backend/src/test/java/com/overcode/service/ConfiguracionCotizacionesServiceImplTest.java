@@ -48,7 +48,7 @@ class ConfiguracionCotizacionesServiceImplTest {
     }
 
     @Test
-    void seCreaUnaConfiguracion() {
+    void seCreaUnaConfiguracionSiNoExiste() {
         EstrategiaCotizacion estrategia = new EstrategiaCotizacionSiempre2(1.0, 1.0);
         EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
@@ -63,7 +63,7 @@ class ConfiguracionCotizacionesServiceImplTest {
 
 
             configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizaciones = configuracionCotizacionesService.guardar(configuracionACrear);
+            configuracionCotizaciones = configuracionCotizacionesService.crearConfiguracionSiNoExiste(configuracionACrear);
 
         }
 
@@ -74,7 +74,7 @@ class ConfiguracionCotizacionesServiceImplTest {
     }
 
     @Test
-    void alGuardarUnaConfiguracionNuevaPisaALaYaExistente() {
+    void alIntentarCrearUnaConfiguracionNuevaSeMantieneLaAnterior() {
 
         EstrategiaCotizacion estrategia = new EstrategiaCotizacionSiempre2(1.0, 1.0);
         EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
@@ -95,7 +95,7 @@ class ConfiguracionCotizacionesServiceImplTest {
 
 
             configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizacionesService.guardar(configuracionACrear);
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(configuracionACrear);
 
             ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesService.recuperar();
 
@@ -103,10 +103,11 @@ class ConfiguracionCotizacionesServiceImplTest {
             configuracionCotizacionesNueva.setId(2L);
             configuracionCotizacionesNueva.setEstrategiaCotizacion(estrategiaConValorBase);
 
-            ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.guardar(configuracionCotizacionesNueva);
+            ConfiguracionCotizaciones configuracionCotizacionesCreada = configuracionCotizacionesService
+                    .crearConfiguracionSiNoExiste(configuracionCotizacionesNueva);
 
-            assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizaciones.getId());
-            assertEquals(estrategiaConValorBase.getValorBase(), configuracionCotizaciones.getEstrategiaCotizacion().getValorBase());
+            assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizacionesCreada.getId());
+            assertEquals(estrategia.getValorBase(), configuracionCotizacionesCreada.getEstrategiaCotizacion().getValorBase());
 
         }
 
