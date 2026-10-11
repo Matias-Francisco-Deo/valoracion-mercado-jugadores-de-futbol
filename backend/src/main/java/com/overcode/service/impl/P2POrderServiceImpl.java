@@ -93,7 +93,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         }
 
         // Cambiar estado a CANCELLED
-        order.setStatus(OrderStatus.CANCELLED);
+        order.cancel();
         orderRepository.save(order);
 
         // Revertir Escrow
@@ -132,8 +132,8 @@ public class P2POrderServiceImpl implements P2POrderService {
             }
 
             // Realizar liquidación
-            order.setStatus(OrderStatus.COMPLETED);
-            match.setStatus(OrderStatus.COMPLETED);
+            order.markCompleted();
+            match.markCompleted();
 
             orderRepository.save(order);
             orderRepository.save(match);
