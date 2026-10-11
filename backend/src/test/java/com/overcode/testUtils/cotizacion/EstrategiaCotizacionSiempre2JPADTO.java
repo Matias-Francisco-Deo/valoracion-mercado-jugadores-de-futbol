@@ -17,8 +17,10 @@ import lombok.Setter;
 public class EstrategiaCotizacionSiempre2JPADTO extends EstrategiaCotizacionJPADTO {
 
     @Override
-    public EstrategiaCotizacion instanciarEstrategia(Double valorBase, Double factorEscala) {
-        return new EstrategiaCotizacionSiempre2(valorBase, factorEscala);
+    public EstrategiaCotizacion aModelo() {
+        EstrategiaCotizacion estrategiaCotizacion = new EstrategiaCotizacionSiempre2(getValorBase(), getFactorEscala());
+        estrategiaCotizacion.setId(getId());
+        return estrategiaCotizacion;
     }
 
     public static EstrategiaCotizacionSiempre2JPADTO desdeModeloParaTest(EstrategiaCotizacionSiempre2 estrategiaCotizacionSiempre2) {

@@ -4,6 +4,7 @@ import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -88,7 +88,7 @@ class EstrategiaCotizacionRepositoryTest {
     void guardarFallaCuandoLaEstrategiaNoEstaMapeada() {
         EstrategiaCotizacionSiempre2 estrategia = ESTRATEGIA_COTIZACION_1;
 
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> estrategiaCotizacionRepository.guardar(estrategia));
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionRepository.guardar(estrategia));
     }
 
     @Test

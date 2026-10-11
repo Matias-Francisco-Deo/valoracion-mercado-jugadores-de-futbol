@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import java.util.List;
 
@@ -119,7 +118,7 @@ class EstrategiaCotizacionServiceTest {
     void guardarFallaCuandoLaEstrategiaNoEstaMapeada() {
         EstrategiaCotizacionSiempre2 estrategia = ESTRATEGIA_COTIZACION_1;
 
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> estrategiaCotizacionService.guardar(estrategia));
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.guardar(estrategia));
     }
 
     @Test

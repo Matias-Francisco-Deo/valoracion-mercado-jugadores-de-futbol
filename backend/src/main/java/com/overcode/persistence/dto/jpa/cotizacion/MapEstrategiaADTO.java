@@ -6,7 +6,7 @@ import com.overcode.model.cotizacion.EstrategiaCotizacion;
 public abstract class MapEstrategiaADTO {
     private final Class<? extends EstrategiaCotizacion> estrategia;
 
-    public MapEstrategiaADTO(Class<? extends EstrategiaCotizacion> estrategia) {
+    protected MapEstrategiaADTO(Class<? extends EstrategiaCotizacion> estrategia) {
         this.estrategia = estrategia;
     }
 
@@ -14,5 +14,5 @@ public abstract class MapEstrategiaADTO {
         return estrategiaClase == estrategia;
     }
 
-    public abstract EstrategiaCotizacionJPADTO getDTO();
+    public abstract EstrategiaCotizacionJPADTO getDTO(Class<? extends EstrategiaCotizacion> estrategiaClase);
 }

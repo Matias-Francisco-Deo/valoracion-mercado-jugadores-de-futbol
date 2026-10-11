@@ -67,8 +67,11 @@ class EstrategiaCotizacionE2eTest {
     private PlayerService playerService;
 
     private RestClient restClient;
+
     @Autowired
     private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesServiceImpl;
+
+    private EstrategiaCotizacionSiempre2MapADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapADTO();
 
     @PostConstruct
     public void init() {
@@ -79,13 +82,14 @@ class EstrategiaCotizacionE2eTest {
 
     @BeforeEach
     void setUp() {
-        TipoEstrategiaCotizacion.agregarMapEstrategia(new EstrategiaCotizacionSiempre2MapADTO());
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
         testService.eliminarJugadoresYEquipos();
         testService.eliminarEstrategiasCotizacion();
     }
 
     @AfterEach
     void teardown() {
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
         testService.eliminarJugadoresYEquipos();
         testService.eliminarEstrategiasCotizacion();
     }
@@ -323,15 +327,6 @@ class EstrategiaCotizacionE2eTest {
 
 
         crearConfiguracionCotizacionesConEstrategia();
-
-        // Guardar y seleccionar estrategia
-//        EstrategiaCotizacion estrategiaGuardada = guardarEstrategiaEnContexto(); // TODO fix
-
-//        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-//            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-//                    .thenReturn(ESTRATEGIA_DTO_1);
-//            estrategiaCotizacionService.seleccionarEstrategia(estrategiaGuardada.getId());
-//        }
 
         // Disparar cotización vía HTTP
         ResponseEntity<String> respuesta = restClient.post()

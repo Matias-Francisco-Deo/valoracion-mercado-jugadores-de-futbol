@@ -27,13 +27,7 @@ public abstract class EstrategiaCotizacionJPADTO {
     @NotNull
     private Double factorEscala;
 
-    public abstract EstrategiaCotizacion instanciarEstrategia(Double valorBase, Double factorEscala);
-
-    public EstrategiaCotizacion aModelo() {
-        EstrategiaCotizacion estrategiaCotizacion = instanciarEstrategia(getValorBase(), getFactorEscala());
-        estrategiaCotizacion.setId(getId());
-        return estrategiaCotizacion;
-    }
+    public abstract EstrategiaCotizacion aModelo();
 
     public static EstrategiaCotizacionJPADTO desdeModelo(EstrategiaCotizacion estrategia) {
         EstrategiaCotizacionJPADTO dto = TipoEstrategiaCotizacion.getValueOf(estrategia.getClass());

@@ -1,5 +1,6 @@
 package com.overcode.testUtils.cotizacion;
 
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaADTO;
 
@@ -11,7 +12,7 @@ public class EstrategiaCotizacionSiempre2MapADTO extends MapEstrategiaADTO {
     }
 
     @Override
-    public EstrategiaCotizacionJPADTO getDTO() {
+    public EstrategiaCotizacionJPADTO getDTO(Class<? extends EstrategiaCotizacion> estrategiaClase) {
         return new EstrategiaCotizacionSiempre2JPADTO();
     }
 }
