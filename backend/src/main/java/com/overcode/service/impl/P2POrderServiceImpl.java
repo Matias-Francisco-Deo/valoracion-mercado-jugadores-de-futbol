@@ -1,6 +1,7 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.AuditLog;
+import com.overcode.model.FillPlan;
 import com.overcode.model.OrderStatus;
 import com.overcode.model.OrderType;
 import com.overcode.model.P2POrder;
@@ -11,6 +12,7 @@ import com.overcode.persistence.repository.interfaces.P2POrderRepository;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
 import com.overcode.service.events.P2POrderCreatedEvent;
 import com.overcode.service.exception.InsufficientEscrowException;
+import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.exception.OrderNotFoundException;
 import com.overcode.service.interfaces.P2POrderService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,6 +81,107 @@ public class P2POrderServiceImpl implements P2POrderService {
         eventPublisher.publishEvent(new P2POrderCreatedEvent(this, savedOrder.getId()));
 
         return savedOrder;
+    }
+
+    @Override
+    @Transactional
+    public void executeMarketBuy(Long userId, Long playerId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+
+        Portfolio buyerPortfolio = portfolioRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Portfolio not found for user: " + userId));
+
+        // Sweep the open SELL book (cheapest first), ignoring the taker's own resting orders.
+        List<P2POrder> asks = orderRepository.findOpenSellOrders(playerId).stream()
+                .filter(order -> !order.belongsTo(userId))
+                .toList();
+
+        FillPlan plan = FillPlan.build(quantity, asks);
+        if (!plan.isFullyFilled()) {
+            throw new InsufficientLiquidityException(
+                    "Not enough liquidity to buy " + quantity + " tokens for player " + playerId);
+        }
+
+        // Taker pays up front at each maker's price; the domain guards the buyer's funds.
+        buyerPortfolio.deductCredits(plan.totalCost());
+        TokenHolding buyerHolding = buyerPortfolio.getOrCreateHoldingForPlayer(playerId);
+
+        Map<Long, Portfolio> sellerPortfolios = new HashMap<>();
+        for (FillPlan.Fill fill : plan.getFills()) {
+            P2POrder makerOrder = fill.getMakerOrder();
+            Portfolio sellerPortfolio = sellerPortfolios.computeIfAbsent(makerOrder.getUserId(),
+                    id -> portfolioRepository.findByUserId(id)
+                            .orElseThrow(() -> new IllegalStateException("Seller portfolio not found: " + id)));
+
+            // Seller already escrowed the tokens when posting the SELL order; just move them to
+            // the buyer and credit the seller. Then consume the resting quantity.
+            sellerPortfolio.addCredits(fill.getSubtotal());
+            buyerHolding.addTokens(fill.getQuantityTaken());
+            makerOrder.reduceQuantity(fill.getQuantityTaken());
+            orderRepository.save(makerOrder);
+
+            auditLogRepository.save(new AuditLog(UUID.randomUUID(), AuditLog.OperationType.BUY,
+                    userId, makerOrder.getUserId(), playerId,
+                    fill.getQuantityTaken(), fill.getPrice(), Instant.now()));
+        }
+
+        sellerPortfolios.values().forEach(portfolioRepository::save);
+        portfolioRepository.save(buyerPortfolio);
+    }
+
+    @Override
+    @Transactional
+    public void executeMarketSell(Long userId, Long playerId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+
+        Portfolio sellerPortfolio = portfolioRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Portfolio not found for user: " + userId));
+
+        TokenHolding sellerHolding = sellerPortfolio.getHoldingForPlayer(playerId)
+                .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player."));
+        if (!sellerHolding.hasSufficientTokens(quantity)) {
+            throw new InsufficientEscrowException("Not enough tokens to sell.");
+        }
+
+        // Sweep the open BUY book (highest bid first), ignoring the taker's own resting orders.
+        List<P2POrder> bids = orderRepository.findOpenBuyOrders(playerId).stream()
+                .filter(order -> !order.belongsTo(userId))
+                .toList();
+
+        FillPlan plan = FillPlan.build(quantity, bids);
+        if (!plan.isFullyFilled()) {
+            throw new InsufficientLiquidityException(
+                    "Not enough liquidity to sell " + quantity + " tokens for player " + playerId);
+        }
+
+        // Taker delivers tokens up front and receives the escrowed credits the makers already locked.
+        sellerHolding.deductTokens(quantity);
+        sellerPortfolio.addCredits(plan.totalCost());
+
+        Map<Long, Portfolio> buyerPortfolios = new HashMap<>();
+        for (FillPlan.Fill fill : plan.getFills()) {
+            P2POrder makerOrder = fill.getMakerOrder();
+            Portfolio buyerPortfolio = buyerPortfolios.computeIfAbsent(makerOrder.getUserId(),
+                    id -> portfolioRepository.findByUserId(id)
+                            .orElseThrow(() -> new IllegalStateException("Buyer portfolio not found: " + id)));
+
+            // Buyer already escrowed the credits when posting the BUY order; just deliver tokens
+            // and consume the resting quantity.
+            buyerPortfolio.getOrCreateHoldingForPlayer(playerId).addTokens(fill.getQuantityTaken());
+            makerOrder.reduceQuantity(fill.getQuantityTaken());
+            orderRepository.save(makerOrder);
+
+            auditLogRepository.save(new AuditLog(UUID.randomUUID(), AuditLog.OperationType.SELL,
+                    userId, makerOrder.getUserId(), playerId,
+                    fill.getQuantityTaken(), fill.getPrice(), Instant.now()));
+        }
+
+        buyerPortfolios.values().forEach(portfolioRepository::save);
+        portfolioRepository.save(sellerPortfolio);
     }
 
     @Override

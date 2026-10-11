@@ -9,6 +9,7 @@ import com.overcode.persistence.repository.interfaces.P2POrderRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,5 +43,19 @@ public class P2POrderRepositoryImpl implements P2POrderRepository {
     public Optional<P2POrder> findBestBuyMatch(Long playerId, int quantity, BigDecimal minPrice) {
         return dao.findFirstByPlayerIdAndStatusAndTypeAndQuantityAndPricePerTokenGreaterThanEqualOrderByPricePerTokenDescCreatedAtAsc(
                 playerId, OrderStatus.OPEN, OrderType.BUY, quantity, minPrice).map(P2POrderJPADTO::aModelo);
+    }
+
+    @Override
+    public List<P2POrder> findOpenSellOrders(Long playerId) {
+        return dao.findByPlayerIdAndStatusAndTypeOrderByPricePerTokenAscCreatedAtAsc(
+                        playerId, OrderStatus.OPEN, OrderType.SELL)
+                .stream().map(P2POrderJPADTO::aModelo).toList();
+    }
+
+    @Override
+    public List<P2POrder> findOpenBuyOrders(Long playerId) {
+        return dao.findByPlayerIdAndStatusAndTypeOrderByPricePerTokenDescCreatedAtAsc(
+                        playerId, OrderStatus.OPEN, OrderType.BUY)
+                .stream().map(P2POrderJPADTO::aModelo).toList();
     }
 }
