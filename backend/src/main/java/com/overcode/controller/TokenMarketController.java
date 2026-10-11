@@ -3,8 +3,10 @@ package com.overcode.controller;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.model.User;
+import com.overcode.service.exception.InsufficientEscrowException;
+import com.overcode.service.exception.InsufficientLiquidityException;
+import com.overcode.service.interfaces.P2POrderService;
 import com.overcode.service.interfaces.UserService;
-import com.overcode.service.interfaces.TokenMarketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,11 @@ import java.util.Map;
 @Tag(name = "Market Orders", description = "Endpoints for buying and selling player tokens")
 public class TokenMarketController {
 
-    private final TokenMarketService tokenMarketService;
+    private final P2POrderService p2pOrderService;
     private final UserService userService;
 
-    public TokenMarketController(TokenMarketService tokenMarketService, UserService userService) {
-        this.tokenMarketService = tokenMarketService;
+    public TokenMarketController(P2POrderService p2pOrderService, UserService userService) {
+        this.p2pOrderService = p2pOrderService;
         this.userService = userService;
     }
 
@@ -36,12 +38,11 @@ public class TokenMarketController {
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
         }
 
-        String email = principal.getName();
-        User user = userService.recuperarPorEmail(email)
+        User user = userService.recuperarPorEmail(principal.getName())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         try {
-            tokenMarketService.buyTokens(user.getId(), request.getPlayerId(), request.getQuantity());
+            p2pOrderService.executeMarketBuy(user.getId(), request.getPlayerId(), request.getQuantity());
 
             return ResponseEntity.ok(Map.of(
                     "message", "Tokens successfully purchased",
@@ -51,11 +52,11 @@ public class TokenMarketController {
             ));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (InsufficientLiquidityException e) {
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("Insufficient funds")) {
+            if ("Insufficient funds".equals(e.getMessage())) {
                 return ResponseEntity.status(402).body(Map.of("error", e.getMessage()));
-            } else if (e.getMessage().contains("tokens")) {
-                return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
             }
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -67,12 +68,11 @@ public class TokenMarketController {
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
         }
 
-        String email = principal.getName();
-        User user = userService.recuperarPorEmail(email)
+        User user = userService.recuperarPorEmail(principal.getName())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
         try {
-            tokenMarketService.sellTokens(user.getId(), request.getPlayerId(), request.getQuantity());
+            p2pOrderService.executeMarketSell(user.getId(), request.getPlayerId(), request.getQuantity());
 
             return ResponseEntity.ok(Map.of(
                     "message", "Tokens successfully sold",
@@ -82,15 +82,12 @@ public class TokenMarketController {
             ));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals("Not enough tokens to sell") || e.getMessage().contains("You don't own")) {
-                return ResponseEntity.status(422).body(Map.of("error", e.getMessage()));
-            } else if (e.getMessage().equals("Insufficient funds")) {
-                // E.g., admin doesn't have enough credits to buy back
-                return ResponseEntity.status(409).body(Map.of("error", "Market lacks credits to fulfill this sale"));
-            }
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (InsufficientEscrowException e) {
+            // Seller does not own enough tokens to cover the sale.
+            return ResponseEntity.status(422).body(Map.of("error", e.getMessage()));
+        } catch (InsufficientLiquidityException e) {
+            // No open bids to absorb the sale.
+            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
         }
     }
 }
-
