@@ -59,10 +59,4 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public ErrorResponseDTO handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-//        return new ErrorResponseDTO("Parámetro inválido: " + ex.getName());
-//    }
-
 }
