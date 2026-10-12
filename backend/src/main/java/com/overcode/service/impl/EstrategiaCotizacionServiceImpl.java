@@ -66,7 +66,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         verificarFactorEscalaPositivo(factorEscala);
 
-        if (estrategiaCotizacionRepository.recuperar(id).isEmpty()) { // TODO testear esto :'v
+        if (estrategiaCotizacionRepository.recuperar(id).isEmpty()) {
             throw new EntidadNoEncontradaException("La estrategia a actualizar no existe");
         }
 

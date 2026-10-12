@@ -14,6 +14,10 @@ public class ConfiguracionCotizaciones {
     public ConfiguracionCotizaciones(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
+    public ConfiguracionCotizaciones(Long idManual, EstrategiaCotizacion estrategiaCotizacion) {
+        setId(idManual);
+        setEstrategiaCotizacion(estrategiaCotizacion);
+    }
 
     public void cambiarEstrategiaDeCotizacionPor(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);

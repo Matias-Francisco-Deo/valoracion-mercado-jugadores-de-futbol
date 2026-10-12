@@ -25,6 +25,7 @@ public class EstrategiaCotizacionSiempre2JPADTO extends EstrategiaCotizacionJPAD
 
     public static EstrategiaCotizacionSiempre2JPADTO desdeModeloParaTest(EstrategiaCotizacionSiempre2 estrategiaCotizacionSiempre2) {
         EstrategiaCotizacionSiempre2JPADTO dto = new EstrategiaCotizacionSiempre2JPADTO();
+        dto.setTitulo(estrategiaCotizacionSiempre2.getTitulo());
         dto.setFactorEscala(estrategiaCotizacionSiempre2.getFactorEscala());
         dto.setValorBase(estrategiaCotizacionSiempre2.getValorBase());
         return dto;

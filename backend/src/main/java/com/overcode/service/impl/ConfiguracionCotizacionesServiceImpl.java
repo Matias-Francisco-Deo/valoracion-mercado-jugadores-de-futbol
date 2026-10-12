@@ -12,6 +12,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ConfiguracionCotizacionesServiceImpl implements ConfiguracionCotizacionesService {
+
+    public static final long CONFIG_ID = 1L;
+
     private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
 
     public ConfiguracionCotizacionesServiceImpl(ConfiguracionCotizacionesRepository configuracionCotizacionesRepository) {
@@ -20,8 +23,8 @@ public class ConfiguracionCotizacionesServiceImpl implements ConfiguracionCotiza
 
     @Override
     public ConfiguracionCotizaciones crearConfiguracionSiNoExiste(ConfiguracionCotizaciones configuracionCotizaciones) {
-        if (configuracionCotizacionesRepository.existeConfiguracion()) return this.recuperar();
-
+        if (configuracionCotizacionesRepository.existePorId(CONFIG_ID)) return this.recuperar();
+        configuracionCotizaciones.setId(CONFIG_ID); // siempre va a ser el mismo objeto porque tiene el mismo ID
         return configuracionCotizacionesRepository.guardar(configuracionCotizaciones);
     }
 
@@ -29,7 +32,7 @@ public class ConfiguracionCotizacionesServiceImpl implements ConfiguracionCotiza
     @Override
     public ConfiguracionCotizaciones recuperar() {
 
-        Optional<ConfiguracionCotizaciones> optionalConfig = configuracionCotizacionesRepository.recuperar();
+        Optional<ConfiguracionCotizaciones> optionalConfig = configuracionCotizacionesRepository.recuperarPorId(CONFIG_ID);
 
         if (optionalConfig.isEmpty()) throw new EntidadNoEncontradaException("Configuración de cotizaciones no encontrada");
 

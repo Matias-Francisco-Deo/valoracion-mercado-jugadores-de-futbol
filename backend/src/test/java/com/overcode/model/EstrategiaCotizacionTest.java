@@ -96,6 +96,13 @@ class EstrategiaCotizacionTest {
     }
 
     @Test
+    void laEstrategiaDebeTenerNombre() {
+        assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaConNombre(""));
+        assertThrows(EstrategiaInvalidaException.class, () -> getEstrategiaConNombre(null));
+        assertDoesNotThrow(() -> getEstrategiaConNombre("Estrategia de prueba"));
+    }
+
+    @Test
     void testEstrategiaDebeDar1SiElValorDeCotizacionEs0() {
 
         List<Player> players = List.of(JUGADOR_1);

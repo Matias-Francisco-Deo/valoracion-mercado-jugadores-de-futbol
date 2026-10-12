@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public interface ConfiguracionCotizacionesRepository {
     ConfiguracionCotizaciones guardar(ConfiguracionCotizaciones configuracionCotizaciones);
-    Optional<ConfiguracionCotizaciones> recuperar();
-
-    boolean existeConfiguracion();
+    Optional<ConfiguracionCotizaciones> recuperarPorId(Long id);
+    boolean existePorId(Long id);
 }

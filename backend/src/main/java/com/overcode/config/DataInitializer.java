@@ -26,8 +26,8 @@ public class DataInitializer {
     @PostConstruct
     @Transactional
     public void initialize() {
-        inicializarConfiguracion();
-        crearEstrategias();
+//        inicializarConfiguracion();
+//        crearEstrategias();
         userService.crearSuperusuario();
     }
 

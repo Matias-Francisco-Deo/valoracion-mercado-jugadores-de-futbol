@@ -11,7 +11,6 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
-import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -27,6 +26,7 @@ import java.util.List;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mockStatic;
 
 @SpringBootTest()
@@ -46,10 +46,10 @@ class EstrategiaCotizacionServiceTest {
 
     @Autowired
     private TestService testService;
+
     @Autowired
     private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepositoryImpl;
-    @Autowired
-    private PlayerService playerService;
+
     @Autowired
     private PlayerServiceImpl playerServiceImpl;
 
@@ -66,7 +66,7 @@ class EstrategiaCotizacionServiceTest {
     private EstrategiaCotizacion guardarEstrategia1() {
         EstrategiaCotizacion guardada;
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(ESTRATEGIA_COTIZACION_1))
                     .thenReturn(ESTRATEGIA_DTO);
 
             guardada = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1);
@@ -77,7 +77,7 @@ class EstrategiaCotizacionServiceTest {
 
     private void contextoConDTODeEstrategia1(Runnable accion) {
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(isA(EstrategiaCotizacion.class)))
                     .thenReturn(ESTRATEGIA_DTO);
             accion.run();
         }
@@ -85,7 +85,7 @@ class EstrategiaCotizacionServiceTest {
 
     private void contextoConDTODeEstrategia2(Runnable accion) {
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(isA(EstrategiaCotizacion.class)))
                     .thenReturn(ESTRATEGIA_DTO_2);
             accion.run();
         }
@@ -94,7 +94,7 @@ class EstrategiaCotizacionServiceTest {
     private EstrategiaCotizacion guardarEstrategia2() {
         EstrategiaCotizacion guardada;
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(ESTRATEGIA_COTIZACION_2))
                     .thenReturn(ESTRATEGIA_DTO_2);
 
             guardada = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2);
@@ -221,6 +221,11 @@ class EstrategiaCotizacionServiceTest {
 
         assertEquals(3.0, estrategiaActualizada.getFactorEscala());
 
+    }
+
+    @Test
+    void noSePuedeModificarUnaEstrategiaQueNoExiste() {
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.actualizar(-1L, 3.0));
     }
 
     @Test

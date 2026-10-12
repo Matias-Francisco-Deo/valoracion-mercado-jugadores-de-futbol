@@ -10,13 +10,11 @@ import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapADTO;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +30,6 @@ import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mockStatic;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EstrategiaCotizacionE2eTest {
@@ -43,13 +40,9 @@ class EstrategiaCotizacionE2eTest {
 
     private static final EstrategiaCotizacionSiempre2 ESTRATEGIA_1 =
             new EstrategiaCotizacionSiempre2(0.0, 1.0);
-    private static final EstrategiaCotizacionSiempre2JPADTO ESTRATEGIA_DTO_1 =
-            EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_1);
 
     private static final EstrategiaCotizacionSiempre2 ESTRATEGIA_2 =
             new EstrategiaCotizacionSiempre2(10.0, 4.0);
-    private static final EstrategiaCotizacionSiempre2JPADTO ESTRATEGIA_DTO_2 =
-            EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_1);
 
     @LocalServerPort
     private int port;
@@ -99,37 +92,19 @@ class EstrategiaCotizacionE2eTest {
     // ────────────────────────────────────────────────────────────────────────────
 
     private EstrategiaCotizacion guardarEstrategiaEnContexto() {
-        EstrategiaCotizacion[] resultado = new EstrategiaCotizacion[1]; // TODO borrar los mockedstatic
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_1);
-            resultado[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_1);
-        }
-        return resultado[0];
+        return estrategiaCotizacionService.guardar(ESTRATEGIA_1);
     }
 
     private EstrategiaCotizacion crearConfiguracionCotizacionesConEstrategiaSecundaria() {
-        EstrategiaCotizacion[] resultado = new EstrategiaCotizacion[1];
-
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_2);
-            resultado[0] = configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_2))
+        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_2))
                     .getEstrategiaCotizacion();
-        }
-        return resultado[0];
+
     }
 
     private EstrategiaCotizacion crearConfiguracionCotizacionesConEstrategia() {
-        EstrategiaCotizacion[] resultado = new EstrategiaCotizacion[1];
-
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_1);
-            resultado[0] = configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_1))
+        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_1))
                     .getEstrategiaCotizacion();
-        }
-        return resultado[0];
+
     }
 
     // ────────────────────────────────────────────────────────────────────────────
@@ -182,9 +157,6 @@ class EstrategiaCotizacionE2eTest {
         EstrategiaCotizacion estrategiaGuardada = guardarEstrategiaEnContexto();
 
         // Creamos una configuración inicial con la misma estrategia
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_1);
 
             // Seleccionamos la estrategia vía HTTP
             ResponseEntity<Void> respuesta = restClient.post()
@@ -194,7 +166,6 @@ class EstrategiaCotizacionE2eTest {
                     .toBodilessEntity();
 
             assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-        }
     }
 
     @Test
@@ -202,11 +173,6 @@ class EstrategiaCotizacionE2eTest {
         crearConfiguracionCotizacionesConEstrategiaSecundaria();
 
         EstrategiaCotizacion estrategiaGuardada = guardarEstrategiaEnContexto();
-
-
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_1);
 
             // Primera selección
             restClient.post()
@@ -223,7 +189,6 @@ class EstrategiaCotizacionE2eTest {
                     .toBodilessEntity();
 
             assertEquals(HttpStatus.OK, respuesta.getStatusCode());
-        }
     }
 
     @Test
@@ -353,11 +318,8 @@ class EstrategiaCotizacionE2eTest {
         // Sin jugadores en base
         EstrategiaCotizacion estrategiaGuardada = guardarEstrategiaEnContexto();
 
-        try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(ESTRATEGIA_DTO_1);
-            estrategiaCotizacionService.seleccionarEstrategia(estrategiaGuardada.getId());
-        }
+
+        estrategiaCotizacionService.seleccionarEstrategia(estrategiaGuardada.getId());
 
         ResponseEntity<String> respuesta = restClient.post()
                 .uri(BASE_PATH + "/cotizar")

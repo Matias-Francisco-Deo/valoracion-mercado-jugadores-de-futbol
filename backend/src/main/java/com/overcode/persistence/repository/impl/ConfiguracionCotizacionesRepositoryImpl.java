@@ -10,33 +10,28 @@ import java.util.Optional;
 
 @Repository
 public class ConfiguracionCotizacionesRepositoryImpl implements ConfiguracionCotizacionesRepository {
-
-    public static final long CONFIG_ID = 1L;
     private final ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAOJPA;
 
     public ConfiguracionCotizacionesRepositoryImpl(ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAOJPA) {
         this.configuracionCotizacionesDAOJPA = configuracionCotizacionesDAOJPA;
     }
 
-
-
     @Override
     public ConfiguracionCotizaciones guardar(ConfiguracionCotizaciones configuracionCotizaciones) {
         ConfiguracionCotizacionesJPADTO dto = ConfiguracionCotizacionesJPADTO.desdeModelo(configuracionCotizaciones);
-        dto.setId(CONFIG_ID); // TODO mover al service
         return configuracionCotizacionesDAOJPA.save(dto).aModelo();
     }
 
     @Override
-    public Optional<ConfiguracionCotizaciones> recuperar() {
-        Optional<ConfiguracionCotizacionesJPADTO> optionalConfig = configuracionCotizacionesDAOJPA.findById(CONFIG_ID);
+    public Optional<ConfiguracionCotizaciones> recuperarPorId(Long id) {
+        Optional<ConfiguracionCotizacionesJPADTO> optionalConfig = configuracionCotizacionesDAOJPA.findById(id);
 
         return optionalConfig.map(ConfiguracionCotizacionesJPADTO::aModelo);
 
     }
 
     @Override
-    public boolean existeConfiguracion() {
-        return configuracionCotizacionesDAOJPA.existsById(CONFIG_ID);
+    public boolean existePorId(Long id) {
+        return configuracionCotizacionesDAOJPA.existsById(id);
     }
 }

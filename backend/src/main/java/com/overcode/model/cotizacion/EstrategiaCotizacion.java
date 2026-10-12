@@ -14,10 +14,12 @@ import java.util.List;
 public abstract class EstrategiaCotizacion {
 
     private Long id;
+    private String titulo;
     private Double valorBase;
     private Double factorEscala;
 
-    protected EstrategiaCotizacion(Double valorBase, Double factorEscala) {
+    protected EstrategiaCotizacion(String titulo, Double valorBase, Double factorEscala) {
+        setTitulo(titulo);
         setValorBase(valorBase);
         setFactorEscala(factorEscala);
     }
@@ -44,5 +46,10 @@ public abstract class EstrategiaCotizacion {
     public void setValorBase(Double valorBase) {
         if (valorBase == null || valorBase < 0) throw new EstrategiaInvalidaException("El valor base debe ser 0 o más grande");
         this.valorBase = valorBase;
+    }
+
+    public void setTitulo(String titulo) {
+        if (titulo == null || titulo.trim().isEmpty()) throw new EstrategiaInvalidaException("El título es obligatorio");
+        this.titulo = titulo;
     }
 }

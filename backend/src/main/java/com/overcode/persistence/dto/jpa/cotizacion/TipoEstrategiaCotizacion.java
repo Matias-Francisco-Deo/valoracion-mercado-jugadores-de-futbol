@@ -14,7 +14,9 @@ public enum TipoEstrategiaCotizacion {;
             new EstrategiaCotizacionUnoMapADTO()
     ));
 
-    public static EstrategiaCotizacionJPADTO getValueOf(Class<? extends EstrategiaCotizacion> estrategiaClase) {
+    public static EstrategiaCotizacionJPADTO getValueOf(EstrategiaCotizacion estrategiaCotizacion) {
+
+        Class<? extends EstrategiaCotizacion> estrategiaClase = estrategiaCotizacion.getClass();
 
         Optional<MapEstrategiaADTO> mapEstrategia = maps.stream().filter(
                 map -> map.esAplicable(estrategiaClase)
@@ -24,7 +26,7 @@ public enum TipoEstrategiaCotizacion {;
             throw new EntidadNoEncontradaException("Unexpected value: " + estrategiaClase.getSimpleName());
         }
 
-        return mapEstrategia.get().getDTO(estrategiaClase);
+        return mapEstrategia.get().getDTO(estrategiaCotizacion);
     }
 
     public static void agregarMapEstrategia(MapEstrategiaADTO estrategiaADTO) {

@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mockStatic;
 
 
@@ -58,7 +59,7 @@ class ConfiguracionCotizacionesServiceImplTest {
         ConfiguracionCotizaciones configuracionACrear;
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(isA(EstrategiaCotizacion.class)))
                     .thenReturn(estrategiaDTO);
 
 
@@ -89,7 +90,7 @@ class ConfiguracionCotizacionesServiceImplTest {
         estrategiaDTOConValorBase.setValorBase(estrategiaConValorBase.getValorBase());
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(isA(EstrategiaCotizacion.class)))
                     .thenReturn(estrategiaDTO).thenReturn(estrategiaDTOConValorBase);
 
 

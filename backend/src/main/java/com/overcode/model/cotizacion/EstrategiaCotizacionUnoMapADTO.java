@@ -12,7 +12,7 @@ public class EstrategiaCotizacionUnoMapADTO extends MapEstrategiaADTO {
     }
 
     @Override
-    public EstrategiaCotizacionJPADTO getDTO(Class<? extends EstrategiaCotizacion> estrategiaClase) {
+    public EstrategiaCotizacionJPADTO getDTO(EstrategiaCotizacion estrategiaCotizacion) {
         return new EstrategiaCotizacionUnoJPADTO();
     }
 }

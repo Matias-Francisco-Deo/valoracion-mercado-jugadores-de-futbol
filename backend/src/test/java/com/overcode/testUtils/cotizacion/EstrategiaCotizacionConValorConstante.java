@@ -12,12 +12,17 @@ public class EstrategiaCotizacionConValorConstante extends EstrategiaCotizacion 
     private Double valorConstante;
 
     public EstrategiaCotizacionConValorConstante(Double valorConstante, Double factorEscala) {
-        super(0D, factorEscala);
+        super("Valor constante", 0D, factorEscala);
         setValorConstante(valorConstante);
     }
 
     public EstrategiaCotizacionConValorConstante(Double valorBase) {
-        super(valorBase, 1.0);
+        super("Valor constante", valorBase, 1.0);
+        setValorConstante(0.0);
+    }
+
+    public EstrategiaCotizacionConValorConstante(String titulo) {
+        super(titulo, 0D, 1.0);
         setValorConstante(0.0);
     }
 

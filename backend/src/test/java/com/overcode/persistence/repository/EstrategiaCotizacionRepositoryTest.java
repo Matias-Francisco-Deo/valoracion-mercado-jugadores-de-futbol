@@ -50,7 +50,7 @@ class EstrategiaCotizacionRepositoryTest {
     private EstrategiaCotizacion guardarEstrategia1() {
         EstrategiaCotizacion guardada;
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(ESTRATEGIA_COTIZACION_1))
                     .thenReturn(ESTRATEGIA_DTO);
 
             guardada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
@@ -62,7 +62,7 @@ class EstrategiaCotizacionRepositoryTest {
     private EstrategiaCotizacion guardarEstrategia2() {
         EstrategiaCotizacion guardada;
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(ESTRATEGIA_COTIZACION_2))
                     .thenReturn(ESTRATEGIA_DTO_2);
 
             guardada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_2);

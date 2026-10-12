@@ -6,6 +6,7 @@ import com.overcode.model.cotizacion.EstrategiaCotizacion;
 public class EstrategiaCotizacionSiempre2 extends EstrategiaCotizacion {
 
     public EstrategiaCotizacionSiempre2(Double valorBase, Double factorEscala) {
+        setTitulo("Estrategia Siempre 2");
         setValorBase(valorBase);
         setFactorEscala(factorEscala);
     }

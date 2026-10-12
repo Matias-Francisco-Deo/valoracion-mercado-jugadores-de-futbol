@@ -40,7 +40,12 @@ class ConfiguracionCotizacionesRepositoryTest {
 
     @Test
     void siNoHayConfiguracionGuardadaDevuelveVacio() {
-        assertTrue(configuracionCotizacionesRepository.recuperar().isEmpty());
+        assertTrue(configuracionCotizacionesRepository.recuperarPorId(1L).isEmpty());
+    }
+
+    @Test
+    void siNoHayConfiguracionGuardadaNoExiste() {
+        assertFalse(configuracionCotizacionesRepository.existePorId(1L));
     }
 
     @Test
@@ -54,11 +59,11 @@ class ConfiguracionCotizacionesRepositoryTest {
         ConfiguracionCotizaciones configuracionACrear;
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(estrategia))
                     .thenReturn(estrategiaDTO);
 
 
-            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
+            configuracionACrear = new ConfiguracionCotizaciones(1L, estrategia);
             configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
 
         }
@@ -70,42 +75,26 @@ class ConfiguracionCotizacionesRepositoryTest {
     }
 
     @Test
-    void alGuardarUnaConfiguracionNuevaPisaALaYaExistente() {
-
+    void deHaberUnaConfiguracionExiste() {
         EstrategiaCotizacion estrategia = new EstrategiaCotizacionSiempre2(1.0, 1.0);
         EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
         estrategiaDTO.setValorBase(estrategia.getValorBase());
+
+        ConfiguracionCotizaciones configuracionCotizaciones;
         ConfiguracionCotizaciones configuracionACrear;
 
-
-        EstrategiaCotizacion estrategiaConValorBase = new EstrategiaCotizacionSiempre2(2.0, 1.0);
-        EstrategiaCotizacionJPADTO estrategiaDTOConValorBase = new EstrategiaCotizacionSiempre2JPADTO();
-        estrategiaDTOConValorBase.setFactorEscala(estrategiaConValorBase.getFactorEscala());
-        estrategiaDTOConValorBase.setValorBase(estrategiaConValorBase.getValorBase());
-
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
-            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(EstrategiaCotizacionSiempre2.class))
-                    .thenReturn(estrategiaDTO).thenReturn(estrategiaDTOConValorBase);
+            tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(estrategia))
+                    .thenReturn(estrategiaDTO);
 
 
-
-            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizacionesRepository.guardar(configuracionACrear);
-
-            ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesRepository.recuperar().get();
-
-            ConfiguracionCotizaciones configuracionCotizacionesNueva = new ConfiguracionCotizaciones();
-            configuracionCotizacionesNueva.setId(2L);
-            configuracionCotizacionesNueva.setEstrategiaCotizacion(estrategiaConValorBase);
-
-            ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionCotizacionesNueva);
-
-            assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizaciones.getId());
-            assertEquals(estrategiaConValorBase.getValorBase(), configuracionCotizaciones.getEstrategiaCotizacion().getValorBase());
+            configuracionACrear = new ConfiguracionCotizaciones(1L, estrategia);
+            configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
 
         }
 
+        assertTrue(configuracionCotizacionesRepository.existePorId(configuracionCotizaciones.getId()));
 
     }
 

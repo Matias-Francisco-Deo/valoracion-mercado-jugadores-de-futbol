@@ -14,6 +14,5 @@ public abstract class MapEstrategiaADTO {
         return estrategiaClase == estrategia;
     }
 
-    public abstract EstrategiaCotizacionJPADTO getDTO(Class<? extends EstrategiaCotizacion> estrategiaClase);
-    // TODO revisarlo :'v
+    public abstract EstrategiaCotizacionJPADTO getDTO(EstrategiaCotizacion estrategiaCotizacion);
 }

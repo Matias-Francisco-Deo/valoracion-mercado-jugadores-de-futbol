@@ -14,4 +14,8 @@ public class TestEstrategiaCotizacionUtil {
     public static EstrategiaCotizacion getEstrategiaConValorBase(Double valorBase) {
         return new EstrategiaCotizacionConValorConstante(valorBase);
     }
+
+    public static EstrategiaCotizacion getEstrategiaConNombre(String titulo) {
+        return new EstrategiaCotizacionConValorConstante(titulo);
+    }
 }
