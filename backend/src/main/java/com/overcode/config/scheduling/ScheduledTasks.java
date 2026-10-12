@@ -15,10 +15,10 @@ import java.util.Optional;
 public class ScheduledTasks {
 
 	private final ExternalPlayerService externalPlayerService;
-	private static final Integer MAX_PLAYERS_TO_UPDATE = null;
-
-	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 	private final EstrategiaCotizacionService estrategiaCotizacionService;
+	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+
+	private static final Integer MAX_PLAYERS_TO_UPDATE = null;
 
 	public ScheduledTasks(ExternalPlayerService externalPlayerService, EstrategiaCotizacionService estrategiaCotizacionService) {
         this.externalPlayerService = externalPlayerService;

@@ -26,8 +26,8 @@ public class DataInitializer {
     @PostConstruct
     @Transactional
     public void initialize() {
-//        inicializarConfiguracion();
-//        crearEstrategias();
+        inicializarConfiguracion();
+        crearEstrategias();
         userService.crearSuperusuario();
     }
 
@@ -38,12 +38,7 @@ public class DataInitializer {
 
     private void crearEstrategias() {
         estrategiaCotizacionService.guardar(new EstrategiaCotizacionUno(5.0, 1.0));
-//        estrategiaCotizacionService.guardar(new EstrategiaCotizacion() {
-//            @Override
-//            public Double calcularScore(Player player) {
-//                return 5.0;
-//            }
-//        });
+
     }
 
 
