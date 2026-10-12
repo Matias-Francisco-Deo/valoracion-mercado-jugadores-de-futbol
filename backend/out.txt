@@ -26,11 +26,11 @@
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
-[INFO] Running com.overcode.service.PlayerServiceTest
-12:22:36.010 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.overcode.service.PlayerServiceTest]: PlayerServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-12:22:36.131 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.overcode.OvercodeApplication for test class com.overcode.service.PlayerServiceTest
-12:22:36.228 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.overcode.service.PlayerServiceTest]: PlayerServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-12:22:36.229 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.overcode.OvercodeApplication for test class com.overcode.service.PlayerServiceTest
+[INFO] Running com.overcode.service.PlayerServiceImplTest
+12:22:36.010 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.overcode.service.PlayerServiceImplTest]: PlayerServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+12:22:36.131 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.overcode.OvercodeApplication for test class com.overcode.service.PlayerServiceImplTest
+12:22:36.228 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.overcode.service.PlayerServiceImplTest]: PlayerServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+12:22:36.229 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.overcode.OvercodeApplication for test class com.overcode.service.PlayerServiceImplTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -41,8 +41,8 @@
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-09-07T12:22:36.596-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceTest   : Starting PlayerServiceTest using Java 21.0.8 with PID 15580 (started by matias in F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend)
-2026-09-07T12:22:36.598-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceTest   : The following 1 profile is active: "test"
+2026-09-07T12:22:36.596-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceImplTest   : Starting PlayerServiceTest using Java 21.0.8 with PID 15580 (started by matias in F:\Users\ROCKITO\Documents\Hamwork\UNQ\desurollo\overcode\valoracion-mercado-jugadores-de-futbol\backend)
+2026-09-07T12:22:36.598-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceImplTest   : The following 1 profile is active: "test"
 2026-09-07T12:22:37.557-03:00  INFO 15580 --- [overcode-market] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2026-09-07T12:22:37.645-03:00  INFO 15580 --- [overcode-market] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 77 ms. Found 5 JPA repository interfaces.
 2026-09-07T12:22:38.284-03:00  INFO 15580 --- [overcode-market] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
@@ -76,7 +76,7 @@ Using generated security password: b465392c-890c-420e-861f-387c7fb5825b
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
 2026-09-07T12:22:42.164-03:00  INFO 15580 --- [overcode-market] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-09-07T12:22:43.044-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceTest   : Started PlayerServiceTest in 6.753 seconds (process running for 7.922)
+2026-09-07T12:22:43.044-03:00  INFO 15580 --- [overcode-market] [           main] com.overcode.service.PlayerServiceImplTest   : Started PlayerServiceTest in 6.753 seconds (process running for 7.922)
 2026-09-07T12:22:43.048-03:00  WARN 15580 --- [overcode-market] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
 2026-09-07T12:22:43.048-03:00  WARN 15580 --- [overcode-market] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
@@ -101,8 +101,8 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 2026-09-07T12:22:43.646-03:00  WARN 15580 --- [overcode-market] [           main] org.hibernate.orm.jdbc.error             : La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
 insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default) [23502-240]
-[ERROR] Tests run: 6, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 7.885 s <<< FAILURE! -- in com.overcode.service.PlayerServiceTest
-[ERROR] com.overcode.service.PlayerServiceTest.rechazaCreacionConNombreDuplicado -- Time elapsed: 0.482 s <<< ERROR!
+[ERROR] Tests run: 6, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 7.885 s <<< FAILURE! -- in com.overcode.service.PlayerServiceImplTest
+[ERROR] com.overcode.service.PlayerServiceImplTest.rechazaCreacionConNombreDuplicado -- Time elapsed: 0.482 s <<< ERROR!
 org.springframework.dao.DataIntegrityViolationException: 
 could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
@@ -142,7 +142,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
 	at com.overcode.service.impl.PlayerServiceImpl$$SpringCGLIB$$0.create(<generated>)
-	at com.overcode.service.PlayerServiceTest.rechazaCreacionConNombreDuplicado(PlayerServiceTest.java:56)
+	at com.overcode.service.PlayerServiceImplTest.rechazaCreacionConNombreDuplicado(PlayerServiceTest.java:56)
 Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
 insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default) [23502-240]] [insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default)]
@@ -222,7 +222,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:185)
 	... 77 more
 
-[ERROR] com.overcode.service.PlayerServiceTest.listaTodosLosJugadores -- Time elapsed: 0.013 s <<< ERROR!
+[ERROR] com.overcode.service.PlayerServiceImplTest.listaTodosLosJugadores -- Time elapsed: 0.013 s <<< ERROR!
 org.springframework.dao.DataIntegrityViolationException: 
 could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
@@ -262,7 +262,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
 	at com.overcode.service.impl.PlayerServiceImpl$$SpringCGLIB$$0.create(<generated>)
-	at com.overcode.service.PlayerServiceTest.listaTodosLosJugadores(PlayerServiceTest.java:81)
+	at com.overcode.service.PlayerServiceImplTest.listaTodosLosJugadores(PlayerServiceTest.java:81)
 Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
 insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default) [23502-240]] [insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default)]
@@ -342,7 +342,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:185)
 	... 77 more
 
-[ERROR] com.overcode.service.PlayerServiceTest.obtieneJugadorPorId -- Time elapsed: 0.013 s <<< ERROR!
+[ERROR] com.overcode.service.PlayerServiceImplTest.obtieneJugadorPorId -- Time elapsed: 0.013 s <<< ERROR!
 org.springframework.dao.DataIntegrityViolationException: 
 could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
@@ -382,7 +382,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
 	at com.overcode.service.impl.PlayerServiceImpl$$SpringCGLIB$$0.create(<generated>)
-	at com.overcode.service.PlayerServiceTest.obtieneJugadorPorId(PlayerServiceTest.java:66)
+	at com.overcode.service.PlayerServiceImplTest.obtieneJugadorPorId(PlayerServiceTest.java:66)
 Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
 insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default) [23502-240]] [insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default)]
@@ -462,7 +462,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:185)
 	... 77 more
 
-[ERROR] com.overcode.service.PlayerServiceTest.crearJugadorValidoExitosamente -- Time elapsed: 0.012 s <<< ERROR!
+[ERROR] com.overcode.service.PlayerServiceImplTest.crearJugadorValidoExitosamente -- Time elapsed: 0.012 s <<< ERROR!
 org.springframework.dao.DataIntegrityViolationException: 
 could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
@@ -502,7 +502,7 @@ insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,de
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
 	at com.overcode.service.impl.PlayerServiceImpl$$SpringCGLIB$$0.create(<generated>)
-	at com.overcode.service.PlayerServiceTest.crearJugadorValidoExitosamente(PlayerServiceTest.java:46)
+	at com.overcode.service.PlayerServiceImplTest.crearJugadorValidoExitosamente(PlayerServiceTest.java:46)
 Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [La columna "TOTAL_ISSUED" no permite valores nulos (NULL)
 NULL not allowed for column "TOTAL_ISSUED"; SQL statement:
 insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default) [23502-240]] [insert into players (current_price,name,total_tokens_issued,id) values (?,?,?,default)]

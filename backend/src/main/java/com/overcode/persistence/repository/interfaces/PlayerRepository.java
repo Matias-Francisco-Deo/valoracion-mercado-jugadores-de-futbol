@@ -21,4 +21,6 @@ public interface PlayerRepository {
     List<Player> listarTop5JugadoresPorRating();
 
     List<Player> listarTodos();
+
+    List<Player> guardarTodos(List<Player> jugadores);
 }

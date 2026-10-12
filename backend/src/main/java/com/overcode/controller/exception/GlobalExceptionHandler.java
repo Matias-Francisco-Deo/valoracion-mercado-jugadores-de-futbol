@@ -1,5 +1,6 @@
 package com.overcode.controller.exception;
 
+import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -49,6 +50,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailRepetidoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDTO handleRepeatedEmail(EmailRepetidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(EstrategiaInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleEstrategiaInvalida(EstrategiaInvalidaException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

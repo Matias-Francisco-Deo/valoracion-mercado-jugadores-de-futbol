@@ -14,5 +14,4 @@ public interface UserService {
 
     Optional<User> recuperarPorEmail(String email);
 
-    boolean existePorEmail(String email);
 }

@@ -48,6 +48,12 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return playerDAOJPA.findAll().stream().map(PlayerJPADTO::aModelo).toList();
     }
 
+    @Override
+    public List<Player> guardarTodos(List<Player> jugadores) {
+        List<PlayerJPADTO> playerJPADTOS = playerDAOJPA.saveAll(jugadores.stream().map(PlayerJPADTO::desdeModelo).toList());
+        return playerJPADTOS.stream().map(PlayerJPADTO::aModelo).toList();
+    }
+
 
     @Override
     public List<Player> listarTop5JugadoresPorRating() {
