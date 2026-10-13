@@ -24,7 +24,7 @@ class ExternalPlayerControllerTest {
 
         mockMvc.perform(post("/api/admin/players/update"))
                 .andExpect(status().isAccepted())
-                .andExpect(content().string("Scraper manual iniciado en background. Este proceso puede tardar varias horas."));
+                .andExpect(content().string("Actualización iniciada. Este proceso puede tardar varias horas."));
 
         verify(externalPlayerService, times(1)).actualizarJugadoresAsync();
     }
