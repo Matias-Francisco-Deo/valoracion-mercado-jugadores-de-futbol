@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class EstrategiaCotizacionE2eTest {
 
-    private static final String BASE_PATH = "/api/admin/estrategias-cotizacion";
+    private static final String BASE_PATH = "/api/admin/quotes";
     private static final String HEADER_API_KEY = "X-API-KEY";
     private static final String API_KEY_INVALIDA = "clave-invalida-para-tests";
 
@@ -160,7 +160,7 @@ class EstrategiaCotizacionE2eTest {
 
             // Seleccionamos la estrategia vía HTTP
             ResponseEntity<Void> respuesta = restClient.post()
-                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/seleccionar")
+                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/select")
                     .header(HEADER_API_KEY, apiKey)
                     .retrieve()
                     .toBodilessEntity();
@@ -176,14 +176,14 @@ class EstrategiaCotizacionE2eTest {
 
             // Primera selección
             restClient.post()
-                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/seleccionar")
+                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/select")
                     .header(HEADER_API_KEY, apiKey)
                     .retrieve()
                     .toBodilessEntity();
 
             // Segunda selección (misma estrategia, debe seguir siendo OK)
             ResponseEntity<Void> respuesta = restClient.post()
-                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/seleccionar")
+                    .uri(BASE_PATH + "/" + estrategiaGuardada.getId() + "/select")
                     .header(HEADER_API_KEY, apiKey)
                     .retrieve()
                     .toBodilessEntity();
@@ -195,7 +195,7 @@ class EstrategiaCotizacionE2eTest {
     void debeRetornarNotFoundAlSeleccionarEstrategiaInexistente() {
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/" + -1L + "/seleccionar")
+                        .uri(BASE_PATH + "/" + -1L + "/select")
                         .header(HEADER_API_KEY, apiKey)
                         .retrieve()
                         .toBodilessEntity()
@@ -209,7 +209,7 @@ class EstrategiaCotizacionE2eTest {
 
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/-1/seleccionar")
+                        .uri(BASE_PATH + "/-1/select")
                         .header(HEADER_API_KEY, apiKey)
                         .retrieve()
                         .toBodilessEntity()
@@ -295,7 +295,7 @@ class EstrategiaCotizacionE2eTest {
 
         // Disparar cotización vía HTTP
         ResponseEntity<String> respuesta = restClient.post()
-                .uri(BASE_PATH + "/cotizar")
+                .uri(BASE_PATH + "/recalculate")
                 .header(HEADER_API_KEY, apiKey)
                 .retrieve()
                 .toEntity(String.class);
@@ -322,7 +322,7 @@ class EstrategiaCotizacionE2eTest {
         estrategiaCotizacionService.seleccionarEstrategia(estrategiaGuardada.getId());
 
         ResponseEntity<String> respuesta = restClient.post()
-                .uri(BASE_PATH + "/cotizar")
+                .uri(BASE_PATH + "/recalculate")
                 .header(HEADER_API_KEY, apiKey)
                 .retrieve()
                 .toEntity(String.class);
@@ -335,7 +335,7 @@ class EstrategiaCotizacionE2eTest {
         // No hay ninguna estrategia seleccionada
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/cotizar")
+                        .uri(BASE_PATH + "/recalculate")
                         .header(HEADER_API_KEY, apiKey)
                         .retrieve()
                         .toBodilessEntity()
@@ -356,18 +356,18 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /cotizar sin API key
+        // POST /recalculate sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/cotizar")
+                        .uri(BASE_PATH + "/recalculate")
                         .retrieve()
                         .toBodilessEntity()
         );
 
-        // POST /{id}/seleccionar sin API key
+        // POST /{id}/select sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/1/seleccionar")
+                        .uri(BASE_PATH + "/1/select")
                         .retrieve()
                         .toBodilessEntity()
         );
@@ -394,19 +394,19 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /cotizar con clave inválida
+        // POST /recalculate con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/cotizar")
+                        .uri(BASE_PATH + "/recalculate")
                         .header(HEADER_API_KEY, API_KEY_INVALIDA)
                         .retrieve()
                         .toBodilessEntity()
         );
 
-        // POST /{id}/seleccionar con clave inválida
+        // POST /{id}/select con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
-                        .uri(BASE_PATH + "/1/seleccionar")
+                        .uri(BASE_PATH + "/1/select")
                         .header(HEADER_API_KEY, API_KEY_INVALIDA)
                         .retrieve()
                         .toBodilessEntity()

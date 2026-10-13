@@ -19,10 +19,10 @@ public class ExternalPlayerController {
         this.externalPlayerService = externalPlayerService;
     }
 
-    @PostMapping("/actualizar-jugadores")
+    @PostMapping("/update")
     @Operation(summary = "Ejecutar scrapper", description = "Dispara el scrapper de jugadores de forma asíncrona. Retorna 202 inmediatamente.")
     public ResponseEntity<String> runScrapper() {
         externalPlayerService.actualizarJugadoresAsync();
-        return ResponseEntity.accepted().body("Scraper manual iniciado en background. Este proceso puede tardar varias horas.");
+        return ResponseEntity.accepted().body("Actualización iniciada. Este proceso puede tardar varias horas.");
     }
 }

@@ -22,7 +22,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     private static final String API_KEY_HEADER = "X-API-KEY";
     private static final String ADMIN_PLAYER_PATH_PREFIX = "/api/admin/players";
-    private static final String ADMIN_ESTRATEGIAS_PATH_PREFIX = "/api/admin/estrategias-cotizacion";
+    private static final String ADMIN_ESTRATEGIAS_PATH_PREFIX = "/api/admin/quotes";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
