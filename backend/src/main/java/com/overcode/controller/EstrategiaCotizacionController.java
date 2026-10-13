@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/estrategias-cotizacion")
+@RequestMapping("/api/admin/quotes")
 @Tag(name = "Admin Estrategias de Cotización", description = "Endpoints de administración para gestionar estrategias de cotización de jugadores (requiere X-API-KEY)")
 public class EstrategiaCotizacionController {
 
@@ -32,7 +32,7 @@ public class EstrategiaCotizacionController {
         return ResponseEntity.ok(estrategias);
     }
 
-    @PostMapping("/{id}/seleccionar")
+    @PostMapping("/{id}/select")
     @Operation(summary = "Seleccionar estrategia activa", description = "Designa la estrategia identificada por {id} como la estrategia activa para cotizaciones.")
     public ResponseEntity<Void> seleccionarEstrategia(@PathVariable Long id) {
         estrategiaCotizacionService.seleccionarEstrategia(id);
@@ -46,7 +46,7 @@ public class EstrategiaCotizacionController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/cotizar")
+    @PostMapping("/recalculate")
     @Operation(summary = "Cotizar jugadores", description = "Dispara la recotización masiva de jugadores usando la estrategia activa. Retorna confirmación de finalización.")
     public ResponseEntity<String> cotizarJugadores() {
         estrategiaCotizacionService.cotizarJugadores();

@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
                 .requestMatchers("/api/admin/players/**").permitAll() // Protegido por el ApiKeyAuthFilter
-                .requestMatchers("/api/admin/estrategias-cotizacion/**").permitAll() // Protegido por el ApiKeyAuthFilter
+                .requestMatchers("/api/admin/quotes/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .anyRequest().authenticated()
             )
             .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)

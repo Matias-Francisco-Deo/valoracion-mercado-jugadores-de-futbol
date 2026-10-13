@@ -22,7 +22,7 @@ class ExternalPlayerControllerTest {
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ExternalPlayerController(externalPlayerService)).build();
 
-        mockMvc.perform(post("/api/admin/players/actualizar-jugadores"))
+        mockMvc.perform(post("/api/admin/players/update"))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string("Scraper manual iniciado en background. Este proceso puede tardar varias horas."));
 
@@ -36,6 +36,6 @@ class ExternalPlayerControllerTest {
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ExternalPlayerController(externalPlayerService)).build();
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/api/admin/players/actualizar-jugadores")));
+        assertThrows(Exception.class, () -> mockMvc.perform(post("/api/admin/players/update")));
     }
 }
