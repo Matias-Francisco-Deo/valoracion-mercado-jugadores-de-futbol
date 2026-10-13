@@ -4,13 +4,13 @@ export interface OrderTokensRequest {
   quantity: number;
 }
 
-export interface OrderTokensResponse {
-  playerId: number;
-  quantity: number;
-}
-
 export interface UserInventoryResponse {
   userId: number;
+  userPosition:number;
+  totalTokens: number;//cant tokens totales del user
+  totalAccountValue: number;//valor del portfolio entero
+  averagePurchasePrice: number;//precio promedio deo user
+  profitLoss: number;//ganancia/perdida del portfolio entero
   availableTokens:Token[];
   sellingTokens: Token[];
 }
@@ -23,21 +23,12 @@ export interface Token {
   quantity: number;
 }
 
-export interface TokenPageResponse {
-    content: Token[];
+export interface TokenPageResponse<T> {
+    content: T[];
     number:number;
     size:number;
     totalPages:number;
     totalElements:number;
-}
-
-export interface TokenActionModalState {
-  isOpen: boolean;
-  actionType: 'list' | 'delist';
-  playerId: string;
-  playerName: string;
-  unitPrice: number;
-  maxTokens: number;
 }
 
 export interface Transaction {

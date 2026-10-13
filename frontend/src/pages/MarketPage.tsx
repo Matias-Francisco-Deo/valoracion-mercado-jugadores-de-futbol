@@ -14,7 +14,7 @@ export default function MarketPage(){
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedToken,setSelectedToken] = useState<Token|null>(null);
     const [actionModalOpen, setActionModalOpen] = useState(false);
-    const [tokenPage, setTokenPage] = useState<TokenPageResponse | null>(null);
+    const [tokenPage, setTokenPage] = useState<TokenPageResponse<Token> | null>(null);
 
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);

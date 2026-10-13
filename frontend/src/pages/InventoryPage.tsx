@@ -10,12 +10,13 @@ import { placeholderSellingTokens } from "@/data/mocksTokens";
 import type { HttpError } from "@/lib/http-error";
 import { cancelTokenListing, listTokensForSale } from "@/services/ordersService";
 import { getUserPortfolio } from "@/services/userService";
-import type { OrderTokensRequest, Token } from "@/types/inventory";
+import type { OrderTokensRequest, Token, UserInventoryResponse } from "@/types/inventory";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function InventoryPage() {
   const { userId } = useParams()
+  const [userPorfolio,setUserPortfolio] = useState<UserInventoryResponse|null>(null);
   const [tokens, setTokens] = useState<Token[]>(placeholderSellingTokens);
   const [sellingTokens, setSellingTokens] = useState<Token[]>([]);
 
@@ -38,6 +39,7 @@ export default function InventoryPage() {
     if (!userId) return;
 
     getUserPortfolio(userId).then((data)=>{
+      setUserPortfolio(data);
       setTokens(data.availableTokens);
       setSellingTokens(data.sellingTokens);
     })
@@ -92,17 +94,17 @@ export default function InventoryPage() {
           </span>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <PortfolioDataBox title="Posición actual" value="#128"/>
-          <PortfolioDataBox title="Precio promedio de compra" value="$87.40" message="Across 32 owned tokens"/>
-          <PortfolioDataBox title="Valor actual del inventario" value="$3252"/>
-          <PortfolioDataBox title="Ganancia/Predida semanal" value="$184.50"/>
+          <PortfolioDataBox title="Posición actual" value={`$${userPorfolio?.userPosition ?? 0}`} message="Tu posición actual"/>
+          <PortfolioDataBox title="Precio promedio de compra" value={`$${userPorfolio?.averagePurchasePrice ?? 0}`} message={`${userPorfolio?.totalTokens ?? 0} tokens en posesión`}/>
+          <PortfolioDataBox title="Valor actual del inventario" value={`$${userPorfolio?.totalAccountValue ?? 0}`} message="Valoracion en tiempo real"/>
+          <PortfolioDataBox title="Ganancia/Predida semanal" value={`$${userPorfolio?.totalAccountValue ?? 0}`} message="Balance de la última semana"/>
         </div>
         {/*extraer a un componente aparte */}
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>
             <div className="flex items-baseline gap-1 ">
-              <span className="text-xl text-hover-orange">{tokens.length + sellingTokens.length}</span>
+              <span className="text-xl text-hover-orange">{userPorfolio?.totalTokens ?? 0}</span>
               <span className="text-xs text-gray-500">tokens</span>
             </div>
           </div>
