@@ -11,6 +11,7 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
@@ -53,6 +54,9 @@ class EstrategiaCotizacionServiceTest {
     @Autowired
     private PlayerServiceImpl playerServiceImpl;
 
+    @Autowired
+    private UserService userService;
+
     @AfterEach
     void setUp() {
         testService.eliminarEstrategiasCotizacion();
@@ -61,6 +65,9 @@ class EstrategiaCotizacionServiceTest {
     @BeforeEach
     void tearDown() {
         testService.eliminarEstrategiasCotizacion();
+        // emitTokensForNewPlayer (disparado por playerServiceImpl.crear) necesita que exista el
+        // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
+        userService.crearSuperusuario();
     }
 
     private EstrategiaCotizacion guardarEstrategia1() {

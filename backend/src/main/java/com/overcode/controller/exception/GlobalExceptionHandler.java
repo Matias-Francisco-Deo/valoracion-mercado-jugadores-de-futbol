@@ -1,8 +1,10 @@
 package com.overcode.controller.exception;
 
 import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,10 +55,39 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(com.overcode.service.exception.InsufficientEscrowException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponseDTO handleInsufficientEscrow(com.overcode.service.exception.InsufficientEscrowException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(com.overcode.service.exception.OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleOrderNotFound(com.overcode.service.exception.OrderNotFoundException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleIllegalState(IllegalStateException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
+    public ErrorResponseDTO handleInsufficientFunds(InsufficientFundsException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleOptimisticLockingFailure(ObjectOptimisticLockingFailureException ex) {
+        return new ErrorResponseDTO("The order or portfolio was modified by another operation. Please retry.");
+    }
+
     @ExceptionHandler(EstrategiaInvalidaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleEstrategiaInvalida(EstrategiaInvalidaException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
-
 }

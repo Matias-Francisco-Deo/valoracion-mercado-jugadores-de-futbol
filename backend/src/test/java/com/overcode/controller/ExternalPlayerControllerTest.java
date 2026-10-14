@@ -18,24 +18,24 @@ class ExternalPlayerControllerTest {
     @Test
     void activarActualizacionJugadoresDevuelveAcceptedYDisparaServicioUnaVez() throws Exception {
         ExternalPlayerService externalPlayerService = mock(ExternalPlayerService.class);
-        when(externalPlayerService.actualizarJugadoresAsync()).thenReturn(CompletableFuture.completedFuture(null));
+        when(externalPlayerService.actualizarJugadoresAsync(any())).thenReturn(CompletableFuture.completedFuture(null));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ExternalPlayerController(externalPlayerService)).build();
 
-        mockMvc.perform(post("/api/admin/players/update"))
+        mockMvc.perform(post("/api/admin/players/actualizar-jugadores"))
                 .andExpect(status().isAccepted())
-                .andExpect(content().string("Actualización iniciada. Este proceso puede tardar varias horas."));
+                .andExpect(content().string("Scraper iniciado. Limite de equipos: Todos"));
 
-        verify(externalPlayerService, times(1)).actualizarJugadoresAsync();
+        verify(externalPlayerService, times(1)).actualizarJugadoresAsync(any());
     }
 
     @Test
     void activarActualizacionJugadoresPropagaLaExcepcionDelServicio() {
         ExternalPlayerService externalPlayerService = mock(ExternalPlayerService.class);
-        when(externalPlayerService.actualizarJugadoresAsync()).thenThrow(new RuntimeException("fallo del scraper"));
+        when(externalPlayerService.actualizarJugadoresAsync(any())).thenThrow(new RuntimeException("fallo del scraper"));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ExternalPlayerController(externalPlayerService)).build();
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/api/admin/players/update")));
+        assertThrows(Exception.class, () -> mockMvc.perform(post("/api/admin/players/actualizar-jugadores")));
     }
 }

@@ -8,6 +8,7 @@ import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapADTO;
@@ -64,6 +65,9 @@ class EstrategiaCotizacionE2eTest {
     @Autowired
     private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesServiceImpl;
 
+    @Autowired
+    private UserService userService;
+
     private EstrategiaCotizacionSiempre2MapADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapADTO();
 
     @PostConstruct
@@ -78,6 +82,9 @@ class EstrategiaCotizacionE2eTest {
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
         testService.eliminarJugadoresYEquipos();
         testService.eliminarEstrategiasCotizacion();
+        // emitTokensForNewPlayer (disparado al crear un jugador) necesita que exista el
+        // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
+        userService.crearSuperusuario();
     }
 
     @AfterEach

@@ -8,5 +8,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ExternalPlayerService {
     Optional<List<Player>> actualizarJugadores(Integer limit);
-    CompletableFuture<Void> actualizarJugadoresAsync();
+    CompletableFuture<Void> actualizarJugadoresAsync(Integer limit);
 }
