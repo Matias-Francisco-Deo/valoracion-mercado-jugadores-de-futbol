@@ -5,7 +5,6 @@ import com.overcode.model.OrderType;
 import com.overcode.model.P2POrder;
 import com.overcode.model.Player;
 import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
 import com.overcode.persistence.repository.interfaces.P2POrderRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
@@ -164,17 +163,19 @@ class P2POrderServiceSellTest {
     @Test
     void cancelOrderFallaSiNoEsElDueño() {
         P2POrder order = openSellOrder(6);
-        when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
+        UUID orderId = order.getId();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
-        assertThrows(IllegalStateException.class, () -> service.cancelOrder(order.getId(), 999L));
+        assertThrows(IllegalStateException.class, () -> service.cancelOrder(orderId, 999L));
     }
 
     @Test
     void cancelOrderFallaSiLaOrdenYaNoEstaAbierta() {
         P2POrder order = openSellOrder(6);
         order.cancel();
-        when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
+        UUID orderId = order.getId();
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
 
-        assertThrows(IllegalStateException.class, () -> service.cancelOrder(order.getId(), USER_ID));
+        assertThrows(IllegalStateException.class, () -> service.cancelOrder(orderId, USER_ID));
     }
 }

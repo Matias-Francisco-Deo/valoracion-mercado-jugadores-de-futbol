@@ -12,14 +12,14 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class StandaloneDbTest {
+class StandaloneDbTest {
 
     @Autowired
     private PortfolioRepository portfolioRepository;
 
     @Test
     @Transactional
-    public void testDbSave() {
+    void testDbSave() {
         long testUserId = Math.abs(UUID.randomUUID().getLeastSignificantBits());
         // Create user portfolio
         Portfolio p = new Portfolio(UUID.randomUUID(), testUserId, BigDecimal.TEN, null);

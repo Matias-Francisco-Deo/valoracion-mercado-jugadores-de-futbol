@@ -18,7 +18,8 @@ class PortfolioTest {
         portfolio.deductCredits(BigDecimal.valueOf(50));
         assertEquals(0, BigDecimal.valueOf(50).compareTo(portfolio.getCredits()));
         
-        assertThrows(InsufficientFundsException.class, () -> portfolio.deductCredits(BigDecimal.valueOf(60)));
+        BigDecimal amountOverBalance = BigDecimal.valueOf(60);
+        assertThrows(InsufficientFundsException.class, () -> portfolio.deductCredits(amountOverBalance));
         
         portfolio.addCredits(BigDecimal.valueOf(10));
         assertEquals(0, BigDecimal.valueOf(60).compareTo(portfolio.getCredits()));

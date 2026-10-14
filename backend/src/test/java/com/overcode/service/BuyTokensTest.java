@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
-public class BuyTokensTest {
+class BuyTokensTest {
 
     @Autowired
     private P2POrderService p2pOrderService;
@@ -36,7 +36,7 @@ public class BuyTokensTest {
     private PlayerRepository playerRepository;
 
     @Test
-    public void marketBuyFillsAgainstARestingSellOrder() {
+    void marketBuyFillsAgainstARestingSellOrder() {
         Player newPlayer = new Player();
         newPlayer.setName("Test Player " + UUID.randomUUID());
         newPlayer.setCurrentPrice(10);

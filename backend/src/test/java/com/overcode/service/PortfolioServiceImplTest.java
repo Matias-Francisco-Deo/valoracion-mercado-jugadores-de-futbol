@@ -82,9 +82,9 @@ class PortfolioServiceImplTest {
         when(repository.findByUserId(735L)).thenReturn(Optional.of(existing));
 
         PortfolioServiceImpl service = new PortfolioServiceImpl(repository);
+        BigDecimal negativeAmount = BigDecimal.valueOf(-5);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> service.deposit(735L, BigDecimal.valueOf(-5)));
+        assertThrows(IllegalArgumentException.class, () -> service.deposit(735L, negativeAmount));
         verify(repository, never()).save(any());
     }
 

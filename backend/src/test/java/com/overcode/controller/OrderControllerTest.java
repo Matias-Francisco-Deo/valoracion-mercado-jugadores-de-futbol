@@ -18,8 +18,6 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,7 +54,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.playerId").value(10))
                 .andExpect(jsonPath("$.quantity").value(5));
 
-        verify(p2pOrderService, times(1)).executeMarketBuy(eq(USER_ID), eq(PLAYER_ID), eq(5));
+        verify(p2pOrderService, times(1)).executeMarketBuy(USER_ID, PLAYER_ID, 5);
     }
 
     @Test

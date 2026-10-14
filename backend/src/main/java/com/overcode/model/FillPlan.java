@@ -69,14 +69,13 @@ public class FillPlan {
             if (remaining == 0) {
                 break;
             }
-            if (!candidate.isOpen()) {
-                continue;
+            if (candidate.isOpen()) {
+                int take = Math.min(remaining, candidate.getQuantity());
+                Fill fill = new Fill(candidate, take);
+                fills.add(fill);
+                totalCost = totalCost.add(fill.getSubtotal());
+                remaining -= take;
             }
-            int take = Math.min(remaining, candidate.getQuantity());
-            Fill fill = new Fill(candidate, take);
-            fills.add(fill);
-            totalCost = totalCost.add(fill.getSubtotal());
-            remaining -= take;
         }
 
         return new FillPlan(requestedQuantity, requestedQuantity - remaining, totalCost,

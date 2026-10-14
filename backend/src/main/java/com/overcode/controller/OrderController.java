@@ -24,6 +24,9 @@ import java.util.UUID;
 @Tag(name = "Orders", description = "Endpoints for buying and selling player tokens")
 public class OrderController {
 
+    private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
+    private static final String ERROR_KEY = "error";
+
     private final P2POrderService p2pOrderService;
     private final UserService userService;
 
@@ -34,7 +37,7 @@ public class OrderController {
 
     private Long getUserId(Principal principal) {
         if (principal == null) {
-            throw new IllegalStateException("Unauthorized");
+            throw new IllegalStateException(UNAUTHORIZED_MESSAGE);
         }
         User user = userService.recuperarPorEmail(principal.getName())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
@@ -43,7 +46,7 @@ public class OrderController {
 
     /** Buys instantly against the resting SELL book, at the player's current price. All-or-nothing. */
     @PostMapping("/buy")
-    public ResponseEntity<?> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
+    public ResponseEntity<Object> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
         try {
             Long userId = getUserId(principal);
             p2pOrderService.executeMarketBuy(userId, request.getPlayerId(), request.getQuantity());
@@ -55,12 +58,12 @@ public class OrderController {
                     "timestamp", Instant.now().toString()
             ));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, e.getMessage()));
         } catch (InsufficientLiquidityException e) {
-            return ResponseEntity.status(409).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(409).body(Map.of(ERROR_KEY, e.getMessage()));
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("Unauthorized")) {
-                return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
+                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
             }
             throw e;
         }
@@ -70,14 +73,14 @@ public class OrderController {
 
     /** Publishes a resting SELL order for {@code quantity} tokens, priced at the player's current price. */
     @PostMapping("/sell")
-    public ResponseEntity<?> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) {
+    public ResponseEntity<Object> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) {
         try {
             Long userId = getUserId(principal);
             P2POrder order = p2pOrderService.createSellOrder(userId, request.getPlayerId(), request.getQuantity());
             return ResponseEntity.status(HttpStatus.CREATED).body(P2POrderResponseDTO.from(order));
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("Unauthorized")) {
-                return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
+                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
             }
             throw e;
         }
@@ -85,7 +88,7 @@ public class OrderController {
 
     /** Cancels a resting SELL order and refunds its escrowed tokens. */
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelOrder(
+    public ResponseEntity<Object> cancelOrder(
             Principal principal,
             @PathVariable("id") UUID orderId) {
 
@@ -94,8 +97,8 @@ public class OrderController {
             p2pOrderService.cancelOrder(orderId, userId);
             return ResponseEntity.ok().build();
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("Unauthorized")) {
-                return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
+                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
             }
             throw e;
         }

@@ -35,8 +35,12 @@ class P2POrderRepositoryTest {
     }
 
     private P2POrder sellOrder(Long userId, int quantity, String price) {
+        return sellOrder(userId, quantity, price, Instant.now());
+    }
+
+    private P2POrder sellOrder(Long userId, int quantity, String price, Instant createdAt) {
         return new P2POrder(UUID.randomUUID(), userId, PLAYER_ID, OrderType.SELL, quantity,
-                new BigDecimal(price), OrderStatus.OPEN, Instant.now(), null);
+                new BigDecimal(price), OrderStatus.OPEN, createdAt, null);
     }
 
     @Test
@@ -50,12 +54,11 @@ class P2POrderRepositoryTest {
 
     @Test
     @Transactional
-    void findOpenSellOrdersDevuelveSoloAbiertasOrdenadasPorPrecioAscendenteYLuegoFifo() throws InterruptedException {
-        P2POrder expensive = p2pOrderRepository.save(sellOrder(1L, 5, "20.00"));
-        Thread.sleep(5);
-        P2POrder cheap = p2pOrderRepository.save(sellOrder(2L, 5, "5.00"));
-        Thread.sleep(5);
-        P2POrder sameAsCheapButLater = p2pOrderRepository.save(sellOrder(3L, 5, "5.00"));
+    void findOpenSellOrdersDevuelveSoloAbiertasOrdenadasPorPrecioAscendenteYLuegoFifo() {
+        Instant now = Instant.now();
+        P2POrder expensive = p2pOrderRepository.save(sellOrder(1L, 5, "20.00", now));
+        P2POrder cheap = p2pOrderRepository.save(sellOrder(2L, 5, "5.00", now.plusMillis(10)));
+        P2POrder sameAsCheapButLater = p2pOrderRepository.save(sellOrder(3L, 5, "5.00", now.plusMillis(20)));
 
         P2POrder cancelled = p2pOrderRepository.save(sellOrder(4L, 5, "1.00"));
         cancelled.cancel();

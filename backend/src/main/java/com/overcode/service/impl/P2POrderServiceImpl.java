@@ -30,6 +30,8 @@ import java.util.UUID;
 @Service
 public class P2POrderServiceImpl implements P2POrderService {
 
+    private static final String PORTFOLIO_NOT_FOUND_MESSAGE = "Portfolio not found for user: ";
+
     private final P2POrderRepository orderRepository;
     private final PortfolioRepository portfolioRepository;
     private final PlayerRepository playerRepository;
@@ -55,7 +57,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         BigDecimal pricePerToken = BigDecimal.valueOf(player.getCurrentPrice());
 
         Portfolio portfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio not found for user: " + userId));
+                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
 
         TokenHolding holding = portfolio.getHoldingForPlayer(playerId)
                 .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player."));
@@ -78,7 +80,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         }
 
         Portfolio buyerPortfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio not found for user: " + userId));
+                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
 
         // Sweep the open SELL book (cheapest first), ignoring the taker's own resting orders.
         List<P2POrder> asks = orderRepository.findOpenSellOrders(playerId).stream()
@@ -135,7 +137,7 @@ public class P2POrderServiceImpl implements P2POrderService {
 
         // Refund the tokens that were escrowed when the SELL order was created.
         Portfolio portfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio not found for user: " + userId));
+                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
         portfolio.getOrCreateHoldingForPlayer(order.getPlayerId()).addTokens(order.getQuantity());
         portfolioRepository.save(portfolio);
     }

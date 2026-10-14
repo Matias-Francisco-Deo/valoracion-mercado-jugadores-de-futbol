@@ -33,7 +33,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
+    public ResponseEntity<Object> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
         }
@@ -51,7 +51,7 @@ public class PortfolioController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPortfolio(Principal principal) {
+    public ResponseEntity<Object> getPortfolio(Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
         }
