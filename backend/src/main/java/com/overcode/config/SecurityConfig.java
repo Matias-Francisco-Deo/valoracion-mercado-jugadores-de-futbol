@@ -59,6 +59,8 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
+                .requestMatchers("/api/admin/players/**").permitAll() // Protegido por el ApiKeyAuthFilter
+                .requestMatchers("/api/admin/quotes/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -77,6 +79,7 @@ public class SecurityConfig {
                 "GET",
                 "POST",
                 "PUT",
+                "PATCH",
                 "DELETE",
                 "OPTIONS"
         ));

@@ -1,5 +1,6 @@
 package com.overcode.controller.exception;
 
+import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
@@ -82,5 +83,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDTO handleOptimisticLockingFailure(ObjectOptimisticLockingFailureException ex) {
         return new ErrorResponseDTO("The order or portfolio was modified by another operation. Please retry.");
+    }
+
+    @ExceptionHandler(EstrategiaInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleEstrategiaInvalida(EstrategiaInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
     }
 }

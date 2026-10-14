@@ -20,7 +20,7 @@ import static com.overcode.testUtils.TestPlayerUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
-class PlayerServiceTest {
+class PlayerServiceImplTest {
 
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
@@ -32,6 +33,7 @@ class ApiKeyAuthFilterTest {
 
         assertEquals(200, response.getStatus(), "El status debe ser 200 OK");
         assertNull(response.getErrorMessage());
+        assertEquals("api-key-user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     @Test

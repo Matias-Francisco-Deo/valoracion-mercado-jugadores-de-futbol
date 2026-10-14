@@ -1,9 +1,6 @@
 package com.overcode.testUtils;
 
-import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
-import com.overcode.persistence.repository.dao.jpa.PlayerGameDataDAOJPA;
-import com.overcode.persistence.repository.dao.jpa.TeamDAOJPA;
-import com.overcode.persistence.repository.dao.jpa.UserDAOJPA;
+import com.overcode.persistence.repository.dao.jpa.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,12 @@ public class TestService {
     @Autowired
     private PlayerGameDataDAOJPA playerGameDataDAO;
 
+    @Autowired
+    private EstrategiaCotizacionDAOJPA estrategiaCotizacionDAO;
+
+    @Autowired
+    private ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAO;
+
     public void eliminarUsuarios() {
         userDAO.deleteAll();
 
@@ -43,6 +46,11 @@ public class TestService {
         eliminarDatosJugadores();
         playerDAO.deleteAll();
         eliminarEquipos();
+    }
+
+    public void eliminarEstrategiasCotizacion() {
+        configuracionCotizacionesDAO.deleteAll();
+        estrategiaCotizacionDAO.deleteAll();
     }
 
 }

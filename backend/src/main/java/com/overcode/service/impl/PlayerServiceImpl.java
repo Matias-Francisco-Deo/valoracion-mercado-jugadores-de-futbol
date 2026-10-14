@@ -76,6 +76,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.listarTop5JugadoresPorRating();
     }
 
+
     private void validarJugador(Player player) {
         if (playerRepository.existsByName(player.getName())) {
             log.error("Jugador ya existe: {}", player.getName());
