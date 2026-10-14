@@ -93,12 +93,6 @@ export default function InventoryPage() {
             Revisa y gestiona tus tokens
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <PortfolioDataBox title="Posición actual" value={`$${userPorfolio?.userPosition ?? 0}`} message="Tu posición actual"/>
-          <PortfolioDataBox title="Precio promedio de compra" value={`$${userPorfolio?.averagePurchasePrice ?? 0}`} message={`${userPorfolio?.totalTokens ?? 0} tokens en posesión`}/>
-          <PortfolioDataBox title="Valor actual del inventario" value={`$${userPorfolio?.totalAccountValue ?? 0}`} message="Valoracion en tiempo real"/>
-          <PortfolioDataBox title="Ganancia/Predida semanal" value={`$${userPorfolio?.totalAccountValue ?? 0}`} message="Balance de la última semana"/>
-        </div>
         {/*extraer a un componente aparte */}
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">

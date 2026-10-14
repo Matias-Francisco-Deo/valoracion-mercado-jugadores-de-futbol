@@ -6,13 +6,10 @@ export interface OrderTokensRequest {
 
 export interface UserInventoryResponse {
   userId: number;
-  userPosition:number;
-  totalTokens: number;//cant tokens totales del user
-  totalAccountValue: number;//valor del portfolio entero
-  averagePurchasePrice: number;//precio promedio deo user
-  profitLoss: number;//ganancia/perdida del portfolio entero
-  availableTokens:Token[];
+  totalTokens: number;//borrar?
+  availableTokens:Token[];//cambiar por TokenPageResponse<Token>
   sellingTokens: Token[];
+  position:TokenPageResponse<PositionToken>;
 }
 
 export interface Token {
@@ -21,6 +18,15 @@ export interface Token {
   currentPrice : number;
   selling: boolean;
   quantity: number;
+}
+
+export interface PositionToken {
+  playerId: number;
+  playerName: string;
+  quantity: number;
+  averagePurchasePrice: number;
+  currentPrice: number;
+  profitLoss: number;
 }
 
 export interface TokenPageResponse<T> {

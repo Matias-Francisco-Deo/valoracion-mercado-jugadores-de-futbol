@@ -1,6 +1,9 @@
 package com.overcode.service.impl;
 
+import com.overcode.controller.dto.user.PortfolioDataDTO;
 import com.overcode.model.User;
+import com.overcode.persistence.dto.jpa.SummaryTokenPlayerDTO;
+import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.EmailRepetidoException;
@@ -8,6 +11,8 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +26,12 @@ public class UserServiceImpl implements UserService {
     public String superuserEmail;
     public String superuserPassword;
 
+    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
 
     public UserServiceImpl(UserRepository userRepository,
+                           TokenRepository tokenRepository,
                            PasswordHasher passwordHasher,
                            @Value("${superuser.name}") String superuserName,
                            @Value("${superuser.password}") String superuserPassword,
@@ -35,6 +42,7 @@ public class UserServiceImpl implements UserService {
         this.superuserPassword = superuserPassword;
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -69,6 +77,18 @@ public class UserServiceImpl implements UserService {
 
         User superuser = new User(superuserName, superuserEmail, passwordHasher.hash(superuserPassword));
         return userRepository.guardar(superuser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PortfolioDataDTO recuperarPortfolio(Long userId, Pageable pageable) {
+        userRepository.recuperar(userId).orElseThrow(() -> new EntidadNoEncontradaException("El usuario no existe"));
+
+        Page<SummaryTokenPlayerDTO> availableTokens = tokenRepository.findPortfolioTokens(userId,false, pageable);
+
+        Page<SummaryTokenPlayerDTO> sellingTokens = tokenRepository.findPortfolioTokens(userId,true,pageable);
+
+        return new PortfolioDataDTO(availableTokens,sellingTokens);
     }
 
     private void validarUsuarioNuevo(User userACrear) {
