@@ -67,8 +67,17 @@ public class P2POrderServiceImpl implements P2POrderService {
         holding.deductTokens(quantity);
         portfolioRepository.save(portfolio);
 
-        P2POrder newOrder = new P2POrder(UUID.randomUUID(), userId, playerId, OrderType.SELL, quantity,
-                pricePerToken, OrderStatus.OPEN, Instant.now(), null);
+        P2POrder newOrder = P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .playerId(playerId)
+                .type(OrderType.SELL)
+                .quantity(quantity)
+                .pricePerToken(pricePerToken)
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(null)
+                .build();
         return orderRepository.save(newOrder);
     }
 

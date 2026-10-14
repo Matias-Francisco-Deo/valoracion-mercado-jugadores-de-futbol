@@ -134,8 +134,17 @@ class P2POrderServiceSellTest {
     // ------------------------------ cancelOrder ------------------------------
 
     private P2POrder openSellOrder(int quantity) {
-        return new P2POrder(UUID.randomUUID(), USER_ID, PLAYER_ID, OrderType.SELL, quantity,
-                new BigDecimal("25"), OrderStatus.OPEN, Instant.now(), 0L);
+        return P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(USER_ID)
+                .playerId(PLAYER_ID)
+                .type(OrderType.SELL)
+                .quantity(quantity)
+                .pricePerToken(new BigDecimal("25"))
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(0L)
+                .build();
     }
 
     @Test

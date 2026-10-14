@@ -17,8 +17,17 @@ class P2POrderJPADTOTest {
     void desdeModeloMapeaTodosLosCamposCorrectamente() {
         UUID id = UUID.randomUUID();
         Instant createdAt = Instant.now();
-        P2POrder modelo = new P2POrder(id, 1L, 10L, OrderType.SELL, 5,
-                new BigDecimal("25.00"), OrderStatus.OPEN, createdAt, 3L);
+        P2POrder modelo = P2POrder.builder()
+                .id(id)
+                .userId(1L)
+                .playerId(10L)
+                .type(OrderType.SELL)
+                .quantity(5)
+                .pricePerToken(new BigDecimal("25.00"))
+                .status(OrderStatus.OPEN)
+                .createdAt(createdAt)
+                .version(3L)
+                .build();
 
         P2POrderJPADTO dto = P2POrderJPADTO.desdeModelo(modelo);
 
@@ -37,8 +46,17 @@ class P2POrderJPADTOTest {
     void aModeloMapeaTodosLosCamposCorrectamente() {
         UUID id = UUID.randomUUID();
         Instant createdAt = Instant.now();
-        P2POrder original = new P2POrder(id, 1L, 10L, OrderType.BUY, 7,
-                new BigDecimal("12.50"), OrderStatus.COMPLETED, createdAt, 2L);
+        P2POrder original = P2POrder.builder()
+                .id(id)
+                .userId(1L)
+                .playerId(10L)
+                .type(OrderType.BUY)
+                .quantity(7)
+                .pricePerToken(new BigDecimal("12.50"))
+                .status(OrderStatus.COMPLETED)
+                .createdAt(createdAt)
+                .version(2L)
+                .build();
         P2POrderJPADTO dto = P2POrderJPADTO.desdeModelo(original);
 
         P2POrder roundTripped = dto.aModelo();
@@ -56,8 +74,17 @@ class P2POrderJPADTOTest {
 
     @Test
     void desdeModeloPreservaVersionNullParaOrdenesNuevas() {
-        P2POrder nuevaOrden = new P2POrder(UUID.randomUUID(), 1L, 10L, OrderType.SELL, 5,
-                new BigDecimal("25.00"), OrderStatus.OPEN, Instant.now(), null);
+        P2POrder nuevaOrden = P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(1L)
+                .playerId(10L)
+                .type(OrderType.SELL)
+                .quantity(5)
+                .pricePerToken(new BigDecimal("25.00"))
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(null)
+                .build();
 
         P2POrderJPADTO dto = P2POrderJPADTO.desdeModelo(nuevaOrden);
 

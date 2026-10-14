@@ -119,8 +119,17 @@ class OrderControllerTest {
         when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
 
         UUID orderId = UUID.randomUUID();
-        P2POrder createdOrder = new P2POrder(orderId, USER_ID, PLAYER_ID, OrderType.SELL, 5,
-                new BigDecimal("12.00"), OrderStatus.OPEN, Instant.now(), null);
+        P2POrder createdOrder = P2POrder.builder()
+                .id(orderId)
+                .userId(USER_ID)
+                .playerId(PLAYER_ID)
+                .type(OrderType.SELL)
+                .quantity(5)
+                .pricePerToken(new BigDecimal("12.00"))
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(null)
+                .build();
         when(p2pOrderService.createSellOrder(USER_ID, PLAYER_ID, 5)).thenReturn(createdOrder);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();

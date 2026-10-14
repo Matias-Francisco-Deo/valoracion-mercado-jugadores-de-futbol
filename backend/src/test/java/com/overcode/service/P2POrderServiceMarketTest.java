@@ -34,8 +34,17 @@ class P2POrderServiceMarketTest {
     private static final Long PLAYER = 10L;
 
     private P2POrder order(Long userId, OrderType type, int qty, String price) {
-        return new P2POrder(UUID.randomUUID(), userId, PLAYER, type, qty,
-                new BigDecimal(price), OrderStatus.OPEN, Instant.now(), 0L);
+        return P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .playerId(PLAYER)
+                .type(type)
+                .quantity(qty)
+                .pricePerToken(new BigDecimal(price))
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(0L)
+                .build();
     }
 
     private Portfolio portfolio(Long userId, String credits) {

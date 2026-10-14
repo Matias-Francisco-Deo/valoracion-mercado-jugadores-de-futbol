@@ -15,17 +15,81 @@ public class P2POrder {
     private Instant createdAt;
     private Long version;
 
-    public P2POrder(UUID id, Long userId, Long playerId, OrderType type, int quantity,
-                    BigDecimal pricePerToken, OrderStatus status, Instant createdAt, Long version) {
-        this.id = id;
-        this.userId = userId;
-        this.playerId = playerId;
-        this.type = type;
-        this.quantity = quantity;
-        this.pricePerToken = pricePerToken;
-        this.status = status;
-        this.createdAt = createdAt != null ? createdAt : Instant.now();
-        this.version = version;
+    private P2POrder(Builder builder) {
+        this.id = builder.id;
+        this.userId = builder.userId;
+        this.playerId = builder.playerId;
+        this.type = builder.type;
+        this.quantity = builder.quantity;
+        this.pricePerToken = builder.pricePerToken;
+        this.status = builder.status;
+        this.createdAt = builder.createdAt != null ? builder.createdAt : Instant.now();
+        this.version = builder.version;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private UUID id;
+        private Long userId;
+        private Long playerId;
+        private OrderType type;
+        private int quantity;
+        private BigDecimal pricePerToken;
+        private OrderStatus status;
+        private Instant createdAt;
+        private Long version;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder userId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder playerId(Long playerId) {
+            this.playerId = playerId;
+            return this;
+        }
+
+        public Builder type(OrderType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder quantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder pricePerToken(BigDecimal pricePerToken) {
+            this.pricePerToken = pricePerToken;
+            return this;
+        }
+
+        public Builder status(OrderStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder createdAt(Instant createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder version(Long version) {
+            this.version = version;
+            return this;
+        }
+
+        public P2POrder build() {
+            return new P2POrder(this);
+        }
     }
 
     public UUID getId() { return id; }

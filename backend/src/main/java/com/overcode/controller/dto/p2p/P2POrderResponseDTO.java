@@ -18,21 +18,19 @@ public class P2POrderResponseDTO {
     private final OrderStatus status;
     private final Instant createdAt;
 
-    public P2POrderResponseDTO(UUID id, Long userId, Long playerId, OrderType type, int quantity,
-                                BigDecimal pricePerToken, OrderStatus status, Instant createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.playerId = playerId;
-        this.type = type;
-        this.quantity = quantity;
-        this.pricePerToken = pricePerToken;
-        this.status = status;
-        this.createdAt = createdAt;
+    public P2POrderResponseDTO(P2POrder order) {
+        this.id = order.getId();
+        this.userId = order.getUserId();
+        this.playerId = order.getPlayerId();
+        this.type = order.getType();
+        this.quantity = order.getQuantity();
+        this.pricePerToken = order.getPricePerToken();
+        this.status = order.getStatus();
+        this.createdAt = order.getCreatedAt();
     }
 
     public static P2POrderResponseDTO from(P2POrder order) {
-        return new P2POrderResponseDTO(order.getId(), order.getUserId(), order.getPlayerId(), order.getType(),
-                order.getQuantity(), order.getPricePerToken(), order.getStatus(), order.getCreatedAt());
+        return new P2POrderResponseDTO(order);
     }
 
     public UUID getId() { return id; }

@@ -65,7 +65,17 @@ public class P2POrderJPADTO {
     public void setVersion(Long version) { this.version = version; }
 
     public P2POrder aModelo() {
-        return new P2POrder(id, userId, playerId, type, quantity, pricePerToken, status, createdAt, version);
+        return P2POrder.builder()
+                .id(id)
+                .userId(userId)
+                .playerId(playerId)
+                .type(type)
+                .quantity(quantity)
+                .pricePerToken(pricePerToken)
+                .status(status)
+                .createdAt(createdAt)
+                .version(version)
+                .build();
     }
 
     public static P2POrderJPADTO desdeModelo(P2POrder modelo) {

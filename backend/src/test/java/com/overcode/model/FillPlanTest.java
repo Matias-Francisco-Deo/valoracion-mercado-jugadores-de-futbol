@@ -12,8 +12,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class FillPlanTest {
 
     private P2POrder sell(long userId, int quantity, String price) {
-        return new P2POrder(UUID.randomUUID(), userId, 10L, OrderType.SELL, quantity,
-                new BigDecimal(price), OrderStatus.OPEN, Instant.now(), null);
+        return P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .playerId(10L)
+                .type(OrderType.SELL)
+                .quantity(quantity)
+                .pricePerToken(new BigDecimal(price))
+                .status(OrderStatus.OPEN)
+                .createdAt(Instant.now())
+                .version(null)
+                .build();
     }
 
     @Test

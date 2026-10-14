@@ -39,8 +39,17 @@ class P2POrderRepositoryTest {
     }
 
     private P2POrder sellOrder(Long userId, int quantity, String price, Instant createdAt) {
-        return new P2POrder(UUID.randomUUID(), userId, PLAYER_ID, OrderType.SELL, quantity,
-                new BigDecimal(price), OrderStatus.OPEN, createdAt, null);
+        return P2POrder.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .playerId(PLAYER_ID)
+                .type(OrderType.SELL)
+                .quantity(quantity)
+                .pricePerToken(new BigDecimal(price))
+                .status(OrderStatus.OPEN)
+                .createdAt(createdAt)
+                .version(null)
+                .build();
     }
 
     @Test
