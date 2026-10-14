@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FillPlanTest {
 
+    // TODO ke es esto
+
     private P2POrder sell(long userId, int quantity, String price) {
         return P2POrder.builder()
                 .id(UUID.randomUUID())
@@ -37,7 +39,7 @@ class FillPlanTest {
 
     @Test
     void sweepsMultipleOrdersAtTheirOwnPrices() {
-        // Candidates arrive already sorted best-price-first (cheapest sell first).
+        // Candidates arrive already sorted best-price-first (cheapest sell first). // TODO cómo que cheapest? todos valen lo mismo
         FillPlan plan = FillPlan.build(12, List.of(
                 sell(2L, 5, "1.00"),
                 sell(3L, 5, "2.00"),
@@ -53,7 +55,7 @@ class FillPlanTest {
 
     @Test
     void stopsOnceRequestedQuantityIsReached() {
-        FillPlan plan = FillPlan.build(5, List.of(
+        FillPlan plan = FillPlan.build(5, List.of( // TODO esto no se puede hacer directamente en el DAO?
                 sell(2L, 5, "1.00"),
                 sell(3L, 5, "2.00")));
 

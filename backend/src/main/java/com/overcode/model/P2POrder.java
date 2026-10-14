@@ -10,9 +10,9 @@ public class P2POrder {
     private Long playerId;
     private OrderType type;
     private int quantity;
-    private BigDecimal pricePerToken;
+    private BigDecimal pricePerToken; // TODO no bigdecimal
     private OrderStatus status;
-    private Instant createdAt;
+    private Instant createdAt; // TODO LocalDate?
     private Long version;
 
     private P2POrder(Builder builder) {
@@ -92,7 +92,7 @@ public class P2POrder {
         }
     }
 
-    public UUID getId() { return id; }
+    public UUID getId() { return id; } // TODO usá lombok para los getters y los setters
     public Long getUserId() { return userId; }
     public Long getPlayerId() { return playerId; }
     public OrderType getType() { return type; }

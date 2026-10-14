@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class P2POrderTest {
 
-    private P2POrder openOrder(int quantity, String price) {
+    private P2POrder openOrder(int quantity, String price) { // TODO el nombre de la clase no me parece piola, qué tal SellOrder a secas?
         return P2POrder.builder()
                 .id(UUID.randomUUID())
                 .userId(1L)
@@ -20,7 +20,7 @@ class P2POrderTest {
                 .pricePerToken(new BigDecimal(price))
                 .status(OrderStatus.OPEN)
                 .createdAt(Instant.now())
-                .version(null)
+                .version(null) // TODO cómo que version? tf
                 .build();
     }
 
@@ -70,7 +70,7 @@ class P2POrderTest {
     @Test
     void reduceQuantityRejectsNonPositive() {
         P2POrder order = openOrder(3, "1.00");
-        assertThrows(IllegalArgumentException.class, () -> order.reduceQuantity(0));
+        assertThrows(IllegalArgumentException.class, () -> order.reduceQuantity(0)); // TODO el error tiene que ser de modelo, no puede ser genérico de Java
     }
 
     @Test
@@ -78,6 +78,6 @@ class P2POrderTest {
         P2POrder order = openOrder(3, "1.00");
         order.cancel();
         assertEquals(OrderStatus.CANCELLED, order.getStatus());
-        assertThrows(IllegalStateException.class, order::markCompleted);
+        assertThrows(IllegalStateException.class, order::markCompleted); // TODO el error tiene que ser de modelo, no puede ser genérico de Java
     }
 }
