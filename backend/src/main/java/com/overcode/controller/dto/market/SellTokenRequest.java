@@ -12,4 +12,5 @@ public class SellTokenRequest {
     @NotNull(message = "Quantity must not be null")
     @Positive(message = "Quantity must be greater than zero")
     private Integer quantity;
+    // TODO aModelo que te de un SellOrder
 }

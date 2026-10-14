@@ -1,31 +1,17 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.FillPlan;
-import com.overcode.model.OrderStatus;
-import com.overcode.model.OrderType;
-import com.overcode.model.P2POrder;
-import com.overcode.model.Player;
-import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
+import com.overcode.model.*;
 import com.overcode.persistence.repository.interfaces.P2POrderRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
-import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.InsufficientEscrowException;
-import com.overcode.service.exception.InsufficientLiquidityException;
-import com.overcode.service.exception.OrderNotFoundException;
-import com.overcode.service.exception.PortfolioNotFoundException;
+import com.overcode.service.exception.*;
 import com.overcode.service.interfaces.P2POrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class P2POrderServiceImpl implements P2POrderService {
@@ -46,9 +32,9 @@ public class P2POrderServiceImpl implements P2POrderService {
 
     @Override
     @Transactional
-    public P2POrder createSellOrder(Long userId, Long playerId, int quantity) {
+    public P2POrder createSellOrder(Long userId, Long playerId, int quantity) { // TODO esto tiene que ser un solo argumento SellOrder
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive.");
+            throw new IllegalArgumentException("Quantity must be positive."); // TODO errores de service
         }
 
         //orden con precio del token al momento de crearla
@@ -57,15 +43,15 @@ public class P2POrderServiceImpl implements P2POrderService {
         BigDecimal pricePerToken = BigDecimal.valueOf(player.getCurrentPrice());
 
         Portfolio portfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
+                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId)); // TODO esta no va
 
         TokenHolding holding = portfolio.getHoldingForPlayer(playerId)
-                .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player."));
+                .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player.")); // está buena esta excepción por ejemplo
         if (!holding.hasSufficientTokens(quantity)) {
-            throw new InsufficientEscrowException("Not enough tokens to place SELL order.");
+            throw new InsufficientEscrowException("Not enough tokens to place SELL order."); // god excepción hermano
         }
-        holding.deductTokens(quantity);
-        portfolioRepository.save(portfolio);
+        holding.deductTokens(quantity); // TODO un for que mire cada token y haga token.vender que devuelva un SellOrder ya creado
+        portfolioRepository.save(portfolio); // TODO fijate de poner el ID del token en null, cosa que "no tenga" owner mientras se vende
 
         P2POrder newOrder = P2POrder.builder()
                 .id(UUID.randomUUID())
@@ -83,12 +69,12 @@ public class P2POrderServiceImpl implements P2POrderService {
 
     @Override
     @Transactional
-    public void executeMarketBuy(Long userId, Long playerId, int quantity) {
-        if (quantity <= 0) {
+    public void executeMarketBuy(Long userId, Long playerId, int quantity) { // TODO lo mismo de arriba, parámetro solo que venga del aModelo de request
+        if (quantity <= 0) { // TODO esto también tiene que estar en el Body (o Request) que te envíen
             throw new IllegalArgumentException("Quantity must be positive.");
         }
 
-        Portfolio buyerPortfolio = portfolioRepository.findByUserId(userId)
+        Portfolio buyerPortfolio = portfolioRepository.findByUserId(userId) // TODO xd
                 .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
 
         // Sweep the open SELL book (cheapest first), ignoring the taker's own resting orders.
@@ -96,17 +82,17 @@ public class P2POrderServiceImpl implements P2POrderService {
                 .filter(order -> !order.belongsTo(userId))
                 .toList();
 
-        FillPlan plan = FillPlan.build(quantity, asks);
+        FillPlan plan = FillPlan.build(quantity, asks); // TODO sería eso de cambiar el id de los tokens por el comprador :'v
         if (!plan.isFullyFilled()) {
             throw new InsufficientLiquidityException(
                     "Not enough liquidity to buy " + quantity + " tokens for player " + playerId);
         }
 
         // Taker pays up front at each maker's price; the domain guards the buyer's funds.
-        buyerPortfolio.deductCredits(plan.totalCost());
+        buyerPortfolio.deductCredits(plan.totalCost()); // TODO esto es lógica de modelo, tendría que ser alguna especie de buyer.buyTokens(User seller)
         TokenHolding buyerHolding = buyerPortfolio.getOrCreateHoldingForPlayer(playerId);
 
-        Map<Long, Portfolio> sellerPortfolios = new HashMap<>();
+        Map<Long, Portfolio> sellerPortfolios = new HashMap<>(); // TODO sería eso de cambiar el id de los tokens por el comprador :'v
         List<P2POrder> touchedMakers = new ArrayList<>();
         for (FillPlan.Fill fill : plan.getFills()) {
             P2POrder makerOrder = fill.getMakerOrder();
@@ -129,16 +115,16 @@ public class P2POrderServiceImpl implements P2POrderService {
 
     @Override
     @Transactional
-    public void cancelOrder(UUID orderId, Long userId) {
+    public void cancelOrder(UUID orderId, Long userId) { // TODO esto no lo hagas todavía, centrate en compra y venta
         P2POrder order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId)); // buen error
 
         if (!order.getUserId().equals(userId)) {
-            throw new IllegalStateException("You can only cancel your own orders.");
+            throw new IllegalStateException("You can only cancel your own orders."); // TODO tendría que ser exception de service
         }
 
         if (order.getStatus() != OrderStatus.OPEN) {
-            throw new IllegalStateException("Only OPEN orders can be cancelled.");
+            throw new IllegalStateException("Only OPEN orders can be cancelled."); // TODO lo mismo
         }
 
         order.cancel();
