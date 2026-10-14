@@ -1,8 +1,8 @@
 package com.overcode.service;
-import com.overcode.service.interfaces.TokenEmissionService;
 
 import com.overcode.model.Player;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
+import com.overcode.service.interfaces.TokenEmissionService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class TokenEmissionServiceTest {
     private PortfolioRepository portfolioRepository;
 
     @Test
-    void whenPlayerIsCreated_thenTokensAreEmittedToSuperAdmin() {
+    void whenPlayerIsCreatedThenTokensAreEmittedToSuperAdmin() {
         // Given
         Player player = new Player();
         player.setId(1L);

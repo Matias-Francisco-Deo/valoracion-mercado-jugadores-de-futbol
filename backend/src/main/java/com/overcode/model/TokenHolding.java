@@ -2,7 +2,7 @@ package com.overcode.model;
 
 import java.util.UUID;
 
-public class TokenHolding {
+public class TokenHolding { // TODO que sea el otro token, porque la función es casi la misma
     private UUID id;
     private UUID portfolioId;
     private Long playerId;

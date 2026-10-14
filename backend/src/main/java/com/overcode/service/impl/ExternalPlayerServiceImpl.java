@@ -47,7 +47,7 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
         List<Player> allPlayers = teams.stream().flatMap(team -> team.getPlayers().stream()).toList();
         
         // Emit tokens for all players (method is idempotent, so it won't emit twice for existing players)
-        allPlayers.forEach(tokenEmissionService::emitTokensForNewPlayer);
+        allPlayers.forEach(tokenEmissionService::emitTokensForNewPlayer); // TODO xd, esto no debería estar acá
 
         return Optional.of(allPlayers);
     }

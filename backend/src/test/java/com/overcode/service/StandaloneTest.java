@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class StandaloneTest {
+class StandaloneTest { // TODO test modelo
 
     @Test
     void testMapping() {

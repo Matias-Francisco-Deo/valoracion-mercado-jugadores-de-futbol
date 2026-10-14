@@ -53,7 +53,7 @@ public class TeamRepositoryImpl implements TeamRepository {
 
         Team teamToUpdate = optionalTeam.get();
         List<Player> newPlayers = players.stream().filter(player -> !externalPlayerRepository.existsByExternalId(player)).toList();
-        teamToUpdate.addPlayers(newPlayers);
+        teamToUpdate.addPlayers(newPlayers); // TODO acá están los jugadores nuevos
         // guardo al team con todos los datos actualizados
 
         TeamJPADTO teamJPADTO = TeamJPADTO.desdeModelo(teamToUpdate);

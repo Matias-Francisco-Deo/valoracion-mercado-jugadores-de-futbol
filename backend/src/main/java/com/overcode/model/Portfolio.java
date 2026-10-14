@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Portfolio {
+public class Portfolio { // TODO no usar por ahora, dejáselo a Joel
     private UUID id;
     private Long userId;
     private BigDecimal credits;

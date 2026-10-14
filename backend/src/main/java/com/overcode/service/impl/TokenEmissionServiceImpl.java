@@ -35,7 +35,10 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
     @Transactional
     public void emitTokensForNewPlayer(Player player) {
         User superadmin = userRepository.findByEmail(superadminEmail)
-                .orElseThrow(() -> new IllegalStateException("Super admin not found with email: " + superadminEmail));
+                .orElseThrow(() -> new IllegalStateException("Super admin not found with email: " + superadminEmail)); // TODO exception de service
+
+        // TODO vincular los tokens directamente con el superusuario haciendo un for y cambiando al id de owner
+        //  esto es lógica de modelo, NO lo hagas desde el service (o sea, acá)
 
         Portfolio portfolio = portfolioRepository.findByUserId(superadmin.getId())
                 .orElseGet(() -> new Portfolio(UUID.randomUUID(), superadmin.getId(), BigDecimal.ZERO, null));
