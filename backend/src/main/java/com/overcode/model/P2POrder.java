@@ -4,8 +4,17 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+//public class SellOrder { // TODO algo así?
+//    private Long id;
+//    private Long sellerId;
+//    private Long tokenId;
+//    private Long playerId;
+//    private Instant createdAt;
+//}
+
+
 public class P2POrder {
-    private UUID id;
+    private UUID id; // TODO los ids son todos Long
     private Long userId;
     private Long playerId;
     private OrderType type;

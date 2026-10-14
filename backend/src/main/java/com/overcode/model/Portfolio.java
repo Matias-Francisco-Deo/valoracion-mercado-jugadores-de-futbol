@@ -13,7 +13,7 @@ public class Portfolio {
     private Long userId;
     private BigDecimal credits;
     private List<TokenHolding> tokenHoldings;
-    private Long version;
+    private Long version; // TODO version?
 
     public Portfolio(UUID id, Long userId, BigDecimal credits, Long version) {
         this.id = id;
