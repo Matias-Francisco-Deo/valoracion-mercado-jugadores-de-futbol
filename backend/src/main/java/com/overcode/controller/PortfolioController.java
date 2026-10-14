@@ -24,6 +24,8 @@ import java.util.Map;
 @Tag(name = "Portfolio", description = "Endpoints for a user's portfolio and credit balance")
 public class PortfolioController {
 
+    private static final String ERROR_KEY = "error";
+
     private final PortfolioService portfolioService;
     private final UserService userService;
 
@@ -35,7 +37,7 @@ public class PortfolioController {
     @PostMapping("/deposit")
     public ResponseEntity<Object> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Unauthorized"));
         }
 
         User user = userService.recuperarPorEmail(principal.getName())
@@ -45,7 +47,7 @@ public class PortfolioController {
             Portfolio portfolio = portfolioService.deposit(user.getId(), request.getAmount());
             return ResponseEntity.ok(DepositResponseDTO.of(portfolio.getCredits()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, e.getMessage()));
         }
         // PortfolioNotFoundException is mapped globally by GlobalExceptionHandler (404).
     }
@@ -53,7 +55,7 @@ public class PortfolioController {
     @GetMapping
     public ResponseEntity<Object> getPortfolio(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Unauthorized"));
         }
 
         User user = userService.recuperarPorEmail(principal.getName())
