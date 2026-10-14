@@ -14,13 +14,3 @@ CREATE TABLE token_holding (
     CONSTRAINT uk_portfolio_player UNIQUE (portfolio_id, player_id)
 );
 
-CREATE TABLE audit_log (
-    id UUID PRIMARY KEY,
-    operation_type VARCHAR(50) NOT NULL,
-    user_id BIGINT NOT NULL,
-    counterparty_id BIGINT NOT NULL,
-    player_id BIGINT NOT NULL,
-    token_amount INT NOT NULL,
-    price_per_token DECIMAL(19, 2) NOT NULL,
-    timestamp TIMESTAMP NOT NULL
-);

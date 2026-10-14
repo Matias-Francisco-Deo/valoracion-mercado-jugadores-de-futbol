@@ -1,9 +1,7 @@
 package com.overcode.service;
 import com.overcode.service.interfaces.TokenEmissionService;
 
-import com.overcode.model.AuditLog;
 import com.overcode.model.Player;
-import com.overcode.persistence.repository.interfaces.AuditLogRepository;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,9 +23,6 @@ class TokenEmissionServiceTest {
 
     @Autowired
     private PortfolioRepository portfolioRepository;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
 
     @Test
     void whenPlayerIsCreated_thenTokensAreEmittedToSuperAdmin() {
@@ -54,14 +49,5 @@ class TokenEmissionServiceTest {
             }
         }
         assertTrue(found, "SuperAdmin portfolio should have 100 tokens for the new player");
-
-        // Verify Audit Log
-        List<AuditLog> logs = auditLogRepository.findAll();
-        boolean emissionLogged = logs.stream().anyMatch(log ->
-            log.getPlayerId().equals(player.getId()) &&
-            log.getOperationType().equals(AuditLog.OperationType.EMISSION) &&
-            log.getTokenAmount() == 100
-        );
-        assertTrue(emissionLogged, "An emission audit log should be present");
     }
 }

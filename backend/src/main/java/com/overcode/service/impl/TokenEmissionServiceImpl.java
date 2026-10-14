@@ -1,11 +1,9 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.AuditLog;
 import com.overcode.model.Player;
 import com.overcode.model.Portfolio;
 import com.overcode.model.TokenHolding;
 import com.overcode.model.User;
-import com.overcode.persistence.repository.interfaces.AuditLogRepository;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.TokenEmissionService;
@@ -14,27 +12,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.UUID;
 
 @Service
 public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     private static final int INITIAL_TOKEN_AMOUNT = 100;
-    private static final BigDecimal INITIAL_PRICE = BigDecimal.valueOf(1.0);
 
     private final PortfolioRepository portfolioRepository;
-    private final AuditLogRepository auditLogRepository;
     private final UserRepository userRepository;
 
     @Value("${superuser.email:overcode@gmail.com}")
     private String superadminEmail;
 
     public TokenEmissionServiceImpl(PortfolioRepository portfolioRepository,
-                                    AuditLogRepository auditLogRepository,
                                     UserRepository userRepository) {
         this.portfolioRepository = portfolioRepository;
-        this.auditLogRepository = auditLogRepository;
         this.userRepository = userRepository;
     }
 
@@ -57,19 +50,5 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
         holding.addTokens(INITIAL_TOKEN_AMOUNT);
 
         portfolioRepository.save(portfolio);
-
-        // Audit Log
-        AuditLog auditLog = new AuditLog(
-                UUID.randomUUID(),
-                AuditLog.OperationType.EMISSION,
-                superadmin.getId(), // Issuer
-                superadmin.getId(), // Counterparty (Self)
-                player.getId(),
-                INITIAL_TOKEN_AMOUNT,
-                INITIAL_PRICE,
-                Instant.now()
-        );
-
-        auditLogRepository.save(auditLog);
     }
 }

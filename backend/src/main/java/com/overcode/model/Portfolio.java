@@ -1,5 +1,7 @@
 package com.overcode.model;
 
+import com.overcode.model.exception.InsufficientFundsException;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,7 @@ public class Portfolio {
             throw new IllegalArgumentException("Amount must be positive");
         }
         if (!hasSufficientCredits(amount)) {
-            throw new IllegalStateException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
         this.credits = this.credits.subtract(amount);
     }

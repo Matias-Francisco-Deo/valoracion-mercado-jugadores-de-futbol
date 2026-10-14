@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Portfolio;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
+import com.overcode.service.exception.PortfolioNotFoundException;
 import com.overcode.service.interfaces.PortfolioService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,6 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Transactional(readOnly = true)
     public Portfolio getByUserId(Long userId) {
         return portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalStateException("Portfolio not found"));
+                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio not found"));
     }
 }

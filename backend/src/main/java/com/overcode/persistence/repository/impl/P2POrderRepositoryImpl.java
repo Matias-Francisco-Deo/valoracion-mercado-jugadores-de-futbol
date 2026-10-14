@@ -8,7 +8,6 @@ import com.overcode.persistence.repository.dao.jpa.P2POrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.P2POrderRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,33 +28,20 @@ public class P2POrderRepositoryImpl implements P2POrderRepository {
     }
 
     @Override
+    public List<P2POrder> saveAll(List<P2POrder> orders) {
+        List<P2POrderJPADTO> dtos = orders.stream().map(P2POrderJPADTO::desdeModelo).toList();
+        return dao.saveAll(dtos).stream().map(P2POrderJPADTO::aModelo).toList();
+    }
+
+    @Override
     public Optional<P2POrder> findById(UUID id) {
         return dao.findById(id).map(P2POrderJPADTO::aModelo);
-    }
-
-    @Override
-    public Optional<P2POrder> findBestSellMatch(Long playerId, int quantity, BigDecimal maxPrice) {
-        return dao.findFirstByPlayerIdAndStatusAndTypeAndQuantityAndPricePerTokenLessThanEqualOrderByPricePerTokenAscCreatedAtAsc(
-                playerId, OrderStatus.OPEN, OrderType.SELL, quantity, maxPrice).map(P2POrderJPADTO::aModelo);
-    }
-
-    @Override
-    public Optional<P2POrder> findBestBuyMatch(Long playerId, int quantity, BigDecimal minPrice) {
-        return dao.findFirstByPlayerIdAndStatusAndTypeAndQuantityAndPricePerTokenGreaterThanEqualOrderByPricePerTokenDescCreatedAtAsc(
-                playerId, OrderStatus.OPEN, OrderType.BUY, quantity, minPrice).map(P2POrderJPADTO::aModelo);
     }
 
     @Override
     public List<P2POrder> findOpenSellOrders(Long playerId) {
         return dao.findByPlayerIdAndStatusAndTypeOrderByPricePerTokenAscCreatedAtAsc(
                         playerId, OrderStatus.OPEN, OrderType.SELL)
-                .stream().map(P2POrderJPADTO::aModelo).toList();
-    }
-
-    @Override
-    public List<P2POrder> findOpenBuyOrders(Long playerId) {
-        return dao.findByPlayerIdAndStatusAndTypeOrderByPricePerTokenDescCreatedAtAsc(
-                        playerId, OrderStatus.OPEN, OrderType.BUY)
                 .stream().map(P2POrderJPADTO::aModelo).toList();
     }
 }

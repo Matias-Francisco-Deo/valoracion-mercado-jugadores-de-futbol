@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.Portfolio;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
+import com.overcode.service.exception.PortfolioNotFoundException;
 import com.overcode.service.impl.PortfolioServiceImpl;
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +95,6 @@ class PortfolioServiceImplTest {
 
         PortfolioServiceImpl service = new PortfolioServiceImpl(repository);
 
-        assertThrows(IllegalStateException.class, () -> service.getByUserId(5L));
+        assertThrows(PortfolioNotFoundException.class, () -> service.getByUserId(5L));
     }
 }

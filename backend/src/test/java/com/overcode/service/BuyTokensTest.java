@@ -1,6 +1,5 @@
 package com.overcode.service;
 
-import com.overcode.model.OrderType;
 import com.overcode.model.Player;
 import com.overcode.model.Portfolio;
 import com.overcode.model.TokenHolding;
@@ -51,7 +50,7 @@ public class BuyTokensTest {
         sellerPortfolio.addTokenHolding(holding);
         portfolioRepository.save(sellerPortfolio);
 
-        p2pOrderService.createOrder(seller.getId(), player.getId(), OrderType.SELL, 5, new BigDecimal("10.00"));
+        p2pOrderService.createSellOrder(seller.getId(), player.getId(), 5);
 
         // Buyer with enough credits sweeps the book with just {playerId, quantity}.
         User buyer = userRepository.guardar(new User("buyer-" + UUID.randomUUID(),

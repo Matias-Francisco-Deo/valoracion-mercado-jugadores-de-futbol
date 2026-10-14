@@ -1,6 +1,8 @@
 package com.overcode.controller;
 
 import com.overcode.controller.dto.portfolio.DepositRequest;
+import com.overcode.controller.dto.portfolio.DepositResponseDTO;
+import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
 import com.overcode.model.Portfolio;
 import com.overcode.model.User;
 import com.overcode.service.interfaces.PortfolioService;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,15 +43,11 @@ public class PortfolioController {
 
         try {
             Portfolio portfolio = portfolioService.deposit(user.getId(), request.getAmount());
-            return ResponseEntity.ok(Map.of(
-                    "message", "Credits deposited successfully",
-                    "credits", portfolio.getCredits()
-            ));
+            return ResponseEntity.ok(DepositResponseDTO.of(portfolio.getCredits()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
         }
+        // PortfolioNotFoundException is mapped globally by GlobalExceptionHandler (404).
     }
 
     @GetMapping
@@ -62,19 +59,8 @@ public class PortfolioController {
         User user = userService.recuperarPorEmail(principal.getName())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        try {
-            Portfolio portfolio = portfolioService.getByUserId(user.getId());
-            List<Map<String, Object>> holdings = portfolio.getTokenHoldings().stream()
-                    .map(h -> Map.<String, Object>of(
-                            "playerId", h.getPlayerId(),
-                            "quantity", h.getQuantity()))
-                    .toList();
-            return ResponseEntity.ok(Map.of(
-                    "credits", portfolio.getCredits(),
-                    "holdings", holdings
-            ));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
-        }
+        Portfolio portfolio = portfolioService.getByUserId(user.getId());
+        return ResponseEntity.ok(PortfolioResponseDTO.from(portfolio));
+        // PortfolioNotFoundException is mapped globally by GlobalExceptionHandler (404).
     }
 }

@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.exception.InsufficientFundsException;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,7 +18,7 @@ class PortfolioTest {
         portfolio.deductCredits(BigDecimal.valueOf(50));
         assertEquals(0, BigDecimal.valueOf(50).compareTo(portfolio.getCredits()));
         
-        assertThrows(IllegalStateException.class, () -> portfolio.deductCredits(BigDecimal.valueOf(60)));
+        assertThrows(InsufficientFundsException.class, () -> portfolio.deductCredits(BigDecimal.valueOf(60)));
         
         portfolio.addCredits(BigDecimal.valueOf(10));
         assertEquals(0, BigDecimal.valueOf(60).compareTo(portfolio.getCredits()));

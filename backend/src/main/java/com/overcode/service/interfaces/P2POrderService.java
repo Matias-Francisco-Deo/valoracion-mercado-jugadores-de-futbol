@@ -1,25 +1,27 @@
 package com.overcode.service.interfaces;
 
 import com.overcode.model.P2POrder;
-import java.math.BigDecimal;
 import java.util.UUID;
-import com.overcode.model.OrderType;
 
+/**
+ * Trading model: buying is always an instant, all-or-nothing taker sweep against the resting
+ * SELL book; selling publishes a resting SELL order that waits until one or more buyers consume
+ * it (fully or partially). There is no resting BUY order and no user-supplied price anywhere in
+ * this API — a player's price is owned by the pricing strategy ({@code Player#getCurrentPrice()})
+ * and is frozen onto a SELL order at creation time.
+ */
 public interface P2POrderService {
-    P2POrder createOrder(Long userId, Long playerId, OrderType type, int quantity, BigDecimal pricePerToken);
+
+    /** Publishes a resting SELL order for {@code quantity} tokens, priced at the player's current price. */
+    P2POrder createSellOrder(Long userId, Long playerId, int quantity);
+
+    /** Cancels a resting SELL order owned by {@code userId} and refunds its escrowed tokens. */
     void cancelOrder(UUID orderId, Long userId);
-    void processMatchmaking(UUID orderId);
 
     /**
-     * Market BUY: immediately sweep the open SELL book for the player, cheapest first, until
-     * {@code quantity} tokens are filled. All-or-nothing — if the book cannot fully fill the
-     * request it throws and nothing changes.
+     * Instantly sweeps the open SELL book for the player, cheapest first, until {@code quantity}
+     * tokens are filled. All-or-nothing — if the book cannot fully fill the request it throws and
+     * nothing changes.
      */
     void executeMarketBuy(Long userId, Long playerId, int quantity);
-
-    /**
-     * Market SELL: immediately sweep the open BUY book for the player, highest bid first, until
-     * {@code quantity} tokens are sold. All-or-nothing.
-     */
-    void executeMarketSell(Long userId, Long playerId, int quantity);
 }
