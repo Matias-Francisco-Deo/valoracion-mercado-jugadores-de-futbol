@@ -4,7 +4,6 @@ import com.overcode.model.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 
@@ -17,7 +16,6 @@ public class RegistroCotizacion {
 
     private Player player;
 
-    @CreatedDate
     private LocalDate createdAt;
 
     private Double cotizacion;
@@ -28,5 +26,9 @@ public class RegistroCotizacion {
         setPlayer(player);
         setCotizacion(cotizacion);
         setEstrategiaCotizacionUsada(estrategiaCotizacionUsada);
+    }
+
+    public void setCotizacion(Double cotizacion) {
+        this.cotizacion = Math.max(1, cotizacion);
     }
 }

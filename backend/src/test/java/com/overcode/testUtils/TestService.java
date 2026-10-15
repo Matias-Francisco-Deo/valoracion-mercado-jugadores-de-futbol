@@ -52,8 +52,8 @@ public class TestService {
     }
 
     public void eliminarCotizaciones() {
-        eliminarEstrategiasCotizacion();
         registroCotizacionDAO.deleteAll();
+        eliminarEstrategiasCotizacion();
     }
 
     public void eliminarEstrategiasCotizacion() {

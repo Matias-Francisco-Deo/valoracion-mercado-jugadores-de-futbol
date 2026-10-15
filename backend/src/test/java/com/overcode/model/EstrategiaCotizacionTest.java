@@ -8,7 +8,6 @@ import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre5;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
@@ -42,7 +41,6 @@ class EstrategiaCotizacionTest {
         assertEquals(2, registro.getCotizacion());
         assertEquals(JUGADOR_1, registro.getPlayer());
         assertEquals(estrategiaCotizacion, registro.getEstrategiaCotizacionUsada());
-        assertEquals(LocalDate.now(), registro.getCreatedAt());
     }
 
     @Test

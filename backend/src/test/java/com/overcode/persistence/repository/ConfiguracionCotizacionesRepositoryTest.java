@@ -30,12 +30,12 @@ class ConfiguracionCotizacionesRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarEstrategiasCotizacion();
+        testService.eliminarCotizaciones();
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarEstrategiasCotizacion();
+        testService.eliminarCotizaciones();
     }
 
     @Test

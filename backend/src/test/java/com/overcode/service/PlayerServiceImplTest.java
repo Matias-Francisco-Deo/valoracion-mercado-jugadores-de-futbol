@@ -36,6 +36,7 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
     }
 

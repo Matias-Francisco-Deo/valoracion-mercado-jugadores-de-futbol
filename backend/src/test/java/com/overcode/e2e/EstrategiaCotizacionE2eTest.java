@@ -79,19 +79,19 @@ class EstrategiaCotizacionE2eTest {
 
     @BeforeEach
     void setUp() {
-        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
-        testService.eliminarEstrategiasCotizacion();
         // emitTokensForNewPlayer (disparado al crear un jugador) necesita que exista el
         // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
         userService.crearSuperusuario();
     }
 
     @AfterEach
     void teardown() {
         TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
-        testService.eliminarEstrategiasCotizacion();
     }
 
     // ────────────────────────────────────────────────────────────────────────────

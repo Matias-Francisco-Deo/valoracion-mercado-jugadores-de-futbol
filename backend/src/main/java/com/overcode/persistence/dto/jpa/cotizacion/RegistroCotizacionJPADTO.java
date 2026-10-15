@@ -7,11 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
 @Entity(name="registro_cotizacion")
 @Table(name = "registro_cotizaciones")
+@EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
 @NoArgsConstructor
@@ -25,6 +28,7 @@ public class RegistroCotizacionJPADTO {
     @NotNull
     private PlayerJPADTO player;
 
+    @CreatedDate
     private LocalDate createdAt;
 
     private Double cotizacion;
