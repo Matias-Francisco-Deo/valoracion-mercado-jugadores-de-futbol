@@ -1,0 +1,10 @@
+package com.overcode.persistence.repository.interfaces;
+
+import com.overcode.model.cotizacion.RegistroCotizacion;
+
+import java.util.List;
+
+public interface RegistroCotizacionRepository {
+    List<RegistroCotizacion> crearTodos(List<RegistroCotizacion> registroCotizaciones);
+
+}

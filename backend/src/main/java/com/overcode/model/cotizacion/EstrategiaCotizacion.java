@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -24,11 +26,14 @@ public abstract class EstrategiaCotizacion {
         setFactorEscala(factorEscala);
     }
 
-    public void cotizar(List<Player> players) {
-        players.forEach(player -> {
-            Double cotizacion = calcularCotizacion(player);
-            player.recalcularCotizacion(cotizacion);
-        });
+    public List<RegistroCotizacion> cotizar(List<Player> players) {
+        return players.stream().map(this::cotizarAUnJugador).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public RegistroCotizacion cotizarAUnJugador(Player player) {
+        Double cotizacion = calcularCotizacion(player);
+        player.recalcularCotizacion(cotizacion);
+        return new RegistroCotizacion(player, cotizacion, this);
     }
 
     public Double calcularCotizacion(Player player) {

@@ -3,10 +3,12 @@ package com.overcode.service.impl;
 import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -24,13 +26,16 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
     private final ConfiguracionCotizacionesService configuracionCotizacionesService;
     private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private final RegistroCotizacionRepository registroCotizacionRepository;
+
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, ConfiguracionCotizacionesRepository configuracionCotizacionesRepository, PlayerRepository playerRepository, PlayerService playerService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, ConfiguracionCotizacionesRepository configuracionCotizacionesRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionCotizacionesService = configuracionCotizacionesService;
         this.configuracionCotizacionesRepository = configuracionCotizacionesRepository;
+        this.registroCotizacionRepository = registroCotizacionRepository;
         this.playerRepository = playerRepository;
         this.playerService = playerService;
     }
@@ -81,7 +86,9 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         List<Player> jugadores = playerService.recuperarTodos();
 
-        estrategia.cotizar(jugadores);
+        List<RegistroCotizacion> registros = estrategia.cotizar(jugadores);
+
+        registroCotizacionRepository.crearTodos(registros);
 
         playerRepository.guardarTodos(jugadores);
 
