@@ -3,6 +3,7 @@ package com.overcode.service;
 import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
@@ -11,6 +12,7 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
+import com.overcode.service.impl.RegistroCotizacionServiceImpl;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
@@ -57,14 +59,21 @@ class EstrategiaCotizacionServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RegistroCotizacionServiceImpl registroCotizacionServiceImpl;
+
     @AfterEach
     void setUp() {
-        testService.eliminarEstrategiasCotizacion();
+        testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
+        testService.eliminarDatosJugadores();
     }
 
     @BeforeEach
     void tearDown() {
-        testService.eliminarEstrategiasCotizacion();
+        testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
+        testService.eliminarDatosJugadores();
         // emitTokensForNewPlayer (disparado por playerServiceImpl.crear) necesita que exista el
         // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
         userService.crearSuperusuario();
@@ -273,6 +282,34 @@ class EstrategiaCotizacionServiceTest {
             // estrategia1 es siempre2 con 0 de valor base y 1 de escala = 2
 
             assertEquals(2.0, Double.valueOf(playerRecuperado.getCurrentPrice()));
+        });
+
+    }
+
+    @Test
+    void seCotizanJugadoresYQuedaUnRegistro() {
+
+        Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
+        Player playerPersistido = playerServiceImpl.crear(player);
+
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
+
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+
+            estrategiaCotizacionService.cotizarJugadores();
+
+            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(playerPersistido.getId());
+
+            assertFalse(registros.isEmpty());
+            RegistroCotizacion primerRegistro = registros.getFirst();
+
+            assertEquals(2.0, primerRegistro.getCotizacion());
+            assertEquals(playerPersistido.getId(), primerRegistro.getPlayer().getId());
         });
 
     }

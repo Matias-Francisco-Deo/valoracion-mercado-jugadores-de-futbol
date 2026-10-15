@@ -90,7 +90,6 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         registroCotizacionRepository.crearTodos(registros);
 
         playerRepository.guardarTodos(jugadores);
-
     }
 
     private static void verificarFactorEscalaPositivo(Double factorEscala) {

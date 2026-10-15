@@ -27,7 +27,7 @@ public class RegistroCotizacionRepositoryImpl implements RegistroCotizacionRepos
         return registroCotizacionDAOJPA.saveAll(registros).stream().map(RegistroCotizacionJPADTO::aModelo).toList();
     }
 
-    public List<RegistroCotizacion> recuperarRegistrosDeJugador(Long id) {
-        return registroCotizacionDAOJPA.recuperarRegistrosDeJugador(id).stream().map(RegistroCotizacionJPADTO::aModelo).toList();
+    public List<RegistroCotizacion> recuperarRegistrosDeJugador(Long playerId) {
+        return registroCotizacionDAOJPA.recuperarRegistrosDeJugador(playerId).stream().map(RegistroCotizacionJPADTO::aModelo).toList();
     }
 }

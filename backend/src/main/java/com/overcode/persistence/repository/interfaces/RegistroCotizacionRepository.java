@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RegistroCotizacionRepository {
     List<RegistroCotizacion> crearTodos(List<RegistroCotizacion> registroCotizaciones);
-
+    List<RegistroCotizacion> recuperarRegistrosDeJugador(Long playerId);
 }

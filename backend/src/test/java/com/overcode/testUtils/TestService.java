@@ -1,6 +1,8 @@
 package com.overcode.testUtils;
 
 import com.overcode.persistence.repository.dao.jpa.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,34 +32,49 @@ public class TestService {
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public void eliminarUsuarios() {
+        entityManager.createNativeQuery("DELETE FROM users");
         userDAO.deleteAll();
 
     }
 
     public void eliminarEquipos() {
+        entityManager.createNativeQuery("DELETE FROM teams");
         teamDAO.deleteAll();
 
     }
 
     public void eliminarDatosJugadores() {
+        entityManager.createNativeQuery("DELETE FROM players_game_data");
         playerGameDataDAO.deleteAll();
 
     }
 
     public void eliminarJugadoresYEquipos() {
         eliminarDatosJugadores();
-        playerDAO.deleteAll();
+        eliminarJugadores();
         eliminarEquipos();
     }
 
+    private void eliminarJugadores() {
+        entityManager.createNativeQuery("DELETE FROM players");
+        playerDAO.deleteAll();
+    }
+
     public void eliminarCotizaciones() {
+        entityManager.createNativeQuery("DELETE FROM registros_cotizaciones");
         registroCotizacionDAO.deleteAll();
         eliminarEstrategiasCotizacion();
     }
 
     public void eliminarEstrategiasCotizacion() {
+        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
         configuracionCotizacionesDAO.deleteAll();
+
+        entityManager.createNativeQuery("DELETE FROM estrategias_cotizacion");
         estrategiaCotizacionDAO.deleteAll();
     }
 
