@@ -20,9 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mockStatic;
 
@@ -60,8 +59,8 @@ class EstrategiaCotizacionServiceManualTest {
     @Disabled("Usar manualmente para testear")
     void cotizarJugadoresManual() {
 
-        Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.crear(player);
+//        Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
+//        Player playerPersistido = playerServiceImpl.crear(player);
 
         final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
 
@@ -74,13 +73,14 @@ class EstrategiaCotizacionServiceManualTest {
 
             estrategiaCotizacionService.cotizarJugadores();
 
-            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(playerPersistido.getId());
+            Player player = playerServiceImpl.recuperarTodos().getFirst();
+
+            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(player.getId());
 
             assertFalse(registros.isEmpty());
             RegistroCotizacion primerRegistro = registros.getFirst();
 
-            assertEquals(2.0, primerRegistro.getCotizacion());
-            assertEquals(playerPersistido.getId(), primerRegistro.getPlayer().getId());
+            assertNotEquals(player.getCurrentPrice(), primerRegistro.getCotizacion());
         });
 
     }

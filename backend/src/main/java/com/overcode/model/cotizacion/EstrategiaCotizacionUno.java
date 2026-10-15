@@ -11,7 +11,7 @@ public class EstrategiaCotizacionUno extends EstrategiaCotizacion {
     private Double valorConstante;
 
     public EstrategiaCotizacionUno(Double valorConstante, Double factorEscala) {
-        super("Estrategia con valor constante " + valorConstante, 0D, factorEscala);
+        super("Estrategia con valor constante " + valorConstante, 2D, factorEscala);
         setValorConstante(valorConstante);
     }
 
