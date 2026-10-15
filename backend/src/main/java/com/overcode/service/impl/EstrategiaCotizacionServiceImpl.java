@@ -87,7 +87,6 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         List<Player> jugadores = playerService.recuperarTodos();
 
         List<RegistroCotizacion> registros = estrategia.cotizar(jugadores);
-
         registroCotizacionRepository.crearTodos(registros);
 
         playerRepository.guardarTodos(jugadores);

@@ -27,6 +27,9 @@ public class TestService {
     @Autowired
     private ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAO;
 
+    @Autowired
+    private RegistroCotizacionDAOJPA registroCotizacionDAO;
+
     public void eliminarUsuarios() {
         userDAO.deleteAll();
 
@@ -46,6 +49,11 @@ public class TestService {
         eliminarDatosJugadores();
         playerDAO.deleteAll();
         eliminarEquipos();
+    }
+
+    public void eliminarCotizaciones() {
+        registroCotizacionDAO.deleteAll();
+        eliminarEstrategiasCotizacion();
     }
 
     public void eliminarEstrategiasCotizacion() {
