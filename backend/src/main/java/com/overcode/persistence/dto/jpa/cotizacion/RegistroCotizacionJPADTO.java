@@ -10,7 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name="registro_cotizacion")
 @Table(name = "registros_cotizaciones")
@@ -29,7 +29,7 @@ public class RegistroCotizacionJPADTO {
     private PlayerJPADTO player;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     private Double cotizacion;
 
