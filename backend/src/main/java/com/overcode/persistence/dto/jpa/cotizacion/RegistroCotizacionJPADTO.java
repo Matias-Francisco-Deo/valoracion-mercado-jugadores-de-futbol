@@ -24,7 +24,7 @@ public class RegistroCotizacionJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private PlayerJPADTO player;
 
@@ -33,7 +33,7 @@ public class RegistroCotizacionJPADTO {
 
     private Double cotizacion;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private EstrategiaCotizacionJPADTO estrategiaCotizacionUsada;
 

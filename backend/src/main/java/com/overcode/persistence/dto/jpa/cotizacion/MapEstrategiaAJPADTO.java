@@ -3,10 +3,10 @@ package com.overcode.persistence.dto.jpa.cotizacion;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 
 
-public abstract class MapEstrategiaADTO {
+public abstract class MapEstrategiaAJPADTO {
     private final Class<? extends EstrategiaCotizacion> estrategia;
 
-    protected MapEstrategiaADTO(Class<? extends EstrategiaCotizacion> estrategia) {
+    protected MapEstrategiaAJPADTO(Class<? extends EstrategiaCotizacion> estrategia) {
         this.estrategia = estrategia;
     }
 
