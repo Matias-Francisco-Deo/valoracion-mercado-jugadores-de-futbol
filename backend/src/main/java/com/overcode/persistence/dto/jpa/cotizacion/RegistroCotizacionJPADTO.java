@@ -18,6 +18,7 @@ import java.time.LocalDate;
 public class RegistroCotizacionJPADTO {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)

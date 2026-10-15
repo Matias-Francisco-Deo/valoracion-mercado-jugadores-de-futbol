@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
@@ -35,6 +36,7 @@ class RegistroCotizacionRepositoryTest {
     @Autowired
     private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepository;
 
+    @Autowired
     private TeamRepositoryImpl teamRepository;
 
     @Autowired
@@ -42,19 +44,18 @@ class RegistroCotizacionRepositoryTest {
     @Autowired
     private RegistroCotizacionRepositoryImpl registroCotizacionRepositoryImpl;
 
-    @AfterEach
+
+    @BeforeEach
     void setUp() {
         testService.eliminarCotizaciones();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
-
     }
 
-    @BeforeEach
+    @AfterEach
     void tearDown() {
-        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
         testService.eliminarCotizaciones();
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
     }
-
 
 
     @Test
@@ -63,20 +64,23 @@ class RegistroCotizacionRepositoryTest {
 
         Player jugador1 = getJugadorConNombre("pepito");
         Team team1 = getTeamConJugadores(List.of(jugador1));
-
         EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
-        teamRepository.guardar(team1);
+        Team teamGuardado = teamRepository.guardar(team1);
 
-        List<RegistroCotizacion> registros = List.of(getRegistroCotizacion(jugador1, estrategiaCotizacionUsada));
+        Player jugadorGuardado = teamGuardado.getPlayers().getFirst();
+        List<RegistroCotizacion> registros = List.of(getRegistroCotizacion(jugadorGuardado, estrategiaCotizacionUsada));
 
         registroCotizacionRepositoryImpl.crearTodos(registros);
 
-        List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugador1.getId());
+        List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId());
         // TODO método para agarrar las de hoy, y las de otros días usando rangos?
 
         assertFalse(registrosRecuperados.isEmpty());
-        assertNotNull(registrosRecuperados.getFirst().getId());
-        assertEquals(10.0, registros.getFirst().getCotizacion());
+        RegistroCotizacion registroRecuperado = registrosRecuperados.getFirst();
+
+        assertNotNull(registroRecuperado.getId());
+        assertEquals(10.0, registroRecuperado.getCotizacion());
+        assertEquals(LocalDate.now(), registroRecuperado.getCreatedAt());
 
     }
 
