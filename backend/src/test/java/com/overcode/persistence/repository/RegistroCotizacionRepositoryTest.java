@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
@@ -62,6 +62,8 @@ class RegistroCotizacionRepositoryTest {
     @Transactional
     void guardarPersisteLosRegistros() {
 
+        LocalDateTime startDate = LocalDateTime.now();
+
         Player jugador1 = getJugadorConNombre("pepito");
         Team team1 = getTeamConJugadores(List.of(jugador1));
         EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
@@ -72,6 +74,8 @@ class RegistroCotizacionRepositoryTest {
 
         registroCotizacionRepositoryImpl.crearTodos(registros);
 
+        LocalDateTime endDate = LocalDateTime.now();
+
         List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId());
         // TODO método para agarrar las de hoy, y las de otros días usando rangos?
 
@@ -80,7 +84,13 @@ class RegistroCotizacionRepositoryTest {
 
         assertNotNull(registroRecuperado.getId());
         assertEquals(10.0, registroRecuperado.getCotizacion());
-        assertEquals(LocalDate.now(), registroRecuperado.getCreatedAt());
+
+        LocalDateTime createdAt = registrosRecuperados.getFirst().getCreatedAt();
+
+        assertNotNull(createdAt);
+
+        assertTrue(createdAt.isAfter(startDate));
+        assertTrue(createdAt.isBefore(endDate));
 
     }
 
