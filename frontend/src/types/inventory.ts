@@ -1,24 +1,26 @@
 export interface OrderTokensRequest {
   playerId: number;
-  //userId: string;
+  userId: string;//quitar?
   quantity: number;
 }
 
-export interface UserInventoryResponse {
-  userId: number;
-  totalTokens: number;//borrar?
-  availableTokens:Token[];//cambiar por TokenPageResponse<Token>
-  sellingTokens: Token[];
-  position:TokenPageResponse<PositionToken>;
-}
-
-export interface Token {
+export interface TokenSummary {
   playerId: number;
   playerName: string;
-  currentPrice : number;
-  selling: boolean;
+  unitPrice : number;
   quantity: number;
 }
+
+export interface OrderSell{
+  id:number;
+  playerId: number;
+  playerName: string;
+  unitPrice : number;
+  totalPrice:number;//quitar?
+  quantity: number;
+}
+
+export type InventoryToken = TokenSummary | OrderSell;
 
 export interface PositionToken {
   playerId: number;
@@ -29,7 +31,19 @@ export interface PositionToken {
   profitLoss: number;
 }
 
-export interface TokenPageResponse<T> {
+export interface Transaction {//orderbuy?? revisar
+  id:number;
+  playerId: number
+  playerName:string;
+  date:string;
+  type: "BUY" | "SELL";
+  quantity:number;
+  unitPrice:number;
+  total:number;
+}
+
+//-------------------------------------general
+export interface PageResponse<T> {
     content: T[];
     number:number;
     size:number;
@@ -37,12 +51,3 @@ export interface TokenPageResponse<T> {
     totalElements:number;
 }
 
-export interface Transaction {
-  id:number;
-  date:string;
-  playerName:string;
-  type:"buy"|"sell";//sell pending?
-  quantity:number;
-  unitPrice:number;
-  totalAmount:number;
-}

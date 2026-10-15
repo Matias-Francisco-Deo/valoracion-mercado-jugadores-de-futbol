@@ -1,28 +1,52 @@
 import { Loading } from "@/components/common/Loading";
 import { Pagination } from "@/components/common/Pagination";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
-import { TokenCard } from "@/components/inventory/TokenCard";
+import { TokenSummaryCard } from "@/components/inventory/TokenSummaryCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
 import type { HttpError } from "@/lib/http-error";
-import { buyTokens, getTokensOnSale } from "@/services/ordersService";
-import type { Token, TokenPageResponse } from "@/types/inventory";
+import { buyListedTokens, getTokensOnSale } from "@/services/ordersService";
+import type { TokenSummary, PageResponse, OrderTokensRequest } from "@/types/inventory";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export default function MarketPage(){
+    const { userId } = useParams()
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [selectedToken,setSelectedToken] = useState<Token|null>(null);
+
+    const [selectedToken,setSelectedToken] = useState<TokenSummary|null>(null);
     const [actionModalOpen, setActionModalOpen] = useState(false);
-    const [tokenPage, setTokenPage] = useState<TokenPageResponse<Token> | null>(null);
+    const [modalError,setModalError] = useState<HttpError | null>(null);
+
+    const [tokenPage, setTokenPage] = useState<PageResponse<TokenSummary> | null>(null);
 
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const handleActionClick = (token: Token) => {
+    const handleActionClick = (token: TokenSummary) => {
+        if(!userId){
+            navigate("/login");
+            return;
+        }
         setSelectedToken(token);
         setActionModalOpen(true);
     }
+
+    const buyTokens = async  (playerId:number,quantity:number): Promise<void> => {
+        setModalError(null);
+        if (!userId) return
+        const request: OrderTokensRequest = {
+            playerId,
+            quantity,
+            userId,
+        }
+        await buyListedTokens(request).then(()=>{
+        setActionModalOpen(false);
+        setSelectedToken(null);
+        })
+        .catch((error: HttpError) => {setModalError(error);});
+}
 
     const handlePageChange = (page: number) => {
         const params = new URLSearchParams(searchParams);
@@ -40,7 +64,7 @@ export default function MarketPage(){
     }, [searchParams]);
 
     if (loading) return <Loading text="Cargando catálogo..." />
-    //if (error) return <ServerErrorComponent />
+    if (error) return <ServerErrorComponent />
 
     return(
         <div className="flex w-full justify-center px-4 py-8">
@@ -60,7 +84,7 @@ export default function MarketPage(){
                     <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {tokenPage && tokenPage.content.length > 0 ?(
                             tokenPage.content.map((token)=>(
-                                <TokenCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
+                                <TokenSummaryCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
                             ))
                         ) : (
                             <p className="text-gray-500 col-span-full text-center">No hay tokens en venta</p>
@@ -76,7 +100,7 @@ export default function MarketPage(){
             </div>
 
             {actionModalOpen && selectedToken && (
-                <TokenActionModal token={selectedToken} actionType={'Comprar'} title={"Comprar tokens"} onConfirm={buyTokens} 
+                <TokenActionModal token={selectedToken} actionType={'Comprar'} title={"Comprar tokens"} onConfirm={buyTokens} error={modalError?.message}
                     onClose={() => {setActionModalOpen(false);setSelectedToken(null)}} />
             )}
         </div>

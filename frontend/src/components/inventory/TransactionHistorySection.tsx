@@ -1,13 +1,17 @@
-import type { Transaction } from "@/types/inventory";
+import type { PageResponse, Transaction } from "@/types/inventory";
 import type { ComponentProps } from "react";
+import { Pagination } from "../common/Pagination";
+import type { HttpError } from "@/lib/http-error";
 
 type  TransactionHistorySectionprops = ComponentProps<"div"> & {
-    transactions:Transaction[];
+    transactionsPage:PageResponse<Transaction> |null;
+    onPageChange: (page: number) => void;
+    transactionError:HttpError | null;
 }
 
-export const TransactionHistorySection = ({ transactions, className, ...props }: TransactionHistorySectionprops) => {
+export const TransactionHistorySection = ({ transactionsPage,onPageChange,transactionError, ...props }: TransactionHistorySectionprops) => {
     return(
-        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6 text-black">
+        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6 text-black" {...props}>
             <div className="flex flex-col">
                 <span className="text-[9px] font-bold tracking-widest text-brand-orange">ACTIVIDAD</span>
                 <h2 className="text-xl font-medium">Historial de transacciones</h2>
@@ -25,26 +29,36 @@ export const TransactionHistorySection = ({ transactions, className, ...props }:
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.length > 0 ? (transactions.map((transaction)=>(
-                            <tr key={transaction.id}>
-                                <td>{transaction.date}</td>
-                                <td>{transaction.playerName}</td>
-                                <td>{transaction.type}</td>
-                                <td>{transaction.quantity}</td>
-                                <td>{transaction.unitPrice}</td>
-                                <td>{transaction.totalAmount}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan={6} className="py-6 text-center! text-gray-500">
-                                No hay transacciones
-                            </td>
-                        </tr>
-                    )}
+                        {transactionsPage === null || transactionError ? (
+                                <tr>
+                                    <td colSpan={6} className="py-6 text-center! text-gray-500">
+                                        Error al cargar las Transacciones.
+                                    </td>
+                                </tr>
+                            ) : transactionsPage.content.length > 0 ? (
+                                transactionsPage.content.map((transaction) => (
+                                    <tr key={transaction.id}>
+                                        <td>{transaction.date}</td>
+                                        <td>{transaction.playerName}</td>
+                                        <td>{transaction.type}</td>
+                                        <td>{transaction.quantity}</td>
+                                        <td>{transaction.unitPrice}</td>
+                                        <td>{transaction.total}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="py-6 text-center! text-gray-500">
+                                        No hay transacciones
+                                    </td>
+                                </tr>
+                            )}
                     </tbody>
-                    
                 </table>
+                <Pagination 
+                    currentPage={transactionsPage?.number ?? 0}
+                    totalPages={transactionsPage?.totalPages ?? 0}
+                    onPageChange={onPageChange}/>
             </div>
         </div>
     )

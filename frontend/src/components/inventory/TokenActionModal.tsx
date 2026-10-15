@@ -1,11 +1,11 @@
 import { useState, type ComponentProps } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import type { OrderTokensRequest, Token } from '@/types/inventory';
+import type { TokenSummary } from '@/types/inventory';
 
 type TokenActionModalProps = ComponentProps<"div"> &{
-  token:Token;
-  onConfirm: (OrderRequest: OrderTokensRequest) => Promise<void>;
+  token:TokenSummary;
+  onConfirm: (playerId:number,quantity:number) => Promise<void>;
   onClose: () => void;
   actionType?: 'Vender' | 'Retirar' | 'Comprar';
   title: string;
@@ -18,7 +18,7 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error,.
 
   const handleSubmit = () =>  {
     setIsSubmitting(true);
-    onConfirm({ playerId: token.playerId, quantity })
+    onConfirm( token.playerId, quantity )
     .finally(()=>{
       setIsSubmitting(false);
     }
@@ -44,11 +44,11 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error,.
         <p className='self-center text-destructive'>{error ?? ""}</p>
         <div className='flex justify-between'>
           <span className="text-sm">Precio: </span>
-          <span> ${token.currentPrice .toFixed(2)}</span>
+          <span> ${token.unitPrice .toFixed(2)}</span>
         </div>
         <div className='flex justify-between border-b pb-1 border-gray-300'>
           <span >Precio total: </span>
-          <span className="text-lg text-[#d66f00] ">${(token.currentPrice  * quantity).toFixed(2)}</span>
+          <span className="text-lg text-[#d66f00] ">${(token.unitPrice  * quantity).toFixed(2)}</span>
         </div>
 
         <div className="flex items-center gap-4 justify-around">
