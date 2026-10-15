@@ -1,27 +1,27 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.model.P2POrder;
-import java.util.UUID;
+import com.overcode.model.BuyOrder;
+import com.overcode.model.SellOrder;
+import com.overcode.model.SellPost;
 
-/**
- * Trading model: buying is always an instant, all-or-nothing taker sweep against the resting
- * SELL book; selling publishes a resting SELL order that waits until one or more buyers consume
- * it (fully or partially). There is no resting BUY order and no user-supplied price anywhere in
- * this API — a player's price is owned by the pricing strategy ({@code Player#getCurrentPrice()})
- * and is frozen onto a SELL order at creation time.
- */
+import java.util.List;
+
 public interface P2POrderService {
 
-    /** Publishes a resting SELL order for {@code quantity} tokens, priced at the player's current price. */
-    P2POrder createSellOrder(Long userId, Long playerId, int quantity);
-
-    /** Cancels a resting SELL order owned by {@code userId} and refunds its escrowed tokens. */
-    void cancelOrder(UUID orderId, Long userId);
+    /**
+     * Publishes 1 resting SELL order per token for the requested quantity,
+     * priced at the player's current price.
+     */
+    List<SellOrder> createSellOrders(SellPost command);
 
     /**
-     * Instantly sweeps the open SELL book for the player, cheapest first, until {@code quantity}
-     * tokens are filled. All-or-nothing — if the book cannot fully fill the request it throws and
-     * nothing changes.
+     * Instantly executes a market BUY against the cheapest resting SELL orders for the player.
+     * All-or-nothing: if there is not enough liquidity, throws InsufficientLiquidityException.
      */
-    void executeMarketBuy(Long userId, Long playerId, int quantity);
+    void executeMarketBuy(BuyOrder buyOrder);
+
+    /**
+     * Cancels a resting SELL order owned by userId and returns the token to the seller.
+     */
+    void cancelOrder(Long orderId, Long userId);
 }

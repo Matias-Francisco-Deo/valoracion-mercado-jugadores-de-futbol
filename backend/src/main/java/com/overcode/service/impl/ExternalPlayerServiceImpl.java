@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Player;
 import com.overcode.model.Team;
+import com.overcode.model.TeamUpsertResult;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
@@ -41,13 +42,17 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
         if (optionalTeams.isEmpty()) return Optional.empty();
 
-        List<Team> teams = optionalTeams.get().stream()
+        List<TeamUpsertResult> upsertResults = optionalTeams.get().stream()
                 .map(teamRepository::upsertTeam).toList();
 
+        List<Team> teams = upsertResults.stream().map(TeamUpsertResult::team).toList();
         List<Player> allPlayers = teams.stream().flatMap(team -> team.getPlayers().stream()).toList();
-        
-        // Emit tokens for all players (method is idempotent, so it won't emit twice for existing players)
-        allPlayers.forEach(tokenEmissionService::emitTokensForNewPlayer); // TODO xd, esto no debería estar acá
+
+        List<Player> newPlayers = upsertResults.stream()
+                .flatMap(result -> result.newPlayers().stream())
+                .toList();
+
+        tokenEmissionService.emitTokensForNewPlayers(newPlayers);
 
         return Optional.of(allPlayers);
     }

@@ -65,6 +65,20 @@ public class PlayerJPADTO {
         return dto;
     }
 
+    public static PlayerJPADTO desdeModeloSinTokens(Player player) {
+        if (player == null) {
+            return null;
+        }
+        PlayerJPADTO dto = new PlayerJPADTO();
+        dto.setId(player.getId());
+        dto.setName(player.getName());
+        dto.setCurrentPrice(player.getCurrentPrice());
+        dto.setExternalId(player.getExternalId());
+        dto.setPlayerGameData(PlayerGameDataJPADTO.desdeModelo(player.getPlayerGameData(), dto));
+        dto.setTeam(player.getTeam() != null ? TeamJPADTO.desdeModeloSinJugadores(player.getTeam()) : null);
+        return dto;
+    }
+
     public static PlayerJPADTO desdeModelo(Player player, PlayerGameDataJPADTO playerGameDataJPADTO) {
         if (player == null) {
             return null;
@@ -121,6 +135,18 @@ public class PlayerJPADTO {
         player.setTokens(this.tokens.stream().map(token -> token.aModelo(player))
                 .collect(Collectors.toCollection(ArrayList::new)));
 
+        player.setPlayerGameData(this.playerGameData != null ? this.playerGameData.aModelo(player) : null);
+        player.setTeam(this.team != null ? this.team.aModeloConJugadores() : null);
+        return player;
+    }
+
+    public Player aModeloSinTokens() {
+        Player player = new Player();
+        player.setId(this.id);
+        player.setExternalId(this.getExternalId());
+        player.setName(this.name);
+        player.setCurrentPrice(this.currentPrice);
+        player.setTokens(new ArrayList<>());
         player.setPlayerGameData(this.playerGameData != null ? this.playerGameData.aModelo(player) : null);
         player.setTeam(this.team != null ? this.team.aModeloConJugadores() : null);
         return player;

@@ -2,6 +2,7 @@ package com.overcode.controller.exception;
 
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.exception.InsufficientFundsException;
+import com.overcode.model.exception.InvalidOrderQuantityException;
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -88,6 +89,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EstrategiaInvalidaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleEstrategiaInvalida(EstrategiaInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidOrderQuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 }

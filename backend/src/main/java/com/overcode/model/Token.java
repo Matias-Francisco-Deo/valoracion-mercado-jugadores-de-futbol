@@ -17,4 +17,20 @@ public class Token {
         setPlayer(player);
     }
 
+    public Token(Long id, User owner, Player player) {
+        this.id = id;
+        this.owner = owner;
+        this.player = player;
+    }
+
+    public boolean isInEscrow() {
+        return this.owner == null;
+    }
+
+    public SellOrder vender(Integer price) {
+        Long sellerId = this.owner != null ? this.owner.getId() : null;
+        Long pId = this.player != null ? this.player.getId() : null;
+        this.owner = null;
+        return new SellOrder(sellerId, pId, this.id, price);
+    }
 }
