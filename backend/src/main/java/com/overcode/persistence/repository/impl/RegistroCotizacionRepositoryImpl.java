@@ -19,7 +19,7 @@ public class RegistroCotizacionRepositoryImpl implements RegistroCotizacionRepos
     }
 
     @Override
-    public List<RegistroCotizacion> crearTodos(List<RegistroCotizacion> registroCotizaciones) {
+    public List<RegistroCotizacion> guardarTodos(List<RegistroCotizacion> registroCotizaciones) {
 
         List<RegistroCotizacionJPADTO> registros =
                 registroCotizaciones.stream().map(RegistroCotizacionJPADTO::desdeModelo).toList();

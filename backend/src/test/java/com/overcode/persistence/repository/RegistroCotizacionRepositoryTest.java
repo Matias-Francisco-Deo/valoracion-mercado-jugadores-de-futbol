@@ -72,7 +72,7 @@ class RegistroCotizacionRepositoryTest {
         Player jugadorGuardado = teamGuardado.getPlayers().getFirst();
         List<RegistroCotizacion> registros = List.of(getRegistroCotizacion(jugadorGuardado, estrategiaCotizacionUsada));
 
-        registroCotizacionRepositoryImpl.crearTodos(registros);
+        registroCotizacionRepositoryImpl.guardarTodos(registros);
 
         LocalDateTime endDate = LocalDateTime.now();
 
