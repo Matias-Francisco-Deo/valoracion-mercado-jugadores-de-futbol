@@ -1,5 +1,6 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.cotizacion.BusquedaRegistroCotizacionRequestDTO;
 import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.controller.dto.player.PlayerFilterDTO;
@@ -65,10 +66,10 @@ public class PlayerController {
     @GetMapping("{id}/quotes")
     public ResponseEntity<List<RegistroCotizacionResponseDTO>> getPlayerQuotes(
             @PathVariable Long id,
-            @RequestParam() LocalDateTime startDate,
-            @RequestParam() LocalDateTime endDate
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate
     ) {
-        BusquedaRegistroCotizacion busqueda = new BusquedaRegistroCotizacion(id, startDate, endDate);
+        BusquedaRegistroCotizacion busqueda = new BusquedaRegistroCotizacionRequestDTO(id, startDate, endDate).aModelo();
         List<RegistroCotizacion> registros = registroCotizacionService.recuperarRegistrosDeJugador(busqueda);
         return ResponseEntity.ok().body(
                 registros.stream().map(RegistroCotizacionResponseDTO::desdeModelo)
