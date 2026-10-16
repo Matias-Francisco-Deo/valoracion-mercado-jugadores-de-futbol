@@ -92,6 +92,12 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(RangoBusquedaInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleEstrategiaInvalida(RangoBusquedaInvalidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
     @ExceptionHandler(InvalidOrderQuantityException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {

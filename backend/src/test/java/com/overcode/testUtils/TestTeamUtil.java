@@ -14,6 +14,10 @@ public class TestTeamUtil {
         return new Team(name, league);
     }
 
+    public static Team getTeamConNombreYLigaYJugadores(String name, String league, List<Player> players) {
+        return new Team(name, league, players);
+    }
+
     public static Team getTeamConJugadores(List<Player> players) {
         return new Team("Club1", "Liga1", players);
     }

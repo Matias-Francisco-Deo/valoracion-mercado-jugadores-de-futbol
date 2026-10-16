@@ -1,11 +1,6 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.BuyOrder;
-import com.overcode.model.Player;
-import com.overcode.model.SellOrder;
-import com.overcode.model.SellPost;
-import com.overcode.model.Token;
-import com.overcode.model.User;
+import com.overcode.model.*;
 import com.overcode.model.dto.OrderSellSummaryDTO;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
@@ -59,7 +54,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         userRepository.guardar(seller);
 
         int price = player.getCurrentPrice();
-        List<SellOrder> orders = tokensToSell.stream()
+        List<SellOrder> orders = tokensToSell.stream() // TODO esto tiene que ser un método de modelo
                 .map(token -> {
                     tokenRepository.clearTokenOwner(token.getId());
                     return token.vender(price);
@@ -80,7 +75,7 @@ public class P2POrderServiceImpl implements P2POrderService {
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + buyerId));
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
-        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream()
+        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream() // TODO esto tiene que ser un método de repository que lo busque directo de la DB
                 .filter(order -> !order.belongsTo(buyerId))
                 .toList();
 
@@ -92,7 +87,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         List<SellOrder> ordersToFill = openOrders.subList(0, quantity);
         Map<Long, User> sellersCache = new HashMap<>();
 
-        for (SellOrder order : ordersToFill) {
+        for (SellOrder order : ordersToFill) { // TODO esto es lógica de modelo, separar
             // Cobrar al comprador (lanza InsufficientFundsException si no tiene saldo)
             buyer.debitCredits(order.getPrice());
 

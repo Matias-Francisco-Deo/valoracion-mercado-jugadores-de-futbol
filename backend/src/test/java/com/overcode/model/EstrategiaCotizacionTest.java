@@ -1,6 +1,7 @@
 package com.overcode.model;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre5;
@@ -26,12 +27,20 @@ class EstrategiaCotizacionTest {
     @Test
     void testEstrategiaCotizaAUnJugadorYSuValor() {
 
-        List<Player> players = List.of(JUGADOR_1);
+        estrategiaCotizacion.cotizarAUnJugador(JUGADOR_1);
 
-        estrategiaCotizacion.cotizar(players);
+        assertEquals(2, JUGADOR_1.getCurrentPrice());
 
-        assertEquals(2, players.getFirst().getCurrentPrice());
+    }
 
+    @Test
+    void testEstrategiaCotizaAUnJugadorYRetornaUnRegistro() {
+
+        RegistroCotizacion registro = estrategiaCotizacion.cotizarAUnJugador(JUGADOR_1);
+
+        assertEquals(2, registro.getCotizacion());
+        assertEquals(JUGADOR_1, registro.getPlayer());
+        assertEquals(estrategiaCotizacion, registro.getEstrategiaCotizacionUsada());
     }
 
     @Test

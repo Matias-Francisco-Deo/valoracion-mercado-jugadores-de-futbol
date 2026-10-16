@@ -11,7 +11,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapADTO;
+import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapAJPADTO;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +68,7 @@ class EstrategiaCotizacionE2eTest {
     @Autowired
     private UserService userService;
 
-    private EstrategiaCotizacionSiempre2MapADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapADTO();
+    private EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
 
     @PostConstruct
     public void init() {
@@ -79,19 +79,19 @@ class EstrategiaCotizacionE2eTest {
 
     @BeforeEach
     void setUp() {
-        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
-        testService.eliminarEstrategiasCotizacion();
         // emitTokensForNewPlayer (disparado al crear un jugador) necesita que exista el
         // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
         userService.crearSuperusuario();
     }
 
     @AfterEach
     void teardown() {
         TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
-        testService.eliminarEstrategiasCotizacion();
     }
 
     // ────────────────────────────────────────────────────────────────────────────
@@ -371,7 +371,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /{id}/select sin API key
+        // POST /{playerId}/select sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
                         .uri(BASE_PATH + "/1/select")
@@ -379,7 +379,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // PATCH /{id} sin API key
+        // PATCH /{playerId} sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.patch()
                         .uri(BASE_PATH + "/1")
@@ -410,7 +410,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /{id}/select con clave inválida
+        // POST /{playerId}/select con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
                         .uri(BASE_PATH + "/1/select")
@@ -419,7 +419,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // PATCH /{id} con clave inválida
+        // PATCH /{playerId} con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.patch()
                         .uri(BASE_PATH + "/1")
