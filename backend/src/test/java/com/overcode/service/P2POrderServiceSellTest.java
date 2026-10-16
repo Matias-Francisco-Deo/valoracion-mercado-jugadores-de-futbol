@@ -87,8 +87,9 @@ class P2POrderServiceSellTest {
     void createSellOrdersFallaSiElJugadorNoExiste() {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.empty());
 
+        SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
         assertThrows(EntidadNoEncontradaException.class,
-                () -> service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 5)));
+                () -> service.createSellOrders(post));
 
         verifyNoInteractions(userRepository);
         verifyNoInteractions(sellOrderRepository);
@@ -99,8 +100,9 @@ class P2POrderServiceSellTest {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.empty());
 
+        SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
         assertThrows(EntidadNoEncontradaException.class,
-                () -> service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 5)));
+                () -> service.createSellOrders(post));
 
         verifyNoInteractions(sellOrderRepository);
     }
@@ -111,8 +113,9 @@ class P2POrderServiceSellTest {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
+        SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
         assertThrows(InsufficientEscrowException.class,
-                () -> service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 5)));
+                () -> service.createSellOrders(post));
 
         verifyNoInteractions(sellOrderRepository);
     }
@@ -123,8 +126,9 @@ class P2POrderServiceSellTest {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
+        SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
         assertThrows(InsufficientEscrowException.class,
-                () -> service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 5)));
+                () -> service.createSellOrders(post));
 
         verifyNoInteractions(sellOrderRepository);
     }

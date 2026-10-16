@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     private final UserRepository userRepository;
@@ -24,7 +25,6 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
     }
 
     @Override
-    @Transactional
     public void emitTokensForNewPlayers(List<Player> players) {
         if (players == null || players.isEmpty()) {
             return;
@@ -40,7 +40,6 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
     }
 
     @Override
-    @Transactional
     public void emitTokensForNewPlayer(Player player) {
         if (player != null) {
             emitTokensForNewPlayers(List.of(player));

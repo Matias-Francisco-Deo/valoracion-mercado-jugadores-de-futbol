@@ -86,8 +86,9 @@ class P2POrderServiceMarketTest {
         when(sellOrderRepository.findOpenSellOrders(PLAYER))
                 .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1)));
 
+        BuyOrder order = new BuyOrder(1L, PLAYER, 5);
         assertThrows(InsufficientLiquidityException.class,
-                () -> service.executeMarketBuy(new BuyOrder(1L, PLAYER, 5)));
+                () -> service.executeMarketBuy(order));
 
         verify(sellOrderRepository, never()).saveAll(any());
     }
@@ -101,8 +102,9 @@ class P2POrderServiceMarketTest {
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0)));
         when(sellOrderRepository.findOpenSellOrders(PLAYER)).thenReturn(List.of(ask));
 
+        BuyOrder order = new BuyOrder(1L, PLAYER, 1);
         assertThrows(InsufficientFundsException.class,
-                () -> service.executeMarketBuy(new BuyOrder(1L, PLAYER, 1)));
+                () -> service.executeMarketBuy(order));
 
         verify(sellOrderRepository, never()).saveAll(any());
     }
@@ -115,7 +117,8 @@ class P2POrderServiceMarketTest {
         when(sellOrderRepository.findOpenSellOrders(PLAYER))
                 .thenReturn(List.of(sellOrder(101L, 1L, 201L, 1)));
 
+        BuyOrder order = new BuyOrder(1L, PLAYER, 1);
         assertThrows(InsufficientLiquidityException.class,
-                () -> service.executeMarketBuy(new BuyOrder(1L, PLAYER, 1)));
+                () -> service.executeMarketBuy(order));
     }
 }

@@ -14,11 +14,11 @@ public abstract class Order {
     protected Long playerId;
     protected Instant createdAt;
 
-    public Order() {
+    protected Order() {
         this.createdAt = Instant.now();
     }
 
-    public Order(Long id, Long userId, Long playerId, Instant createdAt) {
+    protected Order(Long id, Long userId, Long playerId, Instant createdAt) {
         this.id = id;
         this.userId = userId;
         this.playerId = playerId;
