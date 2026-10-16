@@ -3,7 +3,8 @@ package com.overcode.service;
 import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
-import com.overcode.model.cotizacion.RegistroCotizacion;
+import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
@@ -304,9 +305,8 @@ class EstrategiaCotizacionServiceTest {
 
             estrategiaCotizacionService.cotizarJugadores();
 
-            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(playerPersistido.getId(),
-                    LocalDateTime.now().minusDays(30),
-                    LocalDateTime.now()
+            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(
+                    new BusquedaRegistroCotizacion(playerPersistido.getId(), LocalDateTime.now().minusDays(1), LocalDateTime.now())
 
             );
 

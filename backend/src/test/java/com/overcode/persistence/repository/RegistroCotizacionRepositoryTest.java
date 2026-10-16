@@ -3,7 +3,8 @@ package com.overcode.persistence.repository;
 import com.overcode.model.Player;
 import com.overcode.model.Team;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
-import com.overcode.model.cotizacion.RegistroCotizacion;
+import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.RegistroCotizacionRepositoryImpl;
@@ -72,7 +73,7 @@ class RegistroCotizacionRepositoryTest {
         LocalDateTime endDate = LocalDateTime.now();
 
         List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
-                jugadorGuardado.getId(), startDate, endDate
+                new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
         );
 
         assertFalse(registrosRecuperados.isEmpty());
@@ -101,7 +102,9 @@ class RegistroCotizacionRepositoryTest {
         LocalDateTime endDate = LocalDateTime.now();
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate, endDate);
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
+                );
 
         assertFalse(registrosRecuperados.isEmpty());
         RegistroCotizacion registroRecuperado = registrosRecuperados.getFirst();
@@ -123,7 +126,11 @@ class RegistroCotizacionRepositoryTest {
 
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate.minusDays(30), endDate.plusDays(30));
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(),
+                                startDate.minusDays(30),
+                                endDate.plusDays(30))
+                );
 
         assertEquals(3, registrosRecuperados.size());
 
@@ -143,7 +150,9 @@ class RegistroCotizacionRepositoryTest {
 
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate.minusDays(60), endDate.minusDays(59));
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
+                );
 
         assertTrue(registrosRecuperados.isEmpty());
 
@@ -162,7 +171,9 @@ class RegistroCotizacionRepositoryTest {
                 startDate);
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), endDate, startDate);
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
+                );
 
         assertTrue(registrosRecuperados.isEmpty());
 
@@ -181,7 +192,9 @@ class RegistroCotizacionRepositoryTest {
                 startDate);
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(-1L, endDate, startDate);
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(-1L, startDate, endDate)
+                );
 
         assertTrue(registrosRecuperados.isEmpty());
 
@@ -205,7 +218,9 @@ class RegistroCotizacionRepositoryTest {
                 startDate);
 
         List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugador1.getId(), endDate, startDate);
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugador1.getId(), startDate, endDate)
+                );
 
         registrosRecuperados.forEach(registroCotizacion ->
                 assertEquals("pepito", registroCotizacion.getPlayer().getName()));

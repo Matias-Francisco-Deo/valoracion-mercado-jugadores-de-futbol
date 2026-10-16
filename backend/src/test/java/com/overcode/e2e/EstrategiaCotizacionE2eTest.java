@@ -371,7 +371,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /{id}/select sin API key
+        // POST /{playerId}/select sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
                         .uri(BASE_PATH + "/1/select")
@@ -379,7 +379,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // PATCH /{id} sin API key
+        // PATCH /{playerId} sin API key
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.patch()
                         .uri(BASE_PATH + "/1")
@@ -410,7 +410,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // POST /{id}/select con clave inválida
+        // POST /{playerId}/select con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.post()
                         .uri(BASE_PATH + "/1/select")
@@ -419,7 +419,7 @@ class EstrategiaCotizacionE2eTest {
                         .toBodilessEntity()
         );
 
-        // PATCH /{id} con clave inválida
+        // PATCH /{playerId} con clave inválida
         assertThrows(HttpClientErrorException.Unauthorized.class, () ->
                 restClient.patch()
                         .uri(BASE_PATH + "/1")

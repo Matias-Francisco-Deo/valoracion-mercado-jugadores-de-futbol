@@ -33,7 +33,7 @@ public class EstrategiaCotizacionController {
     }
 
     @PostMapping("/{id}/select")
-    @Operation(summary = "Seleccionar estrategia activa", description = "Designa la estrategia identificada por {id} como la estrategia activa para cotizaciones.")
+    @Operation(summary = "Seleccionar estrategia activa", description = "Designa la estrategia identificada por {playerId} como la estrategia activa para cotizaciones.")
     public ResponseEntity<Void> seleccionarEstrategia(@PathVariable Long id) {
         estrategiaCotizacionService.seleccionarEstrategia(id);
         return ResponseEntity.ok().build();

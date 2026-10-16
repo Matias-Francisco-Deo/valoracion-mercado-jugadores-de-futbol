@@ -1,6 +1,6 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
-import com.overcode.model.cotizacion.RegistroCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

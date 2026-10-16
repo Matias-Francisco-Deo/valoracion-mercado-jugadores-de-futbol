@@ -1,12 +1,12 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.cotizacion.RegistroCotizacion;
+import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.RegistroCotizacionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.RegistroCotizacionDAOJPA;
 import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -29,8 +29,12 @@ public class RegistroCotizacionRepositoryImpl implements RegistroCotizacionRepos
     }
 
     @Override
-    public List<RegistroCotizacion> recuperarRegistrosDeJugador(Long playerId, LocalDateTime inicio, LocalDateTime fin) {
-        return registroCotizacionDAOJPA.recuperarRegistrosDeJugador(playerId, inicio, fin).stream()
+    public List<RegistroCotizacion> recuperarRegistrosDeJugador(BusquedaRegistroCotizacion busquedaRegistroCotizacion) {
+        return registroCotizacionDAOJPA.recuperarRegistrosDeJugador(
+                        busquedaRegistroCotizacion.playerId(),
+                        busquedaRegistroCotizacion.inicio(),
+                        busquedaRegistroCotizacion.fin()
+                ).stream()
                 .map(RegistroCotizacionJPADTO::aModelo).toList();
     }
 

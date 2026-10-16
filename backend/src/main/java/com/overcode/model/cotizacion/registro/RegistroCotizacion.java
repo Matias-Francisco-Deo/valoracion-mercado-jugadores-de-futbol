@@ -1,6 +1,7 @@
-package com.overcode.model.cotizacion;
+package com.overcode.model.cotizacion.registro;
 
 import com.overcode.model.Player;
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
