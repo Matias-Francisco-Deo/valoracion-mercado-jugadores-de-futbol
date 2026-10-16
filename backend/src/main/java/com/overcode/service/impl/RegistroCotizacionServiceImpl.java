@@ -3,6 +3,7 @@ package com.overcode.service.impl;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
+import com.overcode.service.exception.RangoBusquedaInvalidoException;
 import com.overcode.service.interfaces.RegistroCotizacionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,19 @@ public class RegistroCotizacionServiceImpl implements RegistroCotizacionService 
 
     @Override
     public List<RegistroCotizacion> recuperarRegistrosDeJugador(BusquedaRegistroCotizacion busquedaRegistroCotizacion) {
+
+        validarRangos(busquedaRegistroCotizacion);
+
         return registroCotizacionRepository.recuperarRegistrosDeJugador(busquedaRegistroCotizacion);
+    }
+
+    private static void validarRangos(BusquedaRegistroCotizacion busquedaRegistroCotizacion) {
+        if (busquedaRegistroCotizacion.inicio() == null || busquedaRegistroCotizacion.fin() == null ) {
+            throw new RangoBusquedaInvalidoException("Las fechas no pueden ser nulas");
+        }
+
+        if (busquedaRegistroCotizacion.inicio().isAfter(busquedaRegistroCotizacion.fin()) ) {
+            throw new RangoBusquedaInvalidoException("La fecha inicial de búsqueda debe ser inferior a la fecha final");
+        }
     }
 }

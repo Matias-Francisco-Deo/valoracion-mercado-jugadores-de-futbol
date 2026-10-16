@@ -15,6 +15,7 @@ public record RegistroCotizacionResponseDTO(
         ) {
 
     public static RegistroCotizacionResponseDTO desdeModelo(RegistroCotizacion registroCotizacion) {
+
         return new RegistroCotizacionResponseDTO(
                 registroCotizacion.getId(),
                 PlayerResponseDTO.desdeModelo(registroCotizacion.getPlayer()),

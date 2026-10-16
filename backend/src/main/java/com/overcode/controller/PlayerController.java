@@ -65,8 +65,8 @@ public class PlayerController {
     @GetMapping("{id}/quotes")
     public ResponseEntity<List<RegistroCotizacionResponseDTO>> getPlayerQuotes(
             @PathVariable Long id,
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate
+            @RequestParam() LocalDateTime startDate,
+            @RequestParam() LocalDateTime endDate
     ) {
         BusquedaRegistroCotizacion busqueda = new BusquedaRegistroCotizacion(id, startDate, endDate);
         List<RegistroCotizacion> registros = registroCotizacionService.recuperarRegistrosDeJugador(busqueda);
