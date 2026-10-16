@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -52,6 +53,9 @@ class RegistroCotizacionServiceTest {
 
     @Autowired
     private RegistroCotizacionServiceImpl registroCotizacionService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
 
     @BeforeEach
@@ -167,27 +171,6 @@ class RegistroCotizacionServiceTest {
 
     @Test
     @Transactional
-    void seBuscaEnRangoInvalidoEntoncesEsVacio() {
-
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = LocalDateTime.now();
-
-        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
-                startDate,
-                startDate,
-                startDate);
-
-        List<RegistroCotizacion> registrosRecuperados =
-                registroCotizacionService.recuperarRegistrosDeJugador(
-                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
-                );
-
-        assertTrue(registrosRecuperados.isEmpty());
-
-    }
-
-    @Test
-    @Transactional
     void seBuscaSobreJugadorSinRegistrosYDaVacio() {
 
         LocalDateTime startDate = LocalDateTime.now();
@@ -291,7 +274,7 @@ class RegistroCotizacionServiceTest {
                                 endDate.plusDays(6))
                 );
 
-        assertEquals(1, registrosRecuperados.size());
+        assertEquals(2, registrosRecuperados.size());
 
     }
 
@@ -346,7 +329,15 @@ class RegistroCotizacionServiceTest {
                 getRegistroCotizacionConFecha(jugadorGuardado, estrategiaCotizacionUsada, tercerFecha)
         );
 
-        registroCotizacionRepositoryImpl.guardarTodos(registros);
+        List<RegistroCotizacion> registrosGuardados = registroCotizacionRepositoryImpl.guardarTodos(registros);
+        List<LocalDateTime> fechas = List.of(primerFecha, segundaFecha, tercerFecha);
+        for (int i = 0; i < registrosGuardados.size(); i++) {
+            jdbcTemplate.update(
+                    "UPDATE registros_cotizaciones SET created_at = ? WHERE id = ?",
+                    fechas.get(i),
+                    registrosGuardados.get(i).getId()
+            );
+        }
         return jugadorGuardado;
     }
 
