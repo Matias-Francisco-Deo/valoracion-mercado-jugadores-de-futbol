@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConLigaYClub;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
 import static com.overcode.testUtils.TestTeamUtil.getTeamConJugadores;
 import static junit.framework.TestCase.*;
@@ -47,12 +48,14 @@ class RegistroCotizacionRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarCotizaciones();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
     }
 
     @AfterEach
     void tearDown() {
+        testService.eliminarJugadoresYEquipos();
         testService.eliminarCotizaciones();
         TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
     }
@@ -64,20 +67,13 @@ class RegistroCotizacionRepositoryTest {
 
         LocalDateTime startDate = LocalDateTime.now();
 
-        Player jugador1 = getJugadorConNombre("pepito");
-        Team team1 = getTeamConJugadores(List.of(jugador1));
-        EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
-        Team teamGuardado = teamRepository.guardar(team1);
-
-        Player jugadorGuardado = teamGuardado.getPlayers().getFirst();
-        List<RegistroCotizacion> registros = List.of(getRegistroCotizacion(jugadorGuardado, estrategiaCotizacionUsada));
-
-        registroCotizacionRepositoryImpl.guardarTodos(registros);
+        Player jugadorGuardado = guardarRegistroDeJugador(getJugadorConNombre("pepito"));
 
         LocalDateTime endDate = LocalDateTime.now();
 
-        List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId());
-        // TODO método para agarrar las de hoy, y las de otros días usando rangos?
+        List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                jugadorGuardado.getId(), startDate, endDate
+        );
 
         assertFalse(registrosRecuperados.isEmpty());
         RegistroCotizacion registroRecuperado = registrosRecuperados.getFirst();
@@ -92,6 +88,173 @@ class RegistroCotizacionRepositoryTest {
         assertTrue(createdAt.isAfter(startDate));
         assertTrue(createdAt.isBefore(endDate));
 
+    }
+
+    @Test
+    @Transactional
+    void sePuedeBuscarPorRango() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistroDeJugador(getJugadorConNombre("pepito"));
+
+        LocalDateTime endDate = LocalDateTime.now();
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate, endDate);
+
+        assertFalse(registrosRecuperados.isEmpty());
+        RegistroCotizacion registroRecuperado = registrosRecuperados.getFirst();
+        assertEquals(10.0, registroRecuperado.getCotizacion());
+
+    }
+
+    @Test
+    @Transactional
+    void sePuedeBuscarPorRangoAmplio() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate.minusDays(30), endDate.plusDays(30));
+
+        assertEquals(3, registrosRecuperados.size());
+
+    }
+
+    @Test
+    @Transactional
+    void seBuscaEnRangoQueNoHayNadaEntoncesEsVacio() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), startDate.minusDays(60), endDate.minusDays(59));
+
+        assertTrue(registrosRecuperados.isEmpty());
+
+    }
+
+    @Test
+    @Transactional
+    void seBuscaEnRangoInvalidoEntoncesEsVacio() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate,
+                startDate,
+                startDate);
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugadorGuardado.getId(), endDate, startDate);
+
+        assertTrue(registrosRecuperados.isEmpty());
+
+    }
+
+    @Test
+    @Transactional
+    void seBuscaSobreJugadorSinRegistrosYDaVacio() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate,
+                startDate,
+                startDate);
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(-1L, endDate, startDate);
+
+        assertTrue(registrosRecuperados.isEmpty());
+
+    }
+
+    @Test
+    @Transactional
+    void seBuscaSobreJugadorYDaRegistrosSoloDeEseJugador() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        Player jugador1 = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate,
+                startDate,
+                startDate);
+
+        guardarRegistrosDeJugadorEnFechas(getJugadorConLigaYClub("pepito2", "liga2", "club3"),
+                startDate,
+                startDate,
+                startDate);
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(jugador1.getId(), endDate, startDate);
+
+        registrosRecuperados.forEach(registroCotizacion ->
+                assertEquals("pepito", registroCotizacion.getPlayer().getName()));
+
+    }
+
+    private Player guardarRegistroDeJugador(Player player) {
+        Team team1 = getTeamConJugadores(List.of(player));
+        EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
+        Team teamGuardado = teamRepository.guardar(team1);
+
+        Player jugadorGuardado = teamGuardado.getPlayers().getFirst();
+        List<RegistroCotizacion> registros = List.of(getRegistroCotizacion(jugadorGuardado, estrategiaCotizacionUsada));
+
+        registroCotizacionRepositoryImpl.guardarTodos(registros);
+        return jugadorGuardado;
+    }
+
+    private Player guardarRegistrosDeJugadorEnFechas(Player player,
+                                                     LocalDateTime primerFecha,
+                                                     LocalDateTime segundaFecha,
+                                                     LocalDateTime tercerFecha) {
+        Team team1 = player.getTeam();
+        team1.addPlayer(player);
+        EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);
+        Team teamGuardado = teamRepository.guardar(team1);
+
+        Player jugadorGuardado = teamGuardado.getPlayers().getFirst();
+        List<RegistroCotizacion> registros = List.of(
+                getRegistroCotizacionConFecha(jugadorGuardado, estrategiaCotizacionUsada, primerFecha),
+                getRegistroCotizacionConFecha(jugadorGuardado, estrategiaCotizacionUsada, segundaFecha),
+                getRegistroCotizacionConFecha(jugadorGuardado, estrategiaCotizacionUsada, tercerFecha)
+        );
+
+        registroCotizacionRepositoryImpl.guardarTodos(registros);
+        return jugadorGuardado;
+    }
+
+    private static @NonNull RegistroCotizacion getRegistroCotizacionConFecha(Player jugador1,
+                                                                              EstrategiaCotizacion estrategiaCotizacionUsada,
+                                                                              LocalDateTime creacion
+    ) {
+        RegistroCotizacion registroCotizacion = new RegistroCotizacion(
+                jugador1,
+                10.0,
+                estrategiaCotizacionUsada
+        );
+        registroCotizacion.setCreatedAt(creacion);
+        return registroCotizacion;
     }
 
     private static @NonNull RegistroCotizacion getRegistroCotizacion(Player jugador1, EstrategiaCotizacion estrategiaCotizacionUsada) {

@@ -24,6 +24,7 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
@@ -303,7 +304,11 @@ class EstrategiaCotizacionServiceTest {
 
             estrategiaCotizacionService.cotizarJugadores();
 
-            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(playerPersistido.getId());
+            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(playerPersistido.getId(),
+                    LocalDateTime.now().minusDays(30),
+                    LocalDateTime.now()
+
+            );
 
             assertFalse(registros.isEmpty());
             RegistroCotizacion primerRegistro = registros.getFirst();

@@ -6,6 +6,7 @@ import com.overcode.service.interfaces.RegistroCotizacionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,7 +20,7 @@ public class RegistroCotizacionServiceImpl implements RegistroCotizacionService 
     }
 
     @Override
-    public List<RegistroCotizacion> recuperarRegistrosDeJugador(Long playerId) {
-        return registroCotizacionRepository.recuperarRegistrosDeJugador(playerId);
+    public List<RegistroCotizacion> recuperarRegistrosDeJugador(Long playerId, LocalDateTime inicio, LocalDateTime fin) {
+        return registroCotizacionRepository.recuperarRegistrosDeJugador(playerId, inicio, fin);
     }
 }

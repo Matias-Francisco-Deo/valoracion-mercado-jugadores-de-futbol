@@ -18,6 +18,7 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -59,9 +60,6 @@ class EstrategiaCotizacionServiceManualTest {
     @Disabled("Usar manualmente para testear")
     void cotizarJugadoresManual() {
 
-//        Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-//        Player playerPersistido = playerServiceImpl.crear(player);
-
         final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
@@ -75,12 +73,14 @@ class EstrategiaCotizacionServiceManualTest {
 
             Player player = playerServiceImpl.recuperarTodos().getFirst();
 
-            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(player.getId());
+            List<RegistroCotizacion> registros = registroCotizacionServiceImpl.recuperarRegistrosDeJugador(player.getId(),
+                    LocalDateTime.now().minusDays(30),
+                    LocalDateTime.now());
 
             assertFalse(registros.isEmpty());
             RegistroCotizacion primerRegistro = registros.getFirst();
 
-            assertNotEquals(player.getCurrentPrice(), primerRegistro.getCotizacion());
+            assertNotEquals(Double.valueOf(player.getCurrentPrice()), primerRegistro.getCotizacion());
         });
 
     }
