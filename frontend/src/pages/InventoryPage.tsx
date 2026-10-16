@@ -52,18 +52,18 @@ export default function InventoryPage() {
   }
 
 //funciones de cambio de pagina
-  const handleAvailablePageChange = (page:number) => {
+  const handleAvailablePageChange = (page:number,search: string = "") => {
     if (!userId) return;
 
-    getAviableTokens(userId, page)
+    getAviableTokens(userId, page, search)
     .then((data) => setAviableTokens(data))
     .catch((error: HttpError) => setServerError(error));
   }
 
-  const handleOrderPageChange= (page:number) => {
+  const handleOrderPageChange= (page:number,search: string = "") => {
     if (!userId) return;
 
-    getOrdersSell(userId, page)
+    getOrdersSell(userId, page, search)
     .then((data) => setOrdersSell(data))
     .catch((error: HttpError) => setServerError(error));
   }
@@ -82,6 +82,22 @@ export default function InventoryPage() {
     getUserPortfolio(userId, page)
     .then((data) => setPositions(data))
     .catch((error: HttpError) => setServerError(error));
+  };
+
+  const handleInventorySearch = (tab: "available" | "for_sale",search: string) => {
+    if (!userId) return;
+
+    if (tab === "available") {
+      getAviableTokens(userId, 0, search)
+        .then((data) => setAviableTokens(data))
+        .catch((error: HttpError) => setServerError(error));
+
+      return;
+    }
+
+    getOrdersSell(userId, 0, search)
+      .then((data) => setOrdersSell(data))
+      .catch((error: HttpError) => setServerError(error));
   };
 
   useEffect(() => {
@@ -133,6 +149,7 @@ export default function InventoryPage() {
               onActionClick={handleActionClick}
               onAvailablePageChange={handleAvailablePageChange}
               onSellingPageChange={handleOrderPageChange}
+              onSearch={handleInventorySearch}
             />
         </div>
         <TransactionHistorySection transactionsPage={transactionsPage} onPageChange={handleTransactionPageChange} transactionError={transactionsError}/>

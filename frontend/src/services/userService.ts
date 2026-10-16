@@ -9,10 +9,18 @@ export async function getTransactionHistory(userId: string,page: number = 0): Pr
   return futbolApi.get<PageResponse<Transaction>>(`users/${userId}/transactions?page=${page}`);
 }
 
-export async function getOrdersSell(userId:string,page: number = 0):Promise<PageResponse<OrderSell>> {//recupera ordenes de venta 
-  return futbolApi.get<PageResponse<OrderSell>>(`users/${userId}/ordersSell?page=${page}`);
+export async function getOrdersSell(userId:string,page: number = 0,search: string = ""):Promise<PageResponse<OrderSell>> {//recupera ordenes de venta 
+  const query = new URLSearchParams({page: String(page),});
+
+  if (search.trim()) {query.set("search", search.trim());}
+
+  return futbolApi.get<PageResponse<OrderSell>>( `users/${userId}/ordersSell?${query.toString()}`);
 }
 
-export async function getAviableTokens(userId:string,page: number = 0):Promise<PageResponse<TokenSummary>> {//recupera tokens para vender
-  return futbolApi.get<PageResponse<TokenSummary>>(`users/${userId}/tokens?page=${page}`);
+export async function getAviableTokens(userId:string,page: number = 0,search: string = ""):Promise<PageResponse<TokenSummary>> {//recupera tokens para vender
+  const query = new URLSearchParams({page: String(page),});
+
+  if (search.trim()) {query.set("search", search.trim());}
+  
+  return futbolApi.get<PageResponse<TokenSummary>>(`users/${userId}/tokens?${query.toString()}`);
 }

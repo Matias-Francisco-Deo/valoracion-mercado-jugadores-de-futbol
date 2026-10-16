@@ -1,22 +1,61 @@
 import type { OrderSell, PageResponse, TokenSummary } from "@/types/inventory";
 import { Input } from "../ui/Input";
 import { TokenSummaryCard } from "./TokenSummaryCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pagination } from "../common/Pagination";
+import { Button } from "../ui/Button";
+
+type InventoryTab = "available" | "for_sale";
 
 interface TokenInventorySectionProps {
     aviableTokens: PageResponse<TokenSummary> |null;
     ordersSell: PageResponse<OrderSell> |null;
     onActionClick: (token: TokenSummary) => void;
 
-    onAvailablePageChange?: (page: number) => void;
-    onSellingPageChange?: (page: number) => void;
+    onAvailablePageChange?: (page: number,search: string) => void;
+    onSellingPageChange?: (page: number,search: string) => void;
+
+    onSearch: (tab: InventoryTab, search: string) => void;
 }
 
-export default function TokenInventorySection({aviableTokens,ordersSell,onActionClick,onAvailablePageChange,onSellingPageChange}: TokenInventorySectionProps) {
+export default function TokenInventorySection({aviableTokens,ordersSell,onActionClick,onAvailablePageChange,onSellingPageChange,onSearch}: TokenInventorySectionProps) {
+    const [searchText, setSearchText] = useState("");
+    const [appliedFilters, setAppliedFilters] = useState<Record<InventoryTab, string>>({
+            available: "",
+            for_sale: "",
+        });
+
     const [inventoryTab, setInventoryTab] = useState<'available' | 'for_sale'>('available');
     const selectedPage = inventoryTab === "available" ? aviableTokens : ordersSell;
     const onPageChange = inventoryTab === "available" ? onAvailablePageChange : onSellingPageChange;
+
+    const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const search = searchText.trim();
+
+        setAppliedFilters((previous) => ({
+            ...previous,
+            [inventoryTab]: search,
+        }));
+
+        onSearch(inventoryTab, search);
+    };
+
+    const handleClearSearch = () => {
+        setSearchText("");
+
+        setAppliedFilters((previous) => ({
+            ...previous,
+            [inventoryTab]: "",
+        }));
+
+        onSearch(inventoryTab, "");
+    };
+
+    useEffect(() => {
+        setSearchText(appliedFilters[inventoryTab]);
+    }, [inventoryTab, appliedFilters]);
 
     return (
         <div className="flex w-full flex-col gap-4 rounded-2xl">
@@ -45,10 +84,23 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 </button>
             </div>
 
-            <Input
-                className="border-none bg-[#faa42b] shadow-xl"
-                placeholder="Buscar tokens..."
-            />
+
+            <form onSubmit={handleSearch} className="flex w-full items-center gap-2">
+                <Input
+                    className="border-none bg-[#faa42b] shadow-xl"
+                    placeholder="Buscar tokens por nombre..."
+                    value={searchText}
+                    onChange={(event) => setSearchText(event.target.value)}
+                />
+
+                <Button onClick={handleClearSearch}
+                    disabled={
+                    !searchText.trim() &&
+                    !appliedFilters[inventoryTab]
+                    }>
+                    Limpiar
+                </Button>
+            </form>
 
             <div className="grid min-h-40 grid-cols-1 gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {inventoryTab === 'available' ? (
@@ -76,7 +128,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                     />
                 ))
                 ) : (
-                <p className="col-span-full text-center text-gray-500">
+                <p className="col-span-full text-center text-gray-500 py-6">
                     No tienes tokens en venta.
                 </p>
                 )}
@@ -87,7 +139,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                     <Pagination
                         currentPage={selectedPage.number}
                         totalPages={selectedPage.totalPages}
-                        onPageChange={onPageChange}
+                        onPageChange={(page) => onPageChange?.(page, appliedFilters[inventoryTab])}
                     />
                 </div>
                 )
