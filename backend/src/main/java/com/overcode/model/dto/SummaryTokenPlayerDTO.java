@@ -1,4 +1,4 @@
-package com.overcode.persistence.dto.jpa;
+package com.overcode.model.dto;
 
 public record SummaryTokenPlayerDTO(
         Long idPlayer,

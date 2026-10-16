@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.token;
 
-import com.overcode.persistence.dto.jpa.SummaryTokenPlayerDTO;
+import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

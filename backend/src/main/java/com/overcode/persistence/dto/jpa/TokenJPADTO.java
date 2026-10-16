@@ -30,9 +30,6 @@ public class TokenJPADTO {
     @NotNull
     private PlayerJPADTO player;
 
-    @Column(name = "for_sale", nullable = false)
-    private boolean forSale;
-
     public TokenJPADTO(Long id, UserJPADTO userJPADTO, PlayerJPADTO playerJPADTO) {
         setId(id);
         setOwner(userJPADTO);

@@ -29,6 +29,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public boolean existsById(Long userId){return userDAOJPA.existsById(userId);}
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         return userDAOJPA.findByUsername(username).map(UserJPADTO::aModelo);

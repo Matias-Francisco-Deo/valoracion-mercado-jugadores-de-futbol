@@ -6,7 +6,7 @@ import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
 import type { HttpError } from "@/lib/http-error";
 import { buyListedTokens, getTokensOnSale } from "@/services/ordersService";
-import type { TokenSummary, PageResponse, OrderTokensRequest } from "@/types/inventory";
+import type { TokenSummary, PageResponse, OrderTokensRequest, OrderSell } from "@/types/inventory";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -19,7 +19,7 @@ export default function MarketPage(){
     const [actionModalOpen, setActionModalOpen] = useState(false);
     const [modalError,setModalError] = useState<HttpError | null>(null);
 
-    const [tokenPage, setTokenPage] = useState<PageResponse<TokenSummary> | null>(null);
+    const [tokenPage, setTokenPage] = useState<PageResponse<OrderSell> | null>(null);
 
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
@@ -57,10 +57,18 @@ export default function MarketPage(){
     };
 
     useEffect(() => {
-        getTokensOnSale().then((data) => {
+        const page = Number(searchParams.get("page") ?? "0");
+        const nombre = searchParams.get("nombre") ?? undefined;
+
+        setLoading(true);
+        setError(null);
+
+        getTokensOnSale(page,nombre).then((data) => {
             setTokenPage(data);
-        }).catch((err: HttpError) => {setError(err);})
+        })
+        .catch((err: HttpError) => {setError(err);})
         .finally(() => {setLoading(false);})
+        
     }, [searchParams]);
 
     if (loading) return <Loading text="Cargando catálogo..." />

@@ -1,10 +1,13 @@
 package com.overcode.persistence.repository.impl;
 
+import com.overcode.model.dto.OrderSellSummaryDTO;
 import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.SellOrder;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,4 +57,15 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
                 .map(SellOrderJPADTO::aModelo)
                 .toList();
     }
+
+    @Override
+    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(String nombre, Pageable pageable) {
+        return dao.buscarOrdersSellAbiertas(nombre, pageable);
+    }
+
+    @Override
+    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre,Pageable pageable) {
+        return dao.buscarOrdersSellAbiertasPorUsuario(userId, nombre, pageable);
+    }
+
 }

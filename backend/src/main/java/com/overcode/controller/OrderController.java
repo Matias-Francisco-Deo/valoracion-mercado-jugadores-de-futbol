@@ -2,16 +2,22 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
+import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
+import com.overcode.controller.dto.p2p.OrderSellSummaryResponseDTO;
 import com.overcode.controller.dto.p2p.SellOrderResponseDTO;
 import com.overcode.model.BuyOrder;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.User;
+import com.overcode.model.dto.OrderSellSummaryDTO;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.P2POrderService;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -102,5 +108,18 @@ public class OrderController {
             }
             throw e;
         }
+    }
+
+    @GetMapping("/for-sell")
+    public ResponseEntity<OrderSellSummaryPageResponseDTO> buscarOrdersSellAbiertas(
+            @RequestParam(required = false) String nombre,
+            @PageableDefault(size = 20, sort = "playerName")
+            Pageable pageable
+    ) {
+         Page<OrderSellSummaryDTO> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertas(nombre, pageable);
+
+        OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
+
+        return ResponseEntity.ok(response);
     }
 }

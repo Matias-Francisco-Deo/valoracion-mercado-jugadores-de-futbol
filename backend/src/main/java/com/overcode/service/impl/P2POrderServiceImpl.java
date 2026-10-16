@@ -6,6 +6,7 @@ import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.Token;
 import com.overcode.model.User;
+import com.overcode.model.dto.OrderSellSummaryDTO;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
@@ -14,6 +15,8 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.exception.OrderNotFoundException;
 import com.overcode.service.interfaces.P2POrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,4 +134,19 @@ public class P2POrderServiceImpl implements P2POrderService {
         // Devolver el token al vendedor
         tokenRepository.setTokenOwner(order.getTokenId(), userId);
     }
+
+    @Override
+    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(String nombre, Pageable pageable) {
+        return sellOrderRepository.buscarOrdersSellSummaryAbiertas(nombre,pageable);
+    }
+
+    @Override
+    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId,String nombre,Pageable pageable) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntidadNoEncontradaException("El usuario no existe");
+        }
+
+        return sellOrderRepository.buscarOrdersSellSummaryAbiertasPorUsuario(userId, nombre,pageable);
+    }
+
 }

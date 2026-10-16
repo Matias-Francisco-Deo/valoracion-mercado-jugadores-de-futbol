@@ -12,11 +12,9 @@ export interface TokenSummary {
 }
 
 export interface OrderSell{
-  id:number;
   playerId: number;
   playerName: string;
   unitPrice : number;
-  totalPrice:number;//quitar?
   quantity: number;
 }
 

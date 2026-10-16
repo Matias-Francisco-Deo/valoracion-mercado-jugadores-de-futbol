@@ -121,7 +121,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 ) : ordersSell && ordersSell?.content.length > 0 ? (
                 ordersSell?.content.map((token) => (
                     <TokenSummaryCard
-                    key={token.id}
+                    key={token.playerId}
                     token={token}
                     onActionClick={() => onActionClick(token)}
                     actionType="Cancelar venta"

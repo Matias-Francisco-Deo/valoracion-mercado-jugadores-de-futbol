@@ -1,7 +1,5 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.user.PortfolioDataDTO;
-import com.overcode.controller.dto.user.PortfolioResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.User;
 import com.overcode.service.interfaces.UserService;
@@ -32,13 +30,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    @GetMapping("/{id}/portfolio")
-    public PortfolioResponseDTO getPortfolio(
-            @PathVariable Long id,
-            Pageable pageable//TODO quitar este pageable y dejar una cantidad por defecto en otro lado?
-    ){
-        PortfolioDataDTO portfolioData = userService.recuperarPortfolio(id,pageable);
 
-        return PortfolioResponseDTO.desdeModelo(portfolioData);
-    }
+
 }

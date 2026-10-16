@@ -1,6 +1,5 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.controller.dto.user.PortfolioDataDTO;
 import com.overcode.model.User;
 import org.springframework.data.domain.Pageable;
 
@@ -16,6 +15,5 @@ public interface UserService {
 
     Optional<User> recuperarPorEmail(String email);
 
-    PortfolioDataDTO recuperarPortfolio(Long userId, Pageable pageable);
 
 }
