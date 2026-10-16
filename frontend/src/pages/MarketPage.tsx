@@ -39,7 +39,6 @@ export default function MarketPage(){
         const request: OrderTokensRequest = {
             playerId,
             quantity,
-            userId,
         }
         await buyListedTokens(request).then(()=>{
         setActionModalOpen(false);

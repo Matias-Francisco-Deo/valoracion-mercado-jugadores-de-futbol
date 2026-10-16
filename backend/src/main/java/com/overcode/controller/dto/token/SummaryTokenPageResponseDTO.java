@@ -5,16 +5,16 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public record TokenPageResponseDTO(
-        List<SummaryTokenPlayerDTO> content,
+public record SummaryTokenPageResponseDTO(
+        List<SummaryTokenPlayerResponseDTO> content,
         int number,
         int size,
         int totalPages,
         long totalElements
 ) {
-    public static TokenPageResponseDTO desdeModelo(Page<SummaryTokenPlayerDTO> page) {
-        return new TokenPageResponseDTO(
-                page.getContent(),
+    public static SummaryTokenPageResponseDTO desdeModelo(Page<SummaryTokenPlayerDTO> page) {
+        return new SummaryTokenPageResponseDTO(
+                page.getContent().stream().map(SummaryTokenPlayerResponseDTO::desdeModelo).toList(),
                 page.getNumber(),
                 page.getSize(),
                 page.getTotalPages(),

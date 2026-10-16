@@ -111,12 +111,26 @@ public class OrderController {
     }
 
     @GetMapping("/for-sell")
-    public ResponseEntity<OrderSellSummaryPageResponseDTO> buscarOrdersSellAbiertas(
+    public ResponseEntity<OrderSellSummaryPageResponseDTO> searchOpenOrdersSell(
             @RequestParam(required = false) String nombre,
             @PageableDefault(size = 20, sort = "playerName")
             Pageable pageable
     ) {
          Page<OrderSellSummaryDTO> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertas(nombre, pageable);
+
+        OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/ordersSell")
+    public ResponseEntity<OrderSellSummaryPageResponseDTO> searchUserOpenOrdersSell(
+            @PathVariable Long id,
+            @RequestParam(required = false) String nombre,
+            @PageableDefault(size = 10, sort = "playerName")
+            Pageable pageable
+    ) {
+        Page<OrderSellSummaryDTO> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 

@@ -1,9 +1,12 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.Token;
+import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import com.overcode.persistence.dto.jpa.TokenJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TokenDAOJPA;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +46,10 @@ public class TokenRepositoryImpl implements TokenRepository {
     @Transactional
     public void clearTokenOwner(Long tokenId) {
         tokenDAO.clearOwner(tokenId);
+    }
+
+    @Override
+    public Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName,Pageable pageable){
+        return tokenDAO.buscarSummaryTokensPorUsuario(userId,playerName,pageable);
     }
 }

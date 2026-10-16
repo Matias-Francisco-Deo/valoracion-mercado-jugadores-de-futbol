@@ -1,6 +1,7 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.User;
+import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.PasswordHasher;
@@ -9,6 +10,7 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
+    private final TokenRepository tokenRepository;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordHasher passwordHasher,
+                           TokenRepository tokenRepository,
                            @Value("${superuser.name}") String superuserName,
                            @Value("${superuser.password}") String superuserPassword,
                            @Value("${superuser.email}") String superuserEmail
@@ -37,6 +41,7 @@ public class UserServiceImpl implements UserService {
         this.superuserPassword = superuserPassword;
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -73,6 +78,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.guardar(superuser);
     }
 
+    @Override
+    public Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable){
+        if (!userRepository.existsById(userId)) {
+            throw new EntidadNoEncontradaException("El usuario no existe");
+        }
+
+        return tokenRepository.buscarSummaryTokensPorUsuario(userId,playerName,pageable);
+    }
 
     private void validarUsuarioNuevo(User userACrear) {
         if (userRepository.existsByUsername(userACrear.getUsername())) {

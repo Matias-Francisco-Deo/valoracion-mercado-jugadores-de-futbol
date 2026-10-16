@@ -1,6 +1,6 @@
 export interface OrderTokensRequest {
   playerId: number;
-  userId: string;//quitar?
+  //userId: string;//quitar?
   quantity: number;
 }
 

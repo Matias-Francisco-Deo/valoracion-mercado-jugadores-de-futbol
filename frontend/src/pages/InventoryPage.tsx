@@ -41,7 +41,6 @@ export default function InventoryPage() {
     const request: OrderTokensRequest = {
       playerId,
       quantity,
-      userId,
     }
 
     await listTokensForSale(request).then(()=>{
