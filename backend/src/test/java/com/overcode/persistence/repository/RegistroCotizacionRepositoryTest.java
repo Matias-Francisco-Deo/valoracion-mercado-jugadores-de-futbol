@@ -70,7 +70,7 @@ class RegistroCotizacionRepositoryTest {
 
         Player jugadorGuardado = guardarRegistroDeJugador(getJugadorConNombre("pepito"));
 
-        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now().plusSeconds(30);
 
         List<RegistroCotizacion> registrosRecuperados = registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
                 new BusquedaRegistroCotizacion(jugadorGuardado.getId(), startDate, endDate)
