@@ -49,6 +49,9 @@ public class ExternalPlayerWhoScoredScrapper {
         // Aislamos el JSON crudo del estado inicial de la página
         String rawJson = JsonExtractorUtil.extractPlayerStatsJson(html);
         String position = JsonExtractorUtil.extractPlayerPosition(html);
+        if (position == null) {
+            throw new ScraperExtractionException("No se pudo encontrar la posición del jugador.");
+        }
 
         try {
             JsonNode rootNode = objectMapper.readTree(rawJson);
@@ -111,7 +114,8 @@ public class ExternalPlayerWhoScoredScrapper {
                     totalKeyPasses,
                     totalTackles,
                     totalSuccessfulDribbles,
-                    roundedRating
+                    roundedRating,
+                    position
             );
 
 
@@ -122,9 +126,7 @@ public class ExternalPlayerWhoScoredScrapper {
             );
 
             playerGameData.setPlayer(player);
-            if (position != null) {
-                player.setPosition(position);
-            }
+
 
             return Optional.of(player);
 

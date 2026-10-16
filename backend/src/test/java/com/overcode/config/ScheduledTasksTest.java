@@ -1,6 +1,7 @@
 package com.overcode.config;
 
 import com.overcode.config.scheduling.ScheduledTasks;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.ExternalPlayerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,6 +56,11 @@ class ScheduledTasksTest {
 
     @MockitoBean
     ExternalPlayerService externalPlayerService;
+
+    @MockitoBean
+    EstrategiaCotizacionService estrategiaCotizacionService;
+
+
 
     @Test
     void actualizarDatosJugadoresSeEjecutaALas12DeLaNoche() {

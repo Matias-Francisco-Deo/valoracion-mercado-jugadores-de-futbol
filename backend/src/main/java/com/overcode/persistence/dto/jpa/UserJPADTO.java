@@ -61,6 +61,19 @@ public class UserJPADTO {
         return dto;
     }
 
+    public static UserJPADTO desdeModeloSinTokens(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserJPADTO dto = new UserJPADTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        dto.setCreditBalance(user.getCreditBalance());
+        return dto;
+    }
+
     public User aModelo() {
 
         User user = new User();
@@ -69,7 +82,18 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
-        user.setTokens(this.tokens.stream().map(token -> token.aModelo(user)).toList());
+        user.setTokens(new ArrayList<>(this.tokens.stream().map(token -> token.aModelo(user)).toList()));
+        return user;
+    }
+
+    public User aModeloSinTokens() {
+        User user = new User();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        user.setEmail(this.email);
+        user.setPassword(this.password);
+        user.setCreditBalance(this.creditBalance);
+        user.setTokens(new ArrayList<>());
         return user;
     }
 

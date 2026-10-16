@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Player {
 
     private Long id;
@@ -21,11 +20,11 @@ public class Player {
     private Team team;
 
     private PlayerGameData playerGameData;
-    
-    private String position;
 
-
-
+    public Player() {
+        setCurrentPrice(1);
+        setTokens(getInitialTokens());
+    }
 
     public Player(Long id,
                   Long externalId,
@@ -69,5 +68,15 @@ public class Player {
 
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
+    }
+
+    public void recalcularCotizacion(Double cotizacion) {
+        setCurrentPrice(cotizacion.intValue());
+    }
+
+    public void assignInitialTokensTo(User owner) {
+        if (this.tokens != null && owner != null) {
+            owner.addTokens(this.tokens);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.Player;
 import com.overcode.model.Team;
+import com.overcode.model.TeamUpsertResult;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
@@ -43,6 +44,9 @@ class ExternalPlayerServiceImplTest {
     @MockitoBean
     private TeamRepository teamRepositoryMock;
 
+    @MockitoBean
+    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+
     @InjectMocks
     private ExternalPlayerServiceImpl mockExternalPlayerServiceImpl;
 
@@ -60,7 +64,7 @@ class ExternalPlayerServiceImplTest {
         when(externalPlayerRepository.getDatosDeEquipos(List.of(teamDTO)))
                 .thenReturn(Optional.of(List.of(team)));
 
-        when(teamRepositoryMock.upsertTeam(team)).thenReturn(team);
+        when(teamRepositoryMock.upsertTeam(team)).thenReturn(new TeamUpsertResult(team, team.getPlayers()));
 
         Optional<List<Player>> optionalPlayers = mockExternalPlayerServiceImpl.actualizarJugadores(1);
 
@@ -82,7 +86,7 @@ class ExternalPlayerServiceImplTest {
     @Test
     @Disabled("Use automatically to generate players up to the limit set in the method")
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(1);
+        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(2);
 
         assertTrue(optionalPlayers.isPresent());
         List<Player> players = optionalPlayers.get();
@@ -96,7 +100,7 @@ class ExternalPlayerServiceImplTest {
             assertNotNull(player.getPlayerGameData());
             assertNotNull(player.getPlayerGameData().getRating());
             assertNotNull(player.getPlayerGameData().getAssists());
-            assertNotNull(player.getPosition());
+            assertNotNull(player.getPlayerGameData().getPosition());
         }
         ));
     }
@@ -104,7 +108,7 @@ class ExternalPlayerServiceImplTest {
     @Test
     @Disabled("Use automatically to generate players up to the limit set in the method")
     void encuentraJugadoresConDatosAsync(){
-        CompletableFuture<Void> future = externalPlayerServiceImpl.actualizarJugadoresAsync();
+        CompletableFuture<Void> future = externalPlayerServiceImpl.actualizarJugadoresAsync(null);
 
         future.join();
 
@@ -136,9 +140,9 @@ class ExternalPlayerServiceImplTest {
         when(externalPlayerRepository.getDatosDeEquipos(List.of(teamDTO)))
                 .thenReturn(Optional.of(List.of(team)));
 
-        when(teamRepositoryMock.upsertTeam(team)).thenReturn(team);
+        when(teamRepositoryMock.upsertTeam(team)).thenReturn(new TeamUpsertResult(team, team.getPlayers()));
 
-        CompletableFuture<Void> future = mockExternalPlayerServiceImpl.actualizarJugadoresAsync();
+        CompletableFuture<Void> future = mockExternalPlayerServiceImpl.actualizarJugadoresAsync(null);
 
         future.join();
 

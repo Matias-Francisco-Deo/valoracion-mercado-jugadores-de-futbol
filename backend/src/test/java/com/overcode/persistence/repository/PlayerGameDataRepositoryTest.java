@@ -44,7 +44,8 @@ class PlayerGameDataRepositoryTest {
                 623,
                 914,
                 838,
-                9.91
+                9.91,
+                "Forward"
         );
         Player player = getJugadorConGameData("Jorgelín", playerGameData);
         playerGameData.setPlayer(player);
@@ -84,7 +85,8 @@ class PlayerGameDataRepositoryTest {
                 623,
                 914,
                 838,
-                9.91
+                9.91,
+                "Midfielder"
         );
         Player player = getJugadorConGameData("Jorgelín", playerGameData);
         playerGameData.setPlayer(player);
@@ -103,6 +105,7 @@ class PlayerGameDataRepositoryTest {
         assertEquals(914, recuperado.get().getTackles());
         assertEquals(838, recuperado.get().getSuccessfulDribbles());
         assertEquals(9.91, recuperado.get().getRating());
+        assertEquals("Midfielder", recuperado.get().getPosition());
     }
 
     @Test

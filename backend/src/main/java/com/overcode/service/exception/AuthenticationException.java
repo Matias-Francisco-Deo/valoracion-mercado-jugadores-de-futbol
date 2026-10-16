@@ -1,6 +1,6 @@
 package com.overcode.service.exception;
 
-public class AuthenticationException extends ServiceException {
+public class AuthenticationException extends RuntimeException {
     public AuthenticationException(String message) {
         super(message);
     }

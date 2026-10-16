@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Player;
 import com.overcode.model.Team;
+import com.overcode.model.TeamUpsertResult;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
@@ -22,12 +23,13 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
     private final ExternalPlayerRepository externalPlayerRepository;
     private final TeamRepository teamRepository;
+    private final com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
     private static final Logger log = LoggerFactory.getLogger(ExternalPlayerServiceImpl.class);
 
-    public ExternalPlayerServiceImpl(ExternalPlayerRepository externalPlayerRepository, TeamRepository teamRepository) {
+    public ExternalPlayerServiceImpl(ExternalPlayerRepository externalPlayerRepository, TeamRepository teamRepository, com.overcode.service.interfaces.TokenEmissionService tokenEmissionService) {
         this.externalPlayerRepository = externalPlayerRepository;
-
         this.teamRepository = teamRepository;
+        this.tokenEmissionService = tokenEmissionService;
     }
 
     @Override
@@ -40,18 +42,34 @@ public class ExternalPlayerServiceImpl implements ExternalPlayerService {
 
         if (optionalTeams.isEmpty()) return Optional.empty();
 
-        List<Team> teams = optionalTeams.get().stream()
+        List<TeamUpsertResult> upsertResults = optionalTeams.get().stream()
                 .map(teamRepository::upsertTeam).toList();
 
-        return Optional.of(teams.stream().flatMap(team -> team.getPlayers().stream()).toList());
+        List<Team> teams = upsertResults.stream().map(TeamUpsertResult::team).toList();
+        List<Player> allPlayers = teams.stream().flatMap(team -> team.getPlayers().stream()).toList();
+
+        List<Player> newPlayers = upsertResults.stream()
+                .flatMap(result -> result.newPlayers().stream())
+                .toList();
+
+        tokenEmissionService.emitTokensForNewPlayers(newPlayers);
+
+        return Optional.of(allPlayers);
     }
 
     @Override
     @Async
-    public CompletableFuture<Void> actualizarJugadoresAsync() {
-        log.info("Iniciando actualizacion asincrona manual...");
-        actualizarJugadores(null);
-        log.info("Finalizó la actualización asíncrona manual.");
-        return CompletableFuture.completedFuture(null);
+    public CompletableFuture<Void> actualizarJugadoresAsync(Integer limit) {
+        log.info("Iniciando actualizacion asincrona manual con limite: {}", limit);
+        try {
+            actualizarJugadores(limit);
+            log.info("Finalizó la actualización asíncrona manual.");
+            return CompletableFuture.completedFuture(null);
+        } catch (Exception e) {
+            // Without this, the exception is stored in the discarded CompletableFuture and silently swallowed,
+            // which makes the async task look "stuck" instead of reporting what actually failed.
+            log.error("Falló la actualización asíncrona manual: {}", e.getMessage(), e);
+            return CompletableFuture.failedFuture(e);
+        }
     }
 }

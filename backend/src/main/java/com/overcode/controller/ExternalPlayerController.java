@@ -20,9 +20,9 @@ public class ExternalPlayerController {
     }
 
     @PostMapping("/actualizar-jugadores")
-    @Operation(summary = "Ejecutar scrapper", description = "Dispara el scrapper de jugadores de forma asíncrona. Retorna 202 inmediatamente.")
-    public ResponseEntity<String> runScrapper() {
-        externalPlayerService.actualizarJugadoresAsync();
-        return ResponseEntity.accepted().body("Scraper manual iniciado en background. Este proceso puede tardar varias horas.");
+    @Operation(summary = "Ejecutar scrapper", description = "Dispara el scrapper de forma asíncrona. Podes pasarle ?limit=2 para traer solo 2 equipos rápidos.")
+    public ResponseEntity<String> runScrapper(@org.springframework.web.bind.annotation.RequestParam(required = false) Integer limit) {
+        externalPlayerService.actualizarJugadoresAsync(limit);
+        return ResponseEntity.accepted().body("Scraper iniciado. Limite de equipos: " + (limit == null ? "Todos" : limit));
     }
 }
