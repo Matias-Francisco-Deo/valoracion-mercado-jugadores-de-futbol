@@ -10,8 +10,15 @@ import java.util.List;
 
 public interface RegistroCotizacionDAOJPA extends JpaRepository<RegistroCotizacionJPADTO, Long> {
 
-    @Query("select r from registro_cotizacion r where r.player.id = :playerId " +
-            "and r.createdAt >= :inicio and r.createdAt <= :fin")
+    @Query(value = """
+        select r.*
+        from registros_cotizaciones r
+        where r.player_id = :playerId
+          and (cast(:inicio as timestamp) is null
+               or r.created_at >= cast(:inicio as timestamp))
+          and (cast(:fin as timestamp) is null
+               or r.created_at <= cast(:fin as timestamp))
+        """, nativeQuery = true)
     List<RegistroCotizacionJPADTO> recuperarRegistrosDeJugador(
             @Param("playerId") Long playerId,
             @Param("inicio") LocalDateTime inicio,

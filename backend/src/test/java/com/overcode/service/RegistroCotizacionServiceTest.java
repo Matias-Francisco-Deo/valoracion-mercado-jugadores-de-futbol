@@ -271,6 +271,29 @@ class RegistroCotizacionServiceTest {
 
     }
 
+    @Test
+    @Transactional
+    void sePuedeBuscarPorRangoNuloYTraeTodo() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionService.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(),
+                                null,
+                                null)
+                );
+
+        assertEquals(3, registrosRecuperados.size());
+
+    }
+
     private Player guardarRegistroDeJugador(Player player) {
         Team team1 = getTeamConJugadores(List.of(player));
         EstrategiaCotizacion estrategiaCotizacionUsada = estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1);

@@ -29,12 +29,10 @@ public class RegistroCotizacionServiceImpl implements RegistroCotizacionService 
     }
 
     private static void validarRangos(BusquedaRegistroCotizacion busquedaRegistroCotizacion) {
-        if (busquedaRegistroCotizacion.inicio() == null || busquedaRegistroCotizacion.fin() == null ) {
-            throw new RangoBusquedaInvalidoException("Las fechas no pueden ser nulas");
-        }
+        if (busquedaRegistroCotizacion.inicio() == null || busquedaRegistroCotizacion.fin() == null ) return;
 
-        if (busquedaRegistroCotizacion.inicio().isAfter(busquedaRegistroCotizacion.fin()) ) {
+        if (busquedaRegistroCotizacion.inicio().isAfter(busquedaRegistroCotizacion.fin()) )
             throw new RangoBusquedaInvalidoException("La fecha inicial de búsqueda debe ser inferior a la fecha final");
-        }
+
     }
 }

@@ -138,6 +138,29 @@ class RegistroCotizacionRepositoryTest {
 
     @Test
     @Transactional
+    void sePuedeBuscarPorRangoNuloYTraeTodo() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionRepositoryImpl.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(),
+                                null,
+                                null)
+                );
+
+        assertEquals(3, registrosRecuperados.size());
+
+    }
+
+    @Test
+    @Transactional
     void seBuscaEnRangoQueNoHayNadaEntoncesEsVacio() {
 
         LocalDateTime startDate = LocalDateTime.now();
