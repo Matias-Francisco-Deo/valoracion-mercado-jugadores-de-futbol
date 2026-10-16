@@ -236,29 +236,6 @@ class RegistroCotizacionServiceTest {
 
     @Test
     @Transactional
-    void seBuscaConRangosNullYDaError() {
-
-        BusquedaRegistroCotizacion busquedaRegistroCotizacion = new BusquedaRegistroCotizacion(1L, null, null);
-        BusquedaRegistroCotizacion busquedaRegistroCotizacionInicioNull = new BusquedaRegistroCotizacion(1L, null, LocalDateTime.now());
-        BusquedaRegistroCotizacion busquedaRegistroCotizacionFinNull = new BusquedaRegistroCotizacion(1L, LocalDateTime.now(), null);
-
-        assertThrows(RangoBusquedaInvalidoException.class, () -> {
-            registroCotizacionService.recuperarRegistrosDeJugador(busquedaRegistroCotizacion);
-        });
-
-        assertThrows(RangoBusquedaInvalidoException.class, () -> {
-            registroCotizacionService.recuperarRegistrosDeJugador(busquedaRegistroCotizacionInicioNull);
-        });
-
-        assertThrows(RangoBusquedaInvalidoException.class, () -> {
-            registroCotizacionService.recuperarRegistrosDeJugador(busquedaRegistroCotizacionFinNull);
-        });
-
-
-    }
-
-    @Test
-    @Transactional
     void seBuscaConRangosMalFormadosYDaError() {
 
         BusquedaRegistroCotizacion busquedaRegistroCotizacion = new BusquedaRegistroCotizacion(1L,
@@ -291,6 +268,53 @@ class RegistroCotizacionServiceTest {
                 );
 
         assertEquals(3, registrosRecuperados.size());
+
+    }
+
+    @Test
+    @Transactional
+    void sePuedeBuscarPorRangoNuloDeInicioYTraeTodoHastaFechaFin() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionService.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(),
+                                null,
+                                endDate.plusDays(6))
+                );
+
+        assertEquals(1, registrosRecuperados.size());
+
+    }
+
+    @Test
+    @Transactional
+    void sePuedeBuscarPorRangoNuloDeFinalYTraeTodoDesdePrimerFecha() {
+
+        LocalDateTime startDate = LocalDateTime.now();
+
+        Player jugadorGuardado = guardarRegistrosDeJugadorEnFechas(getJugadorConNombre("pepito"),
+                startDate.minusDays(15),
+                startDate.plusDays(5),
+                startDate.plusDays(15));
+
+
+        List<RegistroCotizacion> registrosRecuperados =
+                registroCotizacionService.recuperarRegistrosDeJugador(
+                        new BusquedaRegistroCotizacion(jugadorGuardado.getId(),
+                                startDate.plusDays(10),
+                                null)
+                );
+
+        assertEquals(1, registrosRecuperados.size());
 
     }
 
