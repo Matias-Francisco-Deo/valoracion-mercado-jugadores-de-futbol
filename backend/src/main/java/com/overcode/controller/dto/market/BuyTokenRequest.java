@@ -12,4 +12,8 @@ public class BuyTokenRequest {
     @NotNull(message = "Quantity must not be null")
     @Positive(message = "Quantity must be greater than zero")
     private Integer quantity;
+
+    public com.overcode.model.BuyOrder aModelo(Long userId) {
+        return new com.overcode.model.BuyOrder(userId, this.playerId, this.quantity);
+    }
 }

@@ -2,8 +2,10 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
-import com.overcode.controller.dto.p2p.P2POrderResponseDTO;
-import com.overcode.model.P2POrder;
+import com.overcode.controller.dto.p2p.SellOrderResponseDTO;
+import com.overcode.model.BuyOrder;
+import com.overcode.model.SellOrder;
+import com.overcode.model.SellPost;
 import com.overcode.model.User;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.P2POrderService;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -49,7 +51,8 @@ public class OrderController {
     public ResponseEntity<Object> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
         try {
             Long userId = getUserId(principal);
-            p2pOrderService.executeMarketBuy(userId, request.getPlayerId(), request.getQuantity());
+            BuyOrder buyOrder = request.aModelo(userId);
+            p2pOrderService.executeMarketBuy(buyOrder);
 
             return ResponseEntity.ok(Map.of(
                     "message", "Tokens successfully purchased",
@@ -57,8 +60,6 @@ public class OrderController {
                     "quantity", request.getQuantity(),
                     "timestamp", Instant.now().toString()
             ));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, e.getMessage()));
         } catch (InsufficientLiquidityException e) {
             return ResponseEntity.status(409).body(Map.of(ERROR_KEY, e.getMessage()));
         } catch (IllegalStateException e) {
@@ -67,17 +68,16 @@ public class OrderController {
             }
             throw e;
         }
-        // InsufficientFundsException and PortfolioNotFoundException are mapped globally by
-        // GlobalExceptionHandler (402 / 404 respectively).
     }
 
-    /** Publishes a resting SELL order for {@code quantity} tokens, priced at the player's current price. */
+    /** Publishes resting SELL orders (one per token) for the requested quantity. */
     @PostMapping("/sell")
     public ResponseEntity<Object> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) {
         try {
             Long userId = getUserId(principal);
-            P2POrder order = p2pOrderService.createSellOrder(userId, request.getPlayerId(), request.getQuantity());
-            return ResponseEntity.status(HttpStatus.CREATED).body(P2POrderResponseDTO.from(order));
+            SellPost command = request.aModelo(userId);
+            List<SellOrder> orders = p2pOrderService.createSellOrders(command);
+            return ResponseEntity.status(HttpStatus.CREATED).body(SellOrderResponseDTO.from(orders));
         } catch (IllegalStateException e) {
             if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
                 return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
@@ -86,11 +86,11 @@ public class OrderController {
         }
     }
 
-    /** Cancels a resting SELL order and refunds its escrowed tokens. */
+    /** Cancels a resting SELL order and returns the token to the seller. */
     @PostMapping("/{id}/cancel")
     public ResponseEntity<Object> cancelOrder(
             Principal principal,
-            @PathVariable("id") UUID orderId) {
+            @PathVariable("id") Long orderId) {
 
         try {
             Long userId = getUserId(principal);

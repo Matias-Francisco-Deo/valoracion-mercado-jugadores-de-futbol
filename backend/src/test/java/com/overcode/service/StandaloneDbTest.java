@@ -12,7 +12,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class StandaloneDbTest {
+class StandaloneDbTest { // TODO test medio raaaaaaaaaaaaaaaaaro
 
     @Autowired
     private PortfolioRepository portfolioRepository;

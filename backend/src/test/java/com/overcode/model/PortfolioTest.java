@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PortfolioTest {
 
+    // TODO bigdecimal no
+
     @Test
     void testAddAndDeductCredits() {
         Portfolio portfolio = new Portfolio(UUID.randomUUID(), 1L, BigDecimal.valueOf(100), 0L);

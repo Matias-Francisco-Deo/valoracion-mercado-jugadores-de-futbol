@@ -1,153 +1,134 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.FillPlan;
-import com.overcode.model.OrderStatus;
-import com.overcode.model.OrderType;
-import com.overcode.model.P2POrder;
+import com.overcode.model.BuyOrder;
 import com.overcode.model.Player;
-import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
-import com.overcode.persistence.repository.interfaces.P2POrderRepository;
+import com.overcode.model.SellOrder;
+import com.overcode.model.SellPost;
+import com.overcode.model.Token;
+import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.PortfolioRepository;
+import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import com.overcode.persistence.repository.interfaces.TokenRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.InsufficientEscrowException;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.exception.OrderNotFoundException;
-import com.overcode.service.exception.PortfolioNotFoundException;
 import com.overcode.service.interfaces.P2POrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class P2POrderServiceImpl implements P2POrderService {
 
-    private static final String PORTFOLIO_NOT_FOUND_MESSAGE = "Portfolio not found for user: ";
-
-    private final P2POrderRepository orderRepository;
-    private final PortfolioRepository portfolioRepository;
+    private final SellOrderRepository sellOrderRepository;
+    private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
+    private final TokenRepository tokenRepository;
 
-    public P2POrderServiceImpl(P2POrderRepository orderRepository,
-                               PortfolioRepository portfolioRepository,
-                               PlayerRepository playerRepository) {
-        this.orderRepository = orderRepository;
-        this.portfolioRepository = portfolioRepository;
+    public P2POrderServiceImpl(SellOrderRepository sellOrderRepository,
+                               UserRepository userRepository,
+                               PlayerRepository playerRepository,
+                               TokenRepository tokenRepository) {
+        this.sellOrderRepository = sellOrderRepository;
+        this.userRepository = userRepository;
         this.playerRepository = playerRepository;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
     @Transactional
-    public P2POrder createSellOrder(Long userId, Long playerId, int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive.");
-        }
+    public List<SellOrder> createSellOrders(SellPost command) {
+        Long userId = command.userId();
+        Long playerId = command.playerId();
+        int quantity = command.quantity();
 
-        //orden con precio del token al momento de crearla
         Player player = playerRepository.recuperar(playerId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + playerId));
-        BigDecimal pricePerToken = BigDecimal.valueOf(player.getCurrentPrice());
 
-        Portfolio portfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
+        User seller = userRepository.recuperar(userId)
+                .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + userId));
 
-        TokenHolding holding = portfolio.getHoldingForPlayer(playerId)
-                .orElseThrow(() -> new InsufficientEscrowException("No tokens found for player."));
-        if (!holding.hasSufficientTokens(quantity)) {
-            throw new InsufficientEscrowException("Not enough tokens to place SELL order.");
-        }
-        holding.deductTokens(quantity);
-        portfolioRepository.save(portfolio);
+        List<Token> tokensToSell = seller.releaseTokensForSale(playerId, quantity);
+        userRepository.guardar(seller);
 
-        P2POrder newOrder = P2POrder.builder()
-                .id(UUID.randomUUID())
-                .userId(userId)
-                .playerId(playerId)
-                .type(OrderType.SELL)
-                .quantity(quantity)
-                .pricePerToken(pricePerToken)
-                .status(OrderStatus.OPEN)
-                .createdAt(Instant.now())
-                .version(null)
-                .build();
-        return orderRepository.save(newOrder);
+        int price = player.getCurrentPrice();
+        List<SellOrder> orders = tokensToSell.stream()
+                .map(token -> {
+                    tokenRepository.clearTokenOwner(token.getId());
+                    return token.vender(price);
+                })
+                .toList();
+
+        return sellOrderRepository.saveAll(orders);
     }
 
     @Override
     @Transactional
-    public void executeMarketBuy(Long userId, Long playerId, int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive.");
-        }
+    public void executeMarketBuy(BuyOrder buyOrder) {
+        Long buyerId = buyOrder.getUserId();
+        Long playerId = buyOrder.getPlayerId();
+        int quantity = buyOrder.getQuantity();
 
-        Portfolio buyerPortfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
+        User buyer = userRepository.recuperar(buyerId)
+                .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + buyerId));
 
-        // Sweep the open SELL book (cheapest first), ignoring the taker's own resting orders.
-        List<P2POrder> asks = orderRepository.findOpenSellOrders(playerId).stream()
-                .filter(order -> !order.belongsTo(userId))
+        // Buscar órdenes de venta abiertas excluyendo las del propio comprador
+        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream()
+                .filter(order -> !order.belongsTo(buyerId))
                 .toList();
 
-        FillPlan plan = FillPlan.build(quantity, asks);
-        if (!plan.isFullyFilled()) {
+        if (openOrders.size() < quantity) {
             throw new InsufficientLiquidityException(
                     "Not enough liquidity to buy " + quantity + " tokens for player " + playerId);
         }
 
-        // Taker pays up front at each maker's price; the domain guards the buyer's funds.
-        buyerPortfolio.deductCredits(plan.totalCost());
-        TokenHolding buyerHolding = buyerPortfolio.getOrCreateHoldingForPlayer(playerId);
+        List<SellOrder> ordersToFill = openOrders.subList(0, quantity);
+        Map<Long, User> sellersCache = new HashMap<>();
 
-        Map<Long, Portfolio> sellerPortfolios = new HashMap<>();
-        List<P2POrder> touchedMakers = new ArrayList<>();
-        for (FillPlan.Fill fill : plan.getFills()) {
-            P2POrder makerOrder = fill.getMakerOrder();
-            Portfolio sellerPortfolio = sellerPortfolios.computeIfAbsent(makerOrder.getUserId(),
-                    id -> portfolioRepository.findByUserId(id)
-                            .orElseThrow(() -> new PortfolioNotFoundException("Seller portfolio not found: " + id)));
+        for (SellOrder order : ordersToFill) {
+            // Cobrar al comprador (lanza InsufficientFundsException si no tiene saldo)
+            buyer.debitCredits(order.getPrice());
 
-            // Seller already escrowed the tokens when posting the SELL order; just move them to
-            // the buyer and credit the seller. Then consume the resting quantity.
-            sellerPortfolio.addCredits(fill.getSubtotal());
-            buyerHolding.addTokens(fill.getQuantityTaken());
-            makerOrder.reduceQuantity(fill.getQuantityTaken());
-            touchedMakers.add(makerOrder);
+            // Acreditar fondos al vendedor
+            User seller = sellersCache.computeIfAbsent(order.getUserId(),
+                    id -> userRepository.recuperar(id)
+                            .orElseThrow(() -> new EntidadNoEncontradaException("Seller not found: " + id)));
+            seller.creditCredits(order.getPrice());
+
+            // Transferir el token al comprador
+            tokenRepository.setTokenOwner(order.getTokenId(), buyer.getId());
+            Token token = tokenRepository.findById(order.getTokenId()).orElse(null);
+            if (token != null) {
+                buyer.addToken(token);
+            }
+
+            // Marcar la orden como completada
+            order.markCompleted();
         }
 
-        orderRepository.saveAll(touchedMakers);
-        sellerPortfolios.values().forEach(portfolioRepository::save);
-        portfolioRepository.save(buyerPortfolio);
+        userRepository.guardar(buyer);
+        sellersCache.values().forEach(userRepository::guardar);
+        sellOrderRepository.saveAll(ordersToFill);
     }
 
     @Override
     @Transactional
-    public void cancelOrder(UUID orderId, Long userId) {
-        P2POrder order = orderRepository.findById(orderId)
+    public void cancelOrder(Long orderId, Long userId) {
+        SellOrder order = sellOrderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId));
 
-        if (!order.getUserId().equals(userId)) {
+        if (!order.belongsTo(userId)) {
             throw new IllegalStateException("You can only cancel your own orders.");
         }
 
-        if (order.getStatus() != OrderStatus.OPEN) {
-            throw new IllegalStateException("Only OPEN orders can be cancelled.");
-        }
-
         order.cancel();
-        orderRepository.save(order);
+        sellOrderRepository.save(order);
 
-        // Refund the tokens that were escrowed when the SELL order was created.
-        Portfolio portfolio = portfolioRepository.findByUserId(userId)
-                .orElseThrow(() -> new PortfolioNotFoundException(PORTFOLIO_NOT_FOUND_MESSAGE + userId));
-        portfolio.getOrCreateHoldingForPlayer(order.getPlayerId()).addTokens(order.getQuantity());
-        portfolioRepository.save(portfolio);
+        // Devolver el token al vendedor
+        tokenRepository.setTokenOwner(order.getTokenId(), userId);
     }
 }
