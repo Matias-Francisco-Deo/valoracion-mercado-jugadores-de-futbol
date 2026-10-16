@@ -20,7 +20,7 @@ export interface OrderSell{
   quantity: number;
 }
 
-export type InventoryToken = TokenSummary | OrderSell;
+export type InventoryToken = TokenSummary | OrderSell;//todavia no se usa de verdad
 
 export interface PositionToken {
   playerId: number;

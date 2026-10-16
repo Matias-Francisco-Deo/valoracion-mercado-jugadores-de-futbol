@@ -16,7 +16,7 @@ export const TokenSummaryCard = ({ token, actionType, onActionClick, className, 
   return (
     <div className={cn(
         'flex min-w-0 flex-col max-w-67 rounded-2xl border border-gray-500 bg-gray-400 shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl text-black',
-        className,)} {...props}>
+        className)} {...props}>
       <div className="flex flex-col items-center px-4 py-4 text-center">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-500/40">
           <Shield className="h-6 w-6" aria-hidden="true" />

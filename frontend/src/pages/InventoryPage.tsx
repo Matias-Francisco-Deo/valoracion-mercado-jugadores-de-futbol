@@ -1,4 +1,5 @@
 import { Loading } from "@/components/common/Loading";
+import PortfolioPositionsSection from "@/components/inventory/PortfolioPositionsSection";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import TokenInventorySection from "@/components/inventory/TokenInventorySection";
 import { TransactionHistorySection } from "@/components/inventory/TransactionHistorySection";
@@ -75,7 +76,13 @@ export default function InventoryPage() {
     .catch((error: HttpError) => setTransactionsError(error));
   };
 
-  
+    const handlePositionPageChange = (page: number) => {
+    if (!userId) return;
+
+    getUserPortfolio(userId, page)
+    .then((data) => setPositions(data))
+    .catch((error: HttpError) => setServerError(error));
+  };
 
   useEffect(() => {
     if (!userId) return
@@ -97,7 +104,7 @@ export default function InventoryPage() {
   }, [userId]);
 
       if (loadingPage) return <Loading text="Cargando catálogo..." />
-      if (serverError) return <ServerErrorComponent />
+      //if (serverError) return <ServerErrorComponent />
 
   return (
     <div className="flex w-full justify-center px-4 py-8">
@@ -111,6 +118,7 @@ export default function InventoryPage() {
             Revisa y gestiona tus tokens
           </span>
         </div>
+        <PortfolioPositionsSection positions={positions} onPageChange={handlePositionPageChange}/>
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-[470px] p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>
