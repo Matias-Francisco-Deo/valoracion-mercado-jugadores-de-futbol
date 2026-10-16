@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
 import com.overcode.model.Team;
+import com.overcode.model.TeamUpsertResult;
 
 import java.util.Optional;
 
@@ -12,5 +13,5 @@ public interface TeamRepository {
 
     Optional<Team> recuperarPorNombreYLiga(String name, String league);
 
-    Team upsertTeam(Team team);
+    TeamUpsertResult upsertTeam(Team team);
 }

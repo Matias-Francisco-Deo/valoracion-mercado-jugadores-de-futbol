@@ -108,7 +108,7 @@ class TeamRepositoryTest {
         Player player1Recuperado = teamRecuperado.getPlayers().getFirst();
         player1Recuperado.getPlayerGameData().setRating(9.0);
 
-        Team teamActualizado = teamRepository.upsertTeam(teamRecuperado);
+        Team teamActualizado = teamRepository.upsertTeam(teamRecuperado).team();
         Player player1Actualizado = teamActualizado.getPlayers().getFirst();
         assertEquals(9.0, player1Actualizado.getPlayerGameData().getRating());
 
@@ -128,11 +128,13 @@ class TeamRepositoryTest {
         Player player2 = getJugadorConNombre("player2");
         teamRecuperado.addPlayer(player2);
 
-        Team teamActualizado = teamRepository.upsertTeam(teamRecuperado);
+        com.overcode.model.TeamUpsertResult result = teamRepository.upsertTeam(teamRecuperado);
+        Team teamActualizado = result.team();
 
         assertTrue(teamActualizado.getPlayers().stream().anyMatch(p -> p.getName().equals("player2")));
         assertTrue(teamActualizado.getPlayers().stream().anyMatch(p -> p.getName().equals("player1")));
-
+        assertEquals(1, result.newPlayers().size());
+        assertEquals("player2", result.newPlayers().getFirst().getName());
     }
 
 }

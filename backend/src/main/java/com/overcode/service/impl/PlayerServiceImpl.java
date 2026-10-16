@@ -8,6 +8,7 @@ import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenEmissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,15 +25,17 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final TokenEmissionService tokenEmissionService;
     private static final Logger log = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, TokenEmissionService tokenEmissionService) {
         this.playerRepository = playerRepository;
-        this.teamRepository=teamRepository;
+        this.teamRepository = teamRepository;
+        this.tokenEmissionService = tokenEmissionService;
     }
 
     @Override
-    public Player crear(Player player) {
+    public Player crear(Player player) { // TODO hay que borrar este método, no se usa
         validarJugador(player);
 
         Team team = player.getTeam();
@@ -41,7 +44,12 @@ public class PlayerServiceImpl implements PlayerService {
         Team teamGuardado = teamOptional.orElseGet(() -> teamRepository.guardar(team));
 
         player.setTeam(teamGuardado);
-        return playerRepository.guardar(player);
+        Player savedPlayer = playerRepository.guardar(player);
+        
+        // Emit tokens automatically for the new player to the SuperAdmin
+        tokenEmissionService.emitTokensForNewPlayer(savedPlayer); // TODO esto creo que directamente no va acá
+        
+        return savedPlayer;
     }
 
     @Override

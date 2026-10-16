@@ -45,7 +45,7 @@ public class TokenJPADTO {
         }
         return new TokenJPADTO(
                 token.getId(),
-                UserJPADTO.desdeModelo(token.getOwner()),
+                UserJPADTO.desdeModeloSinTokens(token.getOwner()),
                 player
         );
     }
@@ -57,7 +57,7 @@ public class TokenJPADTO {
         return new TokenJPADTO(
                 token.getId(),
                 user,
-                PlayerJPADTO.desdeModelo(token.getPlayer())
+                PlayerJPADTO.desdeModeloSinTokens(token.getPlayer())
         );
     }
 
@@ -77,17 +77,23 @@ public class TokenJPADTO {
         Token token = new Token();
         token.setId(getId());
         token.setOwner(user);
-        token.setPlayer(getPlayer().aModelo());
+        token.setPlayer(getPlayer() == null ? null : getPlayer().aModeloSinTokens());
         return token;
     }
 
     public Token aModelo(Player player) {
         Token token = new Token();
         token.setId(getId());
-        token.setOwner(getOwner() == null ? null : getOwner().aModelo());
+        token.setOwner(getOwner() == null ? null : getOwner().aModeloSinTokens());
         token.setPlayer(player);
         return token;
     }
 
-
+    public Token aModelo() {
+        Token token = new Token();
+        token.setId(getId());
+        token.setOwner(getOwner() == null ? null : getOwner().aModeloSinTokens());
+        token.setPlayer(getPlayer() == null ? null : getPlayer().aModeloSinTokens());
+        return token;
+    }
 }

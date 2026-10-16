@@ -22,11 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest()
 class PlayerServiceImplTest {
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+
     @Autowired
     private PlayerService playerService;
 
-    private final Player JUGADOR_1 = getJugadorConNombre("Messi");
-    private final Player JUGADOR_2 = getJugadorConNombre("Mbappe");
+    private final Player jugador1 = getJugadorConNombre("Messi");
+    private final Player jugador2 = getJugadorConNombre("Mbappe");
 
     @Autowired
     private TestService testService;
@@ -60,10 +63,10 @@ class PlayerServiceImplTest {
 
     @Test
     void rechazaCreacionConNombreDuplicado() {
-        playerService.crear(JUGADOR_1);
+        playerService.crear(jugador1);
 
         NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
-            () -> playerService.crear(JUGADOR_1));
+            () -> playerService.crear(jugador1));
 
         assertTrue(exception.getMessage().contains("Messi"));
     }
@@ -72,7 +75,7 @@ class PlayerServiceImplTest {
 
     @Test
     void obtieneJugadorPorId() {
-        Player creado = playerService.crear(JUGADOR_1);
+        Player creado = playerService.crear(jugador1);
 
         Player encontrado = playerService.recuperar(creado.getId());
 
@@ -87,8 +90,8 @@ class PlayerServiceImplTest {
 
     @Test
     void listaTodosLosJugadores() {
-        playerService.crear(JUGADOR_1);
-        playerService.crear(JUGADOR_2);
+        playerService.crear(jugador1);
+        playerService.crear(jugador2);
 
         List<Player> jugadores = playerService.recuperarTodos();
 

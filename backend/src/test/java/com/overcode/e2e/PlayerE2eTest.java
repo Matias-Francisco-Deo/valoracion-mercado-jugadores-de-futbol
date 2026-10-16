@@ -45,6 +45,12 @@ class PlayerE2eTest {
     @Autowired
     private PlayerService playerService;
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+
+    @Autowired
+    private com.overcode.persistence.repository.interfaces.UserRepository userRepository;
+
     private RestClient restClient;
 
     @PostConstruct
@@ -69,6 +75,8 @@ class PlayerE2eTest {
     void setUp() {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
+        com.overcode.model.User superAdmin = new com.overcode.model.User("SuperAdmin", "overcode@gmail.com", "Password123!");
+        userRepository.guardar(superAdmin);
     }
 
     @AfterEach

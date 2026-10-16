@@ -1,10 +1,17 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.persistence.dto.jpa.SummaryTokenPlayerDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.overcode.model.Token;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface TokenRepository {
 
-    Page<SummaryTokenPlayerDTO> findPortfolioTokens(Long userId, boolean forSale, Pageable pageable);
+    Optional<Token> findById(Long id);
+
+    List<Token> findByOwnerIdAndPlayerId(Long ownerId, Long playerId);
+
+    void setTokenOwner(Long tokenId, Long newOwnerUserId);
+
+    void clearTokenOwner(Long tokenId);
 }
