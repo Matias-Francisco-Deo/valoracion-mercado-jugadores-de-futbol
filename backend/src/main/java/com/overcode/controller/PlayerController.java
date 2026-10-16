@@ -1,14 +1,23 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.player.*;
+import com.overcode.controller.dto.cotizacion.BusquedaRegistroCotizacionRequestDTO;
+import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
+import com.overcode.controller.dto.player.PlayerFilter;
+import com.overcode.controller.dto.player.PlayerFilterDTO;
+import com.overcode.controller.dto.player.PlayerPageResponseDTO;
+import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
+import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.RegistroCotizacionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,9 +26,11 @@ import java.util.List;
 public class PlayerController {
 
     private final PlayerService playerService;
+    private final RegistroCotizacionService registroCotizacionService;
 
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, RegistroCotizacionService registroCotizacionService) {
         this.playerService = playerService;
+        this.registroCotizacionService = registroCotizacionService;
     }
 
     @GetMapping({"", "/"})
@@ -50,5 +61,19 @@ public class PlayerController {
     public ResponseEntity<PlayerResponseDTO> getPlayer(@PathVariable Long id) {
         Player player = playerService.recuperar(id);
         return ResponseEntity.ok().body(PlayerResponseDTO.desdeModelo(player));
+    }
+
+    @GetMapping("{id}/quotes")
+    public ResponseEntity<List<RegistroCotizacionResponseDTO>> getPlayerQuotes(
+            @PathVariable Long id,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate
+    ) {
+        BusquedaRegistroCotizacion busqueda = new BusquedaRegistroCotizacionRequestDTO(id, startDate, endDate).aModelo();
+        List<RegistroCotizacion> registros = registroCotizacionService.recuperarRegistrosDeJugador(busqueda);
+        return ResponseEntity.ok().body(
+                registros.stream().map(RegistroCotizacionResponseDTO::desdeModelo)
+                        .toList()
+        );
     }
 }

@@ -2,12 +2,12 @@ package com.overcode.model.cotizacion;
 
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionUnoJPADTO;
-import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaADTO;
+import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaAJPADTO;
 
 
-public class EstrategiaCotizacionUnoMapADTO extends MapEstrategiaADTO {
+public class EstrategiaCotizacionUnoMapAJPADTO extends MapEstrategiaAJPADTO {
 
-    public EstrategiaCotizacionUnoMapADTO() {
+    public EstrategiaCotizacionUnoMapAJPADTO() {
         super(EstrategiaCotizacionUno.class);
     }
 
