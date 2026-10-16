@@ -1,4 +1,4 @@
-package com.overcode.model;
+package com.overcode.model.orden;
 
 public enum OrderStatus {
     OPEN, COMPLETED, CANCELLED

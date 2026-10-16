@@ -1,11 +1,10 @@
 package com.overcode.service;
 
+import com.overcode.model.BuyOrder;
 import com.overcode.model.Player;
-import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
+import com.overcode.model.SellPost;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.PortfolioRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.P2POrderService;
 import org.junit.jupiter.api.Test;
@@ -13,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -25,9 +22,6 @@ class BuyTokensTest {
 
     @Autowired
     private P2POrderService p2pOrderService;
-
-    @Autowired
-    private PortfolioRepository portfolioRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -42,30 +36,26 @@ class BuyTokensTest {
         newPlayer.setCurrentPrice(10);
         final Player player = playerRepository.guardar(newPlayer);
 
-        // Seller holds tokens and posts a SELL order into the book (this escrows the tokens).
+        // Seller holds tokens and creates sell orders
         User seller = userRepository.guardar(new User("seller-" + UUID.randomUUID(),
                 UUID.randomUUID() + "@gmail.com", "pass"));
-        Portfolio sellerPortfolio = new Portfolio(UUID.randomUUID(), seller.getId(), BigDecimal.ZERO, null);
-        TokenHolding holding = new TokenHolding(UUID.randomUUID(), sellerPortfolio.getId(), player.getId(), 100);
-        sellerPortfolio.addTokenHolding(holding);
-        portfolioRepository.save(sellerPortfolio);
+        player.assignInitialTokensTo(seller);
+        userRepository.guardar(seller);
 
-        p2pOrderService.createSellOrder(seller.getId(), player.getId(), 5);
+        p2pOrderService.createSellOrders(new SellPost(seller.getId(), player.getId(), 5));
 
-        // Buyer with enough credits sweeps the book with just {playerId, quantity}.
-        User buyer = userRepository.guardar(new User("buyer-" + UUID.randomUUID(),
-                UUID.randomUUID() + "@gmail.com", "pass"));
-        portfolioRepository.save(new Portfolio(UUID.randomUUID(), buyer.getId(), new BigDecimal("1000.00"), null));
+        // Buyer with enough credits sweeps the book
+        User buyer = new User("buyer-" + UUID.randomUUID(),
+                UUID.randomUUID() + "@gmail.com", "pass");
+        buyer.creditCredits(1000);
+        buyer = userRepository.guardar(buyer);
 
-        p2pOrderService.executeMarketBuy(buyer.getId(), player.getId(), 5);
+        p2pOrderService.executeMarketBuy(new BuyOrder(buyer.getId(), player.getId(), 5));
 
-        Portfolio buyerAfter = portfolioRepository.findByUserId(buyer.getId()).orElseThrow();
-        boolean buyerHasTokens = buyerAfter.getTokenHoldings().stream()
-                .anyMatch(h -> h.getPlayerId().equals(player.getId()) && h.getQuantity() == 5);
-        assertTrue(buyerHasTokens, "buyer should hold the 5 purchased tokens");
+        User buyerAfter = userRepository.recuperar(buyer.getId()).orElseThrow();
+        assertEquals(5, buyerAfter.getTokenCountForPlayer(player.getId()), "buyer should hold the 5 purchased tokens");
 
-        Portfolio sellerAfter = portfolioRepository.findByUserId(seller.getId()).orElseThrow();
-        assertEquals(0, new BigDecimal("50.00").compareTo(sellerAfter.getCredits()),
-                "seller should receive 5 * 10.00 credits");
+        User sellerAfter = userRepository.recuperar(seller.getId()).orElseThrow();
+        assertEquals(50, sellerAfter.getCreditBalance(), "seller should receive 5 * 10 credits");
     }
 }

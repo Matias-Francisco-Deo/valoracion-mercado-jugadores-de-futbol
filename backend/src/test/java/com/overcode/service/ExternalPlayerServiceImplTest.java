@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.Player;
 import com.overcode.model.Team;
+import com.overcode.model.TeamUpsertResult;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
@@ -63,7 +64,7 @@ class ExternalPlayerServiceImplTest {
         when(externalPlayerRepository.getDatosDeEquipos(List.of(teamDTO)))
                 .thenReturn(Optional.of(List.of(team)));
 
-        when(teamRepositoryMock.upsertTeam(team)).thenReturn(team);
+        when(teamRepositoryMock.upsertTeam(team)).thenReturn(new TeamUpsertResult(team, team.getPlayers()));
 
         Optional<List<Player>> optionalPlayers = mockExternalPlayerServiceImpl.actualizarJugadores(1);
 
@@ -139,7 +140,7 @@ class ExternalPlayerServiceImplTest {
         when(externalPlayerRepository.getDatosDeEquipos(List.of(teamDTO)))
                 .thenReturn(Optional.of(List.of(team)));
 
-        when(teamRepositoryMock.upsertTeam(team)).thenReturn(team);
+        when(teamRepositoryMock.upsertTeam(team)).thenReturn(new TeamUpsertResult(team, team.getPlayers()));
 
         CompletableFuture<Void> future = mockExternalPlayerServiceImpl.actualizarJugadoresAsync(null);
 

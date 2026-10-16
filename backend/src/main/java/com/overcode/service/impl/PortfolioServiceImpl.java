@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class PortfolioServiceImpl implements PortfolioService {
+public class PortfolioServiceImpl implements PortfolioService { // TODO desvinculemos esto por ahora
 
     private final PortfolioRepository portfolioRepository;
 

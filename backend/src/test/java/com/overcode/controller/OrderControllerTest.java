@@ -1,8 +1,9 @@
 package com.overcode.controller;
 
-import com.overcode.model.OrderStatus;
-import com.overcode.model.OrderType;
-import com.overcode.model.P2POrder;
+import com.overcode.model.BuyOrder;
+import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.SellOrder;
+import com.overcode.model.SellPost;
 import com.overcode.model.User;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.P2POrderService;
@@ -12,11 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -54,7 +54,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.playerId").value(10))
                 .andExpect(jsonPath("$.quantity").value(5));
 
-        verify(p2pOrderService, times(1)).executeMarketBuy(USER_ID, PLAYER_ID, 5);
+        verify(p2pOrderService, times(1)).executeMarketBuy(any(BuyOrder.class));
     }
 
     @Test
@@ -96,7 +96,7 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
         doThrow(new InsufficientLiquidityException("Not enough liquidity to buy 5 tokens for player 10"))
-                .when(p2pOrderService).executeMarketBuy(USER_ID, PLAYER_ID, 5);
+                .when(p2pOrderService).executeMarketBuy(any(BuyOrder.class));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();
 
@@ -118,32 +118,21 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
 
-        UUID orderId = UUID.randomUUID();
-        P2POrder createdOrder = P2POrder.builder()
-                .id(orderId)
-                .userId(USER_ID)
-                .playerId(PLAYER_ID)
-                .type(OrderType.SELL)
-                .quantity(5)
-                .pricePerToken(new BigDecimal("12.00"))
-                .status(OrderStatus.OPEN)
-                .createdAt(Instant.now())
-                .version(null)
-                .build();
-        when(p2pOrderService.createSellOrder(USER_ID, PLAYER_ID, 5)).thenReturn(createdOrder);
+        SellOrder createdOrder = new SellOrder(1L, USER_ID, PLAYER_ID, 101L, 12, OrderStatus.OPEN, Instant.now());
+        when(p2pOrderService.createSellOrders(any(SellPost.class))).thenReturn(List.of(createdOrder));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();
 
         mockMvc.perform(post("/orders/sell")
                         .principal(principal)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"playerId\":10,\"quantity\":5}"))
+                        .content("{\"playerId\":10,\"quantity\":1}"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(orderId.toString()))
-                .andExpect(jsonPath("$.playerId").value(10))
-                .andExpect(jsonPath("$.quantity").value(5))
-                .andExpect(jsonPath("$.pricePerToken").value(12.00))
-                .andExpect(jsonPath("$.status").value("OPEN"));
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].playerId").value(10))
+                .andExpect(jsonPath("$[0].tokenId").value(101L))
+                .andExpect(jsonPath("$[0].price").value(12))
+                .andExpect(jsonPath("$[0].status").value("OPEN"));
     }
 
     @Test
@@ -187,7 +176,7 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
 
-        UUID orderId = UUID.randomUUID();
+        Long orderId = 123L;
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();
 
         mockMvc.perform(post("/orders/" + orderId + "/cancel").principal(principal))
@@ -203,7 +192,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();
 
-        mockMvc.perform(post("/orders/" + UUID.randomUUID() + "/cancel"))
+        mockMvc.perform(post("/orders/123/cancel"))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(p2pOrderService);
