@@ -27,8 +27,8 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error,.
 
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(12,29,11,0.7)] backdrop-blur-sm" {...props}>
-      <div className="flex flex-col bg-white text-black rounded-2xl p-6 shadow-lg gap-4">
+    <div className="fixed p-6 inset-0 z-50 flex items-center justify-center bg-[rgba(12,29,11,0.7)] backdrop-blur-sm" {...props}>
+      <div className="flex flex-col bg-white text-black rounded-2xl p-6 shadow-lg gap-4 md:min-w-100">
         <h3 className="text-[#d66f00] text-[10px] uppercase">{props.title}</h3>
         <h2 className="text-2xl">{actionType} {token.playerName} token</h2>
         <span className='text-sm'>Tokens disponibles {quantity}</span>

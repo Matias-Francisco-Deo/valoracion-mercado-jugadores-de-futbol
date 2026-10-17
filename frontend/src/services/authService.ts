@@ -1,5 +1,5 @@
 import { futbolApi } from './api';
-import type { LoginCredentials, RegisterCredentials, AuthResponse } from '../types/auth';
+import type { LoginCredentials, RegisterCredentials, AuthResponse, UserProfile } from '../types/auth';
 
   export async function registerUser(credentials: RegisterCredentials): Promise<AuthResponse> {
     return futbolApi.post<AuthResponse>('/auth/register', {
@@ -16,3 +16,7 @@ import type { LoginCredentials, RegisterCredentials, AuthResponse } from '../typ
       password: credentials.password,
     });
   }
+
+  export async function getUserById(userId: string): Promise<UserProfile> {
+  return futbolApi.get<UserProfile>(`/users/${userId}`);
+}

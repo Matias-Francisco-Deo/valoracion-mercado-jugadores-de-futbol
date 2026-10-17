@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useState } from 'react';
 import type { LoginCredentials, RegisterCredentials, AuthContextType } from '../types/auth';
-import {registerUser, loginUser} from '../services/authService';
+import {registerUser, loginUser, getUserById} from '../services/authService';
 import { getSession, removeSession, saveSession } from '@/lib/session';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +53,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   }, []);
 
+  const refreshUser = useCallback(async (): Promise<void> => {
+  if (!session?.token || !session.user.id) return;
+
+  const updatedUser = await getUserById(session.user.id);
+
+  const updatedSession = {
+    ...session,
+    user: {
+      ...session.user,
+      ...updatedUser,
+    },
+  };
+
+  saveSession(updatedSession);
+  setSession(updatedSession);
+}, [session]);
+
   const value: AuthContextType = {
     user: session?.user ?? null,
     token: session?.token ?? null,
@@ -61,6 +78,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     login,
     logout,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

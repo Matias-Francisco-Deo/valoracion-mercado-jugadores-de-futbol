@@ -4,14 +4,15 @@ import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import { TokenSummaryCard } from "@/components/inventory/TokenSummaryCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Input } from "@/components/ui/Input";
+import { useAuth } from "@/hooks/useAuth";
 import type { HttpError } from "@/lib/http-error";
 import { buyListedTokens, getTokensOnSale } from "@/services/ordersService";
 import type { TokenSummary, PageResponse, OrderTokensRequest, OrderSell } from "@/types/inventory";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function MarketPage(){
-    const { userId } = useParams()
+    const { user, refreshUser } = useAuth()
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,7 +26,7 @@ export default function MarketPage(){
     const [loading, setLoading] = useState(true);
 
     const handleActionClick = (token: TokenSummary) => {
-        if(!userId){
+        if(!user){
             navigate("/login");
             return;
         }
@@ -35,17 +36,21 @@ export default function MarketPage(){
 
     const buyTokens = async  (playerId:number,quantity:number): Promise<void> => {
         setModalError(null);
-        if (!userId) return
+        if (!user) return
         const request: OrderTokensRequest = {
             playerId,
             quantity,
         }
         await buyListedTokens(request).then(()=>{
-        setActionModalOpen(false);
-        setSelectedToken(null);
+            void refreshUser().catch(console.error);;
+
+            setActionModalOpen(false);
+            setSelectedToken(null);
+
+            void refreshOrders();
         })
         .catch((error: HttpError) => {setModalError(error);});
-}
+    }
 
     const handlePageChange = (page: number) => {
         const params = new URLSearchParams(searchParams);
@@ -55,20 +60,26 @@ export default function MarketPage(){
         setSearchParams(params);
     };
 
-    useEffect(() => {
+    const refreshOrders = useCallback((): Promise<void> => {
         const page = Number(searchParams.get("page") ?? "0");
         const nombre = searchParams.get("nombre") ?? undefined;
 
+        return getTokensOnSale(page, nombre)
+            .then((data) => {
+                setTokenPage(data);
+            })
+            .catch((err: HttpError) => {
+                setError(err);
+            });
+    }, [searchParams]);
+
+    useEffect(() => {
         setLoading(true);
         setError(null);
 
-        getTokensOnSale(page,nombre).then((data) => {
-            setTokenPage(data);
-        })
-        .catch((err: HttpError) => {setError(err);})
-        .finally(() => {setLoading(false);})
+        void refreshOrders().finally(() => {setLoading(false);});
         
-    }, [searchParams]);
+    }, [refreshOrders]);
 
     if (loading) return <Loading text="Cargando catálogo..." />
     if (error) return <ServerErrorComponent />
