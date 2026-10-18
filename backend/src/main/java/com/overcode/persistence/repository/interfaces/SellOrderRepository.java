@@ -20,5 +20,7 @@ public interface SellOrderRepository {
 
     Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas (String nombre, Pageable pageable);
 
+    Page<OrderSellSummaryDTO> buscarOrdersSellAbiertasExcluyendoUsuario(Long userId, String nombre, Pageable pageable);
+
     Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId,String nombre, Pageable pageable);
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public record OrderSellSummaryPageResponseDTO(
         List<OrderSellSummaryResponseDTO> content,
-        int page,
+        int number,
         int size,
         long totalElements,
         int totalPages

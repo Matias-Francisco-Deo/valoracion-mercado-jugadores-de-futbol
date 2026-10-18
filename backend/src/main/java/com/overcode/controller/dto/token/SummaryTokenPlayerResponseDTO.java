@@ -6,7 +6,7 @@ public record SummaryTokenPlayerResponseDTO(
         Long idPlayer,
         String playerName,
         Integer quantity,
-        Double pricePerToken
+        Double unitPrice
 ) {
     public static SummaryTokenPlayerResponseDTO desdeModelo(SummaryTokenPlayerDTO modelo) {
         return new SummaryTokenPlayerResponseDTO(

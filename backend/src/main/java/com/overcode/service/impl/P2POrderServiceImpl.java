@@ -131,7 +131,10 @@ public class P2POrderServiceImpl implements P2POrderService {
     }
 
     @Override
-    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(String nombre, Pageable pageable) {
+    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
+        if(userId != null){
+            return sellOrderRepository.buscarOrdersSellAbiertasExcluyendoUsuario(userId,nombre,pageable);
+        }
         return sellOrderRepository.buscarOrdersSellSummaryAbiertas(nombre,pageable);
     }
 

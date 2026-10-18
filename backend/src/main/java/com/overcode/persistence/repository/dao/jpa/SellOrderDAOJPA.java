@@ -43,6 +43,22 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
             Pageable pageable
     );
 
+    @Query(value =
+            "SELECT s.player_id AS playerId, " +
+                    "p.name AS playerName, " +
+                    "COUNT(s.id)::integer AS quantity, " +
+                    "MIN(s.price)::double precision AS unitPrice " +
+                    CONSULTA_RESUMEN_ORDENES + " " +
+                    "AND s.user_id <> :userId " +
+                    "GROUP BY s.player_id, p.name " +
+                    "ORDER BY p.name ASC",
+            nativeQuery = true)
+    Page<OrderSellSummaryDTO> buscarOrdersSellAbiertasExcluyendoUsuario(
+            @Param("userId") Long userId,
+            @Param("nombre") String nombre,
+            Pageable pageable
+    );
+
 
     @Query(value =
             "SELECT s.player_id AS playerId, " +

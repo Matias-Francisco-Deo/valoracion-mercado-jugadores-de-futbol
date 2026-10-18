@@ -114,9 +114,12 @@ public class OrderController {
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchOpenOrdersSell(
             @RequestParam(required = false) String nombre,
             @PageableDefault(size = 20, sort = "playerName")
-            Pageable pageable
+            Pageable pageable,
+            Principal principal
     ) {
-         Page<OrderSellSummaryDTO> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertas(nombre, pageable);
+        Long userId = principal != null ? getUserId(principal) : null;
+
+        Page<OrderSellSummaryDTO> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 

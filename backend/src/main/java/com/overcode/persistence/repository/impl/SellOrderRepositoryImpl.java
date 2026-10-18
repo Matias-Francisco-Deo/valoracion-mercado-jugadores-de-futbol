@@ -64,6 +64,11 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
     }
 
     @Override
+    public Page<OrderSellSummaryDTO> buscarOrdersSellAbiertasExcluyendoUsuario(Long userId, String nombre, Pageable pageable){
+        return dao.buscarOrdersSellAbiertasExcluyendoUsuario(userId, nombre, pageable);
+    }
+
+    @Override
     public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre,Pageable pageable) {
         return dao.buscarOrdersSellAbiertasPorUsuario(userId, nombre, pageable);
     }

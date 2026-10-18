@@ -28,7 +28,7 @@ public interface P2POrderService {
      */
     void cancelOrder(Long orderId, Long userId);
 
-    Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(String nombre, Pageable pageable);
+    Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
 
     Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId,String nombre,Pageable pageable);
 }
