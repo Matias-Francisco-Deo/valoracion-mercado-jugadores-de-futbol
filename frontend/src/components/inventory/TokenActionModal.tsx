@@ -18,7 +18,7 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error,.
 
   const handleSubmit = () =>  {
     setIsSubmitting(true);
-    onConfirm( token.playerId, quantity )
+    onConfirm( token.idPlayer, quantity )
     .finally(()=>{
       setIsSubmitting(false);
     }

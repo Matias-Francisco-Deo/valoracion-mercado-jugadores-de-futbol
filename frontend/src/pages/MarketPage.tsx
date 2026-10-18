@@ -42,7 +42,7 @@ export default function MarketPage(){
             quantity,
         }
         await buyListedTokens(request).then(()=>{
-            void refreshUser().catch(console.error);;
+            void refreshUser().catch(console.error);
 
             setActionModalOpen(false);
             setSelectedToken(null);
@@ -102,7 +102,7 @@ export default function MarketPage(){
                     <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {tokenPage && tokenPage.content.length > 0 ?(
                             tokenPage.content.map((token)=>(
-                                <TokenSummaryCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
+                                <TokenSummaryCard key={token.idPlayer} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
                             ))
                         ) : (
                             <p className="text-gray-500 col-span-full text-center">No hay tokens en venta</p>

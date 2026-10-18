@@ -58,7 +58,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
     }, [inventoryTab, appliedFilters]);
 
     return (
-        <div className="flex w-full flex-col gap-4 rounded-2xl">
+        <div className="flex w-full flex-col gap-4 rounded-2xl min-h-100">
 
             <div className="flex w-full border-b border-gray-200">
                 <button
@@ -107,7 +107,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 aviableTokens && aviableTokens?.content.length > 0 ? (
                     aviableTokens?.content.map((token) => (
                     <TokenSummaryCard
-                        key={token.playerId}
+                        key={token.idPlayer}
                         token={token}
                         onActionClick={() => onActionClick(token)}
                         actionType="Vender"
@@ -121,7 +121,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 ) : ordersSell && ordersSell?.content.length > 0 ? (
                 ordersSell?.content.map((token) => (
                     <TokenSummaryCard
-                    key={token.playerId}
+                    key={token.idPlayer}
                     token={token}
                     onActionClick={() => onActionClick(token)}
                     actionType="Cancelar venta"

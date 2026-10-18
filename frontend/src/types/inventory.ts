@@ -5,14 +5,14 @@ export interface OrderTokensRequest {
 }
 
 export interface TokenSummary {
-  playerId: number;
+  idPlayer: number;
   playerName: string;
   unitPrice : number;
   quantity: number;
 }
 
 export interface OrderSell{
-  playerId: number;
+  idPlayer: number;
   playerName: string;
   unitPrice : number;
   quantity: number;

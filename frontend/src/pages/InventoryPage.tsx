@@ -46,9 +46,26 @@ export default function InventoryPage() {
     await listTokensForSale(request).then(()=>{
       setActionModalOpen(false);
       setSelectedToken(null);
+      
+      return refreshInventory();
     })
     .catch((error: HttpError) => {setModalError(error);});
   }
+
+  //refresh de listas al vender
+  const refreshInventory = (): Promise<void> => {
+    if (!userId) return Promise.resolve();
+
+    return Promise.all([
+      getAviableTokens(userId, 0),
+      getOrdersSell(userId, 0),
+    ])
+      .then(([available, orders]) => {
+        setAviableTokens(available);
+        setOrdersSell(orders);
+      })
+      .catch((error: HttpError) => { setServerError(error);});
+  };
 
 //funciones de cambio de pagina
   const handleAvailablePageChange = (page:number,search: string = "") => {
@@ -83,6 +100,7 @@ export default function InventoryPage() {
     .catch((error: HttpError) => setServerError(error));
   };
 
+  //busqueda de la seccion de tokens
   const handleInventorySearch = (tab: "available" | "for_sale",search: string) => {
     if (!userId) return;
 
