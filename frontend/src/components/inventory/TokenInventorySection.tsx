@@ -102,12 +102,12 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 </Button>
             </form>
 
-            <div className="grid min-h-40 grid-cols-1 gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid w-full min-h-40 grid-cols-1 gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {inventoryTab === 'available' ? (
                 aviableTokens && aviableTokens?.content.length > 0 ? (
                     aviableTokens?.content.map((token) => (
                     <TokenSummaryCard
-                        key={token.idPlayer}
+                        key={token.playerId}
                         token={token}
                         onActionClick={() => onActionClick(token)}
                         actionType="Vender"
@@ -121,7 +121,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                 ) : ordersSell && ordersSell?.content.length > 0 ? (
                 ordersSell?.content.map((token) => (
                     <TokenSummaryCard
-                    key={token.idPlayer}
+                    key={token.playerId}
                     token={token}
                     onActionClick={() => onActionClick(token)}
                     actionType="Cancelar venta"

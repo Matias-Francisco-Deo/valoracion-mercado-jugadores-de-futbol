@@ -3,7 +3,7 @@ package com.overcode.controller.dto.token;
 import com.overcode.model.dto.SummaryTokenPlayerDTO;
 
 public record SummaryTokenPlayerResponseDTO(
-        Long idPlayer,
+        Long playerId,
         String playerName,
         Integer quantity,
         Double unitPrice

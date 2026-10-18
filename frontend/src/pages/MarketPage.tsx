@@ -99,10 +99,10 @@ export default function MarketPage(){
 
                 <div className="flex w-full flex-col gap-6 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
                     <Input className="border-none bg-[#faa42b] shadow-xl max-w-xl" placeholder="Buscar tokens..." />
-                    <div className="self-center grid min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    <div className="self-center grid w-full min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {tokenPage && tokenPage.content.length > 0 ?(
                             tokenPage.content.map((token)=>(
-                                <TokenSummaryCard key={token.idPlayer} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
+                                <TokenSummaryCard key={token.playerId} token={token} onActionClick={()=>handleActionClick(token)} actionType="Comprar"/>
                             ))
                         ) : (
                             <p className="text-gray-500 col-span-full text-center">No hay tokens en venta</p>
