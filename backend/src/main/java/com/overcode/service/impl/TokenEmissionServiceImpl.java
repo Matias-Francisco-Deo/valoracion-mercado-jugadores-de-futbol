@@ -1,7 +1,11 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.Player;
+import com.overcode.model.SellOrder;
+import com.overcode.model.Token;
 import com.overcode.model.User;
+import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.TokenEmissionService;
@@ -16,12 +20,14 @@ import java.util.List;
 public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     private final UserRepository userRepository;
+    private final SellOrderRepository sellOrderRepository;
 
     @Value("${superuser.email:overcode@gmail.com}")
     private String superadminEmail;
 
-    public TokenEmissionServiceImpl(UserRepository userRepository) {
+    public TokenEmissionServiceImpl(UserRepository userRepository,SellOrderRepository sellOrderRepository) {
         this.userRepository = userRepository;
+        this.sellOrderRepository = sellOrderRepository;
     }
 
     @Override
@@ -34,7 +40,11 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
                 .orElseThrow(() -> new EntidadNoEncontradaException("Super admin not found with email: " + superadminEmail));
 
         for (Player player : players) {
-            player.assignInitialTokensTo(superadmin);
+            List<Token> tokens = player.assignInitialTokensTo(superadmin);
+
+            List<SellOrder> orders = superadmin.sellTokens(player,tokens.size());
+
+            sellOrderRepository.saveAll(orders);
         }
         userRepository.guardar(superadmin);
     }

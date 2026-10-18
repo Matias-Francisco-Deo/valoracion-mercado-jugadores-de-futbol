@@ -80,11 +80,14 @@ public class User {
         return getTokensForPlayer(playerId).size();
     }
 
-    public List<Token> releaseTokensForSale(Long playerId, int quantity) {
+    public List<Token> releaseTokensForSale(Player player, int quantity) {
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null.");
+        }
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive.");
         }
-        List<Token> playerTokens = getTokensForPlayer(playerId);
+        List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {
             throw new com.overcode.service.exception.InsufficientEscrowException("Not enough tokens to place SELL order.");
         }
@@ -92,6 +95,17 @@ public class User {
         List<Token> toRelease = new ArrayList<>(playerTokens.subList(0, quantity));
         this.tokens.removeAll(toRelease);
         return toRelease;
+    }
+
+    public List<SellOrder> sellTokens(Player player, int quantity) {
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null.");
+        }
+
+        List<Token> userTokens =  releaseTokensForSale(player, quantity);
+        List<Token> tokensToSell = player.getTokensFrom(userTokens);
+
+        return tokensToSell.stream().map(token -> token.vender(player.getCurrentPrice())).toList();
     }
 
     public void addToken(Token token) {

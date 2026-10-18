@@ -61,14 +61,21 @@ class P2POrderServiceSellTest {
 
     @Test
     void createSellOrdersCreaUnaOrdenPorTokenYGuardaEnRepositorio() {
+        Player player = playerWithPrice(25);
         User user = userWithTokens(10);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
+
+        user.getTokens().forEach(token -> token.setPlayer(player));
+        player.setTokens(new ArrayList<>(user.getTokens()));
+
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
         when(sellOrderRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
-        List<SellOrder> orders = service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 6));
+        List<SellOrder> orders =
+                service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 6));
 
         assertEquals(6, orders.size());
+
         for (SellOrder order : orders) {
             assertEquals(OrderStatus.OPEN, order.getStatus());
             assertEquals(25, order.getPrice());
@@ -76,10 +83,10 @@ class P2POrderServiceSellTest {
             assertEquals(PLAYER_ID, order.getPlayerId());
             assertNotNull(order.getTokenId());
         }
-        // El usuario se quedó con 4 tokens
+
         assertEquals(4, user.getTokenCountForPlayer(PLAYER_ID));
+
         verify(userRepository, times(1)).guardar(user);
-        verify(tokenRepository, times(6)).clearTokenOwner(anyLong());
         verify(sellOrderRepository, times(1)).saveAll(any());
     }
 

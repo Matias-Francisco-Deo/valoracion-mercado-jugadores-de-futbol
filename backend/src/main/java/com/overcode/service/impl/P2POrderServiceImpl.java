@@ -50,16 +50,10 @@ public class P2POrderServiceImpl implements P2POrderService {
         User seller = userRepository.recuperar(userId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + userId));
 
-        List<Token> tokensToSell = seller.releaseTokensForSale(playerId, quantity);
-        userRepository.guardar(seller);
+        List<SellOrder> orders = seller.sellTokens(player,quantity);
 
-        int price = player.getCurrentPrice();
-        List<SellOrder> orders = tokensToSell.stream() // TODO esto tiene que ser un método de modelo
-                .map(token -> {
-                    tokenRepository.clearTokenOwner(token.getId());
-                    return token.vender(price);
-                })
-                .toList();
+        userRepository.guardar(seller);
+        playerRepository.guardar(player);
 
         return sellOrderRepository.saveAll(orders);
     }
