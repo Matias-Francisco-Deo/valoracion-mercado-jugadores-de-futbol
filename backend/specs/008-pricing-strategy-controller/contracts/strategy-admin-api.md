@@ -44,7 +44,7 @@
 - **Request Body**:
   ```json
   {
-    "tipo": "com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2",
+    "tipo": "com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2",
     "valorBase": 0.0,
     "factorEscala": 1.5
   }

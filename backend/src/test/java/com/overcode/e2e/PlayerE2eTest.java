@@ -8,14 +8,14 @@ import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
-import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapAJPADTO;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.*;
+import static com.overcode.testUtils.cotizacion.TestEstrategiaCotizacionUtil.getEstrategiaRating;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,9 +60,6 @@ class PlayerE2eTest {
     @MockitoBean
     private TokenEmissionService tokenEmissionService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     private RestClient restClient;
 
     @Autowired
@@ -74,6 +72,7 @@ class PlayerE2eTest {
             new EstrategiaCotizacionSiempre2(0.0, 1.0);
 
     private final EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
+    private final EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO2 = new EstrategiaCotizacionRatingMapAJPADTO();
 
 
     @PostConstruct
@@ -100,13 +99,13 @@ class PlayerE2eTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
-//        User superAdmin = new User("SuperAdmin", "overcode@gmail.com", "Password123!");
-//        userRepository.guardar(superAdmin);
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO2);
     }
 
     @AfterEach
     void tearDown() {
         TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO2);
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
@@ -244,13 +243,16 @@ class PlayerE2eTest {
     }
 
     @Test
-    void listarTopJugadoresTraeOrdenadosPorRating() {
+    void listarRankingDeJugadoresTraeOrdenadosPorRating() {
         String token = obtainAuthToken();
-        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
-        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
+
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(getEstrategiaRating())); // esta estrategia discrimina por rating only
+
+        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5));
+        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -268,36 +270,11 @@ class PlayerE2eTest {
 
 
     @Test
-    void listarTopJugadoresTrae5AunqueHayaMas() {
-        String token = obtainAuthToken();
-        playerService.crear(getJugadorConRating("jugador1", 9.5D));
-        playerService.crear(getJugadorConRating("jugador2", 8.5D));
-        playerService.crear(getJugadorConRating("jugador3", 7.5D));
-        playerService.crear(getJugadorConRating("jugador4", 6.5D));
-        playerService.crear(getJugadorConRating("jugador5", 5.5D));
-        playerService.crear(getJugadorConRating("jugador6", 5.5D));
-
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {
-                });
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-
-        assertNotNull(players);
-        assertEquals(5, players.size());
-
-    }
-
-    @Test
-    void listarTopJugadoresSinJugadoresDaVacio() {
+    void listarRankingJugadoresSinJugadoresDaVacio() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -383,7 +360,7 @@ class PlayerE2eTest {
         Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
         estrategiaCotizacionService.cotizarJugadores();
 
-        LocalDateTime fin = LocalDateTime.now();
+        LocalDateTime fin = LocalDateTime.now().plusSeconds(20);
 
         ResponseEntity<List<RegistroCotizacionResponseDTO>> response = restClient.get()
                 .uri("/players/" + guardado.getId() + "/quotes?startDate=" + inicio + "&endDate=" + fin)

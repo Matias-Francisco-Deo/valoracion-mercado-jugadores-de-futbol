@@ -10,8 +10,8 @@ import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryIm
 import com.overcode.persistence.repository.impl.RegistroCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.TeamRepositoryImpl;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
