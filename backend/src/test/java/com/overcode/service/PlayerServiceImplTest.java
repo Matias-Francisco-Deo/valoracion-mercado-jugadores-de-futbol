@@ -11,8 +11,7 @@ import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRating;
-import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRatingMapAJPADTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +24,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.*;
+import static com.overcode.testUtils.cotizacion.TestEstrategiaCotizacionUtil.getEstrategiaRating;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
@@ -36,15 +36,15 @@ class PlayerServiceImplTest {
     @Autowired
     private PlayerService playerService;
 
-    private final Player jugador1 = getJugadorConNombre("Messi");
-    private final Player jugador2 = getJugadorConNombre("Mbappe");
+    private Player jugador1 = getJugadorConNombre("Messi");
+    private Player jugador2 = getJugadorConNombre("Mbappe");
 
     @Autowired
     private TestService testService;
     @Autowired
     private EstrategiaCotizacionService estrategiaCotizacionService;
 
-    private EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
+    private final EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
     @Autowired
     private ConfiguracionCotizacionesService configuracionCotizacionesService;
 
@@ -56,10 +56,6 @@ class PlayerServiceImplTest {
         configuracionCotizacionesService.crearConfiguracionSiNoExiste(
                 new ConfiguracionCotizaciones(getEstrategiaRating())
         );
-    }
-
-    private static EstrategiaCotizacionRating getEstrategiaRating() {
-        return new EstrategiaCotizacionRating(1.0, 1.0);
     }
 
     @Test
@@ -131,11 +127,11 @@ class PlayerServiceImplTest {
     @Test
     void listaRankingDeJugadoresPorEstrategiaActiva() {
         // usa estrategia que se basa en el rating
-        Player jugador1 = getJugadorConRating("Jugador1", 2D);
-        playerService.crear(jugador1);
+        Player jugadorUltimo = getJugadorConRating("Jugador1", 2D);
+        playerService.crear(jugadorUltimo);
 
-        Player jugador2 = getJugadorConRating("Jugador2", 3D);
-        playerService.crear(jugador2);
+        Player jugadorAnteultimo = getJugadorConRating("Jugador2", 3D);
+        playerService.crear(jugadorAnteultimo);
 
         Player jugador3 = getJugadorConRating("Jugador3", 4D);
         playerService.crear(jugador3);
@@ -149,7 +145,7 @@ class PlayerServiceImplTest {
         estrategiaCotizacionService.cotizarJugadores();
 
         List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
-        List<Player> expectedPlayers = List.of(jugador5, jugador4, jugador3, jugador2, jugador1);
+        List<Player> expectedPlayers = List.of(jugador5, jugador4, jugador3, jugadorAnteultimo, jugadorUltimo);
 
 
         assertEquals(expectedPlayers.size(), jugadores.size());
@@ -158,37 +154,6 @@ class PlayerServiceImplTest {
         }
 
     }
-
-//    @Test
-//    void listaLosTop5JugadoresPorRatingConMasDe5Jugadores() {
-//        Player jugador1 = getJugadorConRating("Jugador1", 2D);
-//        playerService.crear(jugador1);
-//
-//        Player jugador2 = getJugadorConRating("Jugador2", 3D);
-//        playerService.crear(jugador2);
-//
-//        Player jugador3 = getJugadorConRating("Jugador3", 4D);
-//        playerService.crear(jugador3);
-//
-//        Player jugador4 = getJugadorConRating("Jugador4", 9D);
-//        playerService.crear(jugador4);
-//
-//        Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
-//        playerService.crear(jugador5);
-//
-//        Player jugador6 = getJugadorConRating("Jugador6", 9.9D);
-//        playerService.crear(jugador6);
-//
-//        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
-//        List<Player> expectedPlayers = List.of(jugador6, jugador5, jugador4, jugador3, jugador2);
-//
-//
-//        assertEquals(expectedPlayers.size(), jugadores.size());
-//        for (int i = 0; i < jugadores.size(); i++) {
-//            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
-//        }
-//
-//    }
 
     @Test
     void listarJugadoresRankingCuandoNoHayJugadoresDaVacio() {
@@ -201,10 +166,10 @@ class PlayerServiceImplTest {
 
     @Test
     void listarJugadoresPorClub() {
-        Player jugador1 = getJugadorConClub("Jugador1", "Club1");
+        jugador1 = getJugadorConClub("Jugador1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConClub("Jugador2", "Club1");
+        jugador2 = getJugadorConClub("Jugador2", "Club1");
         playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConClub("Jugador3", "Club2");
@@ -229,10 +194,10 @@ class PlayerServiceImplTest {
 
     @Test
     void listarJugadoresPorLiga() {
-        Player jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
+        jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club1");
+        jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club1");
         playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
@@ -257,10 +222,10 @@ class PlayerServiceImplTest {
 
     @Test
     void listarJugadoresPorLigaYClub() {
-        Player jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
+        jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
         playerService.crear(jugador1);
 
-        Player jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club4");
+        jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club4");
         playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
