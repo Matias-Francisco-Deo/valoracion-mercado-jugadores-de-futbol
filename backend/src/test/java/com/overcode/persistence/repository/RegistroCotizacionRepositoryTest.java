@@ -10,8 +10,8 @@ import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryIm
 import com.overcode.persistence.repository.impl.RegistroCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.TeamRepositoryImpl;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionRatingMapAJPADTO;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class RegistroCotizacionRepositoryTest {
 
     public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_1 = new EstrategiaCotizacionSiempre2(10.0, 2.0);
 
-    private EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
+    private EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
 
     @Autowired
     private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepository;

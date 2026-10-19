@@ -12,7 +12,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRating;
-import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class PlayerServiceImplTest {
     @Autowired
     private EstrategiaCotizacionService estrategiaCotizacionService;
 
-    private EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
+    private EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
     @Autowired
     private ConfiguracionCotizacionesService configuracionCotizacionesService;
 
