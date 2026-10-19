@@ -1,18 +1,18 @@
-package com.overcode.testUtils.cotizacion;
+package com.overcode.testUtils.cotizacion.rating;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaAJPADTO;
 
 
-public class EstrategiaCotizacionSiempre2MapAJPADTO extends MapEstrategiaAJPADTO {
+public class EstrategiaCotizacionRatingMapAJPADTO extends MapEstrategiaAJPADTO {
 
-    public EstrategiaCotizacionSiempre2MapAJPADTO() {
-        super(EstrategiaCotizacionSiempre2.class);
+    public EstrategiaCotizacionRatingMapAJPADTO() {
+        super(EstrategiaCotizacionRating.class);
     }
 
     @Override
     public EstrategiaCotizacionJPADTO getDTO(EstrategiaCotizacion estrategiaCotizacion) {
-        return new EstrategiaCotizacionSiempre2JPADTO();
+        return new EstrategiaCotizacionRatingJPADTO();
     }
 }

@@ -1,4 +1,4 @@
-package com.overcode.testUtils.cotizacion;
+package com.overcode.testUtils.cotizacion.siempre2;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;

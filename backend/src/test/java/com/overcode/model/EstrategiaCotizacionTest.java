@@ -3,8 +3,8 @@ package com.overcode.model;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre5;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

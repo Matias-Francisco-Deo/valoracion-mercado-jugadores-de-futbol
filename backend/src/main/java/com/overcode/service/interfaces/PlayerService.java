@@ -16,5 +16,5 @@ public interface PlayerService {
     Page<Player> recuperarTodosConFiltro(PlayerFilter filter, Pageable pageable);
     List<Player> recuperarTodos();
 
-    List<Player> listarTop5JugadoresPorRating();
+    List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva();
 }

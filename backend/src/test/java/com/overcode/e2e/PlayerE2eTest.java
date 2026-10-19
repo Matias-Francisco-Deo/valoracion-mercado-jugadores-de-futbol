@@ -14,8 +14,8 @@ import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2MapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +73,7 @@ class PlayerE2eTest {
     private static final EstrategiaCotizacionSiempre2 ESTRATEGIA_1 =
             new EstrategiaCotizacionSiempre2(0.0, 1.0);
 
-    private final EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
+    private final EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
 
 
     @PostConstruct
@@ -250,7 +250,7 @@ class PlayerE2eTest {
         Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -278,7 +278,7 @@ class PlayerE2eTest {
         playerService.crear(getJugadorConRating("jugador6", 5.5D));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -297,7 +297,7 @@ class PlayerE2eTest {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {

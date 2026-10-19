@@ -56,8 +56,8 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
 
     @Override
-    public List<Player> listarTop5JugadoresPorRating() {
-        return playerDAOJPA.listarTop5JugadoresPorRating().stream()
+    public List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva() {
+        return playerDAOJPA.recuperarRankingDeJugadoresPorEstrategiaActiva().stream()
             .map(PlayerJPADTO::aModelo)
             .toList();
     }

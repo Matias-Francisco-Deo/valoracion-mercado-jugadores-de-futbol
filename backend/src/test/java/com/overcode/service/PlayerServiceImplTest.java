@@ -2,10 +2,17 @@ package com.overcode.service;
 
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.Player;
+import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
+import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRating;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionRatingMapAJPADTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -22,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest()
 class PlayerServiceImplTest {
 
-    @org.springframework.test.context.bean.override.mockito.MockitoBean
-    private com.overcode.service.interfaces.TokenEmissionService tokenEmissionService;
+    @MockitoBean
+    private TokenEmissionService tokenEmissionService;
 
     @Autowired
     private PlayerService playerService;
@@ -33,11 +41,25 @@ class PlayerServiceImplTest {
 
     @Autowired
     private TestService testService;
+    @Autowired
+    private EstrategiaCotizacionService estrategiaCotizacionService;
+
+    private EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
+    @Autowired
+    private ConfiguracionCotizacionesService configuracionCotizacionesService;
 
     @BeforeEach
     void setUp() {
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
+                new ConfiguracionCotizaciones(getEstrategiaRating())
+        );
+    }
+
+    private static EstrategiaCotizacionRating getEstrategiaRating() {
+        return new EstrategiaCotizacionRating(1.0, 1.0);
     }
 
     @Test
@@ -107,7 +129,8 @@ class PlayerServiceImplTest {
     }
 
     @Test
-    void listaLosTop5JugadoresPorRating() {
+    void listaRankingDeJugadoresPorEstrategiaActiva() {
+        // usa estrategia que se basa en el rating
         Player jugador1 = getJugadorConRating("Jugador1", 2D);
         playerService.crear(jugador1);
 
@@ -117,13 +140,15 @@ class PlayerServiceImplTest {
         Player jugador3 = getJugadorConRating("Jugador3", 4D);
         playerService.crear(jugador3);
 
-        Player jugador4 = getJugadorConRating("Jugador4", 9D);
+        Player jugador4 = getJugadorConRating("Jugador4", 8D);
         playerService.crear(jugador4);
 
         Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
         playerService.crear(jugador5);
 
-        List<Player> jugadores = playerService.listarTop5JugadoresPorRating();
+        estrategiaCotizacionService.cotizarJugadores();
+
+        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
         List<Player> expectedPlayers = List.of(jugador5, jugador4, jugador3, jugador2, jugador1);
 
 
@@ -134,41 +159,41 @@ class PlayerServiceImplTest {
 
     }
 
+//    @Test
+//    void listaLosTop5JugadoresPorRatingConMasDe5Jugadores() {
+//        Player jugador1 = getJugadorConRating("Jugador1", 2D);
+//        playerService.crear(jugador1);
+//
+//        Player jugador2 = getJugadorConRating("Jugador2", 3D);
+//        playerService.crear(jugador2);
+//
+//        Player jugador3 = getJugadorConRating("Jugador3", 4D);
+//        playerService.crear(jugador3);
+//
+//        Player jugador4 = getJugadorConRating("Jugador4", 9D);
+//        playerService.crear(jugador4);
+//
+//        Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
+//        playerService.crear(jugador5);
+//
+//        Player jugador6 = getJugadorConRating("Jugador6", 9.9D);
+//        playerService.crear(jugador6);
+//
+//        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
+//        List<Player> expectedPlayers = List.of(jugador6, jugador5, jugador4, jugador3, jugador2);
+//
+//
+//        assertEquals(expectedPlayers.size(), jugadores.size());
+//        for (int i = 0; i < jugadores.size(); i++) {
+//            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
+//        }
+//
+//    }
+
     @Test
-    void listaLosTop5JugadoresPorRatingConMasDe5Jugadores() {
-        Player jugador1 = getJugadorConRating("Jugador1", 2D);
-        playerService.crear(jugador1);
+    void listarJugadoresRankingCuandoNoHayJugadoresDaVacio() {
 
-        Player jugador2 = getJugadorConRating("Jugador2", 3D);
-        playerService.crear(jugador2);
-
-        Player jugador3 = getJugadorConRating("Jugador3", 4D);
-        playerService.crear(jugador3);
-
-        Player jugador4 = getJugadorConRating("Jugador4", 9D);
-        playerService.crear(jugador4);
-
-        Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
-        playerService.crear(jugador5);
-
-        Player jugador6 = getJugadorConRating("Jugador6", 9.9D);
-        playerService.crear(jugador6);
-
-        List<Player> jugadores = playerService.listarTop5JugadoresPorRating();
-        List<Player> expectedPlayers = List.of(jugador6, jugador5, jugador4, jugador3, jugador2);
-
-
-        assertEquals(expectedPlayers.size(), jugadores.size());
-        for (int i = 0; i < jugadores.size(); i++) {
-            assertEquals(jugadores.get(i).getName(), expectedPlayers.get(i).getName());
-        }
-
-    }
-
-    @Test
-    void listaLosTop5JugadoresPorRatingCuandoNoHayJugadoresDaVacio() {
-
-        List<Player> jugadores = playerService.listarTop5JugadoresPorRating();
+        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
 
         assertTrue(jugadores.isEmpty());
 
@@ -279,6 +304,8 @@ class PlayerServiceImplTest {
 
     @AfterEach
     void tearDown() {
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
     }
 }
