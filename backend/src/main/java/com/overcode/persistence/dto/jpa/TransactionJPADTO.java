@@ -1,0 +1,80 @@
+package com.overcode.persistence.dto.jpa;
+
+import com.overcode.model.transaction.Transaction;
+import com.overcode.model.transaction.TransactionType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity(name="transaction")
+@Table(name = "transactions")
+@Setter
+@Getter
+@NoArgsConstructor
+public class TransactionJPADTO {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserJPADTO owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    private PlayerJPADTO player;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
+
+    @Column(nullable = false)
+    private TransactionType type;
+
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @Column(nullable = false, name = "unit_price")
+    private Double unitPrice;
+
+    public TransactionJPADTO(Long id,UserJPADTO user,PlayerJPADTO player,LocalDateTime date, TransactionType type,Integer quantity,Double unitPrice){
+        setId(id);
+        setOwner(user);
+        setPlayer(player);
+        setDate(date);
+        setType(type);
+        setQuantity(quantity);
+        setUnitPrice(unitPrice);
+    }
+
+    public static TransactionJPADTO desdeModelo(Transaction transaction){
+        if(transaction == null){return null;}
+        return new TransactionJPADTO(
+                transaction.getId(),
+                UserJPADTO.desdeModelo(transaction.getOwner()),
+                PlayerJPADTO.desdeModelo(transaction.getPlayer()),
+                transaction.getDate(),
+                transaction.getType(),
+                transaction.getQuantity(),
+                transaction.getUnitPrice()
+        );
+    }
+
+    public Transaction aModelo() {
+        Transaction transaction = new Transaction();
+        transaction.setId(this.id);
+        transaction.setOwner(this.owner != null ? this.owner.aModelo() : null);
+        transaction.setPlayer(this.player != null ? this.player.aModelo() : null);
+        transaction.setDate(this.date);
+        transaction.setType(this.type);
+        transaction.setQuantity(this.quantity);
+        transaction.setUnitPrice(this.unitPrice);
+        return transaction;
+    }
+
+    public Double getTotalPrice(){
+        return this.unitPrice*this.quantity;
+    }
+}

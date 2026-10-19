@@ -2,10 +2,9 @@ package com.overcode.service.impl;
 
 import com.overcode.model.*;
 import com.overcode.model.dto.OrderSellSummaryDTO;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
-import com.overcode.persistence.repository.interfaces.TokenRepository;
-import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.model.transaction.Transaction;
+import com.overcode.model.transaction.TransactionType;
+import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.exception.OrderNotFoundException;
@@ -15,9 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class P2POrderServiceImpl implements P2POrderService {
@@ -26,15 +27,18 @@ public class P2POrderServiceImpl implements P2POrderService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final TokenRepository tokenRepository;
+    private final TransactionRepository transactionRepository;
 
     public P2POrderServiceImpl(SellOrderRepository sellOrderRepository,
                                UserRepository userRepository,
                                PlayerRepository playerRepository,
-                               TokenRepository tokenRepository) {
+                               TokenRepository tokenRepository,
+                               TransactionRepository transactionRepository) {
         this.sellOrderRepository = sellOrderRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.tokenRepository = tokenRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -67,6 +71,8 @@ public class P2POrderServiceImpl implements P2POrderService {
 
         User buyer = userRepository.recuperar(buyerId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + buyerId));
+
+        Player player = playerRepository.recuperar(playerId).orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + playerId));
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
         List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream() // TODO esto tiene que ser un método de repository que lo busque directo de la DB
@@ -102,9 +108,12 @@ public class P2POrderServiceImpl implements P2POrderService {
             order.markCompleted();
         }
 
+        List<Transaction> transactions = createTransactions(buyer, player, quantity, ordersToFill, sellersCache);
+
         userRepository.guardar(buyer);
         sellersCache.values().forEach(userRepository::guardar);
         sellOrderRepository.saveAll(ordersToFill);
+        transactionRepository.guardarTodos(transactions);
     }
 
     @Override
@@ -141,4 +150,26 @@ public class P2POrderServiceImpl implements P2POrderService {
         return sellOrderRepository.buscarOrdersSellSummaryAbiertasPorUsuario(userId, nombre,pageable);
     }
 
+    private List<Transaction> createTransactions(User buyer, Player player, int quantity, List<SellOrder> ordersToFill, Map<Long, User> sellersCache) {
+        List<Transaction> transactions = new ArrayList<>();
+
+        // Transacción del comprador
+        transactions.add(new Transaction(buyer, player, TransactionType.BUY, quantity));
+
+        // Agrupar las órdenes ejecutadas por vendedor
+        Map<Long, Integer> quantityBySeller = ordersToFill.stream()
+                .collect(Collectors.groupingBy(
+                        SellOrder::getUserId,
+                        Collectors.summingInt(order -> 1)
+                ));
+
+        // Crear una transacción por cada vendedor
+        quantityBySeller.forEach((sellerId, sellerQuantity) -> {
+            User seller = sellersCache.get(sellerId);
+
+            transactions.add(new Transaction(seller, player, TransactionType.SELL, sellerQuantity));
+        });
+
+        return transactions;
+    }
 }

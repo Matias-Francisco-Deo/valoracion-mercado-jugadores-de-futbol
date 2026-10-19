@@ -6,10 +6,7 @@ import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.Token;
 import com.overcode.model.User;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
-import com.overcode.persistence.repository.interfaces.TokenRepository;
-import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientEscrowException;
 import com.overcode.service.exception.OrderNotFoundException;
@@ -31,9 +28,10 @@ class P2POrderServiceSellTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PlayerRepository playerRepository = mock(PlayerRepository.class);
     private final TokenRepository tokenRepository = mock(TokenRepository.class);
+    private final TransactionRepository transactionRepository = mock(TransactionRepository.class);
 
     private final P2POrderServiceImpl service =
-            new P2POrderServiceImpl(sellOrderRepository, userRepository, playerRepository, tokenRepository);
+            new P2POrderServiceImpl(sellOrderRepository, userRepository, playerRepository, tokenRepository,transactionRepository);
 
     private static final Long USER_ID = 1L;
     private static final Long PLAYER_ID = 10L;

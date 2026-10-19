@@ -2,7 +2,9 @@ package com.overcode.service.impl;
 
 import com.overcode.model.User;
 import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.transaction.Transaction;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
+import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.EmailRepetidoException;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,10 +31,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
     private final TokenRepository tokenRepository;
+    private final TransactionRepository transactionRepository;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordHasher passwordHasher,
                            TokenRepository tokenRepository,
+                           TransactionRepository transactionRepository,
                            @Value("${superuser.name}") String superuserName,
                            @Value("${superuser.password}") String superuserPassword,
                            @Value("${superuser.email}") String superuserEmail
@@ -42,6 +47,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
         this.tokenRepository = tokenRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -85,6 +91,13 @@ public class UserServiceImpl implements UserService {
         }
 
         return tokenRepository.buscarSummaryTokensPorUsuario(userId,playerName,pageable);
+    }
+
+    @Override
+    public Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
+        if (!userRepository.existsById(userId)) {throw new EntidadNoEncontradaException("El usuario no existe");}
+
+        return transactionRepository.recuperarPorUserId(userId,pageable);
     }
 
     private void validarUsuarioNuevo(User userACrear) {

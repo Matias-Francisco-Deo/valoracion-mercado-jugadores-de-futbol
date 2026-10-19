@@ -31,13 +31,12 @@ export interface PositionToken {
 
 export interface Transaction {//orderbuy?? revisar
   id:number;
-  playerId: number
   playerName:string;
   date:string;
-  type: "BUY" | "SELL";
   quantity:number;
   unitPrice:number;
-  total:number;
+  totalPrice:number;
+  type: "BUY" | "SELL";
 }
 
 //-------------------------------------general
