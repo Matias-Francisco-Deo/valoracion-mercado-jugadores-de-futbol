@@ -150,6 +150,7 @@ class EstrategiaCotizacionServiceTest {
         assertEquals(recuperada.getValorBase(), ESTRATEGIA_COTIZACION_1.getValorBase());
     }
 
+
     @Test
     void recuperarTodosDevuelveEstrategiasGuardadas() {
 
@@ -224,8 +225,31 @@ class EstrategiaCotizacionServiceTest {
             assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.seleccionarEstrategia(-1L));
         });
 
+    }
 
+    @Test
+    void sePuedeVerLaEstrategiaSeleccionada() {
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacionSiempre2[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion2 = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_2};
 
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+        contextoConDTODeEstrategia2(() -> estrategiaCotizacion2[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
+            EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
+
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaActual));
+            estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
+            EstrategiaCotizacion estrategiaSeleccionada = estrategiaCotizacionService.recuperarEstrategiaSeleccionada();
+            assertEquals(estrategiaAUsar.getId(), estrategiaSeleccionada.getId());
+        });
+    }
+
+    @Test
+    void siNoHayEstrategiaSeleccionadaEsError() {
+        assertThrows(EntidadNoEncontradaException.class,
+                () -> estrategiaCotizacionService.recuperarEstrategiaSeleccionada());
     }
 
     @Test

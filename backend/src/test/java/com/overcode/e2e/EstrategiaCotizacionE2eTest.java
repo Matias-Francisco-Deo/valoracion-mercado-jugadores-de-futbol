@@ -199,7 +199,40 @@ class EstrategiaCotizacionE2eTest {
     }
 
     @Test
-    void debeRetornarNotFoundAlSeleccionarEstrategiaInexistente() {
+    void debeRetornarEstrategiaSiExiste() {
+
+        crearConfiguracionCotizacionesConEstrategiaSecundaria();
+
+        // Necesitamos primero una configuración activa, creamos la estrategia y la seleccionamos
+        EstrategiaCotizacion estrategiaGuardada = guardarEstrategiaEnContexto();
+
+        estrategiaCotizacionService.seleccionarEstrategia(estrategiaGuardada.getId());
+
+        // Seleccionamos la estrategia vía HTTP
+        ResponseEntity<EstrategiaCotizacionResponseDTO> respuesta = restClient.get()
+                .uri(BASE_PATH + "/selected")
+                .header(HEADER_API_KEY, apiKey)
+                .retrieve()
+                .toEntity(EstrategiaCotizacionResponseDTO.class);
+
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+        assertNotNull(respuesta.getBody());
+        assertEquals(estrategiaGuardada.getId(), respuesta.getBody().id());
+    }
+
+    @Test
+    void debeRetornarNotFoundAlNoHaberEstrategia() {
+        assertThrows(HttpClientErrorException.NotFound.class, () ->
+                restClient.get()
+                        .uri(BASE_PATH + "/selected")
+                        .header(HEADER_API_KEY, apiKey)
+                        .retrieve()
+                        .toEntity(EstrategiaCotizacionResponseDTO.class)
+        );
+    }
+
+    @Test
+    void debeRetornarNotFoundAlHaberEstrategiaInexistente() {
         assertThrows(HttpClientErrorException.NotFound.class, () ->
                 restClient.post()
                         .uri(BASE_PATH + "/" + -1L + "/select")
