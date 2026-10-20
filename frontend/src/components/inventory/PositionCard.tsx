@@ -24,28 +24,39 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
 
             <header className="flex items-center gap-3">
                 <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-titles font-semibold  text-wrap">
+                    <h3 className="truncate font-titles text-start font-semibold  text-wrap">
                         {position.playerName}
                     </h3>
                 </div>
 
-                <span className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-semibold ${
-                    isProfit
-                    ? "bg-green-900/15 text-green-800"
-                    : "bg-red-900/15 text-red-800"
-                }`}
-                >
-                {isProfit ? "+" : ""}
-                {profitPercentage.toFixed(2)}%
-                </span>
+                <div className="flex flex-col gap-1 text-[11px]">
+                    <span className={`shrink-0 rounded-lg px-2.5 py-1.5  font-semibold ${
+                            isProfit
+                            ? "bg-green-900/15 text-green-800"
+                            : "bg-red-900/15 text-red-800"
+                        }`}
+                        >
+                        {isProfit ? "+" : ""}
+                        {profitPercentage.toFixed(2)}%
+                    </span>
+                    <span className={`shrink-0 rounded-lg px-2.5 py-1.5 text-[12px] font-semibold ${
+                            isProfit
+                            ? "bg-green-900/15 text-green-800"
+                            : "bg-red-900/15 text-red-800"
+                        }`}
+                        >
+                        {isProfit ? "+" : ""}
+                        ${position.profitLoss}
+                    </span>
+                </div>
             </header>
 
             <div className="flex items-center justify-between gap-2">
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-start text-gray-700">
                     Valor actual: 
                 </p>
 
-                <p className="text-2xl font-semibold tracking-tight">
+                <p className="text-md sm:text-xl  font-semibold tracking-tight">
                     {currentValue}
                 </p>
             </div>
@@ -54,15 +65,15 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
 
             {/* Position details */}
             <section className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl flex flex-col justify-center items-center bg-gray-500/20 p-2">
-                    <p className="text-xs text-gray-700">Cantidad</p>
+                <div className="text-[12px] sm:text-sm rounded-xl flex flex-col justify-center items-center bg-gray-500/20 p-2">
+                    <p className=" text-gray-700">Cantidad</p>
                     <p className="font-semibold">
                         {position.quantity}
                     </p>
                 </div>
 
-                <div className="rounded-xl flex flex-col justify-center items-center bg-gray-500/20 p-2">
-                    <p className="text-xs text-gray-700">
+                <div className="rounded-xl text-[12px] sm:text-sm flex flex-col justify-center items-center bg-gray-500/20 p-2">
+                    <p className="text-gray-700">
                         Precio promedio
                     </p>
                     <p className="wrap-break-words font-semibold">
@@ -71,11 +82,11 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                 </div>
             </section>
             <div className="col-span-2 flex items-center justify-between wrap-break-words gap-3 pt-1">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-[11px] sm:text-sm text-start font-medium text-gray-700">
                     Precio actual por unidad
                 </p>
                 <p className="text-sm font-semibold">
-                    {position.currentPrice}
+                    ${position.currentPrice}
                 </p>
             </div>
 

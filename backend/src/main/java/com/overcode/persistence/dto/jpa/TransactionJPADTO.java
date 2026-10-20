@@ -65,8 +65,8 @@ public class TransactionJPADTO {
     public Transaction aModelo() {
         Transaction transaction = new Transaction();
         transaction.setId(this.id);
-        transaction.setOwner(this.owner != null ? this.owner.aModelo() : null);
-        transaction.setPlayer(this.player != null ? this.player.aModelo() : null);
+        transaction.setOwner(this.owner.aModelo());
+        transaction.setPlayer(this.player.aModelo());
         transaction.setDate(this.date);
         transaction.setType(this.type);
         transaction.setQuantity(this.quantity);

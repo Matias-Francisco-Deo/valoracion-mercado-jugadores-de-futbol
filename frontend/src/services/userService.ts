@@ -1,8 +1,8 @@
 import type { OrderSell, PageResponse, PositionToken, TokenSummary, Transaction,  } from "@/types/inventory";
 import { futbolApi } from "./api";
 
-export async function getUserPortfolio(userId: string,page: number = 0): Promise<PageResponse<PositionToken>> {//recupera las posiciones del user
-  return futbolApi.get<PageResponse<PositionToken>>(`/users/${userId}/portfolio?page=${page}`);
+export async function getUserPortfolio(userId: string,page: number = 0): Promise<PositionToken[]> {//recupera las posiciones del user
+  return futbolApi.get<PositionToken[]>(`/users/${userId}/portfolio?page=${page}`);
 }
 
 export async function getTransactionHistory(userId: string,page: number = 0): Promise<PageResponse<Transaction>>{

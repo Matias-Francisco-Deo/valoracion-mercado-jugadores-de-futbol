@@ -1,9 +1,11 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.position.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
+import com.overcode.model.Position;
 import com.overcode.model.User;
 import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import com.overcode.model.transaction.Transaction;
@@ -58,6 +60,14 @@ public class UserController {
         Page<Transaction> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
 
         return ResponseEntity.ok(TransactionPageResponseDTO.desdeModelo(transactions));
+    }
+
+    @GetMapping("/{userId}/portfolio")
+    public ResponseEntity<List<PositionResponseDTO>> getPortfolio(@PathVariable Long userId) {
+
+        List<Position> positions = userService.recuperarPortfolioDeUser(userId);
+
+        return ResponseEntity.ok(positions.stream().map(PositionResponseDTO::desdeModelo).toList());
     }
 
 }

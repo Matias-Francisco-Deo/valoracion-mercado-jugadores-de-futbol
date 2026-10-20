@@ -16,4 +16,6 @@ public interface TransactionRepository {
     Page<Transaction> recuperarPorUserId(Long userId, Pageable pageable);
 
     List<Transaction> guardarTodos(List<Transaction> transactions);
+
+    List<Transaction> recuperarTodasPorUserId(Long userId);
 }

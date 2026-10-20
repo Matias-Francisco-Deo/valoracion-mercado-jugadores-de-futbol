@@ -37,6 +37,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
+    public List<Transaction> recuperarTodasPorUserId(Long userId) {
+        return transactionDAOJPA.findAllByOwner_IdOrderByDateAscIdAsc(userId).stream().map(TransactionJPADTO::aModelo).toList();
+    }
+
+    @Override
     public List<Transaction> guardarTodos(List<Transaction> transactions) {
         List<TransactionJPADTO> transactionDTOS = transactionDAOJPA.saveAll(transactions.stream().map(TransactionJPADTO::desdeModelo).toList());
         return transactionDTOS.stream().map(TransactionJPADTO::aModelo).toList();

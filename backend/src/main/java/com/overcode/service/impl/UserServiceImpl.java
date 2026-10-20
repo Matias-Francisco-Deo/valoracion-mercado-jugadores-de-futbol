@@ -1,5 +1,6 @@
 package com.overcode.service.impl;
 
+import com.overcode.model.Position;
 import com.overcode.model.User;
 import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import com.overcode.model.transaction.Transaction;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -98,6 +100,36 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(userId)) {throw new EntidadNoEncontradaException("El usuario no existe");}
 
         return transactionRepository.recuperarPorUserId(userId,pageable);
+    }
+
+    @Override
+    public List<Position> recuperarPortfolioDeUser(Long userId){
+        if(!userRepository.existsById(userId)){
+            throw new EntidadNoEncontradaException("El usuario no existe");
+        }
+        List<Transaction> transactions = transactionRepository.recuperarTodasPorUserId(userId);
+
+        Map<Long, List<Transaction>> transactionsPorJugador = new java.util.LinkedHashMap<>();
+
+        for (Transaction transaction : transactions) {
+            Long playerId = transaction.getPlayer().getId();
+            transactionsPorJugador.computeIfAbsent(playerId, id -> new java.util.ArrayList<>()).add(transaction);
+        }
+
+        List<Position> positions = new java.util.ArrayList<>();
+
+        for (Map.Entry<Long, List<Transaction>> entry : transactionsPorJugador.entrySet()) {
+            List<Transaction> transactionsDelJugador = entry.getValue();
+
+            com.overcode.model.Player player = transactionsDelJugador.get(0).getPlayer();
+
+            Position position = new Position(player, transactionsDelJugador);
+            if (position.getQuantity() > 0) {
+                positions.add(position);
+            }
+        }
+
+        return positions;
     }
 
     private void validarUsuarioNuevo(User userACrear) {

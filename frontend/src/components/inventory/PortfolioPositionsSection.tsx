@@ -1,15 +1,13 @@
-import type { PageResponse, PositionToken } from "@/types/inventory";
+import type { PositionToken } from "@/types/inventory";
 import { PositionCard } from "./PositionCard";
-import { Pagination } from "../common/Pagination";
 import { useState } from "react";
 
 interface PortfolioPositionsSectionProps{
-    positions: PageResponse<PositionToken>|null;
+    positions: PositionToken[];
 
-    onPageChange?:(page: number) => void;
 }
 
-export default function PortfolioPositionsSection({positions, onPageChange}:PortfolioPositionsSectionProps){
+export default function PortfolioPositionsSection({positions}:PortfolioPositionsSectionProps){
     const [selectedPosition,setSelectedPosition] = useState<PositionToken|null>(null);
 
     const handleSelectPosition = (position: PositionToken) => {
@@ -24,8 +22,8 @@ export default function PortfolioPositionsSection({positions, onPageChange}:Port
             <div className="flex w-full flex-col bg-[#f3f1f1] gap-2 rounded-2xl p-4 sm:p-6">
                 <span className="text-black text-xl font-medium">Posiciones del porfolio</span>
                 <div className="grid w-full min-h-40 grid-cols-1 gap-4 self-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 border-t border-gray-200 pt-4">
-                    {positions && positions.content.length > 0 ? (
-                        positions.content.map((position) => (
+                    {positions.length > 0 ? (
+                        positions.map((position) => (
                         <PositionCard  key={position.playerId} position={position} onSelect={handleSelectPosition} 
                         isSelected={selectedPosition?.playerId === position.playerId}/>
                             ))
@@ -35,14 +33,6 @@ export default function PortfolioPositionsSection({positions, onPageChange}:Port
                         </p>
                     )}
                 </div>
-                {positions && positions.totalPages > 1 && onPageChange && (
-                    <div className="flex w-full justify-center border-t border-gray-200 pt-4">
-                        <Pagination 
-                            currentPage={positions.number}
-                            totalPages={positions.totalPages}
-                            onPageChange={onPageChange}/>
-                    </div>
-                )}
             </div>
             
         </div>

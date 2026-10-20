@@ -19,7 +19,7 @@ export default function InventoryPage() {
   const [transactionsPage,setTransactionsPage] = useState<PageResponse<Transaction>|null>(null);
 
   //paginacion de los tokens
-  const [positions,setPositions] = useState<PageResponse<PositionToken>|null>(null);
+  const [positions,setPositions] = useState<PositionToken[]>([]);
   const [aviableTokens, setAviableTokens] = useState<PageResponse<TokenSummary>|null>(null);
   const [ordersSell, setOrdersSell] = useState<PageResponse<OrderSell>|null>(null);
 
@@ -151,12 +151,14 @@ export default function InventoryPage() {
             Revisa y gestiona tus tokens
           </span>
         </div>
-        <PortfolioPositionsSection positions={positions} onPageChange={handlePositionPageChange}/>
+        <PortfolioPositionsSection positions={positions}/>
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-[470px] p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>
             <div className="flex items-baseline gap-1 ">
-              <span className="text-xl text-hover-orange">{positions?.totalElements ?? 0}</span>
+              <span className="text-xl text-hover-orange">
+                {positions.reduce((total, position) => total + position.quantity, 0)}
+              </span>
               <span className="text-xs text-gray-500">tokens</span>
             </div>
           </div>

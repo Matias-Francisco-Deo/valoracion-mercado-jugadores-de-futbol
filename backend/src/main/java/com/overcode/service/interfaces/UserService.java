@@ -1,5 +1,6 @@
 package com.overcode.service.interfaces;
 
+import com.overcode.model.Position;
 import com.overcode.model.User;
 import com.overcode.model.dto.SummaryTokenPlayerDTO;
 import com.overcode.model.transaction.Transaction;
@@ -22,4 +23,6 @@ public interface UserService {
     Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable);
 
     Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable);
+
+    List<Position> recuperarPortfolioDeUser(Long userId);
 }
