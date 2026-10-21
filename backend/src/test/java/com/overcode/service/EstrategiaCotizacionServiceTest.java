@@ -7,7 +7,7 @@ import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;

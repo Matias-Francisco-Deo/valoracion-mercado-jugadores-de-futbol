@@ -1,6 +1,7 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

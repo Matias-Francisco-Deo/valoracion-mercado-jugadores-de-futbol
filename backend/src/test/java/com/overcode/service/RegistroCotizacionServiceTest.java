@@ -5,7 +5,7 @@ import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.player.Player;
 import com.overcode.model.player.Team;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.RegistroCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.TeamRepositoryImpl;

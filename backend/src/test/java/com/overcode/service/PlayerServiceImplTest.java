@@ -3,7 +3,7 @@ package com.overcode.service;
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
@@ -11,7 +11,7 @@ import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionTestRatingMapAJPADTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class PlayerServiceImplTest {
     @Autowired
     private EstrategiaCotizacionService estrategiaCotizacionService;
 
-    private final EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionRatingMapAJPADTO();
+    private final EstrategiaCotizacionTestRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionTestRatingMapAJPADTO();
     @Autowired
     private ConfiguracionCotizacionesService configuracionCotizacionesService;
 

@@ -1,14 +1,15 @@
-package com.overcode.testUtils.cotizacion.rating;
+package com.overcode.persistence.dto.jpa.cotizacion.mapper;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
-import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaAJPADTO;
+import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionRatingJPADTO;
 
 
 public class EstrategiaCotizacionRatingMapAJPADTO extends MapEstrategiaAJPADTO {
 
     public EstrategiaCotizacionRatingMapAJPADTO() {
-        super(EstrategiaCotizacionTestRating.class);
+        super(EstrategiaCotizacionRating.class);
     }
 
     @Override
