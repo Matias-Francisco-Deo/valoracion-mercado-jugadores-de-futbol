@@ -1,6 +1,5 @@
 package com.overcode.model.player;
 
-import com.overcode.model.Token;
 import com.overcode.model.User;
 import com.overcode.model.token.Token;
 import lombok.Getter;
