@@ -1,6 +1,7 @@
 package com.overcode.model;
 
 import com.overcode.model.transaction.Transaction;
+import com.overcode.model.transaction.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,22 +36,19 @@ public class Position {
         for (Transaction transaccion : transactions) {
             int tokensDeTransaccion = transaccion.getQuantity();
 
-            switch (transaccion.getType()) {
-                case BUY -> {
-                    tokensEnPosesion += tokensDeTransaccion;
-                    costoAcumulado += transaccion.getTotalPrice();
+            if (transaccion.getType() == TransactionType.BUY) {
+                tokensEnPosesion += tokensDeTransaccion;
+                costoAcumulado += transaccion.getTotalPrice();
+
+            } else if (transaccion.getType() == TransactionType.SELL) {
+                if (tokensDeTransaccion > tokensEnPosesion) {
+                    throw new IllegalStateException("La venta supera la cantidad de tokens disponibles");
                 }
 
-                case SELL -> {
-                    if (tokensDeTransaccion > tokensEnPosesion) {
-                        throw new IllegalStateException("La venta supera la cantidad de tokens disponibles");
-                    }
+                double costoPromedioAnterior = tokensEnPosesion > 0 ? costoAcumulado / tokensEnPosesion : 0.0; // Costo promedio por token antes de la venta
 
-                    double costoPromedioAnterior = tokensEnPosesion > 0 ? costoAcumulado / tokensEnPosesion : 0.0; // Costo promedio por token antes de la venta
-
-                    tokensEnPosesion -= tokensDeTransaccion;
-                    costoAcumulado = costoPromedioAnterior * tokensEnPosesion;// Conservamos el costo correspondiente a los tokens restantes
-                }
+                tokensEnPosesion -= tokensDeTransaccion;
+                costoAcumulado = costoPromedioAnterior * tokensEnPosesion;// Conservamos el costo correspondiente a los tokens restantes
             }
         }
 

@@ -26,7 +26,7 @@ public class Transaction {
         setPlayer(player);
         setType(type);
         setQuantity(quantity);
-        setUnitPrice(player.getCurrentPrice().doubleValue());//Todo cambiar cuando se cambie el integer de player
+        setUnitPrice(player.getCurrentPrice().doubleValue());
     }
 
     public Transaction(Long id,User user,Player player,LocalDateTime date, TransactionType type,Integer quantity,Double unitPrice){

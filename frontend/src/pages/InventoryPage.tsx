@@ -92,14 +92,6 @@ export default function InventoryPage() {
     .catch((error: HttpError) => setTransactionsError(error));
   };
 
-    const handlePositionPageChange = (page: number) => {
-    if (!userId) return;
-
-    getUserPortfolio(userId, page)
-    .then((data) => setPositions(data))
-    .catch((error: HttpError) => setServerError(error));
-  };
-
   //busqueda de la seccion de tokens
   const handleInventorySearch = (tab: "available" | "for_sale",search: string) => {
     if (!userId) return;
@@ -137,7 +129,7 @@ export default function InventoryPage() {
   }, [userId]);
 
       if (loadingPage) return <Loading text="Cargando catálogo..." />
-      //if (serverError) return <ServerErrorComponent />
+      if (serverError) return <ServerErrorComponent />
 
   return (
     <div className="flex w-full justify-center px-4 py-8">

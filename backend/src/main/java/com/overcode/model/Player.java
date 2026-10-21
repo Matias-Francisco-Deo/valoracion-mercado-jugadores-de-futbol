@@ -68,9 +68,9 @@ public class Player {
     }
 
     public List<Token> getTokensFrom(List<Token> tokensToFind) {
-        Set<Long> TokensIds = tokensToFind.stream().map(Token::getId).collect(Collectors.toSet());
+        Set<Long> tokensIds = tokensToFind.stream().map(Token::getId).collect(Collectors.toSet());
 
-        return this.tokens.stream().filter(token -> TokensIds.contains(token.getId())).toList();
+        return this.tokens.stream().filter(token -> tokensIds.contains(token.getId())).toList();
     }
 
     public void setCurrentPrice(Integer currentPrice) {
