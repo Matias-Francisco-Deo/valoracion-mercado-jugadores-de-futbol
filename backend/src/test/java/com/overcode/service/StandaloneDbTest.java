@@ -1,7 +1,7 @@
 package com.overcode.service;
 
 import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
+import com.overcode.model.token.TokenHolding;
 import com.overcode.persistence.repository.interfaces.PortfolioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

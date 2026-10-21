@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.token.TokenHolding;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class PortfolioJPADTO {
         
         List<TokenHoldingJPADTO> holdings = new ArrayList<>();
         if (modelo.getTokenHoldings() != null) {
-            for (com.overcode.model.TokenHolding holdingModelo : modelo.getTokenHoldings()) {
+            for (TokenHolding holdingModelo : modelo.getTokenHoldings()) {
                 holdings.add(TokenHoldingJPADTO.desdeModelo(holdingModelo, entity));
             }
         }

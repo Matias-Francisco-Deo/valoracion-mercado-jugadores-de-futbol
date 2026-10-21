@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.portfolio;
 
-import com.overcode.model.TokenHolding;
+import com.overcode.model.token.TokenHolding;
 
 public class TokenHoldingResponseDTO {
     private final Long playerId;

@@ -1,10 +1,12 @@
 package com.overcode.model;
 
+import com.overcode.model.token.Token;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -65,6 +67,11 @@ public class Player {
         this(null, externalId, name, team, playerGameData);
     }
 
+    public List<Token> getTokensFrom(List<Token> tokensToFind) {
+        Set<Long> tokensIds = tokensToFind.stream().map(Token::getId).collect(Collectors.toSet());
+
+        return this.tokens.stream().filter(token -> tokensIds.contains(token.getId())).toList();
+    }
 
     public void setCurrentPrice(Integer currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
@@ -74,9 +81,11 @@ public class Player {
         setCurrentPrice(cotizacion.intValue());
     }
 
-    public void assignInitialTokensTo(User owner) {
-        if (this.tokens != null && owner != null) {
-            owner.addTokens(this.tokens);
+    public List<Token> assignInitialTokensTo(User owner) {
+        if (this.tokens == null && owner == null) {
+            return tokens;
         }
+        owner.addTokens(this.tokens);
+        return tokens;
     }
 }

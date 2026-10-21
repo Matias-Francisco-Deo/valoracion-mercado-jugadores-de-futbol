@@ -4,12 +4,9 @@ import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
-import com.overcode.model.Token;
+import com.overcode.model.token.Token;
 import com.overcode.model.User;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
-import com.overcode.persistence.repository.interfaces.TokenRepository;
-import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientEscrowException;
 import com.overcode.service.exception.OrderNotFoundException;
@@ -31,9 +28,10 @@ class P2POrderServiceSellTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PlayerRepository playerRepository = mock(PlayerRepository.class);
     private final TokenRepository tokenRepository = mock(TokenRepository.class);
+    private final TransactionRepository transactionRepository = mock(TransactionRepository.class);
 
     private final P2POrderServiceImpl service =
-            new P2POrderServiceImpl(sellOrderRepository, userRepository, playerRepository, tokenRepository);
+            new P2POrderServiceImpl(sellOrderRepository, userRepository, playerRepository, tokenRepository,transactionRepository);
 
     private static final Long USER_ID = 1L;
     private static final Long PLAYER_ID = 10L;
@@ -61,14 +59,21 @@ class P2POrderServiceSellTest {
 
     @Test
     void createSellOrdersCreaUnaOrdenPorTokenYGuardaEnRepositorio() {
+        Player player = playerWithPrice(25);
         User user = userWithTokens(10);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
+
+        user.getTokens().forEach(token -> token.setPlayer(player));
+        player.setTokens(new ArrayList<>(user.getTokens()));
+
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
         when(sellOrderRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
-        List<SellOrder> orders = service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 6));
+        List<SellOrder> orders =
+                service.createSellOrders(new SellPost(USER_ID, PLAYER_ID, 6));
 
         assertEquals(6, orders.size());
+
         for (SellOrder order : orders) {
             assertEquals(OrderStatus.OPEN, order.getStatus());
             assertEquals(25, order.getPrice());
@@ -76,10 +81,10 @@ class P2POrderServiceSellTest {
             assertEquals(PLAYER_ID, order.getPlayerId());
             assertNotNull(order.getTokenId());
         }
-        // El usuario se quedó con 4 tokens
+
         assertEquals(4, user.getTokenCountForPlayer(PLAYER_ID));
+
         verify(userRepository, times(1)).guardar(user);
-        verify(tokenRepository, times(6)).clearTokenOwner(anyLong());
         verify(sellOrderRepository, times(1)).saveAll(any());
     }
 
