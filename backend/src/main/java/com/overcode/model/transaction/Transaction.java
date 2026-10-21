@@ -1,7 +1,7 @@
 package com.overcode.model.transaction;
 
-import com.overcode.model.Player;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

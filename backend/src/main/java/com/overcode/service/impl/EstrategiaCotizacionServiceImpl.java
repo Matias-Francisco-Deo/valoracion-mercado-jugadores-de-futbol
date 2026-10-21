@@ -1,10 +1,10 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;

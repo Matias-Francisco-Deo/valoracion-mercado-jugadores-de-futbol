@@ -1,7 +1,7 @@
-package com.overcode.model;
+package com.overcode.model.cotizacion;
 
-import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
+import com.overcode.model.player.Player;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import org.junit.jupiter.api.Test;
 

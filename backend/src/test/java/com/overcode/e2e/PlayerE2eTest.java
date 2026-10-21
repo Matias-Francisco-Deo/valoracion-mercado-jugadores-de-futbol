@@ -5,15 +5,15 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
 import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.model.player.Player;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionTestRatingMapAJPADTO;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import jakarta.annotation.PostConstruct;
@@ -72,7 +72,7 @@ class PlayerE2eTest {
             new EstrategiaCotizacionSiempre2(0.0, 1.0);
 
     private final EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
-    private final EstrategiaCotizacionRatingMapAJPADTO estrategiaADTO2 = new EstrategiaCotizacionRatingMapAJPADTO();
+    private final EstrategiaCotizacionTestRatingMapAJPADTO estrategiaADTO2 = new EstrategiaCotizacionTestRatingMapAJPADTO();
 
 
     @PostConstruct

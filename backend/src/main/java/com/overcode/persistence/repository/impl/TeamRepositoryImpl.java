@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
-import com.overcode.model.TeamUpsertResult;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
+import com.overcode.model.player.TeamUpsertResult;
 import com.overcode.persistence.dto.jpa.TeamJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TeamDAOJPA;
 import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;

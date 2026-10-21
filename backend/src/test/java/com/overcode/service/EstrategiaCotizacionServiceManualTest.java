@@ -1,12 +1,12 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
@@ -22,8 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mockStatic;
 
@@ -32,9 +31,6 @@ class EstrategiaCotizacionServiceManualTest {
 
     public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_1 = new EstrategiaCotizacionSiempre2(0.0, 1.0);
     public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_1);
-
-    public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_2 = new EstrategiaCotizacionSiempre2(2.0, 2.0);
-    public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO_2 = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_2);
 
     @Autowired
     private EstrategiaCotizacionServiceImpl estrategiaCotizacionService;
@@ -85,6 +81,14 @@ class EstrategiaCotizacionServiceManualTest {
 
             assertNotEquals(Double.valueOf(player.getCurrentPrice()), primerRegistro.getCotizacion());
         });
+
+    }
+
+    @Test
+    @Disabled("Usar manualmente para testear")
+    void cotizarJugadoresManualConConfigActual() {
+
+        assertDoesNotThrow(() -> estrategiaCotizacionService.cotizarJugadores());
 
     }
 

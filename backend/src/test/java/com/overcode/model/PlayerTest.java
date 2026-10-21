@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.player.Player;
 import org.junit.jupiter.api.Test;
 
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;

@@ -1,6 +1,6 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ The test suite exercises representations of the existing domain entities exposed
 
 ### 1. Player
 
-Reuses existing `com.overcode.model.Player` and its serialized representation `PlayerResponseDTO`.
+Reuses existing `com.overcode.model.player.Player` and its serialized representation `PlayerResponseDTO`.
 
 | Field | Type | Description | In Response DTO? |
 |---|---|---|---|

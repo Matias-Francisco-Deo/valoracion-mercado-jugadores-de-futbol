@@ -1,6 +1,7 @@
-package com.overcode.persistence.dto.jpa.cotizacion;
+package com.overcode.persistence.dto.jpa.cotizacion.mapper;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 
 
 public abstract class MapEstrategiaAJPADTO {

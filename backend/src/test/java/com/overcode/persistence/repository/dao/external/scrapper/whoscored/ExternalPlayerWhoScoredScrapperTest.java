@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.dao.external.scrapper.whoscored;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
@@ -85,9 +85,7 @@ class ExternalPlayerWhoScoredScrapperTest {
     void lanzaExcepcionCuandoJugadorNoRegistraPartidosEnLasCincoLigasPrincipales() {
         when(httpClient.getHtml(anyString())).thenReturn(WhoScoredTestFixtures.createZeroTop5AppearancesHtml());
 
-        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> {
-            scrapper.getDatosDeJugador(11119L, jugadorDraft);
-        });
+        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> scrapper.getDatosDeJugador(11119L, jugadorDraft));
 
         assertTrue(exception.getMessage().contains("El jugador no registra actividad en ninguna de las 5 ligas principales."));
     }
@@ -97,9 +95,7 @@ class ExternalPlayerWhoScoredScrapperTest {
     void lanzaExcepcionCuandoElJsonNoContieneElNodoTournamentsOEsInvalido() {
         when(httpClient.getHtml(anyString())).thenReturn(WhoScoredTestFixtures.createMissingTournamentsNodeHtml());
 
-        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> {
-            scrapper.getDatosDeJugador(11119L, jugadorDraft);
-        });
+        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> scrapper.getDatosDeJugador(11119L, jugadorDraft));
 
         assertTrue(exception.getMessage().contains("No se encontró el nodo 'tournaments' en el JSON."));
     }
@@ -109,9 +105,7 @@ class ExternalPlayerWhoScoredScrapperTest {
     void lanzaExcepcionCuandoElHtmlNoContieneElBloqueJsonEsperado() {
         when(httpClient.getHtml(anyString())).thenReturn(WhoScoredTestFixtures.createHtmlWithoutArgsBlock());
 
-        assertThrows(ScraperExtractionException.class, () -> {
-            scrapper.getDatosDeJugador(11119L, jugadorDraft);
-        });
+        assertThrows(ScraperExtractionException.class, () -> scrapper.getDatosDeJugador(11119L, jugadorDraft));
     }
 
     @Test
@@ -119,9 +113,7 @@ class ExternalPlayerWhoScoredScrapperTest {
     void lanzaExcepcionCuandoElJsonTieneSintaxisCorrupta() {
         when(httpClient.getHtml(anyString())).thenReturn(WhoScoredTestFixtures.createCorruptedJsonHtml());
 
-        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> {
-            scrapper.getDatosDeJugador(11119L, jugadorDraft);
-        });
+        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> scrapper.getDatosDeJugador(11119L, jugadorDraft));
 
         assertTrue(exception.getMessage().contains("Error al parsear el JSON de estadísticas con Jackson."));
     }
@@ -131,9 +123,7 @@ class ExternalPlayerWhoScoredScrapperTest {
     void propagaExcepcionCuandoElHttpClientFalla() {
         when(httpClient.getHtml(anyString())).thenThrow(new ScraperExtractionException("Error fatal ejecutando Playwright"));
 
-        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> {
-            scrapper.getDatosDeJugador(11119L, jugadorDraft);
-        });
+        ScraperExtractionException exception = assertThrows(ScraperExtractionException.class, () -> scrapper.getDatosDeJugador(11119L, jugadorDraft));
 
         assertTrue(exception.getMessage().contains("Error fatal ejecutando Playwright"));
     }

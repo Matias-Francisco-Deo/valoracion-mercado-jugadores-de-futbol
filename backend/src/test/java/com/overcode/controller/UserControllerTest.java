@@ -1,9 +1,9 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
-import com.overcode.model.Player;
 import com.overcode.model.Position;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.model.transaction.TransactionType;
@@ -24,9 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

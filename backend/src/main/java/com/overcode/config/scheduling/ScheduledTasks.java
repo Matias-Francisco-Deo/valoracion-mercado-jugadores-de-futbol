@@ -1,6 +1,6 @@
 package com.overcode.config.scheduling;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.ExternalPlayerService;
 import org.slf4j.Logger;

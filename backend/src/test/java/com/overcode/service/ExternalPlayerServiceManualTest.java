@@ -1,6 +1,6 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.service.impl.ExternalPlayerServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
 import org.junit.jupiter.api.Disabled;
@@ -29,7 +29,7 @@ class ExternalPlayerServiceManualTest {
     @Test
     @Disabled("Use automatically to generate players up to the limit set in the method")
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(2);
+        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(5);
 
         assertTrue(optionalPlayers.isPresent());
         List<Player> players = optionalPlayers.get();

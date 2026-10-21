@@ -1,8 +1,7 @@
 package com.overcode.service;
-
-import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.model.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;

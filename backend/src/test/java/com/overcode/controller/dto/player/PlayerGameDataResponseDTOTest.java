@@ -1,6 +1,7 @@
 package com.overcode.controller.dto.player;
 
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ class PlayerGameDataResponseDTOTest {
 
     @Test
     void desdeModeloDebeMapearCorrectamenteHaciaResponseDTO() {
-        PlayerGameData data = new PlayerGameData(10L, null, 5, 3, 10, 2, 4, 6, 8.5, "Forward");
+        PlayerGameData data = new PlayerGameData(10L, null, 5, 3, 10, 2, 4, 6, 8.5, PlayerPosition.ATACANTE);
         
         PlayerGameDataResponseDTO dto = PlayerGameDataResponseDTO.desdeModelo(data, 1L);
         
@@ -20,7 +21,7 @@ class PlayerGameDataResponseDTOTest {
         assertEquals(10, dto.shotsOnTarget());
         assertEquals(4, dto.tackles());
         assertEquals(8.5, dto.rating());
-        assertEquals("Forward", dto.position());
+        assertEquals(PlayerPosition.ATACANTE, dto.position());
     }
 
     @Test

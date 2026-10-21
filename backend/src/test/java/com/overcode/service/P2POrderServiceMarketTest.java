@@ -1,12 +1,12 @@
 package com.overcode.service;
 
 import com.overcode.model.BuyOrder;
-import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
-import com.overcode.model.token.Token;
 import com.overcode.model.User;
 import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.model.transaction.TransactionType;
 import com.overcode.persistence.repository.interfaces.*;

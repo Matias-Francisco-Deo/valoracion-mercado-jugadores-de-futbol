@@ -1,7 +1,7 @@
 package com.overcode.controller.dto.player;
 
 import com.overcode.controller.dto.token.TokenResponseDTO;
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 
 import java.util.List;
 

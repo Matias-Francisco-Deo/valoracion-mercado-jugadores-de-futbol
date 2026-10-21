@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.dao.external;
 
-import com.overcode.model.Team;
+import com.overcode.model.player.Team;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 
 import java.util.List;
