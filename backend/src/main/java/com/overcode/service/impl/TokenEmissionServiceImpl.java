@@ -2,10 +2,9 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
-import com.overcode.model.Token;
+import com.overcode.model.token.Token;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
-import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.TokenEmissionService;

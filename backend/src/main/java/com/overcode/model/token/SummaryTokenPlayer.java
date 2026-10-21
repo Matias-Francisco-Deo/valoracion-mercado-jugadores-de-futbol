@@ -1,6 +1,6 @@
-package com.overcode.model.dto;
+package com.overcode.model.token;
 
-public record SummaryTokenPlayerDTO(
+public record SummaryTokenPlayer(
         Long idPlayer,
         String playerName,
         Integer quantity,

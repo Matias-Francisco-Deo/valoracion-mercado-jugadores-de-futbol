@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.dao.jpa;
 
 import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.dto.OrderSellSummaryDTO;
+import com.overcode.model.orden.OrderSellSummary;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +38,7 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "GROUP BY s.player_id, p.name " +
                     "ORDER BY p.name ASC",
             nativeQuery = true)
-    Page<OrderSellSummaryDTO> buscarOrdersSellAbiertas(
+    Page<OrderSellSummary> buscarOrdersSellAbiertas(
             @Param("nombre") String nombre,
             Pageable pageable
     );
@@ -53,7 +53,7 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "GROUP BY s.player_id, p.name " +
                     "ORDER BY p.name ASC",
             nativeQuery = true)
-    Page<OrderSellSummaryDTO> buscarOrdersSellAbiertasExcluyendoUsuario(
+    Page<OrderSellSummary> buscarOrdersSellAbiertasExcluyendoUsuario(
             @Param("userId") Long userId,
             @Param("nombre") String nombre,
             Pageable pageable
@@ -70,7 +70,7 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "GROUP BY s.player_id, p.name " +
                     "ORDER BY p.name ASC",
             nativeQuery = true)
-    Page<OrderSellSummaryDTO> buscarOrdersSellAbiertasPorUsuario(
+    Page<OrderSellSummary> buscarOrdersSellAbiertasPorUsuario(
             @Param("userId") Long userId,
             @Param("nombre") String nombre,
             Pageable pageable

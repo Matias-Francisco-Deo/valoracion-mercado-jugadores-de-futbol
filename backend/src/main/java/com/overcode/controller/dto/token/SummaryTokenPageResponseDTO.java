@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.token;
 
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.SummaryTokenPlayer;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public record SummaryTokenPageResponseDTO(
         int totalPages,
         long totalElements
 ) {
-    public static SummaryTokenPageResponseDTO desdeModelo(Page<SummaryTokenPlayerDTO> page) {
+    public static SummaryTokenPageResponseDTO desdeModelo(Page<SummaryTokenPlayer> page) {
         return new SummaryTokenPageResponseDTO(
                 page.getContent().stream().map(SummaryTokenPlayerResponseDTO::desdeModelo).toList(),
                 page.getNumber(),

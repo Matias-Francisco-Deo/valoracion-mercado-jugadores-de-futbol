@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.token.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -99,7 +100,7 @@ public class User {
 
     public List<SellOrder> sellTokens(Player player, int quantity) {
         if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null.");
+            throw new IllegalArgumentException("Player cannot be null.");//TODO crear una exepcion de modelo
         }
 
         List<Token> userTokens =  releaseTokensForSale(player, quantity);

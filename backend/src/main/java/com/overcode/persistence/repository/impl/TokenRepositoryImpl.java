@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.Token;
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.Token;
+import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.persistence.dto.jpa.TokenJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TokenDAOJPA;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
@@ -49,7 +49,7 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName,Pageable pageable){
+    public Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable){
         return tokenDAO.buscarSummaryTokensPorUsuario(userId,playerName,pageable);
     }
 }

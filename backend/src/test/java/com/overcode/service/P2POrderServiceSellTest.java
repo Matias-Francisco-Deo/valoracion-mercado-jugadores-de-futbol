@@ -4,7 +4,7 @@ import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
-import com.overcode.model.Token;
+import com.overcode.model.token.Token;
 import com.overcode.model.User;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;

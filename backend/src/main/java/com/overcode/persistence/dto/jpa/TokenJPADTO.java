@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
 import com.overcode.model.Player;
-import com.overcode.model.Token;
+import com.overcode.model.token.Token;
 import com.overcode.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

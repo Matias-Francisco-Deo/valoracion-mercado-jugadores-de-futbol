@@ -1,14 +1,23 @@
 package com.overcode.controller;
 
+import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.BuyOrder;
 import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.User;
+import com.overcode.model.orden.OrderSellSummary;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.P2POrderService;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -18,7 +27,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +42,13 @@ class OrderControllerTest {
 
     private OrderController controllerWith(P2POrderService p2pOrderService, UserService userService) {
         return new OrderController(p2pOrderService, userService);
+    }
+
+    private MockMvc mockMvcWith(P2POrderService p2pOrderService, UserService userService) {
+        return MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService))
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     // ------------------------------ /orders/buy ------------------------------
@@ -196,5 +214,243 @@ class OrderControllerTest {
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(p2pOrderService);
+    }
+
+    // ------------------------------ /orders/for-sell ------------------------------
+
+    @Test
+    void searchOpenOrdersSellSinPrincipalDevuelveTodasLasOrdenesAbiertas() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 5, 15.0);
+        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertas(isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(page);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].playerId").value(PLAYER_ID))
+                .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
+                .andExpect(jsonPath("$.content[0].quantity").value(5))
+                .andExpect(jsonPath("$.content[0].unitPrice").value(15.0))
+                .andExpect(jsonPath("$.number").value(0))
+                .andExpect(jsonPath("$.size").value(20))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
+
+        verify(p2pOrderService, times(1)).buscarOrdersSellSummaryAbiertas(isNull(), isNull(), any(Pageable.class));
+        verifyNoInteractions(userService);
+    }
+
+    @Test
+    void searchOpenOrdersSellConUsuarioAutenticadoExcluyeSusPropiasOrdenes() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+        User user = new User("ivan", "ivan@gmail.com", "pass");
+        user.setId(USER_ID);
+        when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
+
+        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 3, 20.0);
+        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
+                .thenReturn(page);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell").principal(principal))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].playerId").value(PLAYER_ID))
+                .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
+                .andExpect(jsonPath("$.content[0].quantity").value(3))
+                .andExpect(jsonPath("$.content[0].unitPrice").value(20.0));
+
+        verify(p2pOrderService, times(1)).buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class));
+    }
+
+    @Test
+    void searchOpenOrdersSellConFiltroPorNombreDeJugadorDevuelveOrdenesFiltradas() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 2, 25.0);
+        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertas(isNull(), eq("Messi"), any(Pageable.class)))
+                .thenReturn(page);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell").param("nombre", "Messi"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
+                .andExpect(jsonPath("$.content[0].quantity").value(2));
+
+        verify(p2pOrderService, times(1)).buscarOrdersSellSummaryAbiertas(isNull(), eq("Messi"), any(Pageable.class));
+    }
+
+    @Test
+    void searchOpenOrdersSellConPaginacionPersonalizada() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(2, 5), 0);
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertas(isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(pageVacia);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell")
+                        .param("page", "2")
+                        .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty());
+
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(p2pOrderService).buscarOrdersSellSummaryAbiertas(isNull(), isNull(), captor.capture());
+        assertEquals(2, captor.getValue().getPageNumber());
+        assertEquals(5, captor.getValue().getPageSize());
+    }
+
+    @Test
+    void searchOpenOrdersSellDevuelveListaVaciaCuandoNoHayOrdenes() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertas(isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(pageVacia);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty())
+                .andExpect(jsonPath("$.totalElements").value(0));
+    }
+
+    @Test
+    void searchOpenOrdersSellConPrincipalCuyoUsuarioNoExisteDevuelve409() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.empty());
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/for-sell").principal(principal))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("User not found"));
+
+        verifyNoInteractions(p2pOrderService);
+    }
+
+    // ------------------------------ /orders/{id}/ordersSell ------------------------------
+
+    @Test
+    void searchUserOpenOrdersSellDevuelveOrdenesAbiertasDelUsuario() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 4, 30.0);
+        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
+                .thenReturn(page);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].playerId").value(PLAYER_ID))
+                .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
+                .andExpect(jsonPath("$.content[0].quantity").value(4))
+                .andExpect(jsonPath("$.content[0].unitPrice").value(30.0))
+                .andExpect(jsonPath("$.number").value(0))
+                .andExpect(jsonPath("$.size").value(10))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1));
+
+        verify(p2pOrderService, times(1)).buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class));
+    }
+
+    @Test
+    void searchUserOpenOrdersSellConFiltroPorNombreDeJugadorDevuelveOrdenesFiltradas() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 1, 35.0);
+        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), eq("Messi"), any(Pageable.class)))
+                .thenReturn(page);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell").param("nombre", "Messi"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
+                .andExpect(jsonPath("$.content[0].quantity").value(1));
+
+        verify(p2pOrderService, times(1)).buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), eq("Messi"), any(Pageable.class));
+    }
+
+    @Test
+    void searchUserOpenOrdersSellConPaginacionPersonalizada() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 5), 0);
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
+                .thenReturn(pageVacia);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell")
+                        .param("page", "1")
+                        .param("size", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty());
+
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(p2pOrderService).buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), captor.capture());
+        assertEquals(1, captor.getValue().getPageNumber());
+        assertEquals(5, captor.getValue().getPageSize());
+    }
+
+    @Test
+    void searchUserOpenOrdersSellDevuelveListaVaciaCuandoUsuarioNoTieneOrdenes() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
+                .thenReturn(pageVacia);
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isEmpty())
+                .andExpect(jsonPath("$.totalElements").value(0));
+    }
+
+    @Test
+    void searchUserOpenOrdersSellDevuelve404CuandoUsuarioNoExiste() throws Exception {
+        P2POrderService p2pOrderService = mock(P2POrderService.class);
+        UserService userService = mock(UserService.class);
+
+        when(p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(999L), isNull(), any(Pageable.class)))
+                .thenThrow(new EntidadNoEncontradaException("El usuario no existe"));
+
+        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
+
+        mockMvc.perform(get("/orders/999/ordersSell"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("El usuario no existe"));
     }
 }

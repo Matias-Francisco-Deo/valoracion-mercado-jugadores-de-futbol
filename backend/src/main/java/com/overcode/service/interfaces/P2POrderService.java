@@ -3,7 +3,7 @@ package com.overcode.service.interfaces;
 import com.overcode.model.BuyOrder;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
-import com.overcode.model.dto.OrderSellSummaryDTO;
+import com.overcode.model.orden.OrderSellSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +28,7 @@ public interface P2POrderService {
      */
     void cancelOrder(Long orderId, Long userId);
 
-    Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
+    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
 
-    Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId,String nombre,Pageable pageable);
+    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable);
 }

@@ -3,11 +3,10 @@ package com.overcode.controller;
 import com.overcode.controller.dto.position.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
-import com.overcode.controller.dto.transaction.TransactionResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.Position;
 import com.overcode.model.User;
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,7 +44,7 @@ public class UserController {
             @PageableDefault(size = 10) Pageable pageable
     ) {
 
-        Page<SummaryTokenPlayerDTO> resultado = userService.buscarSummaryTokensPorUsuario(userId, playerName, pageable);
+        Page<SummaryTokenPlayer> resultado = userService.buscarSummaryTokensPorUsuario(userId, playerName, pageable);
 
         SummaryTokenPageResponseDTO respuesta = SummaryTokenPageResponseDTO.desdeModelo(resultado);
 

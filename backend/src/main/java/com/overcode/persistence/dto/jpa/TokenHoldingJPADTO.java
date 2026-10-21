@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.token.TokenHolding;
 import jakarta.persistence.*;
 import java.util.UUID;
 
@@ -56,8 +57,8 @@ public class TokenHoldingJPADTO {
         return getClass().hashCode();
     }
 
-    public com.overcode.model.TokenHolding aModelo() {
-        return new com.overcode.model.TokenHolding(
+    public TokenHolding aModelo() {
+        return new TokenHolding(
                 this.id,
                 this.portfolio.getId(),
                 this.playerId,
@@ -65,7 +66,7 @@ public class TokenHoldingJPADTO {
         );
     }
 
-    public static TokenHoldingJPADTO desdeModelo(com.overcode.model.TokenHolding modelo, PortfolioJPADTO portfolioEntity) {
+    public static TokenHoldingJPADTO desdeModelo(TokenHolding modelo, PortfolioJPADTO portfolioEntity) {
         return new TokenHoldingJPADTO(
                 modelo.getId(),
                 portfolioEntity,

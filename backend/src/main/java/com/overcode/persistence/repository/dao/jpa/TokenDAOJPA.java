@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.dao.jpa;
 
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.persistence.dto.jpa.TokenJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +58,7 @@ public interface TokenDAOJPA extends JpaRepository<TokenJPADTO, Long> {
             """,
             nativeQuery = true
     )
-    Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(
+    Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(
             @Param("ownerId") Long userId,
             @Param("nombre") String nombre,
             Pageable pageable

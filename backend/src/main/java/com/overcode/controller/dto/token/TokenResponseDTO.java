@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.token;
 
-import com.overcode.model.Token;
+import com.overcode.model.token.Token;
 
 public record TokenResponseDTO(Long tokenId, Long ownerId, Long playerId) {
 

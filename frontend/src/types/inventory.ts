@@ -29,7 +29,7 @@ export interface PositionToken {
   profitLoss: number;
 }
 
-export interface Transaction {//orderbuy?? revisar
+export interface Transaction {
   id:number;
   playerName:string;
   date:string;

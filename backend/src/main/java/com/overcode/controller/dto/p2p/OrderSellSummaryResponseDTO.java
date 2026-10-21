@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.p2p;
 
-import com.overcode.model.dto.OrderSellSummaryDTO;
+import com.overcode.model.orden.OrderSellSummary;
 
 public record OrderSellSummaryResponseDTO(
         Long playerId,
@@ -8,7 +8,7 @@ public record OrderSellSummaryResponseDTO(
         Integer quantity,
         Double unitPrice
 ) {
-    public static OrderSellSummaryResponseDTO desdeModelo(OrderSellSummaryDTO dto) {
+    public static OrderSellSummaryResponseDTO desdeModelo(OrderSellSummary dto) {
         return new OrderSellSummaryResponseDTO(
                 dto.playerId(),
                 dto.playerName(),

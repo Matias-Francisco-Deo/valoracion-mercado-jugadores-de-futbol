@@ -1,6 +1,6 @@
-package com.overcode.model.dto;
+package com.overcode.model.orden;
 
-public record OrderSellSummaryDTO(
+public record OrderSellSummary(
         Long playerId,
         String playerName,
         Integer quantity,

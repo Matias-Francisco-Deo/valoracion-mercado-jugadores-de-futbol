@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.token;
 
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.SummaryTokenPlayer;
 
 public record SummaryTokenPlayerResponseDTO(
         Long playerId,
@@ -8,7 +8,7 @@ public record SummaryTokenPlayerResponseDTO(
         Integer quantity,
         Double unitPrice
 ) {
-    public static SummaryTokenPlayerResponseDTO desdeModelo(SummaryTokenPlayerDTO modelo) {
+    public static SummaryTokenPlayerResponseDTO desdeModelo(SummaryTokenPlayer modelo) {
         return new SummaryTokenPlayerResponseDTO(
                 modelo.idPlayer(),
                 modelo.playerName(),

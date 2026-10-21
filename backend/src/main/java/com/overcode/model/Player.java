@@ -1,7 +1,7 @@
 package com.overcode.model;
 
+import com.overcode.model.token.Token;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;

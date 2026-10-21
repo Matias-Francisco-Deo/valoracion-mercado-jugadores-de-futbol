@@ -1,7 +1,8 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.*;
-import com.overcode.model.dto.OrderSellSummaryDTO;
+import com.overcode.model.orden.OrderSellSummary;
+import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.model.transaction.TransactionType;
 import com.overcode.persistence.repository.interfaces.*;
@@ -134,7 +135,7 @@ public class P2POrderServiceImpl implements P2POrderService {
     }
 
     @Override
-    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
+    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
         if(userId != null){
             return sellOrderRepository.buscarOrdersSellAbiertasExcluyendoUsuario(userId,nombre,pageable);
         }
@@ -142,7 +143,7 @@ public class P2POrderServiceImpl implements P2POrderService {
     }
 
     @Override
-    public Page<OrderSellSummaryDTO> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId,String nombre,Pageable pageable) {
+    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable) {
         if (!userRepository.existsById(userId)) {
             throw new EntidadNoEncontradaException("El usuario no existe");
         }

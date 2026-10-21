@@ -2,7 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Position;
 import com.overcode.model.User;
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable){
+    public Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable){
         if (!userRepository.existsById(userId)) {
             throw new EntidadNoEncontradaException("El usuario no existe");
         }

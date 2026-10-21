@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.Token;
-import com.overcode.model.dto.SummaryTokenPlayerDTO;
+import com.overcode.model.token.Token;
+import com.overcode.model.token.SummaryTokenPlayer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +18,5 @@ public interface TokenRepository {
 
     void clearTokenOwner(Long tokenId);
 
-    Page<SummaryTokenPlayerDTO> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable);
+    Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable);
 }
