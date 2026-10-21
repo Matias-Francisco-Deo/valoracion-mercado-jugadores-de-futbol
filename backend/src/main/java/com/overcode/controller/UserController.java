@@ -1,16 +1,26 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.position.PositionResponseDTO;
+import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
+import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
+import com.overcode.model.Position;
 import com.overcode.model.User;
+import com.overcode.model.token.SummaryTokenPlayer;
+import com.overcode.model.transaction.Transaction;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 @Tag(name = "Users", description = "Endpoints for user information")
 public class UserController {
 
@@ -20,11 +30,43 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
         User user = userService.recuperar(id);
         UserResponseDTO dto = UserResponseDTO.desdeModelo(user);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/{userId}/tokens")
+    public ResponseEntity<SummaryTokenPageResponseDTO> buscarSummaryTokensPorUsuario(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String playerName,
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+
+        Page<SummaryTokenPlayer> resultado = userService.buscarSummaryTokensPorUsuario(userId, playerName, pageable);
+
+        SummaryTokenPageResponseDTO respuesta = SummaryTokenPageResponseDTO.desdeModelo(resultado);
+
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/{userId}/transactions")
+    public  ResponseEntity<TransactionPageResponseDTO> getTransacciones(
+            @PathVariable Long userId,
+            Pageable pageable
+    ){
+        Page<Transaction> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
+
+        return ResponseEntity.ok(TransactionPageResponseDTO.desdeModelo(transactions));
+    }
+
+    @GetMapping("/{userId}/portfolio")
+    public ResponseEntity<List<PositionResponseDTO>> getPortfolio(@PathVariable Long userId) {
+
+        List<Position> positions = userService.recuperarPortfolioDeUser(userId);
+
+        return ResponseEntity.ok(positions.stream().map(PositionResponseDTO::desdeModelo).toList());
     }
 
 }

@@ -1,7 +1,7 @@
 package com.overcode.controller;
 
 import com.overcode.model.Portfolio;
-import com.overcode.model.TokenHolding;
+import com.overcode.model.token.TokenHolding;
 import com.overcode.model.User;
 import com.overcode.service.interfaces.PortfolioService;
 import com.overcode.service.interfaces.UserService;

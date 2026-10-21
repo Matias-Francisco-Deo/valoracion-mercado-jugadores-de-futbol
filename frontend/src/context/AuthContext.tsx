@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useState } from 'react';
 import type { LoginCredentials, RegisterCredentials, AuthContextType } from '../types/auth';
-import {registerUser, loginUser} from '../services/authService';
+import {registerUser, loginUser, getUserById} from '../services/authService';
 import { getSession, removeSession, saveSession } from '@/lib/session';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +53,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   }, []);
 
+  
+  const refreshUser = useCallback((): Promise<void> => {
+    const currentSession = getSession();
+
+    if (!currentSession?.token || !currentSession.user.id) {
+      return Promise.resolve();
+    }
+
+    const token = currentSession.token;
+    const userId = currentSession.user.id;
+
+    return getUserById(userId).then((updatedUser) => {
+      setSession((current) => {
+        // No modificar una sesión diferente
+        if (!current || current.token !== token) {
+          return current;
+        }
+
+        const updatedSession = {
+          ...current,
+          user: {
+            ...current.user,
+            ...updatedUser,
+          },
+        };
+
+        saveSession(updatedSession);
+
+        return updatedSession;
+      });
+    });
+  }, []);
+
+
   const value: AuthContextType = {
     user: session?.user ?? null,
     token: session?.token ?? null,
@@ -61,6 +95,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     login,
     logout,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

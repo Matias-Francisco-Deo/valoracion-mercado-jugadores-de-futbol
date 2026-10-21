@@ -1,6 +1,7 @@
 package com.overcode.model;
 
 import com.overcode.model.exception.InsufficientFundsException;
+import com.overcode.model.token.TokenHolding;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

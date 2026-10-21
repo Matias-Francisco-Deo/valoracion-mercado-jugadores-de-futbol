@@ -1,4 +1,4 @@
-package com.overcode.model;
+package com.overcode.model.token;
 
 import java.util.UUID;
 
