@@ -20,6 +20,7 @@ class DataInitializerTest {
     @Autowired
     private DataInitializer dataInitializer;
 
+
     @Autowired
     private UserRepository userRepository;
 
