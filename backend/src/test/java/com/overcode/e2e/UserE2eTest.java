@@ -15,6 +15,7 @@ import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -267,25 +268,29 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-    void buscarSummaryTokensPorUsuarioInexistenteDevuelveNotFound() {
+    void buscarDatosDeUserInexistenteDaNotFound() {
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
-        assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()
-                .uri("/users/" + NON_EXISTENT_ID + "/tokens")
-                .header("Authorization", "Bearer " + auth.token())
-                .retrieve()
-                .toBodilessEntity());
+        assertThrows(HttpClientErrorException.NotFound.class, () -> getDeUserInexistente(auth, "/tokens"));
+        assertThrows(HttpClientErrorException.NotFound.class, () -> getDeUserInexistente(auth, "/transactions"));
+        assertThrows(HttpClientErrorException.NotFound.class, () -> getDeUserInexistente(auth, "/portfolio"));
     }
+
+
 
     @Test
     void buscarSummaryTokensPorUsuarioSinAutenticacionDevuelveError() {
         // Flujo excepcional: endpoint protegido llamado sin token
-        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> restClient.get()
-                .uri("/users/1/tokens")
-                .retrieve()
-                .toBodilessEntity());
+        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, this::getUser1Tokens);
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
+    }
+
+    private void getUser1Tokens() {
+        restClient.get()
+                .uri("/users/1/tokens")
+                .retrieve()
+                .toBodilessEntity();
     }
 
     // ============================================================================================
@@ -359,25 +364,18 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-    void recuperarTransaccionesDeUsuarioInexistenteDevuelveNotFound() {
-        var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
-
-        assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()
-                .uri("/users/" + NON_EXISTENT_ID + "/transactions")
-                .header("Authorization", "Bearer " + auth.token())
-                .retrieve()
-                .toBodilessEntity());
-    }
-
-    @Test
     void recuperarTransaccionesSinAutenticacionDevuelveError() {
         // Flujo excepcional: llamada sin credenciales
-        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> restClient.get()
-                .uri("/users/1/transactions")
-                .retrieve()
-                .toBodilessEntity());
+        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, this::getTransaccionesUser1);
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
+    }
+
+    private @NonNull ResponseEntity<Void> getTransaccionesUser1() {
+        return restClient.get()
+                .uri("/users/1/transactions")
+                .retrieve()
+                .toBodilessEntity();
     }
 
     // ============================================================================================
@@ -431,24 +429,25 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-    void recuperarPortfolioDeUsuarioInexistenteDevuelveNotFound() {
-        var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
-
-        assertThrows(HttpClientErrorException.NotFound.class, () -> restClient.get()
-                .uri("/users/" + NON_EXISTENT_ID + "/portfolio")
-                .header("Authorization", "Bearer " + auth.token())
-                .retrieve()
-                .toBodilessEntity());
-    }
-
-    @Test
     void recuperarPortfolioSinAutenticacionDevuelveError() {
         // Flujo excepcional: llamada sin credenciales
-        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () -> restClient.get()
-                .uri("/users/1/portfolio")
-                .retrieve()
-                .toBodilessEntity());
+        HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, this::getPortfolioUser1);
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
+    }
+
+    private void getPortfolioUser1() {
+        restClient.get()
+                .uri("/users/1/portfolio")
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private @NonNull ResponseEntity<Void> getDeUserInexistente(AuthResponse auth, String endpoint) {
+        return restClient.get()
+                .uri("/users/" + NON_EXISTENT_ID + endpoint)
+                .header("Authorization", "Bearer " + auth.token())
+                .retrieve()
+                .toBodilessEntity();
     }
 }
