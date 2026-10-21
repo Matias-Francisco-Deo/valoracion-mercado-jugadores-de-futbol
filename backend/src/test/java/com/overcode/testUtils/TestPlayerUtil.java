@@ -1,9 +1,11 @@
 package com.overcode.testUtils;
 
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.Team;
 import org.jspecify.annotations.NonNull;
+
+import static com.overcode.model.player.PlayerPosition.ATACANTE;
 
 public class TestPlayerUtil {
     public static Player getJugadorConRating(String name, Double rating) {
@@ -18,7 +20,7 @@ public class TestPlayerUtil {
     }
 
     private static @NonNull PlayerGameData getPlayerDataConRating(Double rating, Player player) {
-        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, rating, "Forward");
+        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, rating, ATACANTE);
     }
 
     public static Player getJugadorConClub(String name, String club) {
@@ -33,7 +35,7 @@ public class TestPlayerUtil {
     }
 
     public static @NonNull PlayerGameData getPlayerData(Player player) {
-        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0, "Forward");
+        return new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0, ATACANTE);
     }
 
     public static Player getJugadorConLiga(String name, String liga) {

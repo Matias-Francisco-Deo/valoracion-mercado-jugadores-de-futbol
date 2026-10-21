@@ -1,11 +1,11 @@
 package com.overcode.service;
 
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.Token;
 import com.overcode.model.User;
+import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
@@ -155,7 +155,7 @@ class P2POrderServiceSellTest {
     }
 
     @Test
-    void cancelOrderFallaSiNoEsElDueño() {
+    void cancelOrderFallaSiNoEsElDuenio() {
         SellOrder order = new SellOrder(100L, USER_ID, PLAYER_ID, 55L, 25, OrderStatus.OPEN, Instant.now());
         when(sellOrderRepository.findById(100L)).thenReturn(Optional.of(order));
 

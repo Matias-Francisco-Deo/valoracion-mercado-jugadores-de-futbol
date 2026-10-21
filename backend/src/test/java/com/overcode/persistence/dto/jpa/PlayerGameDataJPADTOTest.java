@@ -1,7 +1,8 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,13 +15,13 @@ class PlayerGameDataJPADTOTest {
         player.setId(1L);
         player.setName("Messi");
 
-        PlayerGameData data = new PlayerGameData(10L, player, 5, 3, 10, 2, 4, 6, 8.5, "Forward");
+        PlayerGameData data = new PlayerGameData(10L, player, 5, 3, 10, 2, 4, 6, 8.5, PlayerPosition.ATACANTE);
         
         PlayerGameDataJPADTO dto = PlayerGameDataJPADTO.desdeModelo(data);
         
         assertNotNull(dto);
         assertEquals(10L, dto.getId());
-        assertEquals("Forward", dto.getPosition());
+        assertEquals(PlayerPosition.ATACANTE, dto.getPosition());
         assertEquals(5, dto.getGoals());
         assertEquals(3, dto.getAssists());
         assertEquals(10, dto.getShotsOnTarget());
@@ -42,7 +43,7 @@ class PlayerGameDataJPADTOTest {
 
     @Test
     void desdeModeloDebeMapearConPlayerJPAExistente() {
-        PlayerGameData data = new PlayerGameData(10L, null, 5, 3, 10, 2, 4, 6, 8.5, "Forward");
+        PlayerGameData data = new PlayerGameData(10L, null, 5, 3, 10, 2, 4, 6, 8.5, PlayerPosition.ATACANTE);
         PlayerJPADTO playerDto = new PlayerJPADTO();
         playerDto.setId(2L);
         
@@ -50,13 +51,13 @@ class PlayerGameDataJPADTOTest {
         
         assertNotNull(dto);
         assertEquals(10L, dto.getId());
-        assertEquals("Forward", dto.getPosition());
+        assertEquals(PlayerPosition.ATACANTE, dto.getPosition());
         assertEquals(playerDto, dto.getPlayer());
     }
 
     @Test
     void aModeloDebeMapearCorrectamenteAlModeloDeDominio() {
-        PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO(10L, null, 5, 3, 10, 4, 2, 8.5, 6, "Midfielder");
+        PlayerGameDataJPADTO dto = new PlayerGameDataJPADTO(10L, null, 5, 3, 10, 4, 2, 8.5, 6, PlayerPosition.CENTROCAMPISTA);
         Player player = new Player();
         player.setId(1L);
         
@@ -64,7 +65,7 @@ class PlayerGameDataJPADTOTest {
         
         assertNotNull(data);
         assertEquals(10L, data.getId());
-        assertEquals("Midfielder", data.getPosition());
+        assertEquals(PlayerPosition.CENTROCAMPISTA, data.getPosition());
         assertEquals(5, data.getGoals());
         assertEquals(player, data.getPlayer());
     }

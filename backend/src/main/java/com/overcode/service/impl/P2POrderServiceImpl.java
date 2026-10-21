@@ -1,6 +1,7 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.*;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.TokenRepository;

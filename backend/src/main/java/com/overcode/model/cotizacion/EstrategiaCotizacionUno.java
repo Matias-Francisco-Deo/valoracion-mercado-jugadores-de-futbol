@@ -1,6 +1,6 @@
 package com.overcode.model.cotizacion;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import lombok.Getter;
 import lombok.Setter;
 

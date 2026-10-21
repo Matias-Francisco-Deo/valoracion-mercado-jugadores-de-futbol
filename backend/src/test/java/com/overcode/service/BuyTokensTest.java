@@ -1,9 +1,9 @@
 package com.overcode.service;
 
 import com.overcode.model.BuyOrder;
-import com.overcode.model.Player;
 import com.overcode.model.SellPost;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.P2POrderService;

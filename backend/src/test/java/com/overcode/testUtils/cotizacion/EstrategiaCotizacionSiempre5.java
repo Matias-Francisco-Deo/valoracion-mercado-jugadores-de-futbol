@@ -1,6 +1,6 @@
 package com.overcode.testUtils.cotizacion;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 
 public class EstrategiaCotizacionSiempre5 extends EstrategiaCotizacion {

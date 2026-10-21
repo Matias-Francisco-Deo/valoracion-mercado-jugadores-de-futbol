@@ -1,7 +1,8 @@
-package com.overcode.model;
+package com.overcode.model.player;
 
+import com.overcode.model.Token;
+import com.overcode.model.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;

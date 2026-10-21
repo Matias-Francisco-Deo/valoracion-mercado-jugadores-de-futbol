@@ -1,7 +1,7 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.Player;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.TokenEmissionService;

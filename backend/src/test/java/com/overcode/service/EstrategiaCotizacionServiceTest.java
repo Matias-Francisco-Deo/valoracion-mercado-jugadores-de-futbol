@@ -1,11 +1,11 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
@@ -109,16 +109,14 @@ class EstrategiaCotizacionServiceTest {
         }
     }
 
-    private EstrategiaCotizacion guardarEstrategia2() {
-        EstrategiaCotizacion guardada;
+    private void guardarEstrategia2() {
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(ESTRATEGIA_COTIZACION_2))
                     .thenReturn(ESTRATEGIA_DTO_2);
 
-            guardada = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2);
+            estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2);
 
         }
-        return guardada;
     }
 
     @Test
@@ -134,9 +132,8 @@ class EstrategiaCotizacionServiceTest {
 
     @Test
     void guardarFallaCuandoLaEstrategiaNoEstaMapeada() {
-        EstrategiaCotizacionSiempre2 estrategia = ESTRATEGIA_COTIZACION_1;
 
-        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.guardar(estrategia));
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
     }
 
     @Test
@@ -276,13 +273,9 @@ class EstrategiaCotizacionServiceTest {
         EstrategiaCotizacion estrategiaCotizacion = guardarEstrategia1();
 
         Long id = estrategiaCotizacion.getId();
-        assertThrows(EstrategiaInvalidaException.class, () -> {
-            estrategiaCotizacionService.actualizar(id, 0.0);
-        });
+        assertThrows(EstrategiaInvalidaException.class, () -> estrategiaCotizacionService.actualizar(id, 0.0));
 
-        assertThrows(EstrategiaInvalidaException.class, () -> {
-            estrategiaCotizacionService.actualizar(id, -1.0);
-        });
+        assertThrows(EstrategiaInvalidaException.class, () -> estrategiaCotizacionService.actualizar(id, -1.0));
 
     }
 

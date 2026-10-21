@@ -1,4 +1,4 @@
-package com.overcode.model;
+package com.overcode.model.player;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,14 +20,14 @@ public class PlayerGameData {
     private Integer tackles;
     private Integer successfulDribbles;
     private Double rating;
-    private String position;
+    private PlayerPosition position;
 
 
     public PlayerGameData(Long id, Player player,
                           Integer goals, Integer assists,
                           Integer shotsOnTarget, Integer keyPasses,
                          Integer tackles, Integer successfulDribbles,
-                          Double rating, String position) {
+                          Double rating, PlayerPosition position) {
         setId(id);
         setPosition(position);
         setPlayer(player);
@@ -43,14 +43,14 @@ public class PlayerGameData {
     public PlayerGameData(Player player, Integer goals, Integer assists,
                           Integer shotsOnTarget, Integer keyPasses,
                           Integer tackles, Integer successfulDribbles,
-                          Double rating, String position) {
+                          Double rating, PlayerPosition position) {
         this(null, player, goals, assists, shotsOnTarget, keyPasses, tackles, successfulDribbles, rating, position);
     }
 
     public PlayerGameData(Integer goals, Integer assists,
                           Integer shotsOnTarget, Integer keyPasses,
                           Integer tackles, Integer successfulDribbles,
-                          Double rating, String position) {
+                          Double rating, PlayerPosition position) {
         this(null, null, goals, assists, shotsOnTarget, keyPasses, tackles, successfulDribbles, rating, position);
     }
 }

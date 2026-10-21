@@ -1,8 +1,8 @@
 package com.overcode.service;
 
 import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;

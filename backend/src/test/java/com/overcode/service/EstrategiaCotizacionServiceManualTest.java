@@ -1,10 +1,10 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
@@ -34,7 +34,6 @@ class EstrategiaCotizacionServiceManualTest {
     public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_1);
 
     public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_2 = new EstrategiaCotizacionSiempre2(2.0, 2.0);
-    public static final EstrategiaCotizacionJPADTO ESTRATEGIA_DTO_2 = EstrategiaCotizacionSiempre2JPADTO.desdeModeloParaTest(ESTRATEGIA_COTIZACION_2);
 
     @Autowired
     private EstrategiaCotizacionServiceImpl estrategiaCotizacionService;

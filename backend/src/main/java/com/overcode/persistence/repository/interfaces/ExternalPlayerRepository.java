@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 
 import java.util.List;

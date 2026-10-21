@@ -1,12 +1,12 @@
 package com.overcode.service;
 
 import com.overcode.model.BuyOrder;
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.Token;
 import com.overcode.model.User;
 import com.overcode.model.exception.InsufficientFundsException;
+import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
@@ -19,7 +19,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

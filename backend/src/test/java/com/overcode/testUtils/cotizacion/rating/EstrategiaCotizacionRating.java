@@ -1,7 +1,7 @@
 package com.overcode.testUtils.cotizacion.rating;
 
-import com.overcode.model.Player;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.player.Player;
 
 public class EstrategiaCotizacionRating extends EstrategiaCotizacion {
 

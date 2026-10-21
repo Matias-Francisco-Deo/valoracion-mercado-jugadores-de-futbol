@@ -1,6 +1,6 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.service.impl.ExternalPlayerServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
 import org.junit.jupiter.api.Disabled;

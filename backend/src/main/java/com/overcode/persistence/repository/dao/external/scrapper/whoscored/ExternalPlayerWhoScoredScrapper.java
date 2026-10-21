@@ -3,8 +3,10 @@ package com.overcode.persistence.repository.dao.external.scrapper.whoscored;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.exception.PosicionNoValidaException;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
@@ -115,7 +117,7 @@ public class ExternalPlayerWhoScoredScrapper {
                     totalTackles,
                     totalSuccessfulDribbles,
                     roundedRating,
-                    position
+                    PlayerPosition.aModelo(position)
             );
 
 
@@ -132,6 +134,9 @@ public class ExternalPlayerWhoScoredScrapper {
 
         } catch (JsonProcessingException e) {
             throw new ScraperExtractionException("Error al parsear el JSON de estadísticas con Jackson.", e);
+        } catch (PosicionNoValidaException e) {
+            throw new ScraperExtractionException("Posición no es válida", e);
         }
+
     }
 }
