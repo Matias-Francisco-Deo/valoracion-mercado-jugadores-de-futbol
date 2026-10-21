@@ -1,6 +1,5 @@
-package com.overcode.model;
+package com.overcode.model.cotizacion;
 
-import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.player.Player;

@@ -18,7 +18,7 @@ public class EstrategiaCotizacionRatingJPADTO extends EstrategiaCotizacionJPADTO
 
     @Override
     public EstrategiaCotizacion aModelo() {
-        EstrategiaCotizacion estrategiaCotizacion = new EstrategiaCotizacionRating(getValorBase(), getFactorEscala());
+        EstrategiaCotizacion estrategiaCotizacion = new EstrategiaCotizacionTestRating(getValorBase(), getFactorEscala());
         estrategiaCotizacion.setId(getId());
         return estrategiaCotizacion;
     }

@@ -8,7 +8,7 @@ import com.overcode.persistence.dto.jpa.cotizacion.MapEstrategiaAJPADTO;
 public class EstrategiaCotizacionRatingMapAJPADTO extends MapEstrategiaAJPADTO {
 
     public EstrategiaCotizacionRatingMapAJPADTO() {
-        super(EstrategiaCotizacionRating.class);
+        super(EstrategiaCotizacionTestRating.class);
     }
 
     @Override

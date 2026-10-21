@@ -3,9 +3,9 @@ package com.overcode.testUtils.cotizacion.rating;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.player.Player;
 
-public class EstrategiaCotizacionRating extends EstrategiaCotizacion {
+public class EstrategiaCotizacionTestRating extends EstrategiaCotizacion {
 
-    public EstrategiaCotizacionRating(Double valorBase, Double factorEscala) {
+    public EstrategiaCotizacionTestRating(Double valorBase, Double factorEscala) {
         setTitulo("Estrategia Rating");
         setValorBase(valorBase);
         setFactorEscala(factorEscala);
