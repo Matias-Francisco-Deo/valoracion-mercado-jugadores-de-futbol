@@ -73,8 +73,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Player> listarTop5JugadoresPorRating() {
-        return playerRepository.listarTop5JugadoresPorRating();
+    public List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva() {
+        return playerRepository.recuperarRankingDeJugadoresPorEstrategiaActiva();
     }
 
 

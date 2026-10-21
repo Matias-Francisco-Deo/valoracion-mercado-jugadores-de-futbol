@@ -1,6 +1,7 @@
 package com.overcode.testUtils.cotizacion;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionRating;
 
 public class TestEstrategiaCotizacionUtil {
     public static EstrategiaCotizacion getEstrategiaCotizacionConFactorEscalaYValorConstante(Double factorEscala, Double valorConstante) {
@@ -17,5 +18,9 @@ public class TestEstrategiaCotizacionUtil {
 
     public static EstrategiaCotizacion getEstrategiaConNombre(String titulo) {
         return new EstrategiaCotizacionConValorConstante(titulo);
+    }
+
+    public static EstrategiaCotizacionRating getEstrategiaRating() {
+        return new EstrategiaCotizacionRating(1.0, 1.0);
     }
 }

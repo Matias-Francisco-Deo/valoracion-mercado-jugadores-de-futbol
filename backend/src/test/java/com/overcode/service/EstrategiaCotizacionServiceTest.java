@@ -16,8 +16,8 @@ import com.overcode.service.impl.PlayerServiceImpl;
 import com.overcode.service.impl.RegistroCotizacionServiceImpl;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2;
-import com.overcode.testUtils.cotizacion.EstrategiaCotizacionSiempre2JPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2JPADTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -150,6 +150,7 @@ class EstrategiaCotizacionServiceTest {
         assertEquals(recuperada.getValorBase(), ESTRATEGIA_COTIZACION_1.getValorBase());
     }
 
+
     @Test
     void recuperarTodosDevuelveEstrategiasGuardadas() {
 
@@ -224,8 +225,31 @@ class EstrategiaCotizacionServiceTest {
             assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.seleccionarEstrategia(-1L));
         });
 
+    }
 
+    @Test
+    void sePuedeVerLaEstrategiaSeleccionada() {
+        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacionSiempre2[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion2 = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_2};
 
+        contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+        contextoConDTODeEstrategia2(() -> estrategiaCotizacion2[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2));
+
+        contextoConDTODeEstrategia1(() -> {
+            EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
+            EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
+
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaActual));
+            estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
+            EstrategiaCotizacion estrategiaSeleccionada = estrategiaCotizacionService.recuperarEstrategiaSeleccionada();
+            assertEquals(estrategiaAUsar.getId(), estrategiaSeleccionada.getId());
+        });
+    }
+
+    @Test
+    void siNoHayEstrategiaSeleccionadaEsError() {
+        assertThrows(EntidadNoEncontradaException.class,
+                () -> estrategiaCotizacionService.recuperarEstrategiaSeleccionada());
     }
 
     @Test

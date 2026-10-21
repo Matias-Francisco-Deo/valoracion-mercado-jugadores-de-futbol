@@ -2,6 +2,7 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.cotizacion.ActualizarFactorEscalaRequestDTO;
 import com.overcode.controller.dto.cotizacion.EstrategiaCotizacionResponseDTO;
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +31,13 @@ public class EstrategiaCotizacionController {
                 .map(EstrategiaCotizacionResponseDTO::desdeModelo)
                 .toList();
         return ResponseEntity.ok(estrategias);
+    }
+
+    @GetMapping("/selected")
+    @Operation(summary = "Mostrar estrategia seleccionada", description = "Retorna la estrategia de cotización seleccionada en el sistema.")
+    public ResponseEntity<EstrategiaCotizacionResponseDTO> recuperarEstrategiaSeleccionada() {
+        EstrategiaCotizacion estrategia = estrategiaCotizacionService.recuperarEstrategiaSeleccionada();
+        return ResponseEntity.ok(EstrategiaCotizacionResponseDTO.desdeModelo(estrategia));
     }
 
     @PostMapping("/{id}/select")

@@ -52,6 +52,11 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     }
 
     @Override
+    public EstrategiaCotizacion recuperarEstrategiaSeleccionada() {
+        return configuracionCotizacionesService.recuperar().getEstrategiaCotizacion();
+    }
+
+    @Override
     public void seleccionarEstrategia(Long id) {
         Optional<EstrategiaCotizacion> optionalEstrategiaCotizacion = estrategiaCotizacionRepository.recuperar(id);
         ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();

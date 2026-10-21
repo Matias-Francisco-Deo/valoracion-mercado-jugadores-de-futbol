@@ -18,7 +18,7 @@ public interface PlayerRepository {
 
     Page<Player> listarJugadores(PlayerFilter filtro, Pageable pageable);
 
-    List<Player> listarTop5JugadoresPorRating();
+    List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva();
 
     List<Player> listarTodos();
 
