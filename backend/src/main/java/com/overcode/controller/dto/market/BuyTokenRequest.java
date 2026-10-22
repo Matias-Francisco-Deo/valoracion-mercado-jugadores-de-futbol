@@ -1,10 +1,7 @@
 package com.overcode.controller.dto.market;
 
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
-import com.overcode.model.Team;
 import com.overcode.model.User;
-import com.overcode.model.token.Token;
+import com.overcode.model.player.Player;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;

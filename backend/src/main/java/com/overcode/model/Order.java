@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.player.Player;
 import lombok.Getter;
 import lombok.Setter;
 

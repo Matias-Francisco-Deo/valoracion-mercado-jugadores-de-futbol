@@ -2,11 +2,11 @@ package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.BuyOrder;
-import com.overcode.model.Player;
 import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.orden.OrderSellSummary;
 import com.overcode.service.exception.EntidadNoEncontradaException;

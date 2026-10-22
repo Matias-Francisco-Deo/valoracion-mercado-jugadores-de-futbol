@@ -1,11 +1,10 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.Player;
 import com.overcode.model.User;
 import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.SellOrder;
+import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
