@@ -1,6 +1,7 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.persistence.dto.jpa.bonus.LoginBonusJPADTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -21,17 +22,34 @@ public class ConfiguracionCotizacionesJPADTO {
     @NotNull
     private EstrategiaCotizacionJPADTO estrategiaCotizacion;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "login_bonus_id")
+    private LoginBonusJPADTO loginBonus;
+
     public ConfiguracionCotizaciones aModelo() {
         ConfiguracionCotizaciones configuracion = new ConfiguracionCotizaciones();
         configuracion.setId(getId());
-        configuracion.setEstrategiaCotizacion(getEstrategiaCotizacion().aModelo());
+        if (getEstrategiaCotizacion() != null) {
+            configuracion.setEstrategiaCotizacion(getEstrategiaCotizacion().aModelo());
+        }
+        if (getLoginBonus() != null) {
+            configuracion.setLoginBonus(getLoginBonus().aModelo());
+        }
         return configuracion;
     }
 
     public static ConfiguracionCotizacionesJPADTO desdeModelo(ConfiguracionCotizaciones configuracion) {
+        if (configuracion == null) {
+            return null;
+        }
         ConfiguracionCotizacionesJPADTO dto = new ConfiguracionCotizacionesJPADTO();
         dto.setId(configuracion.getId());
-        dto.setEstrategiaCotizacion(EstrategiaCotizacionJPADTO.desdeModelo(configuracion.getEstrategiaCotizacion()));
+        if (configuracion.getEstrategiaCotizacion() != null) {
+            dto.setEstrategiaCotizacion(EstrategiaCotizacionJPADTO.desdeModelo(configuracion.getEstrategiaCotizacion()));
+        }
+        if (configuracion.getLoginBonus() != null) {
+            dto.setLoginBonus(LoginBonusJPADTO.desdeModelo(configuracion.getLoginBonus()));
+        }
         return dto;
     }
 

@@ -1,5 +1,9 @@
 package com.overcode.model;
 
+import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
+import java.time.LocalDate;
+
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
@@ -24,6 +28,8 @@ public class User {
     private String password;
     private Double creditBalance;
     private List<Token> tokens;
+    private Integer streakCount = 0;
+    private java.time.LocalDate lastBonusClaimDate;
 
     public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setId(id);
@@ -48,6 +54,14 @@ public class User {
         setPassword(password);
         setCreditBalance(0d);
         setTokens(new ArrayList<>());
+    }
+
+    public Integer getStreakCount() {
+        return this.streakCount != null ? this.streakCount : 0;
+    }
+
+    public void setStreakCount(Integer streakCount) {
+        this.streakCount = streakCount != null ? streakCount : 0;
     }
 
     public void setCreditBalance(Double creditBalance) {
@@ -172,6 +186,26 @@ public class User {
         );
 
         return transactions;
+    }
+
+    public boolean puedeReclamarBonusDiarioHoy(LocalDate fechaActual, LoginBonus loginBonus) {
+        if (loginBonus == null) {
+            throw new LoginBonusInvalidoException("El login bonus no puede ser nulo.");
+        }
+        return loginBonus.puedeReclamarHoy(this.lastBonusClaimDate, fechaActual);
+    }
+
+    public Double reclamarBonusDiario(LocalDate fechaActual, LoginBonus loginBonus) {
+        if (loginBonus == null) {
+            throw new LoginBonusInvalidoException("El login bonus no puede ser nulo.");
+        }
+        int rachaActual = this.streakCount != null ? this.streakCount : 0;
+        int nuevaRacha = loginBonus.calcularSiguienteRacha(this.lastBonusClaimDate, fechaActual, rachaActual);
+        Double bonus = loginBonus.getBonusParaRacha(nuevaRacha);
+        creditCredits(bonus);
+        this.streakCount = nuevaRacha;
+        this.lastBonusClaimDate = fechaActual;
+        return bonus;
     }
 
 }
