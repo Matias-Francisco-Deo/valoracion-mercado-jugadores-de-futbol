@@ -80,9 +80,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         if (!playerRepository.existeById(playerId)){throw new EntidadNoEncontradaException("Player not found: " + playerId);}
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
-        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream() // TODO esto tiene que ser un método de repository que lo busque directo de la DB
-                .filter(order -> !order.belongsTo(buyerId))
-                .toList();
+        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId,buyerId);
 
         if (openOrders.size() < quantity) {
             throw new InsufficientLiquidityException(

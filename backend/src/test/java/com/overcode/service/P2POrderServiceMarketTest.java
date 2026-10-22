@@ -89,7 +89,7 @@ class P2POrderServiceMarketTest {
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(sellerA));
         when(userRepository.recuperar(3L)).thenReturn(Optional.of(sellerB));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER)).thenReturn(List.of(askA, askB));
+        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(askA, askB));
 
         service.executeMarketBuy(new BuyOrder(buyer, player, 2));
 
@@ -158,7 +158,7 @@ class P2POrderServiceMarketTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(seller));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER)).thenReturn(List.of(ask1, ask2, ask3));
+        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask1, ask2, ask3));
 
         service.executeMarketBuy(new BuyOrder(buyer, player, 3));
 
@@ -188,7 +188,7 @@ class P2POrderServiceMarketTest {
         User buyer = userWithCredits(1L, 100);
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER))
+        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId()))
                 .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1)));
 
         BuyOrder order = new BuyOrder(buyer, player, 5);
@@ -208,7 +208,7 @@ class P2POrderServiceMarketTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0)));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER)).thenReturn(List.of(ask));
+        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
         assertThrows(InsufficientFundsException.class,
@@ -225,8 +225,8 @@ class P2POrderServiceMarketTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         // La única orden pertenece al propio comprador
-        when(sellOrderRepository.findOpenSellOrders(PLAYER))
-                .thenReturn(List.of(sellOrder(101L, 1L, 201L, 1)));
+        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId()))
+                .thenReturn(List.of());
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
         assertThrows(InsufficientLiquidityException.class,
