@@ -1,5 +1,6 @@
 package com.overcode.persistence.repository.dao.jpa;
 
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.PlayerGameDataJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,5 +32,5 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                                     @Param("keyPasses") Integer keyPasses,
                                     @Param("rating") Double rating,
                                     @Param("successfulDribbles") Integer successfulDribbles,
-                                    @Param("position") String position);
+                                    @Param("position") PlayerPosition position);
 }

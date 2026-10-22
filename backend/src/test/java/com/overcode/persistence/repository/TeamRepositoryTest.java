@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
-import com.overcode.persistence.repository.interfaces.ExternalPlayerRepository;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
+import com.overcode.model.player.TeamUpsertResult;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.testUtils.TestService;
 import jakarta.persistence.EntityManager;
@@ -23,9 +23,6 @@ import static junit.framework.TestCase.*;
 
 @SpringBootTest
 class TeamRepositoryTest {
-
-    @Autowired
-    private ExternalPlayerRepository externalPlayerRepository;
 
     @Autowired
     private TestService testService;
@@ -128,7 +125,7 @@ class TeamRepositoryTest {
         Player player2 = getJugadorConNombre("player2");
         teamRecuperado.addPlayer(player2);
 
-        com.overcode.model.TeamUpsertResult result = teamRepository.upsertTeam(teamRecuperado);
+        TeamUpsertResult result = teamRepository.upsertTeam(teamRecuperado);
         Team teamActualizado = result.team();
 
         assertTrue(teamActualizado.getPlayers().stream().anyMatch(p -> p.getName().equals("player2")));

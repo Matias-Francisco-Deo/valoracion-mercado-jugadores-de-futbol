@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.model.transaction.TransactionType;

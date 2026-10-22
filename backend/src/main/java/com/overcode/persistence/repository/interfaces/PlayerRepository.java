@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
 import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

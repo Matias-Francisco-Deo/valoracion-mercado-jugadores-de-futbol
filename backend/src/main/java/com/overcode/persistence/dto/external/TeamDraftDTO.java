@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.external;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
 
 import java.util.List;
 

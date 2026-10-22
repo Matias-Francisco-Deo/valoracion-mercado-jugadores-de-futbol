@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;

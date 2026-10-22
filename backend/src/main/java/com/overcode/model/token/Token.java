@@ -1,6 +1,6 @@
 package com.overcode.model.token;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.model.SellOrder;
 import com.overcode.model.User;
 import lombok.Getter;

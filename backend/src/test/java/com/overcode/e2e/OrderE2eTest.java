@@ -5,8 +5,8 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
-import com.overcode.model.Player;
 import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
@@ -131,6 +131,74 @@ class OrderE2eTest {
         return req;
     }
 
+    private void comprarTokens(String token, BuyTokenRequest body) {
+        restClient.post()
+                .uri("/orders/buy")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void comprarTokensSinAutenticacion(BuyTokenRequest body) {
+        restClient.post()
+                .uri("/orders/buy")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void publicarOrdenesVenta(String token, SellTokenRequest body) {
+        restClient.post()
+                .uri("/orders/sell")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void publicarOrdenesVentaSinAutenticacion(SellTokenRequest body) {
+        restClient.post()
+                .uri("/orders/sell")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void cancelarOrden(Long orderId, String token) {
+        restClient.post()
+                .uri("/orders/" + orderId + "/cancel")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void cancelarOrdenSinAutenticacion(Long orderId) {
+        restClient.post()
+                .uri("/orders/" + orderId + "/cancel")
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void buscarOrdenesVenta(Long userId, String token) {
+        restClient.get()
+                .uri("/orders/" + userId + "/ordersSell")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private void buscarOrdenesVentaSinAutenticacion(Long userId) {
+        restClient.get()
+                .uri("/orders/" + userId + "/ordersSell")
+                .retrieve()
+                .toBodilessEntity();
+    }
+
     private SellTokenRequest crearSellRequest(Long playerId, Integer quantity) {
         SellTokenRequest req = new SellTokenRequest();
         req.setPlayerId(playerId);
@@ -231,14 +299,10 @@ class OrderE2eTest {
     @Test
     void comprarTokensSinAutenticacionDevuelveError() {
         Player player = crearJugador("Kylian Mbappe", 25);
+        BuyTokenRequest body = crearBuyRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.post()
-                        .uri("/orders/buy")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearBuyRequest(player.getId(), 1))
-                        .retrieve()
-                        .toBodilessEntity()
+                comprarTokensSinAutenticacion(body)
         );
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
@@ -248,16 +312,10 @@ class OrderE2eTest {
     void comprarTokensConCantidadInvalidaDevuelveBadRequest() {
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
         Player player = crearJugador("Pedri", 10);
+        BuyTokenRequest body = crearBuyRequest(player.getId(), 0);
+        String token = buyerAuth.token();
 
-        assertThrows(HttpClientErrorException.BadRequest.class, () ->
-                restClient.post()
-                        .uri("/orders/buy")
-                        .header("Authorization", "Bearer " + buyerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearBuyRequest(player.getId(), 0))
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.BadRequest.class, () -> comprarTokens(token, body));
     }
 
     @Test
@@ -268,15 +326,9 @@ class OrderE2eTest {
         acreditarFondosAUsuario(buyerAuth.user().id(), 500);
 
         // Se intenta comprar 5 tokens cuando no hay ninguna orden publicada
-        assertThrows(HttpClientErrorException.Conflict.class, () ->
-                restClient.post()
-                        .uri("/orders/buy")
-                        .header("Authorization", "Bearer " + buyerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearBuyRequest(player.getId(), 5))
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        BuyTokenRequest body = crearBuyRequest(player.getId(), 5);
+        String token = buyerAuth.token();
+        assertThrows(HttpClientErrorException.Conflict.class, () -> comprarTokens(token, body));
     }
 
     @Test
@@ -297,14 +349,10 @@ class OrderE2eTest {
                 .toBodilessEntity();
 
         // El comprador tiene 0 créditos
+        BuyTokenRequest body = crearBuyRequest(player.getId(), 2);
+        String token = buyerAuth.token();
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.post()
-                        .uri("/orders/buy")
-                        .header("Authorization", "Bearer " + buyerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearBuyRequest(player.getId(), 2))
-                        .retrieve()
-                        .toBodilessEntity()
+                comprarTokens(token, body)
         );
 
         assertEquals(HttpStatus.PAYMENT_REQUIRED, ex.getStatusCode());
@@ -358,6 +406,7 @@ class OrderE2eTest {
                 .toEntity(new ParameterizedTypeReference<>() {});
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assert response.getBody() != null;
         assertEquals(2, response.getBody().size());
 
         // Al publicar todos en venta, ya no deben quedar tokens libres del usuario
@@ -371,14 +420,10 @@ class OrderE2eTest {
     @Test
     void publicarOrdenesDeVentaSinAutenticacionDevuelveError() {
         Player player = crearJugador("Rodri", 35);
+        SellTokenRequest body = crearSellRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.post()
-                        .uri("/orders/sell")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearSellRequest(player.getId(), 1))
-                        .retrieve()
-                        .toBodilessEntity()
+                publicarOrdenesVentaSinAutenticacion(body)
         );
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
@@ -389,16 +434,10 @@ class OrderE2eTest {
         // Flujo excepcional: cantidad <= 0
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Bukayo Saka", 25);
+        SellTokenRequest body = crearSellRequest(player.getId(), -1);
+        String token = sellerAuth.token();
 
-        assertThrows(HttpClientErrorException.BadRequest.class, () ->
-                restClient.post()
-                        .uri("/orders/sell")
-                        .header("Authorization", "Bearer " + sellerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearSellRequest(player.getId(), -1))
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.BadRequest.class, () -> publicarOrdenesVenta(token, body));
     }
 
     @Test
@@ -406,15 +445,11 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Declan Rice", 20);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
+        SellTokenRequest body = crearSellRequest(player.getId(), 5);
+        String token = sellerAuth.token();
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.post()
-                        .uri("/orders/sell")
-                        .header("Authorization", "Bearer " + sellerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearSellRequest(player.getId(), 5))
-                        .retrieve()
-                        .toBodilessEntity()
+                publicarOrdenesVenta(token, body)
         );
 
         assertEquals(422, ex.getStatusCode().value());
@@ -423,16 +458,10 @@ class OrderE2eTest {
     @Test
     void publicarOrdenesDeVentaParaJugadorInexistenteDevuelveNotFound() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
+        SellTokenRequest body = crearSellRequest(NON_EXISTENT_ID, 1);
+        String token = sellerAuth.token();
 
-        assertThrows(HttpClientErrorException.NotFound.class, () ->
-                restClient.post()
-                        .uri("/orders/sell")
-                        .header("Authorization", "Bearer " + sellerAuth.token())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(crearSellRequest(NON_EXISTENT_ID, 1))
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.NotFound.class, () -> publicarOrdenesVenta(token, body));
     }
 
     // ============================================================================================
@@ -481,10 +510,7 @@ class OrderE2eTest {
     @Test
     void cancelarOrdenSinAutenticacionDevuelveError() {
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.post()
-                        .uri("/orders/1/cancel")
-                        .retrieve()
-                        .toBodilessEntity()
+                cancelarOrdenSinAutenticacion(1L)
         );
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
@@ -493,14 +519,10 @@ class OrderE2eTest {
     @Test
     void cancelarOrdenInexistenteDevuelveNotFound() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
+        Long orderId = NON_EXISTENT_ID;
+        String token = sellerAuth.token();
 
-        assertThrows(HttpClientErrorException.NotFound.class, () ->
-                restClient.post()
-                        .uri("/orders/" + NON_EXISTENT_ID + "/cancel")
-                        .header("Authorization", "Bearer " + sellerAuth.token())
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.NotFound.class, () -> cancelarOrden(orderId, token));
     }
 
     @Test
@@ -521,15 +543,10 @@ class OrderE2eTest {
                 .toEntity(new ParameterizedTypeReference<>() {});
 
         Long orderId = sellResponse.getBody().getFirst().id();
+        String token = otherAuth.token();
 
         // El otro usuario intenta cancelarla
-        assertThrows(HttpClientErrorException.Conflict.class, () ->
-                restClient.post()
-                        .uri("/orders/" + orderId + "/cancel")
-                        .header("Authorization", "Bearer " + otherAuth.token())
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.Conflict.class, () -> cancelarOrden(orderId, token));
     }
 
     // ============================================================================================
@@ -777,24 +794,17 @@ class OrderE2eTest {
     @Test
     void buscarOrdenesDeVentaAbiertasDeUsuarioInexistenteDevuelveNotFound() {
         var viewerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
+        Long userId = NON_EXISTENT_ID;
+        String token = viewerAuth.token();
 
-        assertThrows(HttpClientErrorException.NotFound.class, () ->
-                restClient.get()
-                        .uri("/orders/" + NON_EXISTENT_ID + "/ordersSell")
-                        .header("Authorization", "Bearer " + viewerAuth.token())
-                        .retrieve()
-                        .toBodilessEntity()
-        );
+        assertThrows(HttpClientErrorException.NotFound.class, () -> buscarOrdenesVenta(userId, token));
     }
 
     @Test
     void buscarOrdenesDeVentaAbiertasDeUsuarioSinAutenticacionDevuelveError() {
         // Flujo excepcional: llamada sin token
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
-                restClient.get()
-                        .uri("/orders/1/ordersSell")
-                        .retrieve()
-                        .toBodilessEntity()
+                buscarOrdenesVentaSinAutenticacion(1L)
         );
 
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);

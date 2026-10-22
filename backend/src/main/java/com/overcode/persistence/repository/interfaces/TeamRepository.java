@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.Team;
-import com.overcode.model.TeamUpsertResult;
+import com.overcode.model.player.Team;
+import com.overcode.model.player.TeamUpsertResult;
 
 import java.util.Optional;
 

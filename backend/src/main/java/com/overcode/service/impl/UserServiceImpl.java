@@ -2,6 +2,7 @@ package com.overcode.service.impl;
 
 import com.overcode.model.Position;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.transaction.Transaction;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
@@ -121,7 +122,7 @@ public class UserServiceImpl implements UserService {
         for (Map.Entry<Long, List<Transaction>> entry : transactionsPorJugador.entrySet()) {
             List<Transaction> transactionsDelJugador = entry.getValue();
 
-            com.overcode.model.Player player = transactionsDelJugador.get(0).getPlayer();
+            Player player = transactionsDelJugador.get(0).getPlayer();
 
             Position position = new Position(player, transactionsDelJugador);
             if (position.getQuantity() > 0) {

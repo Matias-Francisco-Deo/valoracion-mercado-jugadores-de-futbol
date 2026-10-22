@@ -3,7 +3,7 @@ package com.overcode.persistence.repository;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;

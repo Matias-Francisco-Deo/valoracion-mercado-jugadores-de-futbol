@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.player.PlayerGameData;
 
 import java.util.Optional;
 

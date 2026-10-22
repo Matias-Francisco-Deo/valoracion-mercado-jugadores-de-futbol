@@ -1,7 +1,8 @@
 package com.overcode.config;
 
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
-import com.overcode.model.cotizacion.EstrategiaCotizacionUno;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.UserService;
@@ -32,13 +33,12 @@ public class DataInitializer {
     }
 
     private void inicializarConfiguracion() {
-        ConfiguracionCotizaciones configInicial = new ConfiguracionCotizaciones(new EstrategiaCotizacionUno(3.0, 1.0));
+        ConfiguracionCotizaciones configInicial = new ConfiguracionCotizaciones(new EstrategiaCotizacionRendimientoTotal());
         configuracionCotizacionesService.crearConfiguracionSiNoExiste(configInicial);
     }
 
     private void crearEstrategias() {
-        estrategiaCotizacionService.guardar(new EstrategiaCotizacionUno(5.0, 1.0));
-
+        estrategiaCotizacionService.guardar(new EstrategiaCotizacionRating());
     }
 
 

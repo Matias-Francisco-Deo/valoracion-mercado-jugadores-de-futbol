@@ -4,7 +4,7 @@ import com.overcode.controller.dto.cotizacion.ActualizarFactorEscalaRequestDTO;
 import com.overcode.controller.dto.cotizacion.EstrategiaCotizacionResponseDTO;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;

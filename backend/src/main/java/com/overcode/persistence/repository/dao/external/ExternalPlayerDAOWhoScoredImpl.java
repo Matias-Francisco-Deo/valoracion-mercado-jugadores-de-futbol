@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.dao.external;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.whoscored.ExternalPlayerWhoScoredScrapper;

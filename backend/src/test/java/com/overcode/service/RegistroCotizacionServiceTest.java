@@ -1,11 +1,11 @@
 package com.overcode.service;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
-import com.overcode.persistence.dto.jpa.cotizacion.TipoEstrategiaCotizacion;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.RegistroCotizacionRepositoryImpl;
 import com.overcode.persistence.repository.impl.TeamRepositoryImpl;
@@ -37,7 +37,7 @@ class RegistroCotizacionServiceTest {
 
     public static final EstrategiaCotizacionSiempre2 ESTRATEGIA_COTIZACION_1 = new EstrategiaCotizacionSiempre2(10.0, 2.0);
 
-    private EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
+    private final EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
 
     @Autowired
     private EstrategiaCotizacionRepositoryImpl estrategiaCotizacionRepository;
@@ -225,9 +225,7 @@ class RegistroCotizacionServiceTest {
                 LocalDateTime.now().plusDays(20), // este es más nuevo
                 LocalDateTime.now()); // este es más viejo
 
-        assertThrows(RangoBusquedaInvalidoException.class, () -> {
-            registroCotizacionService.recuperarRegistrosDeJugador(busquedaRegistroCotizacion);
-        });
+        assertThrows(RangoBusquedaInvalidoException.class, () -> registroCotizacionService.recuperarRegistrosDeJugador(busquedaRegistroCotizacion));
 
     }
 
