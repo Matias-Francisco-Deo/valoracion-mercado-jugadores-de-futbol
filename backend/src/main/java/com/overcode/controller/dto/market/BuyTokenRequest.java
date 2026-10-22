@@ -19,7 +19,7 @@ public class BuyTokenRequest {
 
     public com.overcode.model.BuyOrder aModelo(Long userId) {
         return new com.overcode.model.BuyOrder(
-                new User(userId, "placeholder", "placeholderEmail", "placeholder", 0, new ArrayList<>()),
+                new User(userId, "placeholder", "placeholderEmail", "placeholder", 0d, new ArrayList<>()),
                 new Player(playerId),
                 this.quantity);
     }

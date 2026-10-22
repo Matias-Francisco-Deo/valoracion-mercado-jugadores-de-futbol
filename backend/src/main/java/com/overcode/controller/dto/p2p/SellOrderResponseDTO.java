@@ -13,7 +13,7 @@ public class SellOrderResponseDTO {
     private final Long userId;
     private final Long playerId;
     private final Long tokenId;
-    private final Integer price;
+    private final Double price;
     private final OrderStatus status;
     private final Instant createdAt;
 

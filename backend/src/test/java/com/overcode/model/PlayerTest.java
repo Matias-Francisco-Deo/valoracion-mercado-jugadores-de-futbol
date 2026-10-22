@@ -23,7 +23,7 @@ class PlayerTest {
     @Test
     void alAsignarPrecioActualMenorQue1Es1() {
         Player player = getJugadorConNombre("leo");
-        player.setCurrentPrice(-5);
+        player.setCurrentPrice(-5d);
         assertEquals(1, player.getCurrentPrice());
     }
 

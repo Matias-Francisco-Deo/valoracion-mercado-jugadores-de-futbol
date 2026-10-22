@@ -29,7 +29,7 @@ class ExternalPlayerServiceManualTest {
     @Test
     @Disabled("Use automatically to generate players up to the limit set in the method")
     void encuentraJugadoresConDatos(){
-        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(5);
+        Optional<List<Player>> optionalPlayers = externalPlayerServiceImpl.actualizarJugadores(2);
 
         assertTrue(optionalPlayers.isPresent());
         List<Player> players = optionalPlayers.get();

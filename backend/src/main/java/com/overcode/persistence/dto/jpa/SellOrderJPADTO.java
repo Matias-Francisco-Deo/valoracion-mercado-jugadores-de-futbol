@@ -30,12 +30,12 @@ public class SellOrderJPADTO {
     @JoinColumn(name = "player_id", nullable = false)
     private PlayerJPADTO player;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "token_id", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "token_id", nullable = false)
     private TokenJPADTO token;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 15)
@@ -44,7 +44,7 @@ public class SellOrderJPADTO {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    public SellOrderJPADTO(Long id, UserJPADTO owner, PlayerJPADTO player, TokenJPADTO token, Integer price, OrderStatus status, Instant createdAt) {
+    public SellOrderJPADTO(Long id, UserJPADTO owner, PlayerJPADTO player, TokenJPADTO token, Double price, OrderStatus status, Instant createdAt) {
         this.id = id;
         this.owner = owner;
         this.player = player;

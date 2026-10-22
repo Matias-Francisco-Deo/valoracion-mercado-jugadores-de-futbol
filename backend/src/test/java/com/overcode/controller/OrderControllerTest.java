@@ -143,7 +143,7 @@ class OrderControllerTest {
         Player player = new Player();
         player.setId(PLAYER_ID);
         Token token = new Token(101L, seller, player);
-        SellOrder createdOrder = new SellOrder(1L, seller, player, token, 12, OrderStatus.OPEN, Instant.now());
+        SellOrder createdOrder = new SellOrder(1L, seller, player, token, 12d, OrderStatus.OPEN, Instant.now());
         when(p2pOrderService.createSellOrders(any(SellPost.class))).thenReturn(List.of(createdOrder));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();
