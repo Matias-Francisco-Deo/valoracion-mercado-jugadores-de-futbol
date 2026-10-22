@@ -37,6 +37,7 @@ public class TestService {
 
     public void eliminarUsuarios() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM users");
         userDAO.deleteAll();
 
@@ -50,6 +51,7 @@ public class TestService {
 
     public void eliminarDatosJugadores() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM players_game_data");
         playerGameDataDAO.deleteAll();
 
@@ -63,6 +65,7 @@ public class TestService {
 
     private void eliminarJugadores() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM players");
         playerDAO.deleteAll();
     }
