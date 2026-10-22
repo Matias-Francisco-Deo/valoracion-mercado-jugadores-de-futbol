@@ -1,0 +1,104 @@
+package com.overcode.service.impl;
+
+import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
+import com.overcode.model.cotizacion.registro.RegistroCotizacion;
+import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.model.player.Player;
+import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
+import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
+import com.overcode.service.interfaces.PlayerService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionService {
+
+    private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
+    private final ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private final RegistroCotizacionRepository registroCotizacionRepository;
+
+    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
+
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, ConfiguracionCotizacionesRepository configuracionCotizacionesRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService) {
+        this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
+        this.configuracionCotizacionesService = configuracionCotizacionesService;
+        this.configuracionCotizacionesRepository = configuracionCotizacionesRepository;
+        this.registroCotizacionRepository = registroCotizacionRepository;
+        this.playerRepository = playerRepository;
+        this.playerService = playerService;
+    }
+
+
+    @Override
+    public EstrategiaCotizacion guardar(EstrategiaCotizacion estrategiaCotizacion) {
+        return estrategiaCotizacionRepository.guardar(estrategiaCotizacion);
+    }
+
+    @Override
+    public List<EstrategiaCotizacion> recuperarTodos() {
+        return estrategiaCotizacionRepository.recuperarTodos();
+    }
+
+    @Override
+    public EstrategiaCotizacion recuperarEstrategiaSeleccionada() {
+        return configuracionCotizacionesService.recuperar().getEstrategiaCotizacion();
+    }
+
+    @Override
+    public void seleccionarEstrategia(Long id) {
+        Optional<EstrategiaCotizacion> optionalEstrategiaCotizacion = estrategiaCotizacionRepository.recuperar(id);
+        ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();
+
+        if (optionalEstrategiaCotizacion.isEmpty()) throw new EntidadNoEncontradaException("La estrategia a seleccionar no existe");
+
+        EstrategiaCotizacion estrategiaCotizacion = optionalEstrategiaCotizacion.get();
+
+        configuracionCotizaciones.cambiarEstrategiaDeCotizacionPor(estrategiaCotizacion);
+
+        configuracionCotizacionesRepository.guardar(configuracionCotizaciones);
+
+    }
+
+    @Override
+    public void actualizar(Long id, Double factorEscala) {
+
+        verificarFactorEscalaPositivo(factorEscala);
+
+        if (estrategiaCotizacionRepository.recuperar(id).isEmpty()) {
+            throw new EntidadNoEncontradaException("La estrategia a actualizar no existe");
+        }
+
+        estrategiaCotizacionRepository.actualizar(id, factorEscala);
+    }
+
+    @Override
+    public void cotizarJugadores() {
+        ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();
+
+        EstrategiaCotizacion estrategia = configuracionCotizaciones.getEstrategiaCotizacion();
+
+        List<Player> jugadores = playerService.recuperarTodos();
+
+        List<RegistroCotizacion> registros = estrategia.cotizar(jugadores);
+        registroCotizacionRepository.guardarTodos(registros);
+
+        playerRepository.guardarTodos(jugadores);
+    }
+
+    private static void verificarFactorEscalaPositivo(Double factorEscala) {
+        if (factorEscala == null || factorEscala <= 0) throw new EstrategiaInvalidaException("El factor escala debe ser mayor a 0");
+    }
+
+}

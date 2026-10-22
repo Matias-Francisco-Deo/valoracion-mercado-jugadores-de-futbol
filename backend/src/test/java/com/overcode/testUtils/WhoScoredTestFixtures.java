@@ -10,7 +10,7 @@ public final class WhoScoredTestFixtures {
         return """
                 <!DOCTYPE html>
                 <html>
-                <head><title>WhoScored Mock</title></head>
+                <head><title>WhoScored Mock</title><meta name="description" content="Midfielder"></head>
                 <body>
                 <script type="text/javascript">
                 require.config.params['args'] = %s;
@@ -139,7 +139,7 @@ public final class WhoScoredTestFixtures {
         return """
                 <!DOCTYPE html>
                 <html>
-                <head><title>Corrupted</title></head>
+                <head><title>Corrupted</title><meta name="description" content="Midfielder"></head>
                 <body>
                 <script type="text/javascript">
                 require.config.params['args'] = { "tournaments": [ { "TournamentId": 4, brokenSyntax } ] };
@@ -153,7 +153,7 @@ public final class WhoScoredTestFixtures {
         return """
                 <!DOCTYPE html>
                 <html>
-                <head><title>No Args Block</title></head>
+                <head><title>No Args Block</title><meta name="description" content="Midfielder"></head>
                 <body>
                 <div>Some normal web content without require config</div>
                 </body>

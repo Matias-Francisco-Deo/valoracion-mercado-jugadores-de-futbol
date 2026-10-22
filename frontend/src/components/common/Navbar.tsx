@@ -26,6 +26,14 @@ export const Navbar: React.FC = () => {
           <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/catalogo">
             Catálogo 
           </PageLink>
+          <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to={"/market"}>
+              Mercado
+          </PageLink>
+          {isAuthenticated && user && (
+            <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to={`/inventario/${user.id}`}>
+              Inventario
+            </PageLink>
+          )}
         </nav>
         
         <div>
@@ -37,7 +45,13 @@ export const Navbar: React.FC = () => {
               Iniciar sesión
             </Link>
           ) : (
-            <UserMenu user={user} onLogout={logout} />
+            <div className='flex'>
+              <div className='flex flex-col items-center justify-center'>
+                <span className='text-xs'>Creditos</span>
+                <span className='text-xs'>${user.creditBalance}</span>
+              </div>
+              <UserMenu user={user} onLogout={logout} />
+            </div>
           )}
         </div>
       </div>

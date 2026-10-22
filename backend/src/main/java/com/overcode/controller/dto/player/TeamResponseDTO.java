@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.player;
 
-import com.overcode.model.Team;
+import com.overcode.model.player.Team;
 
 public record TeamResponseDTO(Long id,
                               String name,

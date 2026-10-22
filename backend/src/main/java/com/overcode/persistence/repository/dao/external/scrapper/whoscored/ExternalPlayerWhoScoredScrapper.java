@@ -3,8 +3,10 @@ package com.overcode.persistence.repository.dao.external.scrapper.whoscored;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.exception.PosicionNoValidaException;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.external.PlayerDraftDTO;
 import com.overcode.persistence.repository.dao.external.scrapper.exception.ScraperExtractionException;
 import com.overcode.persistence.repository.dao.external.scrapper.http.ScraperHttpClient;
@@ -49,6 +51,9 @@ public class ExternalPlayerWhoScoredScrapper {
         // Aislamos el JSON crudo del estado inicial de la página
         String rawJson = JsonExtractorUtil.extractPlayerStatsJson(html);
         String position = JsonExtractorUtil.extractPlayerPosition(html);
+        if (position == null) {
+            throw new ScraperExtractionException("No se pudo encontrar la posición del jugador.");
+        }
 
         try {
             JsonNode rootNode = objectMapper.readTree(rawJson);
@@ -111,7 +116,8 @@ public class ExternalPlayerWhoScoredScrapper {
                     totalKeyPasses,
                     totalTackles,
                     totalSuccessfulDribbles,
-                    roundedRating
+                    roundedRating,
+                    PlayerPosition.aModelo(position)
             );
 
 
@@ -122,14 +128,15 @@ public class ExternalPlayerWhoScoredScrapper {
             );
 
             playerGameData.setPlayer(player);
-            if (position != null) {
-                player.setPosition(position);
-            }
+
 
             return Optional.of(player);
 
         } catch (JsonProcessingException e) {
             throw new ScraperExtractionException("Error al parsear el JSON de estadísticas con Jackson.", e);
+        } catch (PosicionNoValidaException e) {
+            throw new ScraperExtractionException("Posición no es válida", e);
         }
+
     }
 }

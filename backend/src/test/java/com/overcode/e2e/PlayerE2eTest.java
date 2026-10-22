@@ -2,11 +2,20 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
 import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
-import com.overcode.model.Player;
+import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.player.Player;
+import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
+import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenEmissionService;
 import com.overcode.testUtils.TestService;
+import com.overcode.testUtils.cotizacion.rating.EstrategiaCotizacionTestRatingMapAJPADTO;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
+import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2MapAJPADTO;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +27,15 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.overcode.testUtils.TestPlayerUtil.*;
+import static com.overcode.testUtils.cotizacion.TestEstrategiaCotizacionUtil.getEstrategiaRating;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -45,7 +57,23 @@ class PlayerE2eTest {
     @Autowired
     private PlayerService playerService;
 
+    @MockitoBean
+    private TokenEmissionService tokenEmissionService;
+
     private RestClient restClient;
+
+    @Autowired
+    private EstrategiaCotizacionService estrategiaCotizacionService;
+
+    @Autowired
+    private ConfiguracionCotizacionesService configuracionCotizacionesService;
+
+    private static final EstrategiaCotizacionSiempre2 ESTRATEGIA_1 =
+            new EstrategiaCotizacionSiempre2(0.0, 1.0);
+
+    private final EstrategiaCotizacionSiempre2MapAJPADTO estrategiaADTO = new EstrategiaCotizacionSiempre2MapAJPADTO();
+    private final EstrategiaCotizacionTestRatingMapAJPADTO estrategiaADTO2 = new EstrategiaCotizacionTestRatingMapAJPADTO();
+
 
     @PostConstruct
     public void init() {
@@ -67,12 +95,18 @@ class PlayerE2eTest {
 
     @BeforeEach
     void setUp() {
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
+        TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO2);
     }
 
     @AfterEach
     void tearDown() {
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
+        TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO2);
+        testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
     }
@@ -209,13 +243,16 @@ class PlayerE2eTest {
     }
 
     @Test
-    void listarTopJugadoresTraeOrdenadosPorRating() {
+    void listarRankingDeJugadoresTraeOrdenadosPorRating() {
         String token = obtainAuthToken();
-        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5D));
-        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 8.5D));
+
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(getEstrategiaRating())); // esta estrategia discrimina por rating only
+
+        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5));
+        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -233,36 +270,11 @@ class PlayerE2eTest {
 
 
     @Test
-    void listarTopJugadoresTrae5AunqueHayaMas() {
-        String token = obtainAuthToken();
-        playerService.crear(getJugadorConRating("jugador1", 9.5D));
-        playerService.crear(getJugadorConRating("jugador2", 8.5D));
-        playerService.crear(getJugadorConRating("jugador3", 7.5D));
-        playerService.crear(getJugadorConRating("jugador4", 6.5D));
-        playerService.crear(getJugadorConRating("jugador5", 5.5D));
-        playerService.crear(getJugadorConRating("jugador6", 5.5D));
-
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {
-                });
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
-
-        assertNotNull(players);
-        assertEquals(5, players.size());
-
-    }
-
-    @Test
-    void listarTopJugadoresSinJugadoresDaVacio() {
+    void listarRankingJugadoresSinJugadoresDaVacio() {
         String token = obtainAuthToken();
 
         ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
-                .uri("/players/top")
+                .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>() {
@@ -295,6 +307,111 @@ class PlayerE2eTest {
         assertEquals(PLAYER_NAME, response.getBody().name());
         assertEquals(1, response.getBody().currentPrice()); // como es recién creado, esto es válido
         assertEquals(100, response.getBody().tokens().size());
+    }
+
+    // -------------------------------- Tests de registros de cotizaciones ---------------------------------
+
+    @Test
+    void seCotizaJugadorYSePuedenRecuperarRegistros() {
+
+        LocalDateTime inicio = LocalDateTime.now();
+
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
+                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        );
+
+        String token = obtainAuthToken();
+        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        estrategiaCotizacionService.cotizarJugadores();
+
+        LocalDateTime fin = LocalDateTime.now();
+
+        ResponseEntity<List<RegistroCotizacionResponseDTO>> response = restClient.get()
+                .uri("/players/" + guardado.getId() + "/quotes")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<RegistroCotizacionResponseDTO> body = response.getBody();
+        assertNotNull(body);
+        RegistroCotizacionResponseDTO registroPrimero = body.getFirst();
+        assertEquals(guardado.getId(), registroPrimero.player().id());
+
+        // se usa la estrategia mock siempre 2, así que tiene que ser 2
+        assertEquals(2, registroPrimero.cotizacion());
+        assertEquals(2, registroPrimero.player().currentPrice());
+        assertTrue(registroPrimero.createdAt().isAfter(inicio));
+        assertTrue(registroPrimero.createdAt().isBefore(fin));
+        assertEquals(ESTRATEGIA_1.getTitulo(), registroPrimero.estrategiaCotizacionUsada().titulo());
+    }
+
+    @Test
+    void seCotizaJugadorYSePuedenRecuperarRegistrosEnRango() {
+
+        LocalDateTime inicio = LocalDateTime.now();
+
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
+                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        );
+
+        String token = obtainAuthToken();
+        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        estrategiaCotizacionService.cotizarJugadores();
+
+        LocalDateTime fin = LocalDateTime.now().plusSeconds(20);
+
+        ResponseEntity<List<RegistroCotizacionResponseDTO>> response = restClient.get()
+                .uri("/players/" + guardado.getId() + "/quotes?startDate=" + inicio + "&endDate=" + fin)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<RegistroCotizacionResponseDTO> body = response.getBody();
+        assertNotNull(body);
+        RegistroCotizacionResponseDTO registroPrimero = body.getFirst();
+        assertEquals(guardado.getId(), registroPrimero.player().id());
+
+        // se usa la estrategia mock siempre 2, así que tiene que ser 2
+        assertEquals(2, registroPrimero.cotizacion());
+        assertEquals(2, registroPrimero.player().currentPrice());
+        assertTrue(registroPrimero.createdAt().isAfter(inicio));
+        assertTrue(registroPrimero.createdAt().isBefore(fin));
+        assertEquals(ESTRATEGIA_1.getTitulo(), registroPrimero.estrategiaCotizacionUsada().titulo());
+    }
+
+    @Test
+    void seCotizaJugadorYSePuedenRecuperarVariosRegistrosEnRango() {
+
+        LocalDateTime inicio = LocalDateTime.now();
+
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
+                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        );
+
+        String token = obtainAuthToken();
+        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        estrategiaCotizacionService.cotizarJugadores();
+        estrategiaCotizacionService.cotizarJugadores();
+        estrategiaCotizacionService.cotizarJugadores();
+
+        LocalDateTime fin = LocalDateTime.now();
+
+        ResponseEntity<List<RegistroCotizacionResponseDTO>> response = restClient.get()
+                .uri("/players/" + guardado.getId() + "/quotes?startDate=" + inicio + "&endDate=" + fin)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<RegistroCotizacionResponseDTO> body = response.getBody();
+        assertNotNull(body);
+
+        assertEquals(3, body.size());
     }
 
     @Test

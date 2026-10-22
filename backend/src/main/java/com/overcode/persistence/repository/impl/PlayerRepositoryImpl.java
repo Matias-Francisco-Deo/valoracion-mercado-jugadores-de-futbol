@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import com.overcode.persistence.repository.dao.jpa.PlayerDAOJPA;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
@@ -27,6 +27,11 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
+    public boolean existeById(Long playerId) {
+        return playerDAOJPA.existsById(playerId);
+    }
+
+    @Override
     public Player guardar(Player player) {
         PlayerJPADTO dto = PlayerJPADTO.desdeModelo(player);
         PlayerJPADTO playerDto = playerDAOJPA.save(dto);
@@ -48,10 +53,16 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return playerDAOJPA.findAll().stream().map(PlayerJPADTO::aModelo).toList();
     }
 
+    @Override
+    public List<Player> guardarTodos(List<Player> jugadores) {
+        List<PlayerJPADTO> playerJPADTOS = playerDAOJPA.saveAll(jugadores.stream().map(PlayerJPADTO::desdeModelo).toList());
+        return playerJPADTOS.stream().map(PlayerJPADTO::aModelo).toList();
+    }
+
 
     @Override
-    public List<Player> listarTop5JugadoresPorRating() {
-        return playerDAOJPA.listarTop5JugadoresPorRating().stream()
+    public List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva() {
+        return playerDAOJPA.recuperarRankingDeJugadoresPorEstrategiaActiva().stream()
             .map(PlayerJPADTO::aModelo)
             .toList();
     }

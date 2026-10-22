@@ -1,6 +1,7 @@
 package com.overcode.config.scheduling;
 
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.ExternalPlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +15,15 @@ import java.util.Optional;
 public class ScheduledTasks {
 
 	private final ExternalPlayerService externalPlayerService;
-	private static final Integer MAX_PLAYERS_TO_UPDATE = null;
-
+	private final EstrategiaCotizacionService estrategiaCotizacionService;
 	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
-    public ScheduledTasks(ExternalPlayerService externalPlayerService) {
+	private static final Integer MAX_PLAYERS_TO_UPDATE = null;
+
+	public ScheduledTasks(ExternalPlayerService externalPlayerService, EstrategiaCotizacionService estrategiaCotizacionService) {
         this.externalPlayerService = externalPlayerService;
-    }
+		this.estrategiaCotizacionService = estrategiaCotizacionService;
+	}
 
     @Scheduled(cron = "0 0 0 * * MON")
 	public void actualizarJugadores() {
@@ -31,5 +34,7 @@ public class ScheduledTasks {
 		} else {
 			log.warn("No se actualizaron jugadores");
 		}
+		estrategiaCotizacionService.cotizarJugadores();
+		log.info("Se cotizaron todos los jugadores");
 	}
 }
