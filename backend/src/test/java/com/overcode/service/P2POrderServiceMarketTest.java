@@ -44,10 +44,6 @@ class P2POrderServiceMarketTest {
         when(playerRepository.existeById(anyLong())).thenReturn(true);
     }
 
-    private void stubExistingPlayer(Long playerId) {
-        when(playerRepository.existeById(playerId)).thenReturn(true);
-    }
-
     private Player playerWithPrice(int price) {
         Player player = new Player();
         player.setId(PLAYER);
@@ -59,13 +55,6 @@ class P2POrderServiceMarketTest {
     private SellOrder sellOrder(Long id, Long userId, Long tokenId, int price) {
         User seller = new User("user-" + userId, "user" + userId + "@gmail.com", "pass");
         seller.setId(userId);
-        Player player = new Player();
-        player.setId(PLAYER);
-        Token token = new Token(tokenId, null, player);
-        return new SellOrder(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
-    }
-
-    private SellOrder sellOrder(Long id, User seller, Long tokenId, int price) {
         Player player = new Player();
         player.setId(PLAYER);
         Token token = new Token(tokenId, null, player);

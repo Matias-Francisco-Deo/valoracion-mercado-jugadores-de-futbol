@@ -32,8 +32,8 @@ public class Token {
 
     public SellOrder vender(Integer price) {
         User seller = this.owner != null ? this.owner : null;
-        Player player = this.player != null ? this.player : null;
+        Player orderPlayer = this.player != null ? this.player : null;
         this.owner = null;
-        return new SellOrder(seller, player, this, price);
+        return new SellOrder(seller, orderPlayer, this, price);
     }
 }
