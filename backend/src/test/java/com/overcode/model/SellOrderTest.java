@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SellOrderTest {
 
-    private SellOrder openOrder(int price) {
+    private SellOrder openOrder(Double price) {
         User seller = new User("seller", "seller@gmail.com", "pass");
         seller.setId(10L);
 
@@ -24,7 +24,7 @@ class SellOrderTest {
 
     @Test
     void isOpenReflectsStatus() {
-        SellOrder order = openOrder(25);
+        SellOrder order = openOrder(25d);
         assertTrue(order.isOpen());
         order.markCompleted();
         assertFalse(order.isOpen());
@@ -33,14 +33,14 @@ class SellOrderTest {
 
     @Test
     void belongsToMatchesSeller() {
-        SellOrder order = openOrder(25);
+        SellOrder order = openOrder(25d);
         assertTrue(order.belongsTo(10L));
         assertFalse(order.belongsTo(99L));
     }
 
     @Test
     void cancelOrderMarksCancelled() {
-        SellOrder order = openOrder(25);
+        SellOrder order = openOrder(25d);
         order.cancel();
         assertEquals(OrderStatus.CANCELLED, order.getStatus());
         assertFalse(order.isOpen());
@@ -48,14 +48,14 @@ class SellOrderTest {
 
     @Test
     void cannotCompleteACancelledOrder() {
-        SellOrder order = openOrder(25);
+        SellOrder order = openOrder(25d);
         order.cancel();
         assertThrows(IllegalStateException.class, order::markCompleted);
     }
 
     @Test
     void cannotCancelACompletedOrder() {
-        SellOrder order = openOrder(25);
+        SellOrder order = openOrder(25d);
         order.markCompleted();
         assertThrows(IllegalStateException.class, order::cancel);
     }

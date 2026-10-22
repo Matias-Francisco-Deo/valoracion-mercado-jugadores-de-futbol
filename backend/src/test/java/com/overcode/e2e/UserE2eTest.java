@@ -83,7 +83,7 @@ import static org.junit.jupiter.api.Assertions.*;
         return response.getBody();
     }
 
-    private Player crearJugador(String nombre, int precio) {
+    private Player crearJugador(String nombre, Double precio) {
         Player player = new Player();
         player.setName(nombre);
         player.setCurrentPrice(precio);
@@ -99,7 +99,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     private void registrarTransaccion(Long userId, Player player, TransactionType type, int quantity) {
-        User user = new User(userId, DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, 0, new ArrayList<>());
+        User user = new User(userId, DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, 0d, new ArrayList<>());
         Transaction tx = new Transaction(user, player, type, quantity);
         transactionRepository.guardar(tx);
     }
@@ -183,7 +183,7 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player player = crearJugador("Lionel Messi", 20);
+        Player player = crearJugador("Lionel Messi", 20d);
         asignarTokensAUsuario(userId, player.getId(), 5);
 
         ResponseEntity<SummaryTokenPageResponseDTO> response = restClient.get()
@@ -226,8 +226,8 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player p1 = crearJugador("Cristiano Ronaldo", 30);
-        Player p2 = crearJugador("Lionel Messi", 25);
+        Player p1 = crearJugador("Cristiano Ronaldo", 30d);
+        Player p2 = crearJugador("Lionel Messi", 25d);
         asignarTokensAUsuario(userId, p1.getId(), 3);
         asignarTokensAUsuario(userId, p2.getId(), 4);
 
@@ -249,8 +249,8 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player p1 = crearJugador("Player One", 10);
-        Player p2 = crearJugador("Player Two", 15);
+        Player p1 = crearJugador("Player One", 10d);
+        Player p2 = crearJugador("Player Two", 15d);
         asignarTokensAUsuario(userId, p1.getId(), 2);
         asignarTokensAUsuario(userId, p2.getId(), 3);
 
@@ -302,7 +302,7 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player player = crearJugador("Erling Haaland", 50);
+        Player player = crearJugador("Erling Haaland", 50d);
         registrarTransaccion(userId, player, TransactionType.BUY, 2);
 
         ResponseEntity<TransactionPageResponseDTO> response = restClient.get()
@@ -346,7 +346,7 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player player = crearJugador("Kylian Mbappe", 40);
+        Player player = crearJugador("Kylian Mbappe", 40d);
         registrarTransaccion(userId, player, TransactionType.BUY, 1);
         registrarTransaccion(userId, player, TransactionType.SELL, 1);
 
@@ -387,7 +387,7 @@ import static org.junit.jupiter.api.Assertions.*;
         var auth = registerUser(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         Long userId = auth.user().id();
 
-        Player player = crearJugador("Vinicius Jr", 60);
+        Player player = crearJugador("Vinicius Jr", 60d);
         // Se registra compra de 4 tokens a precio 60
         registrarTransaccion(userId, player, TransactionType.BUY, 4);
 

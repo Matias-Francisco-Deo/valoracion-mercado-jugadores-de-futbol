@@ -105,7 +105,7 @@ class OrderE2eTest {
         return response.getBody();
     }
 
-    private Player crearJugador(String nombre, int precio) {
+    private Player crearJugador(String nombre, Double precio) {
         Player player = new Player();
         player.setName(nombre);
         player.setCurrentPrice(precio);
@@ -215,7 +215,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Lionel Messi", 20);
+        Player player = crearJugador("Lionel Messi", 20d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 5);
 
         // Vendedor publica 5 órdenes de venta mediante la API
@@ -265,7 +265,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Erling Haaland", 15);
+        Player player = crearJugador("Erling Haaland", 15d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 3);
 
         restClient.post()
@@ -298,7 +298,7 @@ class OrderE2eTest {
 
     @Test
     void comprarTokensSinAutenticacionDevuelveError() {
-        Player player = crearJugador("Kylian Mbappe", 25);
+        Player player = crearJugador("Kylian Mbappe", 25d);
         BuyTokenRequest body = crearBuyRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
@@ -311,7 +311,7 @@ class OrderE2eTest {
     @Test
     void comprarTokensConCantidadInvalidaDevuelveBadRequest() {
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
-        Player player = crearJugador("Pedri", 10);
+        Player player = crearJugador("Pedri", 10d);
         BuyTokenRequest body = crearBuyRequest(player.getId(), 0);
         String token = buyerAuth.token();
 
@@ -322,7 +322,7 @@ class OrderE2eTest {
     void comprarTokensSinLiquidezSuficienteDevuelveConflict() {
         // Flujo excepcional: no hay suficientes órdenes de venta abiertas en el mercado
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
-        Player player = crearJugador("Gavi", 10);
+        Player player = crearJugador("Gavi", 10d);
         acreditarFondosAUsuario(buyerAuth.user().id(), 500);
 
         // Se intenta comprar 5 tokens cuando no hay ninguna orden publicada
@@ -337,7 +337,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Vinicius Jr", 50);
+        Player player = crearJugador("Vinicius Jr", 50d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 2);
 
         restClient.post()
@@ -365,7 +365,7 @@ class OrderE2eTest {
     @Test
     void publicarOrdenesDeVentaExitosamente() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Luka Modric", 30);
+        Player player = crearJugador("Luka Modric", 30d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 4);
 
         ResponseEntity<List<SellOrderRecord>> response = restClient.post()
@@ -394,7 +394,7 @@ class OrderE2eTest {
     void publicarVentaDeTodosLosTokensDisponibles() {
         // Caso borde: usuario publica la totalidad de sus tokens en venta
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Jude Bellingham", 40);
+        Player player = crearJugador("Jude Bellingham", 40d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 2);
 
         ResponseEntity<List<SellOrderRecord>> response = restClient.post()
@@ -419,7 +419,7 @@ class OrderE2eTest {
 
     @Test
     void publicarOrdenesDeVentaSinAutenticacionDevuelveError() {
-        Player player = crearJugador("Rodri", 35);
+        Player player = crearJugador("Rodri", 35d);
         SellTokenRequest body = crearSellRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
@@ -433,7 +433,7 @@ class OrderE2eTest {
     void publicarOrdenesDeVentaConCantidadInvalidaDevuelveBadRequest() {
         // Flujo excepcional: cantidad <= 0
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Bukayo Saka", 25);
+        Player player = crearJugador("Bukayo Saka", 25d);
         SellTokenRequest body = crearSellRequest(player.getId(), -1);
         String token = sellerAuth.token();
 
@@ -443,7 +443,7 @@ class OrderE2eTest {
     @Test
     void publicarOrdenesDeVentaConMasTokensDeLosQuePoseeDevuelveUnprocessableEntity() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Declan Rice", 20);
+        Player player = crearJugador("Declan Rice", 20d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
         SellTokenRequest body = crearSellRequest(player.getId(), 5);
         String token = sellerAuth.token();
@@ -471,7 +471,7 @@ class OrderE2eTest {
     @Test
     void cancelarOrdenDeVentaPropiaExitosamente() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Kevin De Bruyne", 45);
+        Player player = crearJugador("Kevin De Bruyne", 45d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
 
         ResponseEntity<List<SellOrderRecord>> sellResponse = restClient.post()
@@ -531,7 +531,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var otherAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Bernardo Silva", 30);
+        Player player = crearJugador("Bernardo Silva", 30d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
 
         ResponseEntity<List<SellOrderRecord>> sellResponse = restClient.post()
@@ -559,7 +559,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Phil Foden", 25);
+        Player player = crearJugador("Phil Foden", 25d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 3);
 
         restClient.post()
@@ -589,7 +589,7 @@ class OrderE2eTest {
     void buscarOrdenesDeVentaAbiertasExcluyeOrdenesDelPropioUsuarioAutenticado() {
         // Caso borde: un vendedor no debe ver sus propias órdenes en el mercado de compra
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Player player = crearJugador("Lautaro Martinez", 22);
+        Player player = crearJugador("Lautaro Martinez", 22d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 2);
 
         restClient.post()
@@ -634,8 +634,8 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player p1 = crearJugador("Cristiano Ronaldo", 30);
-        Player p2 = crearJugador("Lionel Messi", 35);
+        Player p1 = crearJugador("Cristiano Ronaldo", 30d);
+        Player p2 = crearJugador("Lionel Messi", 35d);
         asignarTokensAUsuario(sellerAuth.user().id(), p1.getId(), 2);
         asignarTokensAUsuario(sellerAuth.user().id(), p2.getId(), 2);
 
@@ -662,8 +662,8 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player p1 = crearJugador("Player Alpha", 10);
-        Player p2 = crearJugador("Player Beta", 12);
+        Player p1 = crearJugador("Player Alpha", 10d);
+        Player p2 = crearJugador("Player Beta", 12d);
         asignarTokensAUsuario(sellerAuth.user().id(), p1.getId(), 1);
         asignarTokensAUsuario(sellerAuth.user().id(), p2.getId(), 1);
 
@@ -694,7 +694,7 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var viewerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player player = crearJugador("Antoine Griezmann", 18);
+        Player player = crearJugador("Antoine Griezmann", 18d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 4);
 
         restClient.post()
@@ -742,8 +742,8 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var viewerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player p1 = crearJugador("Federico Valverde", 28);
-        Player p2 = crearJugador("Eduardo Camavinga", 24);
+        Player p1 = crearJugador("Federico Valverde", 28d);
+        Player p2 = crearJugador("Eduardo Camavinga", 24d);
         asignarTokensAUsuario(sellerAuth.user().id(), p1.getId(), 2);
         asignarTokensAUsuario(sellerAuth.user().id(), p2.getId(), 2);
 
@@ -769,8 +769,8 @@ class OrderE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         var viewerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
-        Player p1 = crearJugador("User Order Player 1", 10);
-        Player p2 = crearJugador("User Order Player 2", 15);
+        Player p1 = crearJugador("User Order Player 1", 10d);
+        Player p2 = crearJugador("User Order Player 2", 15d);
         asignarTokensAUsuario(sellerAuth.user().id(), p1.getId(), 1);
         asignarTokensAUsuario(sellerAuth.user().id(), p2.getId(), 1);
 

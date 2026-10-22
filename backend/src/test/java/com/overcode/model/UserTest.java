@@ -12,7 +12,7 @@ class UserTest {
 
     @Test
     void alCrearAlUsuarioSiSeIntentaDarUnBalanceNegativoDeCreditosTiene0() {
-        User user = new User(1L, "alice", "alice@example.com", "secret", -2, List.of());
+        User user = new User(1L, "alice", "alice@example.com", "secret", -2d, List.of());
         assertEquals(0, user.getCreditBalance());
     }
 
@@ -25,7 +25,7 @@ class UserTest {
     @Test
     void alAsignarUnBalanceDeCreditosNegativoConSetterSeSeteaA0() {
         User user = USER_1;
-        user.setCreditBalance(-3);
+        user.setCreditBalance(-3d);
         assertEquals(0, user.getCreditBalance());
     }
 }

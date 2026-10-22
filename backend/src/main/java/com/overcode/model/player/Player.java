@@ -17,7 +17,7 @@ public class Player {
     private Long externalId;
 
     private String name;
-    private Integer currentPrice;
+    private Double currentPrice;
     private List<Token> tokens;
 
     private Team team;
@@ -25,7 +25,7 @@ public class Player {
     private PlayerGameData playerGameData;
 
     public Player() {
-        setCurrentPrice(1);
+        setCurrentPrice(1d);
         setTokens(getInitialTokens());
     }
 
@@ -40,7 +40,7 @@ public class Player {
         setName(name);
         setTeam(team);
         setPlayerGameData(playerGameData);
-        setCurrentPrice(1);
+        setCurrentPrice(1d);
         setTokens(getInitialTokens());
 
     }
@@ -78,12 +78,12 @@ public class Player {
         return this.tokens.stream().filter(token -> tokensIds.contains(token.getId())).toList();
     }
 
-    public void setCurrentPrice(Integer currentPrice) {
+    public void setCurrentPrice(Double currentPrice) {
         this.currentPrice = Math.max(currentPrice, 1);
     }
 
     public void recalcularCotizacion(Double cotizacion) {
-        setCurrentPrice(cotizacion.intValue());
+        setCurrentPrice(cotizacion);
     }
 
     public List<Token> assignInitialTokensTo(User owner) {

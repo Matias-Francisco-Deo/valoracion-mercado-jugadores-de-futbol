@@ -33,7 +33,7 @@ class BuyTokensTest {
     void marketBuyFillsAgainstARestingSellOrder() {
         Player newPlayer = new Player();
         newPlayer.setName("Test Player " + UUID.randomUUID());
-        newPlayer.setCurrentPrice(10);
+        newPlayer.setCurrentPrice(10d);
         final Player player = playerRepository.guardar(newPlayer);
 
         // Seller holds tokens and creates sell orders
@@ -47,7 +47,7 @@ class BuyTokensTest {
         // Buyer with enough credits sweeps the book
         User buyer = new User("buyer-" + UUID.randomUUID(),
                 UUID.randomUUID() + "@gmail.com", "pass");
-        buyer.creditCredits(1000);
+        buyer.creditCredits(1000d);
         buyer = userRepository.guardar(buyer);
 
         p2pOrderService.executeMarketBuy(new BuyOrder(buyer, player, 5));

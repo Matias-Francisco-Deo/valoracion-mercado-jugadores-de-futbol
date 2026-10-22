@@ -16,12 +16,12 @@ class SellOrderJPADTOTest {
 
     @Test
     void desdeModeloMapeaTodosLosCamposCorrectamente() {
-        User user = new User(10L,"user","email@gmail","pass",0,new ArrayList<>());
+        User user = new User(10L,"user","email@gmail","pass",0d,new ArrayList<>());
         Player player = new Player(20L);
         Token token = new Token(100L,user,player);
 
         Instant now = Instant.now();
-        SellOrder modelo = new SellOrder(1L, user, player, token, 15, OrderStatus.OPEN, now);
+        SellOrder modelo = new SellOrder(1L, user, player, token, 15d, OrderStatus.OPEN, now);
 
         SellOrderJPADTO dto = SellOrderJPADTO.desdeModelo(modelo);
 
@@ -36,12 +36,12 @@ class SellOrderJPADTOTest {
 
     @Test
     void aModeloMapeaTodosLosCamposCorrectamente() {
-        UserJPADTO user = new UserJPADTO(11L,"user2","email2@gmail","pass",0,new ArrayList<>());
-        PlayerJPADTO player = new PlayerJPADTO(21L,"player",30,new ArrayList<>());
+        UserJPADTO user = new UserJPADTO(11L,"user2","email2@gmail","pass",0d,new ArrayList<>());
+        PlayerJPADTO player = new PlayerJPADTO(21L,"player",30d,new ArrayList<>());
         TokenJPADTO token = new TokenJPADTO(101L,user,player);
 
         Instant now = Instant.now();
-        SellOrderJPADTO dto = new SellOrderJPADTO(2L, user, player, token, 30, OrderStatus.COMPLETED, now);
+        SellOrderJPADTO dto = new SellOrderJPADTO(2L, user, player, token, 30d, OrderStatus.COMPLETED, now);
 
         SellOrder modelo = dto.aModelo();
 

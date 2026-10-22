@@ -36,7 +36,7 @@ class P2POrderServiceSellTest {
     private static final Long USER_ID = 1L;
     private static final Long PLAYER_ID = 10L;
 
-    private Player playerWithPrice(int price) {
+    private Player playerWithPrice(Double price) {
         Player player = new Player();
         player.setId(PLAYER_ID);
         player.setCurrentPrice(price);
@@ -46,7 +46,7 @@ class P2POrderServiceSellTest {
     private User userWithTokens(int quantity) {
         User user = new User("user1", "user1@gmail.com", "pass");
         user.setId(USER_ID);
-        Player player = playerWithPrice(25);
+        Player player = playerWithPrice(25d);
         List<Token> tokens = new ArrayList<>();
         for (long i = 1; i <= quantity; i++) {
             tokens.add(new Token(i, user, player));
@@ -59,7 +59,7 @@ class P2POrderServiceSellTest {
 
     @Test
     void createSellOrdersCreaUnaOrdenPorTokenYGuardaEnRepositorio() {
-        Player player = playerWithPrice(25);
+        Player player = playerWithPrice(25d);
         User user = userWithTokens(10);
 
         user.getTokens().forEach(token -> token.setPlayer(player));
@@ -102,7 +102,7 @@ class P2POrderServiceSellTest {
 
     @Test
     void createSellOrdersFallaSiElUsuarioNoExiste() {
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.empty());
 
         SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
@@ -115,7 +115,7 @@ class P2POrderServiceSellTest {
     @Test
     void createSellOrdersFallaSiNoTieneTokensDeEseJugador() {
         User user = userWithTokens(0);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
         SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
@@ -128,7 +128,7 @@ class P2POrderServiceSellTest {
     @Test
     void createSellOrdersFallaSiNoAlcanzaLaCantidadDeTokens() {
         User user = userWithTokens(3);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25)));
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
         SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
@@ -143,10 +143,10 @@ class P2POrderServiceSellTest {
     @Test
     void cancelOrderCancelaYDevuelveTokenAlVendedor() {
         User userTest = userWithTokens(0);
-        Player playerTest = playerWithPrice(25);
+        Player playerTest = playerWithPrice(25d);
         Token tokenTest = new Token(55L,userTest,playerTest);
 
-        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25, OrderStatus.OPEN, Instant.now());
+        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25d, OrderStatus.OPEN, Instant.now());
         when(sellOrderRepository.findById(100L)).thenReturn(Optional.of(order));
 
         service.cancelOrder(100L, USER_ID);
@@ -166,10 +166,10 @@ class P2POrderServiceSellTest {
     @Test
     void cancelOrderFallaSiNoEsElDueño() {
         User userTest = userWithTokens(0);
-        Player playerTest = playerWithPrice(25);
+        Player playerTest = playerWithPrice(25d);
         Token tokenTest = new Token(55L,userTest,playerTest);
 
-        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25, OrderStatus.OPEN, Instant.now());
+        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25d, OrderStatus.OPEN, Instant.now());
         when(sellOrderRepository.findById(100L)).thenReturn(Optional.of(order));
 
         assertThrows(IllegalStateException.class, () -> service.cancelOrder(100L, 999L));

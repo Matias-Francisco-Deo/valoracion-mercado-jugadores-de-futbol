@@ -27,7 +27,7 @@ public class PlayerJPADTO {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false, name = "current_price")
-    private Integer currentPrice;
+    private Double currentPrice;
 
 
     @Column(name = "tokens", nullable = false)
@@ -41,7 +41,7 @@ public class PlayerJPADTO {
     private PlayerGameDataJPADTO playerGameData;
 
 
-    public PlayerJPADTO(Long id, String name, Integer currentPrice, List<TokenJPADTO> tokens) {
+    public PlayerJPADTO(Long id, String name, Double currentPrice, List<TokenJPADTO> tokens) {
         setId(id);
         setName(name);
         setCurrentPrice(currentPrice);

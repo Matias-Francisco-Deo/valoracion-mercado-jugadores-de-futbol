@@ -44,7 +44,7 @@ class P2POrderServiceMarketTest {
         when(playerRepository.existeById(anyLong())).thenReturn(true);
     }
 
-    private Player playerWithPrice(int price) {
+    private Player playerWithPrice(Double price) {
         Player player = new Player();
         player.setId(PLAYER);
         player.setName("Lionel Messi");
@@ -52,7 +52,7 @@ class P2POrderServiceMarketTest {
         return player;
     }
 
-    private SellOrder sellOrder(Long id, Long userId, Long tokenId, int price) {
+    private SellOrder sellOrder(Long id, Long userId, Long tokenId, Double price) {
         User seller = new User("user-" + userId, "user" + userId + "@gmail.com", "pass");
         seller.setId(userId);
         Player player = new Player();
@@ -61,12 +61,12 @@ class P2POrderServiceMarketTest {
         return new SellOrder(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
-    private SellOrder sellOrder(Long id, User seller, Player player, Long tokenId, int price) {
+    private SellOrder sellOrder(Long id, User seller, Player player, Long tokenId, Double price) {
         Token token = new Token(tokenId, null, player);
         return new SellOrder(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
-    private User userWithCredits(Long userId, int credits) {
+    private User userWithCredits(Long userId, Double credits) {
         User user = new User("user-" + userId, "user" + userId + "@gmail.com", "pass");
         user.setId(userId);
         if (credits > 0) {
@@ -77,13 +77,13 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyEjecutaCompraDeMultiplesOrdenesYGuardaTransacciones() {
-        Player player = playerWithPrice(10);
-        User buyer = userWithCredits(1L, 100);
-        User sellerA = userWithCredits(2L, 0);
-        User sellerB = userWithCredits(3L, 0);
+        Player player = playerWithPrice(10d);
+        User buyer = userWithCredits(1L, 100d);
+        User sellerA = userWithCredits(2L, 0d);
+        User sellerB = userWithCredits(3L, 0d);
 
-        SellOrder askA = sellOrder(101L, sellerA, player, 201L, 1);
-        SellOrder askB = sellOrder(102L, sellerB, player, 202L, 2);
+        SellOrder askA = sellOrder(101L, sellerA, player, 201L, 1d);
+        SellOrder askB = sellOrder(102L, sellerB, player, 202L, 2d);
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(sellerA));
@@ -147,13 +147,13 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyConUnSoloVendedorAgrupaTransaccionDeVenta() {
-        Player player = playerWithPrice(15);
-        User buyer = userWithCredits(1L, 100);
-        User seller = userWithCredits(2L, 0);
+        Player player = playerWithPrice(15d);
+        User buyer = userWithCredits(1L, 100d);
+        User seller = userWithCredits(2L, 0d);
 
-        SellOrder ask1 = sellOrder(101L, seller, player, 201L, 5);
-        SellOrder ask2 = sellOrder(102L, seller, player, 202L, 5);
-        SellOrder ask3 = sellOrder(103L, seller, player, 203L, 5);
+        SellOrder ask1 = sellOrder(101L, seller, player, 201L, 5d);
+        SellOrder ask2 = sellOrder(102L, seller, player, 202L, 5d);
+        SellOrder ask3 = sellOrder(103L, seller, player, 203L, 5d);
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(seller));
@@ -184,12 +184,12 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyFallaCuandoNoHaySuficienteLiquidez() {
-        Player player = playerWithPrice(10);
-        User buyer = userWithCredits(1L, 100);
+        Player player = playerWithPrice(10d);
+        User buyer = userWithCredits(1L, 100d);
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId()))
-                .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1)));
+                .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1d)));
 
         BuyOrder order = new BuyOrder(buyer, player, 5);
         assertThrows(InsufficientLiquidityException.class,
@@ -201,12 +201,12 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyFallaPorFondosInsuficientesDelComprador() {
-        Player player = playerWithPrice(10);
-        User buyer = userWithCredits(1L, 1); // solo 1 crédito
-        SellOrder ask = sellOrder(101L, 2L, 201L, 10); // cuesta 10
+        Player player = playerWithPrice(10d);
+        User buyer = userWithCredits(1L, 1d); // solo 1 crédito
+        SellOrder ask = sellOrder(101L, 2L, 201L, 10d); // cuesta 10
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
-        when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0)));
+        when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0d)));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
 
@@ -220,8 +220,8 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyIgnoraLasOrdenesDelPropioComprador() {
-        Player player = playerWithPrice(10);
-        User buyer = userWithCredits(1L, 100);
+        Player player = playerWithPrice(10d);
+        User buyer = userWithCredits(1L, 100d);
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         // La única orden pertenece al propio comprador
@@ -253,8 +253,8 @@ class P2POrderServiceMarketTest {
 
     @Test
     void executeMarketBuyFallaSiElJugadorNoExiste() {
-        Player player = playerWithPrice(10);
-        User buyer = userWithCredits(1L, 100);
+        Player player = playerWithPrice(10d);
+        User buyer = userWithCredits(1L, 100d);
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.existeById(PLAYER)).thenReturn(false);
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.empty());

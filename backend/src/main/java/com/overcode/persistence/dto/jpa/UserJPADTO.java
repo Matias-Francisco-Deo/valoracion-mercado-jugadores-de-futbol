@@ -30,14 +30,14 @@ public class UserJPADTO {
     private String password;
 
     @Column(name = "credit_balance", nullable = false)
-    private Integer creditBalance;
+    private Double creditBalance;
 
     @OrderBy("id ASC")
     @Column(name = "tokens")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
 
-    public UserJPADTO(Long id, String username, String email, String password, Integer creditBalance,  List<TokenJPADTO> tokens) {
+    public UserJPADTO(Long id, String username, String email, String password, Double creditBalance,  List<TokenJPADTO> tokens) {
         this.id = id;
         this.username = username;
         this.email = email;

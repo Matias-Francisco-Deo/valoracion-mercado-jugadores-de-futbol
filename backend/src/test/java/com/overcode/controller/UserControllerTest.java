@@ -48,7 +48,7 @@ class UserControllerTest {
                 .build();
     }
 
-    private Player crearJugadorConPrecio(Long id, String nombre, int precio) {
+    private Player crearJugadorConPrecio(Long id, String nombre, Double precio) {
         Player player = new Player();
         player.setId(id);
         player.setName(nombre);
@@ -142,7 +142,7 @@ class UserControllerTest {
 
     @Test
     void getPortfolioDevuelveListaDePosicionesDelUsuario() throws Exception {
-        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120);
+        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120d);
         Transaction tx = new Transaction(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
         Position position = new Position(player, List.of(tx));
 
@@ -188,7 +188,7 @@ class UserControllerTest {
 
     @Test
     void getTransaccionesDevuelvePaginaDeTransaccionesDelUsuario() throws Exception {
-        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 50);
+        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 50d);
         LocalDateTime fecha = LocalDateTime.of(2026, 10, 15, 14, 30, 0);
         Transaction tx = new Transaction(1L, null, player, fecha, TransactionType.BUY, 4, 50.0);
 
@@ -258,7 +258,7 @@ class UserControllerTest {
     void getUserDevuelveOkConDatosDelUsuario() throws Exception {
         User user = new User("ivan", "ivan@gmail.com", "pass");
         user.setId(USER_ID);
-        user.creditCredits(50);
+        user.creditCredits(50d);
         when(userService.recuperar(USER_ID)).thenReturn(user);
 
         mockMvc.perform(get("/users/" + USER_ID))

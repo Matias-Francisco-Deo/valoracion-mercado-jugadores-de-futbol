@@ -22,10 +22,10 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private Integer creditBalance;
+    private Double creditBalance;
     private List<Token> tokens;
 
-    public User(Long id, String username, String email, String password, Integer creditBalance, List<Token> tokens) {
+    public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setId(id);
         setUsername(username);
         setEmail(email);
@@ -34,7 +34,7 @@ public class User {
         setTokens(tokens);
     }
 
-    public User(String username, String email, String password, Integer creditBalance, List<Token> tokens) {
+    public User(String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setUsername(username);
         setEmail(email);
         setPassword(password);
@@ -46,19 +46,19 @@ public class User {
         setUsername(username);
         setEmail(email);
         setPassword(password);
-        setCreditBalance(0);
+        setCreditBalance(0d);
         setTokens(new ArrayList<>());
     }
 
-    public void setCreditBalance(Integer creditBalance) {
+    public void setCreditBalance(Double creditBalance) {
         this.creditBalance = creditBalance != null ? Math.max(creditBalance, 0) : 0;
     }
 
-    public boolean hasSufficientCredits(Integer amount) {
+    public boolean hasSufficientCredits(Double amount) {
         return amount != null && amount > 0 && this.creditBalance != null && this.creditBalance >= amount;
     }
 
-    public void debitCredits(Integer amount) {
+    public void debitCredits(Double amount) {
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
@@ -68,7 +68,7 @@ public class User {
         this.creditBalance -= amount;
     }
 
-    public void creditCredits(Integer amount) {
+    public void creditCredits(Double amount) {
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }

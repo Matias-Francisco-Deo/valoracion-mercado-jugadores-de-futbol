@@ -15,7 +15,7 @@ class BuyOrderTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(1L, "testuser", "test@email.com", "password", 1000, new ArrayList<>());
+        user = new User(1L, "testuser", "test@email.com", "password", 1000d, new ArrayList<>());
 
         player = new Player(10L, 100L, "Test Player", null, null);
     }

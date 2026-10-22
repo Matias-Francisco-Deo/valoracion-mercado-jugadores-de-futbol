@@ -13,7 +13,7 @@ import java.time.Instant;
 public class SellOrder extends Order {
 
     private Token token;
-    private Integer price;
+    private Double price;
     private OrderStatus status;
 
     public SellOrder() {
@@ -21,14 +21,14 @@ public class SellOrder extends Order {
         this.status = OrderStatus.OPEN;
     }
 
-    public SellOrder(Long id, User seller, Player player, Token token, Integer price, OrderStatus status, Instant createdAt) {
+    public SellOrder(Long id, User seller, Player player, Token token, Double price, OrderStatus status, Instant createdAt) {
         super(id, seller, player, createdAt);
         this.token = token;
         this.price = price;
         this.status = status != null ? status : OrderStatus.OPEN;
     }
 
-    public SellOrder(User seller, Player player, Token token, Integer price) {
+    public SellOrder(User seller, Player player, Token token, Double price) {
         this(null, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
