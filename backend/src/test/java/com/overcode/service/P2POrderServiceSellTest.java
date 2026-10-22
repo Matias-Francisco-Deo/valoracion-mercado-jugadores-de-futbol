@@ -77,9 +77,9 @@ class P2POrderServiceSellTest {
         for (SellOrder order : orders) {
             assertEquals(OrderStatus.OPEN, order.getStatus());
             assertEquals(25, order.getPrice());
-            assertEquals(USER_ID, order.getUserId());
-            assertEquals(PLAYER_ID, order.getPlayerId());
-            assertNotNull(order.getTokenId());
+            assertEquals(USER_ID, order.getOwner().getId());
+            assertEquals(PLAYER_ID, order.getPlayer().getId());
+            assertNotNull(order.getToken().getId());
         }
 
         assertEquals(4, user.getTokenCountForPlayer(PLAYER_ID));
@@ -142,7 +142,11 @@ class P2POrderServiceSellTest {
 
     @Test
     void cancelOrderCancelaYDevuelveTokenAlVendedor() {
-        SellOrder order = new SellOrder(100L, USER_ID, PLAYER_ID, 55L, 25, OrderStatus.OPEN, Instant.now());
+        User userTest = userWithTokens(0);
+        Player playerTest = playerWithPrice(25);
+        Token tokenTest = new Token(55L,userTest,playerTest);
+
+        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25, OrderStatus.OPEN, Instant.now());
         when(sellOrderRepository.findById(100L)).thenReturn(Optional.of(order));
 
         service.cancelOrder(100L, USER_ID);
@@ -161,7 +165,11 @@ class P2POrderServiceSellTest {
 
     @Test
     void cancelOrderFallaSiNoEsElDueño() {
-        SellOrder order = new SellOrder(100L, USER_ID, PLAYER_ID, 55L, 25, OrderStatus.OPEN, Instant.now());
+        User userTest = userWithTokens(0);
+        Player playerTest = playerWithPrice(25);
+        Token tokenTest = new Token(55L,userTest,playerTest);
+
+        SellOrder order = new SellOrder(100L, userTest, playerTest, tokenTest, 25, OrderStatus.OPEN, Instant.now());
         when(sellOrderRepository.findById(100L)).thenReturn(Optional.of(order));
 
         assertThrows(IllegalStateException.class, () -> service.cancelOrder(100L, 999L));

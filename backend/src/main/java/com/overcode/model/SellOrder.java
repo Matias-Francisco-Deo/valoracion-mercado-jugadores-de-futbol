@@ -1,6 +1,7 @@
 package com.overcode.model;
 
 import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.token.Token;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.time.Instant;
 @Setter
 public class SellOrder extends Order {
 
-    private Long tokenId;
+    private Token token;
     private Integer price;
     private OrderStatus status;
 
@@ -19,15 +20,15 @@ public class SellOrder extends Order {
         this.status = OrderStatus.OPEN;
     }
 
-    public SellOrder(Long id, Long sellerId, Long playerId, Long tokenId, Integer price, OrderStatus status, Instant createdAt) {
-        super(id, sellerId, playerId, createdAt);
-        this.tokenId = tokenId;
+    public SellOrder(Long id, User seller, Player player, Token token, Integer price, OrderStatus status, Instant createdAt) {
+        super(id, seller, player, createdAt);
+        this.token = token;
         this.price = price;
         this.status = status != null ? status : OrderStatus.OPEN;
     }
 
-    public SellOrder(Long sellerId, Long playerId, Long tokenId, Integer price) {
-        this(null, sellerId, playerId, tokenId, price, OrderStatus.OPEN, Instant.now());
+    public SellOrder(User seller, Player player, Token token, Integer price) {
+        this(null, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
     public boolean isOpen() {
@@ -35,7 +36,21 @@ public class SellOrder extends Order {
     }
 
     public boolean belongsTo(Long candidateUserId) {
-        return this.userId != null && this.userId.equals(candidateUserId);
+        return this.owner != null && this.owner.getId().equals(candidateUserId);
+    }
+
+    public void executePurchase(User buyer) {
+        if (!isOpen()) {
+            throw new IllegalStateException(
+                    "Only OPEN orders can be purchased."
+            );
+        }
+
+        buyer.debitCredits(price);
+        owner.creditCredits(price);
+        buyer.addToken(token);
+
+        markCompleted();
     }
 
     public void markCompleted() {

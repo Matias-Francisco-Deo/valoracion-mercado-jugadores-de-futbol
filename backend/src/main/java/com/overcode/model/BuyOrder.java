@@ -16,8 +16,8 @@ public class BuyOrder extends Order {
         super();
     }
 
-    public BuyOrder(Long buyerId, Long playerId, Integer quantity) {
-        super(null, buyerId, playerId, Instant.now());
+    public BuyOrder(User seller, Player player, Integer quantity) {
+        super(null, seller, player, Instant.now());
         if (quantity == null || quantity <= 0) {
             throw new InvalidOrderQuantityException("Quantity must be greater than zero.");
         }

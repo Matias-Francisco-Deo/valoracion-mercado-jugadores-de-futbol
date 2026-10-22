@@ -52,6 +52,10 @@ public class Player {
         this(null, externalId, name, null, playerGameData);
     }
 
+    public Player(Long id){//constructor para placeholder de request
+        setId(id);
+    }
+
     private List<Token> getInitialTokens() {
         List<Token> newTokens = new java.util.ArrayList<>();
         for (int i = 0; i < 100; i++) {

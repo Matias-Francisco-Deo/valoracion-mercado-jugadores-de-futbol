@@ -31,9 +31,9 @@ public class Token {
     }
 
     public SellOrder vender(Integer price) {
-        Long sellerId = this.owner != null ? this.owner.getId() : null;
-        Long pId = this.player != null ? this.player.getId() : null;
+        User seller = this.owner != null ? this.owner : null;
+        Player player = this.player != null ? this.player : null;
         this.owner = null;
-        return new SellOrder(sellerId, pId, this.id, price);
+        return new SellOrder(seller, player, this, price);
     }
 }

@@ -22,14 +22,17 @@ public class SellOrderJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserJPADTO owner;
 
-    @Column(name = "player_id", nullable = false)
-    private Long playerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "player_id", nullable = false)
+    private PlayerJPADTO player;
 
-    @Column(name = "token_id", nullable = false)
-    private Long tokenId;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "token_id", nullable = false, unique = true)
+    private TokenJPADTO token;
 
     @Column(name = "price", nullable = false)
     private Integer price;
@@ -41,18 +44,18 @@ public class SellOrderJPADTO {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    public SellOrderJPADTO(Long id, Long userId, Long playerId, Long tokenId, Integer price, OrderStatus status, Instant createdAt) {
+    public SellOrderJPADTO(Long id, UserJPADTO owner, PlayerJPADTO player, TokenJPADTO token, Integer price, OrderStatus status, Instant createdAt) {
         this.id = id;
-        this.userId = userId;
-        this.playerId = playerId;
-        this.tokenId = tokenId;
+        this.owner = owner;
+        this.player = player;
+        this.token = token;
         this.price = price;
         this.status = status;
         this.createdAt = createdAt;
     }
 
     public SellOrder aModelo() {
-        return new SellOrder(id, userId, playerId, tokenId, price, status, createdAt);
+        return new SellOrder(id, owner.aModelo(), player.aModelo(), token.aModelo(), price, status, createdAt);
     }
 
     public static SellOrderJPADTO desdeModelo(SellOrder modelo) {
@@ -61,9 +64,9 @@ public class SellOrderJPADTO {
         }
         SellOrderJPADTO dto = new SellOrderJPADTO();
         dto.setId(modelo.getId());
-        dto.setUserId(modelo.getUserId());
-        dto.setPlayerId(modelo.getPlayerId());
-        dto.setTokenId(modelo.getTokenId());
+        dto.setOwner(UserJPADTO.desdeModelo(modelo.getOwner()));
+        dto.setPlayer(PlayerJPADTO.desdeModelo(modelo.getPlayer()));
+        dto.setToken(TokenJPADTO.desdeModelo(modelo.getToken()));
         dto.setPrice(modelo.getPrice());
         dto.setStatus(modelo.getStatus());
         dto.setCreatedAt(modelo.getCreatedAt());
