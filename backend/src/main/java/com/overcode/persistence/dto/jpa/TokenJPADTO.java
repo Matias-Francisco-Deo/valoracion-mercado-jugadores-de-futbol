@@ -36,6 +36,14 @@ public class TokenJPADTO {
         setPlayer(playerJPADTO);
     }
 
+    public static TokenJPADTO desdeModelo(Token token){
+        return new TokenJPADTO(
+                token.getId(),
+                UserJPADTO.desdeModelo(token.getOwner()),
+                PlayerJPADTO.desdeModelo(token.getPlayer())
+                );
+    }
+
     public static TokenJPADTO desdeModelo(Token token, PlayerJPADTO player) {
         if (token == null) {
             return null;

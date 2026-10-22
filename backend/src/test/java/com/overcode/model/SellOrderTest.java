@@ -1,6 +1,8 @@
 package com.overcode.model;
 
 import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -10,7 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class SellOrderTest {
 
     private SellOrder openOrder(int price) {
-        return new SellOrder(1L, 10L, 20L, 100L, price, OrderStatus.OPEN, Instant.now());
+        User seller = new User("seller", "seller@gmail.com", "pass");
+        seller.setId(10L);
+
+        Player player = new Player();
+        player.setId(20L);
+
+        Token token = new Token(100L, null, player);
+        return new SellOrder(1L, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
     @Test

@@ -19,9 +19,9 @@ public class SellOrderResponseDTO {
 
     public SellOrderResponseDTO(SellOrder order) {
         this.id = order.getId();
-        this.userId = order.getUserId();
-        this.playerId = order.getPlayerId();
-        this.tokenId = order.getTokenId();
+        this.userId = order.getOwner().getId();
+        this.playerId = order.getPlayer().getId();
+        this.tokenId = order.getToken().getId();
         this.price = order.getPrice();
         this.status = order.getStatus();
         this.createdAt = order.getCreatedAt();

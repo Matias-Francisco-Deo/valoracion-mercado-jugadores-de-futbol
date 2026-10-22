@@ -27,6 +27,11 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
+    public boolean existeById(Long playerId) {
+        return playerDAOJPA.existsById(playerId);
+    }
+
+    @Override
     public Player guardar(Player player) {
         PlayerJPADTO dto = PlayerJPADTO.desdeModelo(player);
         PlayerJPADTO playerDto = playerDAOJPA.save(dto);

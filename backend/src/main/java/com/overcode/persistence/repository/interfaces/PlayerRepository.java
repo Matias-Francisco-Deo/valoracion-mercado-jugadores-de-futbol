@@ -12,6 +12,8 @@ public interface PlayerRepository {
 
     boolean existsByName(String name);
 
+    boolean existeById(Long id);
+
     Player guardar(Player player);
 
     Optional<Player> recuperar(Long id);

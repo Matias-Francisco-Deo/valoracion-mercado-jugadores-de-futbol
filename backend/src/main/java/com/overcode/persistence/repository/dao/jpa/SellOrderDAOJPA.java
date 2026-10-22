@@ -18,6 +18,10 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
     List<SellOrderJPADTO> findByPlayerIdAndStatusOrderByPriceAscCreatedAtAsc(
             Long playerId, OrderStatus status);
 
+    //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
+    List<SellOrderJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
+            Long playerId, OrderStatus status, Long buyerId);
+
     String FILTRO_NOMBRE =
             "(:nombre IS NULL OR TRIM(:nombre) = '' " +
                     "OR unaccent(LOWER(p.name)) " +

@@ -50,7 +50,7 @@ class BuyTokensTest {
         buyer.creditCredits(1000);
         buyer = userRepository.guardar(buyer);
 
-        p2pOrderService.executeMarketBuy(new BuyOrder(buyer.getId(), player.getId(), 5));
+        p2pOrderService.executeMarketBuy(new BuyOrder(buyer, player, 5));
 
         User buyerAfter = userRepository.recuperar(buyer.getId()).orElseThrow();
         assertEquals(5, buyerAfter.getTokenCountForPlayer(player.getId()), "buyer should hold the 5 purchased tokens");

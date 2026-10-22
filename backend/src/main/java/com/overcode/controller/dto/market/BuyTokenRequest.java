@@ -1,8 +1,12 @@
 package com.overcode.controller.dto.market;
 
+import com.overcode.model.User;
+import com.overcode.model.player.Player;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+
+import java.util.ArrayList;
 
 @Data
 public class BuyTokenRequest {
@@ -14,6 +18,9 @@ public class BuyTokenRequest {
     private Integer quantity;
 
     public com.overcode.model.BuyOrder aModelo(Long userId) {
-        return new com.overcode.model.BuyOrder(userId, this.playerId, this.quantity);
+        return new com.overcode.model.BuyOrder(
+                new User(userId, "placeholder", "placeholderEmail", "placeholder", 0, new ArrayList<>()),
+                new Player(playerId),
+                this.quantity);
     }
 }

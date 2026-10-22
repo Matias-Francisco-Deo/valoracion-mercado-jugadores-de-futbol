@@ -6,6 +6,8 @@ import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.SellOrder;
 import com.overcode.model.SellPost;
 import com.overcode.model.User;
+import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
 import com.overcode.model.orden.OrderSellSummary;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.InsufficientLiquidityException;
@@ -136,7 +138,12 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.of(user));
 
-        SellOrder createdOrder = new SellOrder(1L, USER_ID, PLAYER_ID, 101L, 12, OrderStatus.OPEN, Instant.now());
+        User seller = new User("placeholder", "placeholder@gmail.com", "placeholder");
+        seller.setId(USER_ID);
+        Player player = new Player();
+        player.setId(PLAYER_ID);
+        Token token = new Token(101L, seller, player);
+        SellOrder createdOrder = new SellOrder(1L, seller, player, token, 12, OrderStatus.OPEN, Instant.now());
         when(p2pOrderService.createSellOrders(any(SellPost.class))).thenReturn(List.of(createdOrder));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(p2pOrderService, userService)).build();

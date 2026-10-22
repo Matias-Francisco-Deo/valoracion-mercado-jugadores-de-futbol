@@ -50,9 +50,9 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<SellOrder> findOpenSellOrders(Long playerId) {
-        return dao.findByPlayerIdAndStatusOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN)
+    @Transactional(readOnly = true)//trae las ordenes abiertas de un jugador, excluyendo al comprador
+    public List<SellOrder> findOpenSellOrders(Long playerId,Long buyerId) {
+        return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)
                 .stream()
                 .map(SellOrderJPADTO::aModelo)
                 .toList();
@@ -68,7 +68,7 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
         return dao.buscarOrdersSellAbiertasExcluyendoUsuario(userId, nombre, pageable);
     }
 
-    @Override
+    @Override//recuoera pagina de summary de ordenes abiertas de un usuario
     public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable) {
         return dao.buscarOrdersSellAbiertasPorUsuario(userId, nombre, pageable);
     }

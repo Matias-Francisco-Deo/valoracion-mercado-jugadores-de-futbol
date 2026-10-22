@@ -70,19 +70,17 @@ public class P2POrderServiceImpl implements P2POrderService {
     @Override
     @Transactional
     public void executeMarketBuy(BuyOrder buyOrder) {
-        Long buyerId = buyOrder.getUserId();
-        Long playerId = buyOrder.getPlayerId();
+        Long buyerId = buyOrder.getOwner().getId();
+        Long playerId = buyOrder.getPlayer().getId();
         int quantity = buyOrder.getQuantity();
 
         User buyer = userRepository.recuperar(buyerId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + buyerId));
 
-        Player player = playerRepository.recuperar(playerId).orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + playerId));
+        if (!playerRepository.existeById(playerId)){throw new EntidadNoEncontradaException("Player not found: " + playerId);}
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
-        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId).stream() // TODO esto tiene que ser un método de repository que lo busque directo de la DB
-                .filter(order -> !order.belongsTo(buyerId))
-                .toList();
+        List<SellOrder> openOrders = sellOrderRepository.findOpenSellOrders(playerId,buyerId);
 
         if (openOrders.size() < quantity) {
             throw new InsufficientLiquidityException(
@@ -90,33 +88,11 @@ public class P2POrderServiceImpl implements P2POrderService {
         }
 
         List<SellOrder> ordersToFill = openOrders.subList(0, quantity);
-        Map<Long, User> sellersCache = new HashMap<>();
 
-        for (SellOrder order : ordersToFill) { // TODO esto es lógica de modelo, separar
-            // Cobrar al comprador (lanza InsufficientFundsException si no tiene saldo)
-            buyer.debitCredits(order.getPrice());
-
-            // Acreditar fondos al vendedor
-            User seller = sellersCache.computeIfAbsent(order.getUserId(),
-                    id -> userRepository.recuperar(id)
-                            .orElseThrow(() -> new EntidadNoEncontradaException("Seller not found: " + id)));
-            seller.creditCredits(order.getPrice());
-
-            // Transferir el token al comprador
-            tokenRepository.setTokenOwner(order.getTokenId(), buyer.getId());
-            Token token = tokenRepository.findById(order.getTokenId()).orElse(null);
-            if (token != null) {
-                buyer.addToken(token);
-            }
-
-            // Marcar la orden como completada
-            order.markCompleted();
-        }
-
-        List<Transaction> transactions = createTransactions(buyer, player, quantity, ordersToFill, sellersCache);
+        List<Transaction> transactions = buyer.buyTokens(ordersToFill);
 
         userRepository.guardar(buyer);
-        sellersCache.values().forEach(userRepository::guardar);
+        ordersToFill.stream().map(SellOrder::getOwner).distinct().forEach(userRepository::guardar);
         sellOrderRepository.saveAll(ordersToFill);
         transactionRepository.guardarTodos(transactions);
     }
@@ -135,7 +111,7 @@ public class P2POrderServiceImpl implements P2POrderService {
         sellOrderRepository.save(order);
 
         // Devolver el token al vendedor
-        tokenRepository.setTokenOwner(order.getTokenId(), userId);
+        tokenRepository.setTokenOwner(order.getToken().getId(), userId);
     }
 
     @Override
@@ -155,26 +131,4 @@ public class P2POrderServiceImpl implements P2POrderService {
         return sellOrderRepository.buscarOrdersSellSummaryAbiertasPorUsuario(userId, nombre,pageable);
     }
 
-    private List<Transaction> createTransactions(User buyer, Player player, int quantity, List<SellOrder> ordersToFill, Map<Long, User> sellersCache) {
-        List<Transaction> transactions = new ArrayList<>();
-
-        // Transacción del comprador
-        transactions.add(new Transaction(buyer, player, TransactionType.BUY, quantity));
-
-        // Agrupar las órdenes ejecutadas por vendedor
-        Map<Long, Integer> quantityBySeller = ordersToFill.stream()
-                .collect(Collectors.groupingBy(
-                        SellOrder::getUserId,
-                        Collectors.summingInt(order -> 1)
-                ));
-
-        // Crear una transacción por cada vendedor
-        quantityBySeller.forEach((sellerId, sellerQuantity) -> {
-            User seller = sellersCache.get(sellerId);
-
-            transactions.add(new Transaction(seller, player, TransactionType.SELL, sellerQuantity));
-        });
-
-        return transactions;
-    }
 }

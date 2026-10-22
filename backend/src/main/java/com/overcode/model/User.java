@@ -2,12 +2,18 @@ package com.overcode.model;
 
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
+import com.overcode.model.transaction.Transaction;
+import com.overcode.model.transaction.TransactionType;
+import com.overcode.service.exception.InsufficientLiquidityException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Setter @Getter @NoArgsConstructor
 public class User {
@@ -110,6 +116,24 @@ public class User {
         return tokensToSell.stream().map(token -> token.vender(player.getCurrentPrice())).toList();
     }
 
+    public List<Transaction> buyTokens(List<SellOrder> orders) {
+        if (orders.isEmpty()) {throw new InsufficientLiquidityException("Not enough tokens to buy.");}
+
+        Map<Long, User> sellersById = new HashMap<>();
+
+        for (SellOrder order : orders) {
+            User seller = order.getOwner();
+
+            User existingSeller = sellersById.putIfAbsent(seller.getId(), seller);
+
+            if (existingSeller != null) {order.setOwner(existingSeller);}
+
+            order.executePurchase(this);
+        }
+
+        return createTransactions(orders);
+    }
+
     public void addToken(Token token) {
         if (token == null) {
             return;
@@ -129,4 +153,25 @@ public class User {
             addToken(token);
         }
     }
+
+    private List<Transaction> createTransactions(List<SellOrder> orders) {//crear un objeto aparte para crear las transacciones?
+        List<Transaction> transactions = new ArrayList<>();
+
+        Player player = orders.get(0).getPlayer();
+
+        transactions.add(new Transaction(this, player, TransactionType.BUY, orders.size()));
+
+        Map<User, Integer> quantityBySeller = orders.stream()
+                .collect(Collectors.groupingBy(
+                        SellOrder::getOwner,
+                        Collectors.summingInt(order -> 1)
+                ));
+
+        quantityBySeller.forEach((seller, quantity) ->
+                transactions.add(new Transaction(seller, player, TransactionType.SELL, quantity))
+        );
+
+        return transactions;
+    }
+
 }
