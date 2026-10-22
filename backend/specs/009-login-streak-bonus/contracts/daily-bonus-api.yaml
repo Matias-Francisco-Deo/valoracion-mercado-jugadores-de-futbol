@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Daily Login Bonus API
+  version: 1.0.0
+  description: API for retrieving daily login streak bonus status and claiming daily bonus credits.
+paths:
+  /api/daily-bonus:
+    get:
+      summary: Retrieve current daily bonus status and weekly schedule
+      description: |
+        Returns the user's current streak count, today's bonus reward value,
+        whether today's bonus has already been claimed, and the full weekly schedule (LUNES through DOMINGO).
+        The bonus is NEVER granted by calling this GET endpoint or upon logging in.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Daily bonus status successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyBonusStatusResponseDTO'
+        '401':
+          description: Unauthorized - missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+
+  /api/daily-bonus/claim:
+    post:
+      summary: Claim today's login bonus
+      description: |
+        Submits an explicit petition to claim today's bonus credits.
+        Advances user streak according to calendar day continuity, adds credits to the user's balance,
+        and records the claim date. Multiple claims on the same UTC calendar day are rejected.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Bonus claimed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimBonusResponseDTO'
+        '400':
+          description: Bonus already claimed today or invalid request state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+        '401':
+          description: Unauthorized - missing or invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DiaDeLaSemana:
+      type: string
+      enum:
+        - LUNES
+        - MARTES
+        - MIERCOLES
+        - JUEVES
+        - VIERNES
+        - SABADO
+        - DOMINGO
+
+    DailyBonusStatusResponseDTO:
+      type: object
+      required:
+        - currentStreak
+        - todayBonus
+        - alreadyClaimedToday
+        - weeklyBonuses
+      properties:
+        currentStreak:
+          type: integer
+          description: Current consecutive streak days (1 to 7, or 0 if never claimed)
+          example: 3
+        todayBonus:
+          type: number
+          format: double
+          description: Credit amount available or already granted for today
+          example: 2.0
+        alreadyClaimedToday:
+          type: boolean
+          description: True if the user has already claimed the bonus for the current UTC calendar day
+          example: false
+        weeklyBonuses:
+          type: object
+          description: Map of DiaDeLaSemana to bonus credit values (Double)
+          additionalProperties:
+            type: number
+            format: double
+          example:
+            LUNES: 1.0
+            MARTES: 2.0
+            MIERCOLES: 2.0
+            JUEVES: 5.0
+            VIERNES: 5.0
+            SABADO: 10.0
+            DOMINGO: 15.0
+
+    ClaimBonusResponseDTO:
+      type: object
+      required:
+        - creditsAwarded
+        - newStreak
+        - currentCreditBalance
+        - claimDate
+        - message
+      properties:
+        creditsAwarded:
+          type: number
+          format: double
+          description: Amount of credits added to user balance by this claim
+          example: 5.0
+        newStreak:
+          type: integer
+          description: Updated streak count after claim (1 to 7)
+          example: 4
+        currentCreditBalance:
+          type: number
+          format: double
+          description: Total user credit balance after applying the bonus
+          example: 105.0
+        claimDate:
+          type: string
+          format: date
+          description: Calendar date (UTC) on which the bonus was claimed
+          example: "2026-10-22"
+        message:
+          type: string
+          description: Informative confirmation message
+          example: "¡Bonus diario reclamado con éxito!"
+
+    ErrorResponseDTO:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "El bonus diario de hoy ya ha sido reclamado."
