@@ -1,5 +1,8 @@
 package com.overcode.controller.exception;
 
+import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
+import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
+import com.overcode.model.bonus.exception.RachaInvalidaException;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.model.exception.InvalidOrderQuantityException;
@@ -101,6 +104,36 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidOrderQuantityException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(BonusYaReclamadoHoyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleBonusYaReclamadoHoy(BonusYaReclamadoHoyException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(FechaReclamoInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleFechaReclamoInvalida(FechaReclamoInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(RachaInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleRachaInvalida(RachaInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(LoginBonusNoConfiguradoException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponseDTO handleLoginBonusNoConfigurado(LoginBonusNoConfiguradoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ReclamoBonusNoPermitidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleReclamoBonusNoPermitido(ReclamoBonusNoPermitidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 }

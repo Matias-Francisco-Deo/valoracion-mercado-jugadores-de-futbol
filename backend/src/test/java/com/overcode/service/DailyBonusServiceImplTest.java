@@ -7,6 +7,7 @@ import com.overcode.model.bonus.DiaDeLaSemana;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -58,7 +59,10 @@ class DailyBonusServiceImplTest {
         bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
 
         ConfiguracionCotizaciones config = configuracionCotizacionesRepository.recuperarPorId(1L)
-                .orElse(new ConfiguracionCotizaciones());
+                .orElse(new ConfiguracionCotizaciones(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase));
+        if (config.getEstrategiaCotizacion() == null) {
+            config.setEstrategiaCotizacion(new EstrategiaCotizacionRendimientoTotal());
+        }
         config.setId(1L);
         config.setLoginBonus(bonusBase);
         configuracionCotizacionesRepository.guardar(config);

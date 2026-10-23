@@ -31,7 +31,8 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     @Override
     public ClaimBonusResponseDTO reclamarBonus(String username, LocalDate fechaActual) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado con nombre: " + username));
+                .or(() -> userRepository.findByEmail(username))
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado: " + username));
 
         ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
         LoginBonus loginBonus = config.getLoginBonus();
@@ -55,7 +56,8 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     @Transactional(readOnly = true)
     public DailyBonusStatusResponseDTO obtenerEstadoBonus(String username, LocalDate fechaActual) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado con nombre: " + username));
+                .or(() -> userRepository.findByEmail(username))
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado: " + username));
 
         ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
         LoginBonus loginBonus = config.getLoginBonus();

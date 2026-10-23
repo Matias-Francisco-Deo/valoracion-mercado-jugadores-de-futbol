@@ -20,8 +20,8 @@
 
 **Purpose**: Establish reusable static factory utilities and test harnesses required for scalable testing across all subsequent phases.
 
-- [ ] T001 [P] Create test factory utility `TestLoginBonusUtil` with static helpers `getLoginBonusBase()` (seeding base rewards map: LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0) and `getLoginBonusPersonalizado(Map<DiaDeLaSemana, Double>)` in `src/test/java/com/overcode/testUtils/TestLoginBonusUtil.java`
-- [ ] T002 [P] Create or update test factory utility `TestUserUtil` with static helper methods `getUsuarioDeNombre(String nombre)` and `getUsuarioConRacha(String nombre, int racha, LocalDate ultimoReclamo)` in `src/test/java/com/overcode/testUtils/TestUserUtil.java`
+- [X] T001 [P] Create test factory utility `TestLoginBonusUtil` with static helpers `getLoginBonusBase()` (seeding base rewards map: LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0) and `getLoginBonusPersonalizado(Map<DiaDeLaSemana, Double>)` in `src/test/java/com/overcode/testUtils/TestLoginBonusUtil.java`
+- [X] T002 [P] Create or update test factory utility `TestUserUtil` with static helper methods `getUsuarioDeNombre(String nombre)` and `getUsuarioConRacha(String nombre, int racha, LocalDate ultimoReclamo)` in `src/test/java/com/overcode/testUtils/TestUserUtil.java`
 
 ---
 
@@ -32,27 +32,27 @@
 **⚠️ CRITICAL**: Must be completed before any user story endpoint or service workflow is implemented.
 
 ### Custom Exception Hierarchy (Zero Java Default Exceptions)
-- [ ] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `RachaInvalidaException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
-- [ ] T004 [P] Create custom service exceptions: `LoginBonusNoConfiguradoException` and `ReclamoBonusNoPermitidoException` in `src/main/java/com/overcode/service/exception/`
+- [X] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `RachaInvalidaException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
+- [X] T004 [P] Create custom service exceptions: `LoginBonusNoConfiguradoException` and `ReclamoBonusNoPermitidoException` in `src/main/java/com/overcode/service/exception/`
 
 ### Domain Enums and Core Models
-- [ ] T006 [P] Create `DiaDeLaSemana` enum (`LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`) with `desdeRacha(int racha)` and `desdeDayOfWeek(DayOfWeek dayOfWeek)` methods enforcing custom exceptions in `src/main/java/com/overcode/model/bonus/DiaDeLaSemana.java`
-- [ ] T007 [P] Create unit test in Spanish `DiaDeLaSemanaTest` verifying valid mappings and that invalid values throw `RachaInvalidaException` and `DiaDeLaSemanaInvalidoException` in `src/test/java/com/overcode/model/bonus/DiaDeLaSemanaTest.java`
-- [ ] T008 Implement `LoginBonus` domain class with `Map<DiaDeLaSemana, Double> bonusRewards`, `getBonusParaDia(DiaDeLaSemana)`, `getBonusParaRacha(int)`, `calcularSiguienteRacha(LocalDate, LocalDate, int)`, `puedeReclamarHoy(LocalDate, LocalDate)`, and unmodifiable schedule getter in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
-- [ ] T009 Update `ConfiguracionCotizaciones` domain class to include `loginBonus` field, getter/setter, and `cambiarLoginBonusPor(LoginBonus)` in `src/main/java/com/overcode/model/cotizacion/ConfiguracionCotizaciones.java`
-- [ ] T010 Update `User` domain model to support `Double creditBalance`, add `Integer streakCount = 0`, `LocalDate lastBonusClaimDate`, and domain methods `puedeReclamarBonusDiarioHoy` and `reclamarBonusDiario` in `src/main/java/com/overcode/model/User.java`
+- [X] T006 [P] Create `DiaDeLaSemana` enum (`LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`) with `desdeRacha(int racha)` and `desdeDayOfWeek(DayOfWeek dayOfWeek)` methods enforcing custom exceptions in `src/main/java/com/overcode/model/bonus/DiaDeLaSemana.java`
+- [X] T007 [P] Create unit test in Spanish `DiaDeLaSemanaTest` verifying valid mappings and that invalid values throw `RachaInvalidaException` and `DiaDeLaSemanaInvalidoException` in `src/test/java/com/overcode/model/bonus/DiaDeLaSemanaTest.java`
+- [X] T008 Implement `LoginBonus` domain class with `Map<DiaDeLaSemana, Double> bonusRewards`, `getBonusParaDia(DiaDeLaSemana)`, `getBonusParaRacha(int)`, `calcularSiguienteRacha(LocalDate, LocalDate, int)`, `puedeReclamarHoy(LocalDate, LocalDate)`, and unmodifiable schedule getter in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T009 Update `ConfiguracionCotizaciones` domain class to include `loginBonus` field, getter/setter, and `cambiarLoginBonusPor(LoginBonus)` in `src/main/java/com/overcode/model/cotizacion/ConfiguracionCotizaciones.java`
+- [X] T010 Update `User` domain model to support `Double creditBalance`, add `Integer streakCount = 0`, `LocalDate lastBonusClaimDate`, and domain methods `puedeReclamarBonusDiarioHoy` and `reclamarBonusDiario` in `src/main/java/com/overcode/model/User.java`
 
 ### Persistence Layer
-- [ ] T011 [P] Create JPA entity `LoginBonusJPADTO` with `@ElementCollection` map of `DiaDeLaSemana` to `Double` and bidirectional `aModelo()` / `desdeModelo()` mappers in `src/main/java/com/overcode/persistence/dto/jpa/bonus/LoginBonusJPADTO.java`
-- [ ] T012 Update `ConfiguracionCotizacionesJPADTO` to add `@ManyToOne` relation to `LoginBonusJPADTO` and bidirectional domain mappings in `src/main/java/com/overcode/persistence/dto/jpa/cotizacion/ConfiguracionCotizacionesJPADTO.java`
-- [ ] T013 Update `UserJPADTO` to persist `Double creditBalance`, `streak_count`, and `last_bonus_claim_date` with domain mappers in `src/main/java/com/overcode/persistence/dto/jpa/UserJPADTO.java`
-- [ ] T014 [P] Create Spring Data JPA repository `LoginBonusDAOJPA` in `src/main/java/com/overcode/persistence/repository/dao/jpa/LoginBonusDAOJPA.java`
-- [ ] T015 [P] Create repository interface `LoginBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/LoginBonusRepository.java`
-- [ ] T016 Implement repository `LoginBonusRepositoryImpl` wrapping `LoginBonusDAOJPA` and throwing `LoginBonusPersistenciaException` upon failure in `src/main/java/com/overcode/persistence/repository/impl/LoginBonusRepositoryImpl.java`
-- [ ] T017 Create repository integration test `LoginBonusRepositoryTest` with PostgreSQL in `src/test/java/com/overcode/persistence/repository/LoginBonusRepositoryTest.java`
+- [X] T011 [P] Create JPA entity `LoginBonusJPADTO` with `@ElementCollection` map of `DiaDeLaSemana` to `Double` and bidirectional `aModelo()` / `desdeModelo()` mappers in `src/main/java/com/overcode/persistence/dto/jpa/bonus/LoginBonusJPADTO.java`
+- [X] T012 Update `ConfiguracionCotizacionesJPADTO` to add `@ManyToOne` relation to `LoginBonusJPADTO` and bidirectional domain mappings in `src/main/java/com/overcode/persistence/dto/jpa/cotizacion/ConfiguracionCotizacionesJPADTO.java`
+- [X] T013 Update `UserJPADTO` to persist `Double creditBalance`, `streak_count`, and `last_bonus_claim_date` with domain mappers in `src/main/java/com/overcode/persistence/dto/jpa/UserJPADTO.java`
+- [X] T014 [P] Create Spring Data JPA repository `LoginBonusDAOJPA` in `src/main/java/com/overcode/persistence/repository/dao/jpa/LoginBonusDAOJPA.java`
+- [X] T015 [P] Create repository interface `LoginBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/LoginBonusRepository.java`
+- [X] T016 Implement repository `LoginBonusRepositoryImpl` wrapping `LoginBonusDAOJPA` and throwing `LoginBonusPersistenciaException` upon failure in `src/main/java/com/overcode/persistence/repository/impl/LoginBonusRepositoryImpl.java`
+- [X] T017 Create repository integration test `LoginBonusRepositoryTest` with PostgreSQL in `src/test/java/com/overcode/persistence/repository/LoginBonusRepositoryTest.java`
 
 ### Database Seeding & Global Configuration
-- [ ] T018 Update `DataInitializer` to instantiate default `LoginBonus` with base credit streak map (`LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`), save it via repository if absent, and link it in `ConfiguracionCotizaciones` in `src/main/java/com/overcode/config/DataInitializer.java`
+- [X] T018 Update `DataInitializer` to instantiate default `LoginBonus` with base credit streak map (`LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`), save it via repository if absent, and link it in `ConfiguracionCotizaciones` in `src/main/java/com/overcode/config/DataInitializer.java`
 
 **Checkpoint**: Foundation ready - all models, repositories, exceptions, and baseline data initialized.
 
@@ -65,16 +65,16 @@
 **Independent Test**: Register/login a user, verify balance is 0.0. Claim on Day 1 (1.0 credit, streak 1). Advance to Day 2, claim again (2.0 credits, cumulative balance 3.0, streak 2). Verify login alone never grants credits.
 
 ### Tests for User Story 1
-- [ ] T019 [P] [US1] Unit test in Spanish `LoginBonusTest` testing consecutive streak calculations and bonus value retrieval in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
-- [ ] T020 [P] [US1] Unit test in Spanish `UserBonusTest` verifying `reclamarBonusDiario` updates `streakCount`, credits balance with `Double`, and verifies login never alters balance in `src/test/java/com/overcode/model/UserBonusTest.java`
-- [ ] T021 [P] [US1] Service integration test in Spanish `DailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
-- [ ] T022 [P] [US1] End-to-End API test in Spanish `DailyBonusE2eTest` verifying `POST /api/daily-bonus/claim` for Day 1 and Day 2 progression and ensuring `POST /auth/login` does not award bonus in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
+- [X] T019 [P] [US1] Unit test in Spanish `LoginBonusTest` testing consecutive streak calculations and bonus value retrieval in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
+- [X] T020 [P] [US1] Unit test in Spanish `UserBonusTest` verifying `reclamarBonusDiario` updates `streakCount`, credits balance with `Double`, and verifies login never alters balance in `src/test/java/com/overcode/model/UserBonusTest.java`
+- [X] T021 [P] [US1] Service integration test in Spanish `DailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T022 [P] [US1] End-to-End API test in Spanish `DailyBonusE2eTest` verifying `POST /api/daily-bonus/claim` for Day 1 and Day 2 progression and ensuring `POST /auth/login` does not award bonus in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 1
-- [ ] T023 [P] [US1] Create DTO `ClaimBonusResponseDTO` (creditsAwarded Double, newStreak Integer, currentCreditBalance Double, claimDate LocalDate, message String) in `src/main/java/com/overcode/controller/dto/bonus/ClaimBonusResponseDTO.java`
-- [ ] T024 [US1] Define service interface `DailyBonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
-- [ ] T025 [US1] Implement `DailyBonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionCotizaciones`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
-- [ ] T026 [US1] Create controller `DailyBonusController` with `POST /api/daily-bonus/claim` secured with `@AuthenticationPrincipal UserAuth` in `src/main/java/com/overcode/controller/DailyBonusController.java`
+- [X] T023 [P] [US1] Create DTO `ClaimBonusResponseDTO` (creditsAwarded Double, newStreak Integer, currentCreditBalance Double, claimDate LocalDate, message String) in `src/main/java/com/overcode/controller/dto/bonus/ClaimBonusResponseDTO.java`
+- [X] T024 [US1] Define service interface `DailyBonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
+- [X] T025 [US1] Implement `DailyBonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionCotizaciones`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T026 [US1] Create controller `DailyBonusController` with `POST /api/daily-bonus/claim` secured with `@AuthenticationPrincipal UserAuth` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: User Story 1 (MVP) is fully functional, independently tested, and proven to never grant bonuses on login.
 
@@ -87,12 +87,12 @@
 **Independent Test**: Claim on Day T. Advance clock to Day T + 2 (or 30 days later). Call `POST /api/daily-bonus/claim`. Verify streak becomes 1 and 1.0 credit is awarded.
 
 ### Tests for User Story 2
-- [ ] T027 [P] [US2] Unit test in Spanish `alPasarMasDeUnDiaSinReclamarSeReiniciaLaRachaADia1()` and long inactivity edge case in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
-- [ ] T028 [P] [US2] Service integration test in Spanish testing streak reset after missing days in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
-- [ ] T029 [P] [US2] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying streak reset to 1 after a missed calendar day in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
+- [X] T027 [P] [US2] Unit test in Spanish `alPasarMasDeUnDiaSinReclamarSeReiniciaLaRachaADia1()` and long inactivity edge case in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
+- [X] T028 [P] [US2] Service integration test in Spanish testing streak reset after missing days in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T029 [P] [US2] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying streak reset to 1 after a missed calendar day in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 2
-- [ ] T030 [US2] Ensure `calcularSiguienteRacha` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T030 [US2] Ensure `calcularSiguienteRacha` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
 
 **Checkpoint**: User Story 2 fully functional and verified with edge cases.
 
@@ -105,12 +105,12 @@
 **Independent Test**: Simulate 7 consecutive daily claims reaching Day 7 (15.0 credits). On Day 8, execute `POST /api/daily-bonus/claim`. Verify streak becomes 1 and 1.0 credit is awarded.
 
 ### Tests for User Story 3
-- [ ] T031 [P] [US3] Unit test in Spanish `alReclamarEnElDia8LaRachaSeReiniciaADia1CicloSemanal()` in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
-- [ ] T032 [P] [US3] Service integration test in Spanish verifying 7-day progression followed by Day 8 cycle rollover in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
-- [ ] T033 [P] [US3] End-to-End API test in Spanish in `DailyBonusE2eTest` testing Day 7 to Day 8 transition in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
+- [X] T031 [P] [US3] Unit test in Spanish `alReclamarEnElDia8LaRachaSeReiniciaADia1CicloSemanal()` in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
+- [X] T032 [P] [US3] Service integration test in Spanish verifying 7-day progression followed by Day 8 cycle rollover in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T033 [P] [US3] End-to-End API test in Spanish in `DailyBonusE2eTest` testing Day 7 to Day 8 transition in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 3
-- [ ] T034 [US3] Validate and enforce `rachaActual >= 7` transition to 1 in `LoginBonus.calcularSiguienteRacha()` in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T034 [US3] Validate and enforce `rachaActual >= 7` transition to 1 in `LoginBonus.calcularSiguienteRacha()` in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
 
 **Checkpoint**: Weekly 7-day loop complete and validated.
 
@@ -123,13 +123,13 @@
 **Independent Test**: Call `POST /api/daily-bonus/claim` twice on the same UTC date. First call returns 200 OK; second call returns 400 Bad Request with `"El bonus diario de hoy ya ha sido reclamado."`.
 
 ### Tests for User Story 4
-- [ ] T035 [P] [US4] Unit test in Spanish `alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException()` in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
-- [ ] T036 [P] [US4] Service integration test in Spanish verifying `BonusYaReclamadoHoyException` is thrown on duplicate same-day claim in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
-- [ ] T037 [P] [US4] End-to-End API test in Spanish verifying HTTP 400 Bad Request and error response payload on same-day duplicate claim in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
+- [X] T035 [P] [US4] Unit test in Spanish `alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException()` in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
+- [X] T036 [P] [US4] Service integration test in Spanish verifying `BonusYaReclamadoHoyException` is thrown on duplicate same-day claim in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T037 [P] [US4] End-to-End API test in Spanish verifying HTTP 400 Bad Request and error response payload on same-day duplicate claim in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 4
-- [ ] T038 [US4] Enforce same-day check in `LoginBonus.calcularSiguienteRacha()` throwing `BonusYaReclamadoHoyException` in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
-- [ ] T039 [US4] Update `GlobalExceptionHandler` to catch `BonusYaReclamadoHoyException` and return HTTP 400 Bad Request with `ErrorResponseDTO` in `src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java`
+- [X] T038 [US4] Enforce same-day check in `LoginBonus.calcularSiguienteRacha()` throwing `BonusYaReclamadoHoyException` in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T039 [US4] Update `GlobalExceptionHandler` to catch `BonusYaReclamadoHoyException` and return HTTP 400 Bad Request with `ErrorResponseDTO` in `src/main/java/com/overcode/controller/exception/GlobalExceptionHandler.java`
 
 **Checkpoint**: Idempotency and duplicate claim protection fully enforced.
 
@@ -142,13 +142,13 @@
 **Independent Test**: Query `GET /api/daily-bonus` before claiming (shows `alreadyClaimedToday: false`, `todayBonus: 1.0`, full map). Claim bonus, then query again (shows `alreadyClaimedToday: true`, `currentStreak: 1`, `todayBonus: 1.0`).
 
 ### Tests for User Story 5
-- [ ] T040 [P] [US5] Service integration test in Spanish testing `obtenerEstadoBonus()` before and after claiming in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
-- [ ] T041 [P] [US5] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying `GET /api/daily-bonus` response payload and status before/after claim in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
+- [X] T040 [P] [US5] Service integration test in Spanish testing `obtenerEstadoBonus()` before and after claiming in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T041 [P] [US5] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying `GET /api/daily-bonus` response payload and status before/after claim in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 5
-- [ ] T042 [P] [US5] Create DTO `DailyBonusStatusResponseDTO` (`currentStreak Integer`, `todayBonus Double`, `alreadyClaimedToday Boolean`, `weeklyBonuses Map<DiaDeLaSemana, Double>`) in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
-- [ ] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `DailyBonusService` and `DailyBonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
-- [ ] T044 [US5] Add endpoint `GET /api/daily-bonus` in `DailyBonusController` in `src/main/java/com/overcode/controller/DailyBonusController.java`
+- [X] T042 [P] [US5] Create DTO `DailyBonusStatusResponseDTO` (`currentStreak Integer`, `todayBonus Double`, `alreadyClaimedToday Boolean`, `weeklyBonuses Map<DiaDeLaSemana, Double>`) in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
+- [X] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `DailyBonusService` and `DailyBonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T044 [US5] Add endpoint `GET /api/daily-bonus` in `DailyBonusController` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: Streak query endpoint fully functional and integrated with status response.
 
@@ -158,10 +158,10 @@
 
 **Purpose**: Validate compliance with architecture, ensure clean test run, and verify documentation integrity.
 
-- [ ] T045 [P] Verify all unit, service, repository, and E2E tests have Latin American Spanish test method names, proper assertions, and clean logging
-- [ ] T046 [P] Audit codebase to confirm ZERO occurrences of Java default exceptions (`IllegalArgumentException`, `IllegalStateException`) in custom bonus code
-- [ ] T047 Execute full build and test verification (`./mvnw clean test`) ensuring 100% pass rate
-- [ ] T048 Update OpenAPI documentation / Swagger config if needed in `src/main/java/com/overcode/config/OpenApiConfig.java`
+- [X] T045 [P] Verify all unit, service, repository, and E2E tests have Latin American Spanish test method names, proper assertions, and clean logging
+- [X] T046 [P] Audit codebase to confirm ZERO occurrences of Java default exceptions (`IllegalArgumentException`, `IllegalStateException`) in custom bonus code
+- [X] T047 Execute full build and test verification (`./mvnw clean test`) ensuring 100% pass rate
+- [X] T048 Update OpenAPI documentation / Swagger config if needed in `src/main/java/com/overcode/config/OpenApiConfig.java`
 
 ---
 
