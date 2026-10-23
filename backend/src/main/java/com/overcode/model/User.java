@@ -10,10 +10,8 @@ import com.overcode.service.exception.InsufficientLiquidityException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -197,18 +195,10 @@ public class User {
 //    }
 
     public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
-
-        BonusClaim bonus = loginBonus.getBonusParaUser(this);
-        addCredits(bonus.givenBonus());
-
-        return bonus;
+        return loginBonus.getBonusParaUser(this);
     }
 
-    private static @NonNull LocalDate getFechaActual() {
-        return LocalDate.now(ZoneOffset.UTC);
-    }
-
-    public Boolean yaReclamoBonus(LocalDate loginBonus) {
-        return this.lastBonusClaimDate.equals(loginBonus);
+    public Boolean yaReclamoBonus(LocalDate hoy) {
+        return this.lastBonusClaimDate == null || this.lastBonusClaimDate.equals(hoy);
     }
 }

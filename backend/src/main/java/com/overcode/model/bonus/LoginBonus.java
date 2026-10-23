@@ -66,6 +66,11 @@ public class LoginBonus {
     public BonusClaim getBonusParaUser(User user) {
         Integer racha = calcularRacha(user);
         Double bonus = getBonusParaDia(DiaDeLaSemana.desdeNumeroDia(racha));
+
+        user.addCredits(bonus);
+        user.setStreakCount(racha);
+        user.setLastBonusClaimDate(getFechaActual());
+
         return new BonusClaim(bonus, racha);
     }
 
@@ -116,7 +121,8 @@ public class LoginBonus {
 //        return ultimoReclamo == null || fechaActual.isAfter(ultimoReclamo);
 //    }
 
-    private static @NonNull LocalDate getFechaActual() {
+    @NonNull
+    public LocalDate getFechaActual() {
         return LocalDate.now(ZoneOffset.UTC);
     }
 

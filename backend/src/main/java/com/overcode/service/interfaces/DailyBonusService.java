@@ -1,8 +1,9 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
+import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.EstadoBonus;
 
 public interface DailyBonusService {
-    ClaimBonusResponseDTO reclamarBonus(String username);
+    BonusClaim reclamarBonus(String username);
     EstadoBonus obtenerEstadoBonus(String username);
 }

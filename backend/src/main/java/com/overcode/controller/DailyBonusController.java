@@ -2,6 +2,8 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
+import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.service.interfaces.DailyBonusService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,8 +27,8 @@ public class DailyBonusController {
     @GetMapping
     public ResponseEntity<DailyBonusStatusResponseDTO> obtenerEstadoBonus(
             Principal principal) {
-        DailyBonusStatusResponseDTO status = dailyBonusService.obtenerEstadoBonus(principal.getName());
-        return ResponseEntity.ok(status);
+        EstadoBonus status = dailyBonusService.obtenerEstadoBonus(principal.getName());
+        return ResponseEntity.ok(DailyBonusStatusResponseDTO.desdeModelo(status));
     }
 
     @PostMapping("/claim")
@@ -34,7 +36,7 @@ public class DailyBonusController {
             Principal principal,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaActual
     ) {
-        ClaimBonusResponseDTO response = dailyBonusService.reclamarBonus(principal.getName());
-        return ResponseEntity.ok(response);
+        BonusClaim claim = dailyBonusService.reclamarBonus(principal.getName());
+        return ResponseEntity.ok(ClaimBonusResponseDTO.desdeModelo(claim));
     }
 }

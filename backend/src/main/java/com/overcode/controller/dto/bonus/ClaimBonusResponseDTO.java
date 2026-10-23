@@ -1,11 +1,10 @@
 package com.overcode.controller.dto.bonus;
 
+import com.overcode.model.bonus.BonusClaim;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,7 +13,13 @@ import java.time.LocalDate;
 public class ClaimBonusResponseDTO {
     private Double creditsAwarded;
     private Integer newStreak;
-    private Double currentCreditBalance;
-    private LocalDate claimDate;
     private String message;
+
+    public static ClaimBonusResponseDTO desdeModelo(BonusClaim claim) {
+        return new ClaimBonusResponseDTO(
+                claim.givenBonus(),
+                claim.currentStreak(),
+                "¡Obtuviste la recompensa diaria!" // TODO mover?
+        );
+    }
 }

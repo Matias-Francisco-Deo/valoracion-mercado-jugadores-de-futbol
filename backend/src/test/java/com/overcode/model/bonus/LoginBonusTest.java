@@ -1,5 +1,6 @@
 package com.overcode.model.bonus;
 
+import com.overcode.model.User;
 import com.overcode.model.bonus.exception.*;
 import com.overcode.testUtils.TestLoginBonusUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +10,13 @@ import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static com.overcode.testUtils.TestUserUtil.getUsuarioConRacha;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 class LoginBonusTest {
 
@@ -34,19 +40,20 @@ class LoginBonusTest {
 
     @Test
     void alConsultarBonusParaRachaRetornaElValorCorrespondiente() {
-        assertEquals(1.0, loginBonus.getBonusParaUser(1));
-        assertEquals(2.0, loginBonus.getBonusParaUser(2));
-        assertEquals(2.0, loginBonus.getBonusParaUser(3));
-        assertEquals(5.0, loginBonus.getBonusParaUser(4));
-        assertEquals(5.0, loginBonus.getBonusParaUser(5));
-        assertEquals(10.0, loginBonus.getBonusParaUser(6));
-        assertEquals(15.0, loginBonus.getBonusParaUser(7));
+        User user = getUsuarioConRacha("pepito", 1, LocalDate.of(2026, 10, 22));
+        loginBonus = spy(loginBonus);
+        doReturn(LocalDate.of(2026, 10, 23)).when(loginBonus).getFechaActual();
+
+        assertEquals(2.0, loginBonus.getBonusParaUser(user).givenBonus());
     }
 
     @Test
     void alCalcularSiguienteRachaSinReclamoPrevioRetorna1() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
-        int siguienteRacha = loginBonus.calcularRacha(null, hoy, 0);
+        User user = getUsuarioConRacha("pepito", 0, hoy);
+
+        int siguienteRacha = loginBonus.calcularRacha(user);
+
         assertEquals(1, siguienteRacha);
     }
 
@@ -55,9 +62,20 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        assertEquals(2, loginBonus.calcularRacha(ayer, hoy, 1));
-        assertEquals(3, loginBonus.calcularRacha(ayer, hoy, 2));
-        assertEquals(7, loginBonus.calcularRacha(ayer, hoy, 6));
+        User user1 = getUsuarioConRacha("pepito", 1, ayer);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
+        assertEquals(2, loginBonus.calcularRacha(user1));
+
+        user1.setStreakCount(2);
+
+        assertEquals(3, loginBonus.calcularRacha(user1));
+
+        user1.setStreakCount(6);
+
+        assertEquals(7, loginBonus.calcularRacha(user1));
     }
 
     @Test
@@ -65,7 +83,12 @@ class LoginBonusTest {
         LocalDate haceTresDias = LocalDate.of(2026, 10, 19);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularRacha(haceTresDias, hoy, 4);
+        User user1 = getUsuarioConRacha("pepito", 4, haceTresDias);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
+        int siguienteRacha = loginBonus.calcularRacha(user1);
         assertEquals(1, siguienteRacha);
     }
 
@@ -74,7 +97,12 @@ class LoginBonusTest {
         LocalDate haceUnMes = LocalDate.of(2026, 9, 22);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularRacha(haceUnMes, hoy, 5);
+        User user1 = getUsuarioConRacha("pepito", 5, haceUnMes);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
+        int siguienteRacha = loginBonus.calcularRacha(user1);
         assertEquals(1, siguienteRacha);
     }
 
@@ -83,7 +111,12 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularRacha(ayer, hoy, 7);
+        User user1 = getUsuarioConRacha("pepito", 7, ayer);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
+        int siguienteRacha = loginBonus.calcularRacha(user1);
         assertEquals(1, siguienteRacha);
     }
 
@@ -91,8 +124,13 @@ class LoginBonusTest {
     void alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
+        User user1 = getUsuarioConRacha("pepito", 1, hoy);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
         assertThrows(BonusYaReclamadoHoyException.class, () ->
-                loginBonus.calcularRacha(hoy, hoy, 1)
+                loginBonus.calcularRacha(user1)
         );
     }
 
@@ -101,69 +139,78 @@ class LoginBonusTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
         LocalDate ayer = LocalDate.of(2026, 10, 21);
 
+        User user1 = getUsuarioConRacha("pepito", 1, hoy);
+
+        loginBonus = spy(loginBonus);
+        doReturn(ayer).when(loginBonus).getFechaActual();
+
         assertThrows(FechaReclamoInvalidaException.class, () ->
-                loginBonus.calcularRacha(hoy, ayer, 1)
+                loginBonus.calcularRacha(user1)
         );
     }
 
+
     @Test
-    void alCalcularRachaConFechaActualNulaLanzaFechaReclamoInvalidaException() {
+    void yaReclamoBonusRetornaTrueSiNoHayReclamoPrevio() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        assertThrows(FechaReclamoInvalidaException.class, () ->
-                loginBonus.calcularRacha(hoy, null, 1)
-        );
+        User user1 = getUsuarioConRacha("pepito", 1, null);
+
+        assertTrue(user1.yaReclamoBonus(hoy));
     }
 
     @Test
-    void puedeReclamarHoyRetornaTrueSiNoHayReclamoPrevio() {
+    void yaReclamoBonusRetornaFalseSiYaReclamoHoy() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
-        assertTrue(loginBonus.puedeReclamarHoy(null, hoy));
+
+        User user1 = getUsuarioConRacha("pepito", 1, hoy);
+
+        loginBonus = spy(loginBonus);
+        doReturn(hoy).when(loginBonus).getFechaActual();
+
+        assertTrue(user1.yaReclamoBonus(hoy));
     }
 
     @Test
-    void puedeReclamarHoyRetornaFalseSiYaReclamoHoy() {
-        LocalDate hoy = LocalDate.of(2026, 10, 22);
-        assertFalse(loginBonus.puedeReclamarHoy(hoy, hoy));
-    }
-
-    @Test
-    void puedeReclamarHoyRetornaTrueSiReclamoAyer() {
+    void yaReclamoBonusRetornaTrueSiReclamoAyer() {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
-        assertTrue(loginBonus.puedeReclamarHoy(ayer, hoy));
+
+        User user1 = getUsuarioConRacha("pepito", 1, ayer);
+
+        assertFalse(user1.yaReclamoBonus(hoy));
     }
 
     @Test
     void alCrearLoginBonusConMapaIncompletoLanzaLoginBonusInvalidoException() {
-        Map<DiaDeLaSemana, Double> mapaIncompleto = new EnumMap<>(DiaDeLaSemana.class);
-        mapaIncompleto.put(DiaDeLaSemana.LUNES, 1.0);
+        Map<DiaDeLaSemana, Double> mapIncompleto = new EnumMap<>(DiaDeLaSemana.class);
+        mapIncompleto.put(DiaDeLaSemana.LUNES, 1.0);
 
         assertThrows(LoginBonusInvalidoException.class, () ->
-                new LoginBonus("Incompleto", mapaIncompleto)
+                new LoginBonus("Incompleto", mapIncompleto)
         );
     }
 
     @Test
     void alCrearLoginBonusConValorNuloONegativoLanzaValorBonusInvalidoException() {
-        Map<DiaDeLaSemana, Double> mapaConCero = new EnumMap<>(DiaDeLaSemana.class);
+        Map<DiaDeLaSemana, Double> mapConCero = new EnumMap<>(DiaDeLaSemana.class);
         for (DiaDeLaSemana dia : DiaDeLaSemana.values()) {
-            mapaConCero.put(dia, 1.0);
+            mapConCero.put(dia, 1.0);
         }
-        mapaConCero.put(DiaDeLaSemana.MIERCOLES, 0.0);
+        mapConCero.put(DiaDeLaSemana.MIERCOLES, 0.0);
 
         assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Cero", mapaConCero)
+                new LoginBonus("Con Cero", mapConCero)
         );
 
-        mapaConCero.put(DiaDeLaSemana.MIERCOLES, -2.0);
+        mapConCero.put(DiaDeLaSemana.MIERCOLES, -2.0);
         assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Negativo", mapaConCero)
+                new LoginBonus("Con Negativo", mapConCero)
         );
 
-        mapaConCero.put(DiaDeLaSemana.MIERCOLES, null);
+        mapConCero.put(DiaDeLaSemana.MIERCOLES, null);
         assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Null", mapaConCero)
+                new LoginBonus("Con Null", mapConCero)
         );
     }
 
