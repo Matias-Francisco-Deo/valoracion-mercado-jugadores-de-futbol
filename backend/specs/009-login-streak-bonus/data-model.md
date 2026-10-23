@@ -16,7 +16,7 @@ Enumeration representing the 7 days of the streak cycle.
 | `DOMINGO` | 7 |
 
 #### Domain Methods:
-- `public static DiaDeLaSemana desdeRacha(int racha)`: Returns corresponding `DiaDeLaSemana`. If `racha < 1 || racha > 7`, throws `RachaInvalidaException`.
+- `public static DiaDeLaSemana desdeRacha(int racha)`: Returns corresponding `DiaDeLaSemana`. If `racha < 1 || racha > 7`, throws `DiaInvalidoException`.
 - `public static DiaDeLaSemana desdeDayOfWeek(DayOfWeek dayOfWeek)`: Returns corresponding `DiaDeLaSemana`. If null, throws `DiaDeLaSemanaInvalidoException`.
 
 ---
@@ -91,7 +91,7 @@ Modified with streak tracking and explicit claim domain method.
 
 ### 2.1 Model Exceptions (`com.overcode.model.bonus.exception`)
 - `BonusYaReclamadoHoyException`: Thrown when a user attempts to claim the bonus for the second time on the same UTC calendar day.
-- `RachaInvalidaException`: Thrown when a streak value is outside 1..7 or invalid.
+- `DiaInvalidoException`: Thrown when a streak value is outside 1..7 or invalid.
 - `DiaDeLaSemanaInvalidoException`: Thrown when a `DiaDeLaSemana` argument is null or cannot be resolved.
 - `ValorBonusInvalidoException`: Thrown when a reward amount in the bonus map is null or $\le 0.0$.
 - `FechaReclamoInvalidaException`: Thrown when a claim date is null or chronologically inconsistent.

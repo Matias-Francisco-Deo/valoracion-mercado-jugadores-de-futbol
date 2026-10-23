@@ -1,11 +1,14 @@
 package com.overcode.model.bonus;
 
+import com.overcode.model.User;
 import com.overcode.model.bonus.exception.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -60,14 +63,35 @@ public class LoginBonus {
         return this.bonusRewards.get(dia);
     }
 
-    public Double getBonusParaRacha(int racha) {
-        return getBonusParaDia(DiaDeLaSemana.desdeRacha(racha));
+    public BonusClaim getBonusParaUser(User user) {
+        Integer racha = calcularRacha(user);
+        Double bonus = getBonusParaDia(DiaDeLaSemana.desdeNumeroDia(racha));
+        return new BonusClaim(bonus, racha);
     }
 
-    public int calcularSiguienteRacha(LocalDate ultimoReclamo, LocalDate fechaActual, int rachaActual) {
-        if (fechaActual == null) {
-            throw new FechaReclamoInvalidaException("La fecha actual de reclamo no puede ser nula.");
+    public EstadoBonus obtenerEstadoBonus(User user) {
+        LocalDate fechaActual = getFechaActual();
+        Integer rachaActual = user.getStreakCount();
+
+        Integer siguienteRacha = calcularRachaSiguiente(user);
+        Double todayBonus = getBonusParaDia(DiaDeLaSemana.desdeNumeroDia(siguienteRacha));
+
+        return new EstadoBonus(rachaActual, todayBonus, user.yaReclamoBonus(fechaActual), this.bonusRewards);
+    }
+
+    public Integer calcularRachaSiguiente(User user) {
+        Integer rachaActual = user.getStreakCount();
+        if (rachaActual == null || rachaActual >= 7) {
+            return 1;
         }
+        return rachaActual + 1;
+    }
+
+    public Integer calcularRacha(User user) {
+        LocalDate fechaActual = getFechaActual();
+        LocalDate ultimoReclamo = user.getLastBonusClaimDate();
+        Integer rachaActual = user.getStreakCount();
+
         if (ultimoReclamo == null) {
             return 1;
         }
@@ -88,11 +112,12 @@ public class LoginBonus {
         return 1;
     }
 
-    public boolean puedeReclamarHoy(LocalDate ultimoReclamo, LocalDate fechaActual) {
-        if (fechaActual == null) {
-            throw new FechaReclamoInvalidaException("La fecha actual no puede ser nula.");
-        }
-        return ultimoReclamo == null || fechaActual.isAfter(ultimoReclamo);
+//    public boolean puedeReclamarHoy(LocalDate ultimoReclamo, LocalDate fechaActual) {
+//        return ultimoReclamo == null || fechaActual.isAfter(ultimoReclamo);
+//    }
+
+    private static @NonNull LocalDate getFechaActual() {
+        return LocalDate.now(ZoneOffset.UTC);
     }
 
     public Map<DiaDeLaSemana, Double> getBonusesDeLaSemana() {

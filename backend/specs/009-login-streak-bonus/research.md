@@ -12,7 +12,7 @@ This feature introduces a daily login streak bonus system into the backend. User
 - **Decision**: Define `DiaDeLaSemana` enum (`LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`).
 - **Domain Structure**: `LoginBonus` MUST store rewards in a `Map<DiaDeLaSemana, Double> bonusRewards`.
 - **Streak Mapping**: `DiaDeLaSemana` provides helper method `desdeRacha(int racha)` (mapping 1 to LUNES, 2 to MARTES, ..., 7 to DOMINGO) and `desdeDayOfWeek(DayOfWeek dayOfWeek)`.
-- **Validation**: Any invalid streak index or null day triggers `RachaInvalidaException` or `DiaDeLaSemanaInvalidoException` (never `IllegalArgumentException`).
+- **Validation**: Any invalid streak index or null day triggers `DiaInvalidoException` or `DiaDeLaSemanaInvalidoException` (never `IllegalArgumentException`).
 
 ### 2. Credit Values as `Double`
 - **Decision**: All credit-related values across the feature (bonus amounts, credits awarded, rewards map, and balance credits) MUST use `Double` instead of `Integer`.
@@ -23,7 +23,7 @@ This feature introduces a daily login streak bonus system into the backend. User
 - **Constraint**: The system CANNOT use Java default exceptions (such as `IllegalArgumentException`, `IllegalStateException`, `NoSuchElementException`).
 - **Model Layer Exceptions** (`com.overcode.model.bonus.exception` / `com.overcode.model.exception`):
   - `BonusYaReclamadoHoyException`: Attempting to claim bonus twice on the same UTC calendar day.
-  - `RachaInvalidaException`: Streak count outside expected bounds.
+  - `DiaInvalidoException`: Streak count outside expected bounds.
   - `DiaDeLaSemanaInvalidoException`: Null or unmapped day of week.
   - `ValorBonusInvalidoException`: Bonus reward amount is null, $\le 0.0$.
   - `FechaReclamoInvalidaException`: Claim date is null or invalid.

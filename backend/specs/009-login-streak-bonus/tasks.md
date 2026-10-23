@@ -32,12 +32,12 @@
 **⚠️ CRITICAL**: Must be completed before any user story endpoint or service workflow is implemented.
 
 ### Custom Exception Hierarchy (Zero Java Default Exceptions)
-- [X] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `RachaInvalidaException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
+- [X] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
 - [X] T004 [P] Create custom service exceptions: `LoginBonusNoConfiguradoException` and `ReclamoBonusNoPermitidoException` in `src/main/java/com/overcode/service/exception/`
 
 ### Domain Enums and Core Models
 - [X] T006 [P] Create `DiaDeLaSemana` enum (`LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`) with `desdeRacha(int racha)` and `desdeDayOfWeek(DayOfWeek dayOfWeek)` methods enforcing custom exceptions in `src/main/java/com/overcode/model/bonus/DiaDeLaSemana.java`
-- [X] T007 [P] Create unit test in Spanish `DiaDeLaSemanaTest` verifying valid mappings and that invalid values throw `RachaInvalidaException` and `DiaDeLaSemanaInvalidoException` in `src/test/java/com/overcode/model/bonus/DiaDeLaSemanaTest.java`
+- [X] T007 [P] Create unit test in Spanish `DiaDeLaSemanaTest` verifying valid mappings and that invalid values throw `DiaInvalidoException` and `DiaDeLaSemanaInvalidoException` in `src/test/java/com/overcode/model/bonus/DiaDeLaSemanaTest.java`
 - [X] T008 Implement `LoginBonus` domain class with `Map<DiaDeLaSemana, Double> bonusRewards`, `getBonusParaDia(DiaDeLaSemana)`, `getBonusParaRacha(int)`, `calcularSiguienteRacha(LocalDate, LocalDate, int)`, `puedeReclamarHoy(LocalDate, LocalDate)`, and unmodifiable schedule getter in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
 - [X] T009 Update `ConfiguracionCotizaciones` domain class to include `loginBonus` field, getter/setter, and `cambiarLoginBonusPor(LoginBonus)` in `src/main/java/com/overcode/model/cotizacion/ConfiguracionCotizaciones.java`
 - [X] T010 Update `User` domain model to support `Double creditBalance`, add `Integer streakCount = 0`, `LocalDate lastBonusClaimDate`, and domain methods `puedeReclamarBonusDiarioHoy` and `reclamarBonusDiario` in `src/main/java/com/overcode/model/User.java`
@@ -92,7 +92,7 @@
 - [X] T029 [P] [US2] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying streak reset to 1 after a missed calendar day in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 2
-- [X] T030 [US2] Ensure `calcularSiguienteRacha` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T030 [US2] Ensure `calcularRacha` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
 
 **Checkpoint**: User Story 2 fully functional and verified with edge cases.
 

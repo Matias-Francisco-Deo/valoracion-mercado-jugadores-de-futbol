@@ -1,36 +1,37 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.bonus.exception.DiaDeLaSemanaInvalidoException;
-import com.overcode.model.bonus.exception.RachaInvalidaException;
+import com.overcode.model.bonus.exception.DiaInvalidoException;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DiaDeLaSemanaTest {
 
     @Test
-    void dadaUnaRachaValidaEntre1Y7RetornaElDiaDeLaSemanaCorrespondiente() {
-        assertEquals(DiaDeLaSemana.LUNES, DiaDeLaSemana.desdeRacha(1));
-        assertEquals(DiaDeLaSemana.MARTES, DiaDeLaSemana.desdeRacha(2));
-        assertEquals(DiaDeLaSemana.MIERCOLES, DiaDeLaSemana.desdeRacha(3));
-        assertEquals(DiaDeLaSemana.JUEVES, DiaDeLaSemana.desdeRacha(4));
-        assertEquals(DiaDeLaSemana.VIERNES, DiaDeLaSemana.desdeRacha(5));
-        assertEquals(DiaDeLaSemana.SABADO, DiaDeLaSemana.desdeRacha(6));
-        assertEquals(DiaDeLaSemana.DOMINGO, DiaDeLaSemana.desdeRacha(7));
+    void dadaUnNumeroDiaValidoEntre1Y7RetornaElDiaDeLaSemanaCorrespondiente() {
+        assertEquals(DiaDeLaSemana.LUNES, DiaDeLaSemana.desdeNumeroDia(1));
+        assertEquals(DiaDeLaSemana.MARTES, DiaDeLaSemana.desdeNumeroDia(2));
+        assertEquals(DiaDeLaSemana.MIERCOLES, DiaDeLaSemana.desdeNumeroDia(3));
+        assertEquals(DiaDeLaSemana.JUEVES, DiaDeLaSemana.desdeNumeroDia(4));
+        assertEquals(DiaDeLaSemana.VIERNES, DiaDeLaSemana.desdeNumeroDia(5));
+        assertEquals(DiaDeLaSemana.SABADO, DiaDeLaSemana.desdeNumeroDia(6));
+        assertEquals(DiaDeLaSemana.DOMINGO, DiaDeLaSemana.desdeNumeroDia(7));
     }
 
     @Test
-    void dadaUnaRachaMenorA1LanzaRachaInvalidaException() {
-        assertThrows(RachaInvalidaException.class, () -> DiaDeLaSemana.desdeRacha(0));
-        assertThrows(RachaInvalidaException.class, () -> DiaDeLaSemana.desdeRacha(-5));
+    void dadaUnNumeroDiaMenorA1LanzaDiaInvalidaException() {
+        assertThrows(DiaInvalidoException.class, () -> DiaDeLaSemana.desdeNumeroDia(0));
+        assertThrows(DiaInvalidoException.class, () -> DiaDeLaSemana.desdeNumeroDia(-5));
     }
 
     @Test
-    void dadaUnaRachaMayorA7LanzaRachaInvalidaException() {
-        assertThrows(RachaInvalidaException.class, () -> DiaDeLaSemana.desdeRacha(8));
-        assertThrows(RachaInvalidaException.class, () -> DiaDeLaSemana.desdeRacha(100));
+    void dadaUnNumeroDiaMayorA7LanzaDiaInvalidaException() {
+        assertThrows(DiaInvalidoException.class, () -> DiaDeLaSemana.desdeNumeroDia(8));
+        assertThrows(DiaInvalidoException.class, () -> DiaDeLaSemana.desdeNumeroDia(100));
     }
 
     @Test
@@ -50,13 +51,13 @@ class DiaDeLaSemanaTest {
     }
 
     @Test
-    void cadaDiaDeLaSemanaTieneElNumeroDeRachaEsperado() {
-        assertEquals(1, DiaDeLaSemana.LUNES.getNumeroRacha());
-        assertEquals(2, DiaDeLaSemana.MARTES.getNumeroRacha());
-        assertEquals(3, DiaDeLaSemana.MIERCOLES.getNumeroRacha());
-        assertEquals(4, DiaDeLaSemana.JUEVES.getNumeroRacha());
-        assertEquals(5, DiaDeLaSemana.VIERNES.getNumeroRacha());
-        assertEquals(6, DiaDeLaSemana.SABADO.getNumeroRacha());
-        assertEquals(7, DiaDeLaSemana.DOMINGO.getNumeroRacha());
+    void cadaDiaDeLaSemanaTieneElNumeroDeDiaEsperado() {
+        assertEquals(1, DiaDeLaSemana.LUNES.getNumeroDia());
+        assertEquals(2, DiaDeLaSemana.MARTES.getNumeroDia());
+        assertEquals(3, DiaDeLaSemana.MIERCOLES.getNumeroDia());
+        assertEquals(4, DiaDeLaSemana.JUEVES.getNumeroDia());
+        assertEquals(5, DiaDeLaSemana.VIERNES.getNumeroDia());
+        assertEquals(6, DiaDeLaSemana.SABADO.getNumeroDia());
+        assertEquals(7, DiaDeLaSemana.DOMINGO.getNumeroDia());
     }
 }

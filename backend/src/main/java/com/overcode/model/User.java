@@ -1,9 +1,7 @@
 package com.overcode.model;
 
+import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
-import java.time.LocalDate;
-
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
@@ -12,7 +10,10 @@ import com.overcode.service.exception.InsufficientLiquidityException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class User {
     private Double creditBalance;
     private List<Token> tokens;
     private Integer streakCount = 0;
-    private java.time.LocalDate lastBonusClaimDate;
+    private LocalDate lastBonusClaimDate;
 
     public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setId(id);
@@ -38,6 +39,7 @@ public class User {
         setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
+        setStreakCount(0);
     }
 
     public User(String username, String email, String password, Double creditBalance, List<Token> tokens) {
@@ -46,6 +48,7 @@ public class User {
         setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
+        setStreakCount(0);
     }
 
     public User(String username, String email, String password) {
@@ -54,6 +57,7 @@ public class User {
         setPassword(password);
         setCreditBalance(0d);
         setTokens(new ArrayList<>());
+        setStreakCount(0);
     }
 
     public Integer getStreakCount() {
@@ -82,7 +86,7 @@ public class User {
         this.creditBalance -= amount;
     }
 
-    public void creditCredits(Double amount) {
+    public void addCredits(Double amount) { // TODO arreglar
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
@@ -188,24 +192,23 @@ public class User {
         return transactions;
     }
 
-    public boolean puedeReclamarBonusDiarioHoy(LocalDate fechaActual, LoginBonus loginBonus) {
-        if (loginBonus == null) {
-            throw new LoginBonusInvalidoException("El login bonus no puede ser nulo.");
-        }
-        return loginBonus.puedeReclamarHoy(this.lastBonusClaimDate, fechaActual);
-    }
+//    public boolean puedeReclamarBonusDiarioHoy(LocalDate fechaActual, LoginBonus loginBonus) {
+//        return loginBonus.puedeReclamarHoy(this.lastBonusClaimDate, fechaActual);
+//    }
 
-    public Double reclamarBonusDiario(LocalDate fechaActual, LoginBonus loginBonus) {
-        if (loginBonus == null) {
-            throw new LoginBonusInvalidoException("El login bonus no puede ser nulo.");
-        }
-        int rachaActual = this.streakCount != null ? this.streakCount : 0;
-        int nuevaRacha = loginBonus.calcularSiguienteRacha(this.lastBonusClaimDate, fechaActual, rachaActual);
-        Double bonus = loginBonus.getBonusParaRacha(nuevaRacha);
-        creditCredits(bonus);
-        this.streakCount = nuevaRacha;
-        this.lastBonusClaimDate = fechaActual;
+    public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
+
+        BonusClaim bonus = loginBonus.getBonusParaUser(this);
+        addCredits(bonus.givenBonus());
+
         return bonus;
     }
 
+    private static @NonNull LocalDate getFechaActual() {
+        return LocalDate.now(ZoneOffset.UTC);
+    }
+
+    public Boolean yaReclamoBonus(LocalDate loginBonus) {
+        return this.lastBonusClaimDate.equals(loginBonus);
+    }
 }

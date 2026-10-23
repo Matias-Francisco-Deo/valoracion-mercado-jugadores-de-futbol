@@ -1,8 +1,8 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
-import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
 import com.overcode.model.User;
+import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -12,8 +12,6 @@ import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.DailyBonusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -29,7 +27,7 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public ClaimBonusResponseDTO reclamarBonus(String username, LocalDate fechaActual) {
+    public BonusClaim reclamarBonus(String username) {
         User user = userRepository.findByUsername(username)
                 .or(() -> userRepository.findByEmail(username))
                 .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado: " + username));
@@ -40,48 +38,33 @@ public class DailyBonusServiceImpl implements DailyBonusService {
             throw new LoginBonusNoConfiguradoException("No hay ningún bonus de login activo configurado.");
         }
 
-        Double creditosOtorgados = user.reclamarBonusDiario(fechaActual, loginBonus);
+        BonusClaim reclamoBonus = user.reclamarBonusDiario(loginBonus);
         userRepository.guardar(user);
 
-        return new ClaimBonusResponseDTO(
-                creditosOtorgados,
-                user.getStreakCount(),
-                user.getCreditBalance(),
-                user.getLastBonusClaimDate(),
-                "Bonus diario reclamado exitosamente."
-        );
+        return reclamoBonus;
+
+//        return new ClaimBonusResponseDTO(
+//                creditosOtorgados,
+//                user.getStreakCount(),
+//                user.getCreditBalance(),
+//                user.getLastBonusClaimDate(),
+//                "Bonus diario reclamado exitosamente."
+//        );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DailyBonusStatusResponseDTO obtenerEstadoBonus(String username, LocalDate fechaActual) {
+    public EstadoBonus obtenerEstadoBonus(String username) {
         User user = userRepository.findByUsername(username)
                 .or(() -> userRepository.findByEmail(username))
                 .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado: " + username));
 
-        ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
+        ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar(); // TODO ta feo
         LoginBonus loginBonus = config.getLoginBonus();
         if (loginBonus == null) {
             throw new LoginBonusNoConfiguradoException("No hay ningún bonus de login activo configurado.");
         }
 
-        boolean puedeReclamar = user.puedeReclamarBonusDiarioHoy(fechaActual, loginBonus);
-        boolean yaReclamado = !puedeReclamar;
-
-        int rachaActual = user.getStreakCount();
-        Double todayBonus;
-        if (yaReclamado) {
-            todayBonus = rachaActual > 0 ? loginBonus.getBonusParaRacha(rachaActual) : loginBonus.getBonusParaRacha(1);
-        } else {
-            int siguienteRacha = loginBonus.calcularSiguienteRacha(user.getLastBonusClaimDate(), fechaActual, rachaActual);
-            todayBonus = loginBonus.getBonusParaRacha(siguienteRacha);
-        }
-
-        return new DailyBonusStatusResponseDTO(
-                rachaActual,
-                todayBonus,
-                yaReclamado,
-                loginBonus.getBonusesDeLaSemana()
-        );
+        return loginBonus.obtenerEstadoBonus(user);
     }
 }

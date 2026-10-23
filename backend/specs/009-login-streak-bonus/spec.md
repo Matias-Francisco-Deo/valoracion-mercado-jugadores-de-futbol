@@ -131,7 +131,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 - **User (Updated)**:
   - *Attributes*: `streakCount` (Integer 0 to 7), `lastBonusClaimDate` (LocalDate), `creditBalance` (Double).
 - **LoginBonus**:
-  - *Attributes*: `bonusRewards` (`Map<DiaDeLaSemana, Double>`), scaling and streak calculation methods (`calcularSiguienteRacha`, `getBonusParaRacha`).
+  - *Attributes*: `bonusRewards` (`Map<DiaDeLaSemana, Double>`), scaling and streak calculation methods (`calcularRacha`, `getBonusParaUser`).
 - **DiaDeLaSemana**:
   - *Values*: `LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`.
 - **ConfiguracionCotizaciones (Updated)**:

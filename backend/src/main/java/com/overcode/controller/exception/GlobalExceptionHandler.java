@@ -1,8 +1,8 @@
 package com.overcode.controller.exception;
 
 import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
+import com.overcode.model.bonus.exception.DiaInvalidoException;
 import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
-import com.overcode.model.bonus.exception.RachaInvalidaException;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.model.exception.InvalidOrderQuantityException;
@@ -119,9 +119,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(RachaInvalidaException.class)
+    @ExceptionHandler(DiaInvalidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDTO handleRachaInvalida(RachaInvalidaException ex) {
+    public ErrorResponseDTO handleRachaInvalida(DiaInvalidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

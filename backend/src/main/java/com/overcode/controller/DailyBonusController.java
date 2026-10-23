@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 @RestController
 @RequestMapping("/api/daily-bonus")
@@ -25,11 +24,8 @@ public class DailyBonusController {
 
     @GetMapping
     public ResponseEntity<DailyBonusStatusResponseDTO> obtenerEstadoBonus(
-            Principal principal,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaActual
-    ) {
-        LocalDate fecha = (fechaActual != null) ? fechaActual : LocalDate.now(ZoneOffset.UTC);
-        DailyBonusStatusResponseDTO status = dailyBonusService.obtenerEstadoBonus(principal.getName(), fecha);
+            Principal principal) {
+        DailyBonusStatusResponseDTO status = dailyBonusService.obtenerEstadoBonus(principal.getName());
         return ResponseEntity.ok(status);
     }
 
@@ -38,8 +34,7 @@ public class DailyBonusController {
             Principal principal,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaActual
     ) {
-        LocalDate fecha = (fechaActual != null) ? fechaActual : LocalDate.now(ZoneOffset.UTC);
-        ClaimBonusResponseDTO response = dailyBonusService.reclamarBonus(principal.getName(), fecha);
+        ClaimBonusResponseDTO response = dailyBonusService.reclamarBonus(principal.getName());
         return ResponseEntity.ok(response);
     }
 }

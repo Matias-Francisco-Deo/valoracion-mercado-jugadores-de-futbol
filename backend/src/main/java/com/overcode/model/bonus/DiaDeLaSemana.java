@@ -1,10 +1,12 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.bonus.exception.DiaDeLaSemanaInvalidoException;
-import com.overcode.model.bonus.exception.RachaInvalidaException;
+import com.overcode.model.bonus.exception.DiaInvalidoException;
+import lombok.Getter;
 
 import java.time.DayOfWeek;
 
+@Getter
 public enum DiaDeLaSemana {
     LUNES(1),
     MARTES(2),
@@ -14,26 +16,22 @@ public enum DiaDeLaSemana {
     SABADO(6),
     DOMINGO(7);
 
-    private final int numeroRacha;
+    private final int numeroDia;
 
-    DiaDeLaSemana(int numeroRacha) {
-        this.numeroRacha = numeroRacha;
+    DiaDeLaSemana(int numeroDia) {
+        this.numeroDia = numeroDia;
     }
 
-    public int getNumeroRacha() {
-        return numeroRacha;
-    }
-
-    public static DiaDeLaSemana desdeRacha(int racha) {
-        if (racha < 1 || racha > 7) {
-            throw new RachaInvalidaException("La racha debe estar entre 1 y 7. Valor recibido: " + racha);
+    public static DiaDeLaSemana desdeNumeroDia(int dia) {
+        if (dia < 1 || dia > 7) {
+            throw new DiaInvalidoException("El día debe estar entre 1 y 7. Valor recibido: " + dia);
         }
-        for (DiaDeLaSemana dia : values()) {
-            if (dia.numeroRacha == racha) {
-                return dia;
+        for (DiaDeLaSemana diaVal : values()) {
+            if (diaVal.numeroDia == dia) {
+                return diaVal;
             }
         }
-        throw new RachaInvalidaException("No se encontró día para la racha: " + racha);
+        throw new DiaInvalidoException("No se encontró día para la dia: " + dia);
     }
 
     public static DiaDeLaSemana desdeDayOfWeek(DayOfWeek dayOfWeek) {

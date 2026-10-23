@@ -48,7 +48,7 @@ The Login Streak Bonus feature provides daily credit rewards mapped through a de
 |---|---|---|---|
 | **I. Layered Architecture** | Controller -> Service -> Model & Persistence. DTOs in `controller/dto`, repositories in `persistence/repository`. | Controller `DailyBonusController` communicates solely with `DailyBonusService`. Domain models remain independent of persistence annotations. JPA DTOs live in `persistence/dto/jpa/bonus`. Repositories live behind `interfaces` and `impl` packages. Custom persistence exceptions in `persistence/exception`. | PASS |
 | **II. Rich Model** | All domain logic lives in model objects. New model object explicitly approved. | `LoginBonus` and `DiaDeLaSemana` approved. Scaling and calculation methods live inside `LoginBonus` and `User`. No business rules in controllers or repositories. | PASS |
-| **III. Validation at Every Layer** | Validate at each layer; domain exceptions for invalid states; NO Java default exceptions. | Custom exceptions defined for each failure mode (`BonusYaReclamadoHoyException`, `RachaInvalidaException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, `LoginBonusInvalidoException`, `LoginBonusNoConfiguradoException`, `LoginBonusPersistenciaException`). | PASS |
+| **III. Validation at Every Layer** | Validate at each layer; domain exceptions for invalid states; NO Java default exceptions. | Custom exceptions defined for each failure mode (`BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, `LoginBonusInvalidoException`, `LoginBonusNoConfiguradoException`, `LoginBonusPersistenciaException`). | PASS |
 | **IV. Testing as Delivery Gate** | Unit tests for model; Testcontainers for services/repos; RestClient for E2E. Tests in Latin American Spanish covering edge cases. | Pure unit tests without Spring context for models/enums; Testcontainers integration tests for repository/service; RestClient E2E tests. Tests in Latin American Spanish using static helpers. | PASS |
 | **V. Definition of Done** | All tests pass, local build clean, compliant with architecture. | Deliverables satisfy all functional and technical constraints. | PASS |
 
@@ -151,7 +151,7 @@ backend/src/test/java/com/overcode/
 
 ### Phase 2: Implementation Preparation (Next Step: `/speckit-tasks`)
 - Execution tasks will be structured in `tasks.md` following dependency order:
-  1. Custom model exceptions (`BonusYaReclamadoHoyException`, `RachaInvalidaException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, `LoginBonusInvalidoException`).
+  1. Custom model exceptions (`BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, `LoginBonusInvalidoException`).
   2. `DiaDeLaSemana` enum with mapping methods & unit tests.
   3. `LoginBonus` class with `Map<DiaDeLaSemana, Double>` & unit tests (`LoginBonusTest`).
   4. `User` adaptations (Double credits, streak tracking, `UserBonusTest`, `TestUserUtil`, `TestLoginBonusUtil`).

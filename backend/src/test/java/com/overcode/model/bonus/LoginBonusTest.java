@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginBonusTest {
 
@@ -33,19 +34,19 @@ class LoginBonusTest {
 
     @Test
     void alConsultarBonusParaRachaRetornaElValorCorrespondiente() {
-        assertEquals(1.0, loginBonus.getBonusParaRacha(1));
-        assertEquals(2.0, loginBonus.getBonusParaRacha(2));
-        assertEquals(2.0, loginBonus.getBonusParaRacha(3));
-        assertEquals(5.0, loginBonus.getBonusParaRacha(4));
-        assertEquals(5.0, loginBonus.getBonusParaRacha(5));
-        assertEquals(10.0, loginBonus.getBonusParaRacha(6));
-        assertEquals(15.0, loginBonus.getBonusParaRacha(7));
+        assertEquals(1.0, loginBonus.getBonusParaUser(1));
+        assertEquals(2.0, loginBonus.getBonusParaUser(2));
+        assertEquals(2.0, loginBonus.getBonusParaUser(3));
+        assertEquals(5.0, loginBonus.getBonusParaUser(4));
+        assertEquals(5.0, loginBonus.getBonusParaUser(5));
+        assertEquals(10.0, loginBonus.getBonusParaUser(6));
+        assertEquals(15.0, loginBonus.getBonusParaUser(7));
     }
 
     @Test
     void alCalcularSiguienteRachaSinReclamoPrevioRetorna1() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
-        int siguienteRacha = loginBonus.calcularSiguienteRacha(null, hoy, 0);
+        int siguienteRacha = loginBonus.calcularRacha(null, hoy, 0);
         assertEquals(1, siguienteRacha);
     }
 
@@ -54,9 +55,9 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        assertEquals(2, loginBonus.calcularSiguienteRacha(ayer, hoy, 1));
-        assertEquals(3, loginBonus.calcularSiguienteRacha(ayer, hoy, 2));
-        assertEquals(7, loginBonus.calcularSiguienteRacha(ayer, hoy, 6));
+        assertEquals(2, loginBonus.calcularRacha(ayer, hoy, 1));
+        assertEquals(3, loginBonus.calcularRacha(ayer, hoy, 2));
+        assertEquals(7, loginBonus.calcularRacha(ayer, hoy, 6));
     }
 
     @Test
@@ -64,7 +65,7 @@ class LoginBonusTest {
         LocalDate haceTresDias = LocalDate.of(2026, 10, 19);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularSiguienteRacha(haceTresDias, hoy, 4);
+        int siguienteRacha = loginBonus.calcularRacha(haceTresDias, hoy, 4);
         assertEquals(1, siguienteRacha);
     }
 
@@ -73,7 +74,7 @@ class LoginBonusTest {
         LocalDate haceUnMes = LocalDate.of(2026, 9, 22);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularSiguienteRacha(haceUnMes, hoy, 5);
+        int siguienteRacha = loginBonus.calcularRacha(haceUnMes, hoy, 5);
         assertEquals(1, siguienteRacha);
     }
 
@@ -82,7 +83,7 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        int siguienteRacha = loginBonus.calcularSiguienteRacha(ayer, hoy, 7);
+        int siguienteRacha = loginBonus.calcularRacha(ayer, hoy, 7);
         assertEquals(1, siguienteRacha);
     }
 
@@ -91,7 +92,7 @@ class LoginBonusTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         assertThrows(BonusYaReclamadoHoyException.class, () ->
-                loginBonus.calcularSiguienteRacha(hoy, hoy, 1)
+                loginBonus.calcularRacha(hoy, hoy, 1)
         );
     }
 
@@ -101,7 +102,7 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
 
         assertThrows(FechaReclamoInvalidaException.class, () ->
-                loginBonus.calcularSiguienteRacha(hoy, ayer, 1)
+                loginBonus.calcularRacha(hoy, ayer, 1)
         );
     }
 
@@ -110,7 +111,7 @@ class LoginBonusTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         assertThrows(FechaReclamoInvalidaException.class, () ->
-                loginBonus.calcularSiguienteRacha(hoy, null, 1)
+                loginBonus.calcularRacha(hoy, null, 1)
         );
     }
 
