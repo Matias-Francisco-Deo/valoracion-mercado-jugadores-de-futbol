@@ -79,7 +79,7 @@ class EstrategiaCotizacionServiceManualTest {
             assertFalse(registros.isEmpty());
             RegistroCotizacion primerRegistro = registros.getFirst();
 
-            assertNotEquals(Double.valueOf(player.getCurrentPrice()), primerRegistro.getCotizacion());
+            assertNotEquals(player.getCurrentPrice(), primerRegistro.getCotizacion());
         });
 
     }
