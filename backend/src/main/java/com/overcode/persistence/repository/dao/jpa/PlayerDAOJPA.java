@@ -39,5 +39,5 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     @Query(
             "from player p order by p.currentPrice desc"
     )
-    List<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva();
+    Page<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable);
 }

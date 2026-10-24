@@ -61,9 +61,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
 
     @Override
-    public List<Player> recuperarRankingDeJugadoresPorEstrategiaActiva() {
-        return playerDAOJPA.recuperarRankingDeJugadoresPorEstrategiaActiva().stream()
-            .map(PlayerJPADTO::aModelo)
-            .toList();
+    public Page<Player> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable) {
+        return playerDAOJPA.recuperarRankingDeJugadoresPorEstrategiaActiva(pageable).map(PlayerJPADTO::aModelo);
     }
 }

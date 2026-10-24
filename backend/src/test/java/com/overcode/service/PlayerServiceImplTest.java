@@ -144,7 +144,8 @@ class PlayerServiceImplTest {
 
         estrategiaCotizacionService.cotizarJugadores();
 
-        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
+        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva(
+                org.springframework.data.domain.PageRequest.of(0, 10)).getContent();
         List<Player> expectedPlayers = List.of(jugador5, jugador4, jugador3, jugadorAnteultimo, jugadorUltimo);
 
 
@@ -158,7 +159,8 @@ class PlayerServiceImplTest {
     @Test
     void listarJugadoresRankingCuandoNoHayJugadoresDaVacio() {
 
-        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva();
+        List<Player> jugadores = playerService.recuperarRankingDeJugadoresPorEstrategiaActiva(
+                org.springframework.data.domain.PageRequest.of(0, 10)).getContent();
 
         assertTrue(jugadores.isEmpty());
 
