@@ -60,11 +60,11 @@ const [values, setValues] = useState<PlayerFilter>(filter);
                         : "flex-row-reverse rounded-l-md"
                 )}>
                 <Menu className="h-5 w-5" />
-                <span>Filtros</span>
+                <span className="hidden sm:block">Filtros</span>
             </Button>
 
             {open && (
-                <div className={cn("flex flex-col gap-2 absolute top-full z-50 w-72 border bg-brand-orange p-4 shadow-md",
+                <div className={cn("flex flex-col gap-2 absolute top-full z-50 w-72 border bg-brand-orange p-4 shadow-md max-[450px]:max-w-[180px]",
                         position === "left"
                             ? "left-0 rounded-b-md rounded-r-md"
                             : "right-0 rounded-b-md rounded-l-md"

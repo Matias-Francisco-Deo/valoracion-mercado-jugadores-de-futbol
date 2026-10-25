@@ -2,21 +2,18 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/common/Navbar';
 import {Footer} from "@/components/common/Footer.tsx";
-import {PageWindow} from "@/components/common/PageWindow.tsx";
-import pasto from "@/assets/pasto.jpg";
+import cancha from '@/assets/cancha.avif';
 
 export const GeneralLayout: React.FC = () => {
-  return (
+    return (
 
-      <div className="h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
-          <Navbar />
-          <main className="flex-1 flex flex-col p-6 bg-pitch-green bg-center overflow-y-scroll"
-                style={{ backgroundImage: `url(${pasto})`, backgroundSize: '60% 100%'}}>
-              <PageWindow>
-                  <Outlet/>
-              </PageWindow>
-          </main>
-          <Footer/>
-      </div>
-  );
+        <div className="h-screen flex flex-col overflow-x-hidden w-full bg-gray-50">
+            <Navbar />
+            <main className="flex-1 flex flex-col p-3 sm:p-6 bg-pitch-green bg-center overflow-y-scroll"
+                style={{ backgroundImage: `url(${cancha})`, backgroundSize: '60% 100%'}}>
+                <Outlet/>
+            </main>
+            <Footer/>
+        </div>
+    );
 };
