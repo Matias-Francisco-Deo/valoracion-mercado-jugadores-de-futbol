@@ -1,6 +1,5 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.bonus.DiaDeLaSemana;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.persistence.exception.LoginBonusPersistenciaException;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
@@ -43,14 +42,14 @@ class LoginBonusRepositoryTest {
 
         assertNotNull(guardado.getId());
         assertEquals("Bonus Base Semanal", guardado.getNombre());
-        assertEquals(1.0, guardado.getBonusParaDia(DiaDeLaSemana.LUNES));
-        assertEquals(15.0, guardado.getBonusParaDia(DiaDeLaSemana.DOMINGO));
+        assertEquals(1.0, guardado.getBonusConRacha(0));
+        assertEquals(15.0, guardado.getBonusConRacha(6));
 
         Optional<LoginBonus> recuperado = loginBonusRepository.recuperarPorId(guardado.getId());
         assertTrue(recuperado.isPresent());
         assertEquals(guardado.getId(), recuperado.get().getId());
         assertEquals("Bonus Base Semanal", recuperado.get().getNombre());
-        assertEquals(7, recuperado.get().getBonusesDeLaSemana().size());
+        assertEquals(7, recuperado.get().getBonusesDeLaSemana().getRewards().size());
     }
 
     @Test

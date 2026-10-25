@@ -1,14 +1,13 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.User;
-import com.overcode.model.bonus.exception.*;
+import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
+import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
 import com.overcode.testUtils.TestLoginBonusUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.EnumMap;
-import java.util.Map;
 
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConRacha;
 import static junit.framework.TestCase.assertFalse;
@@ -29,13 +28,13 @@ class LoginBonusTest {
 
     @Test
     void alConsultarBonusParaCadaDiaRetornaElValorConfigurado() {
-        assertEquals(1.0, loginBonus.getBonusParaDia(DiaDeLaSemana.LUNES));
-        assertEquals(2.0, loginBonus.getBonusParaDia(DiaDeLaSemana.MARTES));
-        assertEquals(2.0, loginBonus.getBonusParaDia(DiaDeLaSemana.MIERCOLES));
-        assertEquals(5.0, loginBonus.getBonusParaDia(DiaDeLaSemana.JUEVES));
-        assertEquals(5.0, loginBonus.getBonusParaDia(DiaDeLaSemana.VIERNES));
-        assertEquals(10.0, loginBonus.getBonusParaDia(DiaDeLaSemana.SABADO));
-        assertEquals(15.0, loginBonus.getBonusParaDia(DiaDeLaSemana.DOMINGO));
+        assertEquals(1.0, loginBonus.getBonusConRacha(0));
+        assertEquals(2.0, loginBonus.getBonusConRacha(1));
+        assertEquals(2.0, loginBonus.getBonusConRacha(2));
+        assertEquals(5.0, loginBonus.getBonusConRacha(3));
+        assertEquals(5.0, loginBonus.getBonusConRacha(4));
+        assertEquals(10.0, loginBonus.getBonusConRacha(5));
+        assertEquals(15.0, loginBonus.getBonusConRacha(6));
     }
 
     @Test
@@ -181,41 +180,4 @@ class LoginBonusTest {
         assertFalse(user1.yaReclamoBonus(hoy));
     }
 
-    @Test
-    void alCrearLoginBonusConMapaIncompletoLanzaLoginBonusInvalidoException() {
-        Map<DiaDeLaSemana, Double> mapIncompleto = new EnumMap<>(DiaDeLaSemana.class);
-        mapIncompleto.put(DiaDeLaSemana.LUNES, 1.0);
-
-        assertThrows(LoginBonusInvalidoException.class, () ->
-                new LoginBonus("Incompleto", mapIncompleto)
-        );
-    }
-
-    @Test
-    void alCrearLoginBonusConValorNuloONegativoLanzaValorBonusInvalidoException() {
-        Map<DiaDeLaSemana, Double> mapConCero = new EnumMap<>(DiaDeLaSemana.class);
-        for (DiaDeLaSemana dia : DiaDeLaSemana.values()) {
-            mapConCero.put(dia, 1.0);
-        }
-        mapConCero.put(DiaDeLaSemana.MIERCOLES, 0.0);
-
-        assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Cero", mapConCero)
-        );
-
-        mapConCero.put(DiaDeLaSemana.MIERCOLES, -2.0);
-        assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Negativo", mapConCero)
-        );
-
-        mapConCero.put(DiaDeLaSemana.MIERCOLES, null);
-        assertThrows(ValorBonusInvalidoException.class, () ->
-                new LoginBonus("Con Null", mapConCero)
-        );
-    }
-
-    @Test
-    void alConsultarBonusParaDiaNuloLanzaDiaDeLaSemanaInvalidoException() {
-        assertThrows(DiaDeLaSemanaInvalidoException.class, () -> loginBonus.getBonusParaDia(null));
-    }
 }

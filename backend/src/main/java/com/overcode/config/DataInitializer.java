@@ -1,7 +1,7 @@
 package com.overcode.config;
 
-import com.overcode.model.bonus.DiaDeLaSemana;
 import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.bonus.LoginBonusRewards;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
@@ -14,8 +14,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.List;
 
 @Component
 public class DataInitializer {
@@ -48,18 +47,8 @@ public class DataInitializer {
     }
 
     private void inicializarConfiguracion() {
-        LoginBonus bonusBase = loginBonusRepository.recuperarPorNombre("Bonus Base Semanal")
-                .orElseGet(() -> {
-                    Map<DiaDeLaSemana, Double> rewards = new EnumMap<>(DiaDeLaSemana.class);
-                    rewards.put(DiaDeLaSemana.LUNES, 1.0);
-                    rewards.put(DiaDeLaSemana.MARTES, 2.0);
-                    rewards.put(DiaDeLaSemana.MIERCOLES, 2.0);
-                    rewards.put(DiaDeLaSemana.JUEVES, 5.0);
-                    rewards.put(DiaDeLaSemana.VIERNES, 5.0);
-                    rewards.put(DiaDeLaSemana.SABADO, 10.0);
-                    rewards.put(DiaDeLaSemana.DOMINGO, 15.0);
-                    return loginBonusRepository.guardar(new LoginBonus("Bonus Base Semanal", rewards));
-                });
+        LoginBonusRewards rewardsBase = new LoginBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
+        LoginBonus bonusBase = new LoginBonus("Bonus login simple", rewardsBase);
 
         ConfiguracionCotizaciones configInicial = new ConfiguracionCotizaciones(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         ConfiguracionCotizaciones config = configuracionCotizacionesService.crearConfiguracionSiNoExiste(configInicial);

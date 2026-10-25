@@ -1,7 +1,9 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.User;
-import com.overcode.model.bonus.exception.*;
+import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
+import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
+import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +12,6 @@ import org.jspecify.annotations.NonNull;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -21,15 +20,15 @@ public class LoginBonus {
 
     private Long id;
     private String nombre;
-    private Map<DiaDeLaSemana, Double> bonusRewards;
+    private LoginBonusRewards bonusRewards;
 
-    public LoginBonus(Long id, String nombre, Map<DiaDeLaSemana, Double> bonusRewards) {
+    public LoginBonus(Long id, String nombre, LoginBonusRewards bonusRewards) {
         this.id = id;
         setNombre(nombre);
         setBonusRewards(bonusRewards);
     }
 
-    public LoginBonus(String nombre, Map<DiaDeLaSemana, Double> bonusRewards) {
+    public LoginBonus(String nombre, LoginBonusRewards bonusRewards) {
         this(null, nombre, bonusRewards);
     }
 
@@ -40,32 +39,13 @@ public class LoginBonus {
         this.nombre = nombre.trim();
     }
 
-    public void setBonusRewards(Map<DiaDeLaSemana, Double> bonusRewards) {
-        if (bonusRewards == null || bonusRewards.size() != DiaDeLaSemana.values().length) {
-            throw new LoginBonusInvalidoException("El mapa de bonusRewards debe contener los 7 días de la semana.");
-        }
-        for (DiaDeLaSemana dia : DiaDeLaSemana.values()) {
-            if (!bonusRewards.containsKey(dia)) {
-                throw new LoginBonusInvalidoException("Falta configurar el bonus para el día: " + dia);
-            }
-            Double valor = bonusRewards.get(dia);
-            if (valor == null || valor <= 0.0) {
-                throw new ValorBonusInvalidoException("El valor de bonus para " + dia + " debe ser mayor a 0.0.");
-            }
-        }
-        this.bonusRewards = new EnumMap<>(bonusRewards);
-    }
-
-    public Double getBonusParaDia(DiaDeLaSemana dia) {
-        if (dia == null) {
-            throw new DiaDeLaSemanaInvalidoException("El día de la semana no puede ser nulo.");
-        }
-        return this.bonusRewards.get(dia);
+    public Double getBonusConRacha(Integer racha) {
+        return this.bonusRewards.get(racha);
     }
 
     public BonusClaim getBonusParaUser(User user) {
         Integer racha = calcularRacha(user);
-        Double bonus = getBonusParaDia(DiaDeLaSemana.desdeNumeroDia(racha));
+        Double bonus = getBonusConRacha(racha);
 
         user.addCredits(bonus);
         user.setStreakCount(racha);
@@ -79,7 +59,7 @@ public class LoginBonus {
         Integer rachaActual = user.getStreakCount();
 
         Integer siguienteRacha = calcularRachaSiguiente(user);
-        Double todayBonus = getBonusParaDia(DiaDeLaSemana.desdeNumeroDia(siguienteRacha));
+        Double todayBonus = getBonusConRacha(siguienteRacha);
 
         return new EstadoBonus(rachaActual, todayBonus, user.yaReclamoBonus(fechaActual), this.bonusRewards);
     }
@@ -126,7 +106,7 @@ public class LoginBonus {
         return LocalDate.now(ZoneOffset.UTC);
     }
 
-    public Map<DiaDeLaSemana, Double> getBonusesDeLaSemana() {
-        return Collections.unmodifiableMap(this.bonusRewards);
+    public LoginBonusRewards getBonusesDeLaSemana() {
+        return this.bonusRewards;
     }
 }
