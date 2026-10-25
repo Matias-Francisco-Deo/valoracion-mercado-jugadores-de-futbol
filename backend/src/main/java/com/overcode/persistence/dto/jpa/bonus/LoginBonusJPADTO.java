@@ -20,9 +20,8 @@ public class LoginBonusJPADTO {
     @Column(nullable = false, unique = true)
     private String nombre;
 
-    @Column(nullable = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private LoginBonusRewardsJPADTO rewards;
-
 
     public LoginBonus aModelo() {
         return new LoginBonus(this.id, this.nombre, this.rewards.aModelo());

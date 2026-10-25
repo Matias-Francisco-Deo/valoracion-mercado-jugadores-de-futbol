@@ -22,7 +22,7 @@ public class ConfiguracionCotizacionesJPADTO {
     @NotNull
     private EstrategiaCotizacionJPADTO estrategiaCotizacion;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "login_bonus_id")
     private LoginBonusJPADTO loginBonus;
 

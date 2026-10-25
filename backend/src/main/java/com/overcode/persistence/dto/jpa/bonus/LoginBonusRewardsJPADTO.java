@@ -33,9 +33,6 @@ public class LoginBonusRewardsJPADTO {
     }
 
     public static LoginBonusRewardsJPADTO desdeModelo(LoginBonusRewards loginBonusRewards) {
-        if (loginBonusRewards == null) {
-            return null;
-        }
         LoginBonusRewardsJPADTO dto = new LoginBonusRewardsJPADTO();
         dto.setRewards(loginBonusRewards.getRewards());
         return dto;

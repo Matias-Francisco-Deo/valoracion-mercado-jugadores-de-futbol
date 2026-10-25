@@ -190,9 +190,6 @@ public class User {
         return transactions;
     }
 
-//    public boolean puedeReclamarBonusDiarioHoy(LocalDate fechaActual, LoginBonus loginBonus) {
-//        return loginBonus.puedeReclamarHoy(this.lastBonusClaimDate, fechaActual);
-//    }
 
     public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
         return loginBonus.getBonusParaUser(this);

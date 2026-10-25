@@ -44,8 +44,8 @@ public class LoginBonus {
     }
 
     public BonusClaim getBonusParaUser(User user) {
+        Double bonus = getBonusConRacha(user.getStreakCount());
         Integer racha = calcularRacha(user);
-        Double bonus = getBonusConRacha(racha);
 
         user.addCredits(bonus);
         user.setStreakCount(racha);

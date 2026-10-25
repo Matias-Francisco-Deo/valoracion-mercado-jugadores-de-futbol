@@ -32,7 +32,7 @@ class UserBonusTest {
     }
 
     @Test
-    void alReclamarBonusDiarioPorPrimeraVezSeOtorgaBonusLunesYLaRachaEs1() {
+    void alReclamarBonusDiarioPorPrimeraVezSeOtorgaBonus0YLaRachaEs1() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         loginBonus = spy(loginBonus);
