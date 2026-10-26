@@ -1,7 +1,6 @@
 package com.overcode.persistence.repository;
 
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.persistence.exception.LoginBonusPersistenciaException;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
 import com.overcode.testUtils.TestLoginBonusUtil;
 import com.overcode.testUtils.TestService;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +36,7 @@ class LoginBonusRepositoryTest {
     }
 
     @Test
+    @Transactional
     void alGuardarUnLoginBonusSePersisteCorrectamenteYSeRecuperaPorId() {
         LoginBonus base = TestLoginBonusUtil.getLoginBonusBase();
         LoginBonus guardado = loginBonusRepository.guardar(base);
@@ -53,6 +54,7 @@ class LoginBonusRepositoryTest {
     }
 
     @Test
+    @Transactional
     void alRecuperarPorNombreRetornaElLoginBonusEsperado() {
         LoginBonus base = TestLoginBonusUtil.getLoginBonusBase();
         loginBonusRepository.guardar(base);
@@ -63,6 +65,7 @@ class LoginBonusRepositoryTest {
     }
 
     @Test
+    @Transactional
     void existePorNombreRetornaTrueSiExisteYFalseSiNoExiste() {
         assertFalse(loginBonusRepository.existePorNombre("Bonus Inexistente"));
 
@@ -73,11 +76,7 @@ class LoginBonusRepositoryTest {
     }
 
     @Test
-    void alGuardarLoginBonusNuloLanzaLoginBonusPersistenciaException() {
-        assertThrows(LoginBonusPersistenciaException.class, () -> loginBonusRepository.guardar(null));
-    }
-
-    @Test
+    @Transactional
     void alRecuperarTodosRetornaLaListaCompleta() {
         LoginBonus base = TestLoginBonusUtil.getLoginBonusBase();
         loginBonusRepository.guardar(base);

@@ -79,19 +79,24 @@ public class TestService {
     }
 
     public void eliminarEstrategiasCotizacion() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
-        configuracionCotizacionesDAO.deleteAll();
+        eliminarConfig();
 
         entityManager.createNativeQuery("DELETE FROM estrategias_cotizacion");
         estrategiaCotizacionDAO.deleteAll();
     }
 
-    public void eliminarLoginBonuses() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones").executeUpdate();
+    private void eliminarConfig() {
+        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
         configuracionCotizacionesDAO.deleteAll();
-        entityManager.createNativeQuery("DELETE FROM login_bonus_rewards").executeUpdate();
+    }
+
+    public void eliminarLoginBonuses() {
+        eliminarConfig();
+
         entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
-        loginBonusDAO.deleteAll();
+        entityManager.createNativeQuery("DELETE FROM rewards_list").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM login_bonus_rewards_data").executeUpdate();
+
     }
 
 }
