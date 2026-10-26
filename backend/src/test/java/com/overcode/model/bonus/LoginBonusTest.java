@@ -43,7 +43,7 @@ class LoginBonusTest {
         loginBonus = spy(loginBonus);
         doReturn(LocalDate.of(2026, 10, 23)).when(loginBonus).getFechaActual();
 
-        assertEquals(2.0, loginBonus.getBonusParaUser(user).givenBonus());
+        assertEquals(2.0, loginBonus.getBonusParaUser(user));
     }
 
     @Test
@@ -51,7 +51,7 @@ class LoginBonusTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
         User user = getUsuarioConRacha("pepito", 0, hoy);
 
-        int siguienteRacha = loginBonus.verificarPuedeReclamarBonus(user);
+        int siguienteRacha = user.aumentarRacha();
 
         assertEquals(1, siguienteRacha);
     }
@@ -66,15 +66,15 @@ class LoginBonusTest {
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
 
-        assertEquals(2, loginBonus.verificarPuedeReclamarBonus(user1));
+        assertEquals(2, user1.aumentarRacha());
 
         user1.setStreakCount(2);
 
-        assertEquals(3, loginBonus.verificarPuedeReclamarBonus(user1));
+        assertEquals(3, user1.aumentarRacha());
 
         user1.setStreakCount(6);
 
-        assertEquals(7, loginBonus.verificarPuedeReclamarBonus(user1));
+        assertEquals(0, user1.aumentarRacha());
     }
 
     @Test
@@ -87,8 +87,8 @@ class LoginBonusTest {
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
 
-        int siguienteRacha = loginBonus.verificarPuedeReclamarBonus(user1);
-        assertEquals(1, siguienteRacha);
+        user1.reclamarBonusDiario(loginBonus);
+        assertEquals(1, user1.getStreakCount());
     }
 
     @Test
@@ -101,8 +101,8 @@ class LoginBonusTest {
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
 
-        int siguienteRacha = loginBonus.verificarPuedeReclamarBonus(user1);
-        assertEquals(1, siguienteRacha);
+        user1.reclamarBonusDiario(loginBonus);
+        assertEquals(1, user1.getStreakCount());
     }
 
     @Test
@@ -110,13 +110,15 @@ class LoginBonusTest {
         LocalDate ayer = LocalDate.of(2026, 10, 21);
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
-        User user1 = getUsuarioConRacha("pepito", 7, ayer);
+        User user1 = getUsuarioConRacha("pepito", 6, ayer);
 
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
+        user1 = spy(user1);
+        doReturn(hoy).when(user1).getFechaActual();
 
-        int siguienteRacha = loginBonus.verificarPuedeReclamarBonus(user1);
-        assertEquals(1, siguienteRacha);
+        user1.reclamarBonusDiario(loginBonus);
+        assertEquals(0, user1.getStreakCount());
     }
 
     @Test
@@ -129,7 +131,7 @@ class LoginBonusTest {
         doReturn(hoy).when(loginBonus).getFechaActual();
 
         assertThrows(BonusYaReclamadoHoyException.class, () ->
-                loginBonus.verificarPuedeReclamarBonus(user1)
+                user1.reclamarBonusDiario(loginBonus)
         );
     }
 
@@ -150,12 +152,12 @@ class LoginBonusTest {
 
 
     @Test
-    void yaReclamoBonusRetornaTrueSiNoHayReclamoPrevio() {
+    void yaReclamoBonusRetornaFalseSiNoHayReclamoPrevio() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         User user1 = getUsuarioConRacha("pepito", 1, null);
 
-        assertTrue(user1.yaReclamoBonus(hoy));
+        assertFalse(user1.yaReclamoBonus(hoy));
     }
 
     @Test

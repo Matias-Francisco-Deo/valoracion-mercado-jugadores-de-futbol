@@ -199,13 +199,14 @@ public class User {
 
 
     public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
+        actualizarRacha();
         Double bonus = loginBonus.getBonusParaUser(this);
         Integer racha = aumentarRacha();
         addCredits(bonus);
         return new BonusClaim(bonus, racha, getCreditBalance());
     }
 
-    private LocalDate getFechaActual() {
+    public LocalDate getFechaActual() {
         return LocalDate.now(ZoneOffset.UTC);
     }
 
@@ -213,9 +214,9 @@ public class User {
         return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
     }
 
-    public void actualizarRacha(LocalDate dia) {
+    public void actualizarRacha() {
         if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
-        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), dia);
+        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), getFechaActual());
         if (diasEntreReclamos > 1) {
             setStreakCount(0);
         }

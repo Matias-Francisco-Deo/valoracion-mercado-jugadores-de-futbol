@@ -43,7 +43,6 @@ public class LoginBonus {
     }
 
     public Double getBonusParaUser(User user) {
-        user.actualizarRacha(getFechaActual());
         Double bonus = getBonusConRacha(user.getStreakCount());
         verificarPuedeReclamarBonus(user);
 
