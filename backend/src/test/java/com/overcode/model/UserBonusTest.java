@@ -37,6 +37,8 @@ class UserBonusTest {
 
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
+        user = spy(user);
+        doReturn(hoy).when(user).getFechaActual();
 
         Double bonusOtorgado = user.reclamarBonusDiario(loginBonus).givenBonus();
 
@@ -53,12 +55,15 @@ class UserBonusTest {
 
         loginBonus = spy(loginBonus);
         doReturn(dia1).when(loginBonus).getFechaActual();
+        user = spy(user);
+        doReturn(dia1).when(user).getFechaActual();
 
         user.reclamarBonusDiario(loginBonus);
         assertEquals(1.0, user.getCreditBalance());
         assertEquals(1, user.getStreakCount());
 
         doReturn(dia2).when(loginBonus).getFechaActual();
+        doReturn(dia2).when(user).getFechaActual();
 
         Double bonusDia2 = user.reclamarBonusDiario(loginBonus).givenBonus();
         assertEquals(2.0, bonusDia2);
@@ -73,6 +78,8 @@ class UserBonusTest {
 
         loginBonus = spy(loginBonus);
         doReturn(hoy).when(loginBonus).getFechaActual();
+        user = spy(user);
+        doReturn(hoy).when(user).getFechaActual();
 
         user.reclamarBonusDiario(loginBonus);
         assertEquals(1.0, user.getCreditBalance());
