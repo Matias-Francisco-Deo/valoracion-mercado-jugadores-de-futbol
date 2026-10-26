@@ -1,7 +1,6 @@
 package com.overcode.model.cotizacion;
 
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +17,13 @@ public class ConfiguracionCotizaciones {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public ConfiguracionCotizaciones(Long idManual, EstrategiaCotizacion estrategiaCotizacion) {
-        setId(idManual);
+    public ConfiguracionCotizaciones(Long id, EstrategiaCotizacion estrategiaCotizacion) {
+        setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public ConfiguracionCotizaciones(Long idManual, EstrategiaCotizacion estrategiaCotizacion, LoginBonus loginBonus) {
-        setId(idManual);
+    public ConfiguracionCotizaciones(Long id, EstrategiaCotizacion estrategiaCotizacion, LoginBonus loginBonus) {
+        setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);
         setLoginBonus(loginBonus);
     }
@@ -33,10 +32,4 @@ public class ConfiguracionCotizaciones {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public void cambiarLoginBonusPor(LoginBonus nuevoBonus) {
-        if (nuevoBonus == null) {
-            throw new LoginBonusInvalidoException("El nuevo login bonus no puede ser nulo.");
-        }
-        this.loginBonus = nuevoBonus;
-    }
 }

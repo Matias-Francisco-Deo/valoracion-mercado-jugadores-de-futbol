@@ -45,6 +45,6 @@ public class DailyBonusServiceImpl implements DailyBonusService {
 
         LoginBonus loginBonus = loginBonusService.recuperarSeleccionado();
 
-        return loginBonus.obtenerEstadoBonus(userRecuperado);
+        return loginBonus.obtenerEstadoBonus(userRecuperado); // TODO método de user
     }
 }

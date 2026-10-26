@@ -43,7 +43,7 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Setup**: User executes `POST /api/daily-bonus/claim`.
 - **Validation**:
   - Response status: `200 OK`.
-  - `creditsAwarded`: `1.0` (LUNES value in base streak map).
+  - `givenBonus`: `1.0` (LUNES value in base streak map).
   - `newStreak`: `1`.
   - User's `creditBalance`: `1.0`.
   - `lastBonusClaimDate`: Today's UTC date.
@@ -52,7 +52,7 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Setup**: Simulate or advance clock to Day 2 (`today + 1 day`). User executes `POST /api/daily-bonus/claim`.
 - **Validation**:
   - Response status: `200 OK`.
-  - `creditsAwarded`: `2.0` (MARTES value).
+  - `givenBonus`: `2.0` (MARTES value).
   - `newStreak`: `2`.
   - User's cumulative `creditBalance`: `3.0`.
 
@@ -60,7 +60,7 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Setup**: User claimed Day 2 on Tuesday. On Thursday (`today + 2 days`, skipping Wednesday), user calls `POST /api/daily-bonus/claim`.
 - **Validation**:
   - Response status: `200 OK`.
-  - `creditsAwarded`: `1.0` (Resets to Day 1 / LUNES reward).
+  - `givenBonus`: `1.0` (Resets to Day 1 / LUNES reward).
   - `newStreak`: `1` (Streak reset).
   - User's `creditBalance` increases by `1.0`.
 
@@ -68,7 +68,7 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Setup**: User maintains a streak up to Day 7 (claiming `15.0` credits for DOMINGO). On Day 8, user calls `POST /api/daily-bonus/claim`.
 - **Validation**:
   - Response status: `200 OK`.
-  - `creditsAwarded`: `1.0` (LUNES reward).
+  - `givenBonus`: `1.0` (LUNES reward).
   - `newStreak`: `1` (Cycled back cleanly to week start).
 
 ### Scenario 6: Re-claiming on the Same Calendar Day Throws Custom Domain Exception
@@ -83,12 +83,12 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Setup**: User calls `GET /api/daily-bonus` before and after claiming.
 - **Validation Before Claim**:
   - `alreadyClaimedToday`: `false`.
-  - `todayBonus`: `1.0` (or next scheduled amount based on streak).
+  - `nextBonus`: `1.0` (or next scheduled amount based on streak).
   - `weeklyBonuses`: Map containing `LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`.
 - **Validation After Claim**:
   - `alreadyClaimedToday`: `true`.
   - `currentStreak`: `1`.
-  - `todayBonus`: `1.0`.
+  - `nextBonus`: `1.0`.
 
 ---
 

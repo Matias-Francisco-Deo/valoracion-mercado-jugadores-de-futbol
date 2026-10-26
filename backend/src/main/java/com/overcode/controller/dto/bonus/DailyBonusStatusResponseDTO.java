@@ -9,7 +9,7 @@ public record DailyBonusStatusResponseDTO(Integer currentStreak, Double todayBon
     public static DailyBonusStatusResponseDTO desdeModelo(EstadoBonus estadoBonus) {
         return new DailyBonusStatusResponseDTO(
             estadoBonus.currentStreak(),
-            estadoBonus.todayBonus(),
+            estadoBonus.nextBonus(),
             estadoBonus.alreadyClaimedToday(),
             estadoBonus.weeklyBonuses().getRewards()
         );

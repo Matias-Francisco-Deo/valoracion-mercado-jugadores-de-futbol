@@ -3,8 +3,8 @@ package com.overcode.controller.dto.bonus;
 import com.overcode.model.bonus.BonusClaim;
 
 public record ClaimBonusResponseDTO(
-    Double creditsAwarded,
-    Integer newStreak,
+    Double givenBonus,
+    Integer currentStreak,
     String message
 ) {
     public static ClaimBonusResponseDTO desdeModelo(BonusClaim claim) {

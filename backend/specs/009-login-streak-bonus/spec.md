@@ -120,8 +120,8 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 - **FR-005**: If the user's previous bonus award was on Day 7 of the streak and the user claims on the next consecutive day, the system MUST reset the streak cycle to Day 1 and award the Day 1 bonus amount (`1.0`).
 - **FR-006**: The system MUST ensure that only one bonus is credited per user per calendar day (UTC); additional claim requests on the same day MUST throw `BonusYaReclamadoHoyException` returning HTTP 400 Bad Request and MUST NOT award credits or alter streak progression.
 - **FR-007**: The system MUST add awarded bonus credits (`Double`) directly to the user's credit balance upon a successful claim.
-- **FR-008**: The system MUST provide the outcome of the daily login bonus (`creditsAwarded`, `newStreak`, `currentCreditBalance`, `claimDate`, `message`) in the response to `POST /api/daily-bonus/claim`.
-- **FR-009**: The system MUST provide an endpoint `GET /api/daily-bonus` to inspect the user's current streak status (`currentStreak`, `todayBonus`, `alreadyClaimedToday`, and `weeklyBonuses`).
+- **FR-008**: The system MUST provide the outcome of the daily login bonus (`givenBonus`, `newStreak`, `currentCreditBalance`, `claimDate`, `message`) in the response to `POST /api/daily-bonus/claim`.
+- **FR-009**: The system MUST provide an endpoint `GET /api/daily-bonus` to inspect the user's current streak status (`currentStreak`, `nextBonus`, `alreadyClaimedToday`, and `weeklyBonuses`).
 - **FR-010**: The system MUST persist the reward schedule as a `LoginBonus` entity (`Map<DiaDeLaSemana, Double>`) in the database with base default values, with the active instance linked to `ConfiguracionCotizaciones`.
 - **FR-011**: *(Deferred)* Dynamic administrator modification via endpoint is deferred to a future administrative feature.
 - **FR-012**: *(Deferred)* Dynamic administrator validation rules are deferred.
@@ -131,7 +131,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 - **User (Updated)**:
   - *Attributes*: `streakCount` (Integer 0 to 7), `lastBonusClaimDate` (LocalDate), `creditBalance` (Double).
 - **LoginBonus**:
-  - *Attributes*: `bonusRewards` (`Map<DiaDeLaSemana, Double>`), scaling and streak calculation methods (`calcularRacha`, `getBonusParaUser`).
+  - *Attributes*: `bonusRewards` (`Map<DiaDeLaSemana, Double>`), scaling and streak calculation methods (`aumentarRachaParaUsuario`, `getBonusParaUser`).
 - **DiaDeLaSemana**:
   - *Values*: `LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`.
 - **ConfiguracionCotizaciones (Updated)**:

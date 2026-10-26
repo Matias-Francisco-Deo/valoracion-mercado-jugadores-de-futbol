@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -200,6 +201,27 @@ public class User {
     }
 
     public Boolean yaReclamoBonus(LocalDate hoy) {
-        return this.lastBonusClaimDate == null || this.lastBonusClaimDate.equals(hoy);
+        return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
+    }
+
+    public void actualizarRacha(LocalDate dia) {
+        if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
+        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), dia);
+        if (diasEntreReclamos > 1) {
+            setStreakCount(0);
+        }
+    }
+
+    public Integer aumentarRacha(LocalDate dia) {
+        Integer nuevaRacha = calcularSiguienteRacha();
+        setStreakCount(nuevaRacha);
+        setLastBonusClaimDate(dia);
+        return nuevaRacha;
+    }
+
+    public Integer calcularSiguienteRacha() {
+        Integer rachaActual = getStreakCount();
+        if (rachaActual == 6) return 0;
+        return rachaActual + 1;
     }
 }
