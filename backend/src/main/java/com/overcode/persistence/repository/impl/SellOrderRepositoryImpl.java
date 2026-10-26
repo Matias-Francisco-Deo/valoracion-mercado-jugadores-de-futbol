@@ -50,6 +50,11 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
     }
 
     @Override
+    public boolean existsOpenOrderByTokenId(Long tokenId) {
+        return dao.existsByToken_IdAndStatus(tokenId, OrderStatus.OPEN);
+    }
+
+    @Override
     @Transactional(readOnly = true)//trae las ordenes abiertas de un jugador, excluyendo al comprador
     public List<SellOrder> findOpenSellOrders(Long playerId,Long buyerId) {
         return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)

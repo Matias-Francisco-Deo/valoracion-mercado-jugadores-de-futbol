@@ -138,6 +138,27 @@ class P2POrderServiceSellTest {
         verifyNoInteractions(sellOrderRepository);
     }
 
+    @Test
+    void createSellOrdersFallaSiElTokenYaTieneUnaOrdenAbierta() {
+        Player player = playerWithPrice(25d);
+        User user = userWithTokens(1);
+        user.getTokens().forEach(token -> token.setPlayer(player));
+        player.setTokens(new ArrayList<>(user.getTokens()));
+
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
+        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
+        when(sellOrderRepository.existsOpenOrderByTokenId(1L)).thenReturn(true);
+
+        SellPost post = new SellPost(USER_ID, PLAYER_ID, 1);
+        assertThrows(IllegalStateException.class,
+                () -> service.createSellOrders(post));
+
+        verify(sellOrderRepository).existsOpenOrderByTokenId(1L);
+        verify(sellOrderRepository, never()).saveAll(any());
+        verify(userRepository, never()).guardar(any());
+        verify(playerRepository, never()).guardar(any());
+    }
+
     // ------------------------------ cancelOrder ------------------------------
 
     @Test

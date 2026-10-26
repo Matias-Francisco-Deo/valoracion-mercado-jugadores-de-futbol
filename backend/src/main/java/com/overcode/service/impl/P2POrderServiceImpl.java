@@ -61,6 +61,14 @@ public class P2POrderServiceImpl implements P2POrderService {
 
         List<SellOrder> orders = seller.sellTokens(player,quantity);
 
+        for (SellOrder order : orders) {
+            Long tokenId = order.getToken().getId();
+
+            if (sellOrderRepository.existsOpenOrderByTokenId(tokenId)) {
+                throw new IllegalStateException("Ya existe una orden abierta para el token: " + tokenId);
+            }
+        }
+
         userRepository.guardar(seller);
         playerRepository.guardar(player);
 

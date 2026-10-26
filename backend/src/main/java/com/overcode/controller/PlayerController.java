@@ -51,10 +51,14 @@ public class PlayerController {
     }
 
     @GetMapping("/ranking")
-    public List<PlayerResponseDTO> listTopPlayers() {
-        return playerService.recuperarRankingDeJugadoresPorEstrategiaActiva().stream()
-                .map(PlayerResponseDTO::desdeModelo)
-                .toList();
+    public PlayerPageResponseDTO listTopPlayers(
+            Pageable pageable
+    ) {
+        Page<PlayerResponseDTO> page = playerService
+                .recuperarRankingDeJugadoresPorEstrategiaActiva(pageable)
+                .map(PlayerResponseDTO::desdeModelo);
+
+        return PlayerPageResponseDTO.desdeModelo(page);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ import { Pagination } from "@/components/common/Pagination";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import { TokenSummaryCard } from "@/components/inventory/TokenSummaryCard";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
 import type { HttpError } from "@/lib/http-error";
@@ -22,6 +23,7 @@ export default function MarketPage(){
     const [modalError,setModalError] = useState<HttpError | null>(null);
 
     const [tokenPage, setTokenPage] = useState<PageResponse<OrderSell> | null>(null);
+    const [nombre, setNombre] = useState(searchParams.get("nombre") ?? "");
 
     const [error, setError] = useState<HttpError | null>(null);
     const [loading, setLoading] = useState(true);
@@ -34,6 +36,23 @@ export default function MarketPage(){
         setSelectedToken(token);
         setActionModalOpen(true);
     }
+
+    const handleSearch = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const params = new URLSearchParams(searchParams);
+        const nombreNormalizado = nombre.trim();
+
+        if (nombreNormalizado) {
+            params.set("nombre", nombreNormalizado);
+        } else {
+            params.delete("nombre");
+        }
+
+        params.set("page", "0");
+
+        setSearchParams(params);
+    };
 
     const buyTokens = async  (playerId:number,quantity:number): Promise<void> => {
         setModalError(null);
@@ -100,7 +119,15 @@ export default function MarketPage(){
                 </div>
 
                 <div className="flex w-full flex-col gap-6 rounded-2xl bg-[#f3f1f1] p-4 shadow-sm sm:p-6">
-                    <Input className="border-none bg-[#faa42b] shadow-xl max-w-xl" placeholder="Buscar tokens..." />
+
+                    <form onSubmit={handleSearch} className="flex w-full max-w-xl gap-2">
+                        <Input className="border-none bg-[#faa42b] shadow-xl max-w-xl" placeholder="Buscar tokens..." value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}/>
+                        <Button type="submit" className="cursor-pointer">
+                            Buscar
+                        </Button>
+                    </form>
+
                     <div className="self-center grid w-full min-h-40 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {tokenPage && tokenPage.content.length > 0 ?(
                             tokenPage.content.map((token)=>(
