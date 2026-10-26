@@ -92,7 +92,7 @@
 - [X] T029 [P] [US2] End-to-End API test in Spanish in `DailyBonusE2eTest` verifying streak reset to 1 after a missed calendar day in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 2
-- [X] T030 [US2] Ensure `aumentarRachaParaUsuario` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
+- [X] T030 [US2] Ensure `verificarPuedeReclamarBonus` in `LoginBonus` handles gaps $> 1$ day returning 1 (LUNES) and awards base reward in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
 
 **Checkpoint**: User Story 2 fully functional and verified with edge cases.
 

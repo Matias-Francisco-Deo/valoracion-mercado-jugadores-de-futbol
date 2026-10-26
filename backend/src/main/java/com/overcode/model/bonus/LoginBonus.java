@@ -42,16 +42,12 @@ public class LoginBonus {
         return this.bonusRewards.get(racha);
     }
 
-    public BonusClaim getBonusParaUser(User user) {
+    public Double getBonusParaUser(User user) {
         user.actualizarRacha(getFechaActual());
         Double bonus = getBonusConRacha(user.getStreakCount());
-        Integer racha = aumentarRachaParaUsuario(user);
+        verificarPuedeReclamarBonus(user);
 
-        user.addCredits(bonus); // TODO hacer otro método en user
-        user.setStreakCount(racha);
-        user.setLastBonusClaimDate(getFechaActual());
-
-        return new BonusClaim(bonus, racha, user.getCreditBalance());
+        return bonus;
     }
 
     public EstadoBonus obtenerEstadoBonus(User user) {
@@ -64,7 +60,7 @@ public class LoginBonus {
     }
 
 
-    public Integer aumentarRachaParaUsuario(User user) {
+    public void verificarPuedeReclamarBonus(User user) {
         LocalDate fechaActual = getFechaActual();
         LocalDate ultimoReclamo = user.getLastBonusClaimDate();
 
@@ -74,8 +70,6 @@ public class LoginBonus {
         if (ultimoReclamo != null && fechaActual.isBefore(ultimoReclamo)) {
             throw new FechaReclamoInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
         }
-
-        return user.aumentarRacha(getFechaActual());
     }
 
     @NonNull
