@@ -25,4 +25,6 @@ public interface UserService {
     Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable);
 
     List<Position> recuperarPortfolioDeUser(Long userId);
+
+    User depositarCreditos(Long userId, Double amount);
 }

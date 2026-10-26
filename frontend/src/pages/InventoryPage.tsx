@@ -1,4 +1,5 @@
 import { Loading } from "@/components/common/Loading";
+import { PortfolioAnalyticsSection } from "@/components/inventory/PortfolioAnalyticsSection";
 import PortfolioPositionsSection from "@/components/inventory/PortfolioPositionsSection";
 import { TokenActionModal } from "@/components/inventory/TokenActionModal";
 import TokenInventorySection from "@/components/inventory/TokenInventorySection";
@@ -143,8 +144,9 @@ export default function InventoryPage() {
             Revisa y gestiona tus tokens
           </span>
         </div>
+        <PortfolioAnalyticsSection positions={positions} />
         <PortfolioPositionsSection positions={positions}/>
-        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-[470px] p-4 shadow-sm sm:p-6">
+        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-117.5 p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>
             <div className="flex items-baseline gap-1 ">

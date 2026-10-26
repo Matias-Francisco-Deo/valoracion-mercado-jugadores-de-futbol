@@ -1,8 +1,11 @@
-import {Link} from 'react-router-dom';
-import {useAuth} from '../../hooks/useAuth';
-import {UserMenu} from './UserMenu';
-import {LogoIcon} from '../../icon/LogoIcon';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
+import { UserMenu } from './UserMenu';
+import { LogoIcon } from '../../icon/LogoIcon';
 import { PageLink } from '../ui/PageLink';
+import { DepositCreditsModal } from './DepositCreditsModal';
 
 /**
  * Top navigation bar featuring the Overcode brand and login navigation link.
@@ -10,16 +13,15 @@ import { PageLink } from '../ui/PageLink';
  */
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  
-
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
   return (
     <header className="h-16 w-full shrink-0 bg-brand-orange shadow-md">
       <div className="h-full w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <nav className="flex items-center gap-6">
-          <Link  to="/"
+          <Link to="/"
             className="flex text-black items-center text-4xl font-bold tracking-wider hover:opacity-90 transition-opacity font-logo">
-            <LogoIcon/>
+            <LogoIcon />
             Overcode
           </Link>
 
@@ -45,16 +47,30 @@ export const Navbar: React.FC = () => {
               Iniciar sesión
             </Link>
           ) : (
-            <div className='flex'>
-              <div className='flex flex-col items-center justify-center'>
-                <span className='text-xs'>Creditos</span>
-                <span className='text-xs'>${user.creditBalance}</span>
+            <div className='flex items-center gap-1'>
+              <div className='flex items-center gap-2 rounded-lg bg-black/10 px-3 py-1 text-black mr-2'>
+                <div className='flex flex-col items-start leading-tight'>
+                  <span className='text-[10px] font-medium uppercase tracking-wider text-black/70'>Créditos</span>
+                  <span className='text-sm font-bold'>${user.creditBalance}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsDepositModalOpen(true)}
+                  className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-white hover:bg-black/80 transition-transform active:scale-95 cursor-pointer"
+                  title="Cargar créditos"
+                >
+                  <Plus size={14} />
+                </button>
               </div>
               <UserMenu user={user} onLogout={logout} />
             </div>
           )}
         </div>
       </div>
+      <DepositCreditsModal
+        isOpen={isDepositModalOpen}
+        onClose={() => setIsDepositModalOpen(false)}
+      />
     </header>
   );
 };

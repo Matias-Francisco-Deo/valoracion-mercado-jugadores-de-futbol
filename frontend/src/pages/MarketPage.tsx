@@ -10,6 +10,7 @@ import { buyListedTokens, getTokensOnSale } from "@/services/ordersService";
 import type { TokenSummary, PageResponse, OrderTokensRequest, OrderSell } from "@/types/inventory";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function MarketPage(){
     const { user, refreshUser } = useAuth()
@@ -46,6 +47,7 @@ export default function MarketPage(){
 
             setActionModalOpen(false);
             setSelectedToken(null);
+            toast.success(`¡Compra exitosa! Compraste ${quantity} token(s).`);
 
             void refreshOrders();
         })

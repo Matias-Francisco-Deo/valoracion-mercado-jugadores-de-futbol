@@ -34,10 +34,11 @@ class PortfolioControllerTest {
     void depositDevuelveOkYLosCreditosActualizados() throws Exception {
         PortfolioService portfolioService = mock(PortfolioService.class);
         UserService userService = mock(UserService.class);
+        User user = new User(735L, "ivan", "ivan@gmail.com", "pass", 0d, null);
         when(userService.recuperarPorEmail("ivan@gmail.com"))
-                .thenReturn(Optional.of(new User("ivan", "ivan@gmail.com", "pass")));
-        Portfolio portfolio = new Portfolio(UUID.randomUUID(), 735L, BigDecimal.valueOf(10000), 0L);
-        when(portfolioService.deposit(any(), any())).thenReturn(portfolio);
+                .thenReturn(Optional.of(user));
+        User updatedUser = new User(735L, "ivan", "ivan@gmail.com", "pass", 10000d, null);
+        when(userService.depositarCreditos(eq(735L), eq(10000d))).thenReturn(updatedUser);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(portfolioService, userService)).build();
 
@@ -49,7 +50,7 @@ class PortfolioControllerTest {
                 .andExpect(jsonPath("$.message").value("Credits deposited successfully"))
                 .andExpect(jsonPath("$.credits").value(10000));
 
-        verify(portfolioService, times(1)).deposit(any(), any());
+        verify(userService, times(1)).depositarCreditos(eq(735L), eq(10000d));
     }
 
     @Test
