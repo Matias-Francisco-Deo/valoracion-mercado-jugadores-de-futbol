@@ -58,6 +58,10 @@ public class User {
         setStreakCount(0);
     }
 
+    public User(Long userId) {
+        setId(userId);
+    }
+
     public Integer getStreakCount() {
         return this.streakCount != null ? this.streakCount : 0;
     }
