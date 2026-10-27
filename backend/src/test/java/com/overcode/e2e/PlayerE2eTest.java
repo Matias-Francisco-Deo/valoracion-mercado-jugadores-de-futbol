@@ -251,7 +251,7 @@ class PlayerE2eTest {
         Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5));
         Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -259,9 +259,10 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
+        PlayerPageResponseDTO page = response.getBody();
 
-        assertNotNull(players);
+        assertNotNull(page);
+        List<PlayerResponseDTO> players = page.content();
         assertEquals(2, players.size());
         assertEquals(players.get(0).id(), player1.getId());
         assertEquals(players.get(1).id(), player2.getId());
@@ -273,7 +274,7 @@ class PlayerE2eTest {
     void listarRankingJugadoresSinJugadoresDaVacio() {
         String token = obtainAuthToken();
 
-        ResponseEntity<List<PlayerResponseDTO>> response = restClient.get()
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players/ranking")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
@@ -281,9 +282,10 @@ class PlayerE2eTest {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<PlayerResponseDTO> players = response.getBody();
+        PlayerPageResponseDTO page = response.getBody();
 
-        assertNotNull(players);
+        assertNotNull(page);
+        List<PlayerResponseDTO> players = page.content();
         assertTrue(players.isEmpty());
 
     }

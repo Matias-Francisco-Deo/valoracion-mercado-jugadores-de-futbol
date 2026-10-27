@@ -37,7 +37,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     boolean existsByExternalId(Long externalId);
 
     @Query(
-            "from player p order by p.currentPrice desc"
+            "from player p order by p.currentPrice desc, p.id asc"
     )
-    List<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva();
+    Page<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable);
 }

@@ -16,6 +16,8 @@ public interface SellOrderRepository {
 
     Optional<SellOrder> findById(Long id);
 
+    boolean existsOpenOrderByTokenId(Long tokenId);
+
     List<SellOrder> findOpenSellOrders(Long playerId,Long buyerId);
 
     Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas (String nombre, Pageable pageable);

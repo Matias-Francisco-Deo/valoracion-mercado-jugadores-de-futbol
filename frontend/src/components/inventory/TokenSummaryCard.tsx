@@ -47,7 +47,7 @@ export const TokenSummaryCard = ({ token, actionType, onActionClick, className, 
 
       {actionType!=='Cancelar venta' && onActionClick &&(
         <div className="p-3">
-          <Button className="w-full py-2.5 text-sm text-white"
+          <Button className="w-full py-2.5 text-sm text-white cursor-pointer"
             onClick={()=>onActionClick(token)}
             aria-label={`${actionType}: ${token.playerName}`}>
             {actionType}

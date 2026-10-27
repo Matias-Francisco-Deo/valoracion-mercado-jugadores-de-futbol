@@ -300,7 +300,7 @@ class EstrategiaCotizacionServiceTest {
 
             // estrategia1 es siempre2 con 0 de valor base y 1 de escala = 2
 
-            assertEquals(2.0, Double.valueOf(playerRecuperado.getCurrentPrice()));
+            assertEquals(2.0, playerRecuperado.getCurrentPrice());
         });
 
     }
