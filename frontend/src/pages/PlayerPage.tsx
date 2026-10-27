@@ -9,6 +9,7 @@ import type { HttpError } from "@/lib/http-error";
 import { getPlayerById, getPlayerQuotes } from "@/services/PlayerService";
 import { PlayerQuoteChart } from "@/components/player/PlayerQuoteChart";
 import { PageLink } from "@/components/ui/PageLink";
+import { TrendingUp } from "lucide-react";
 
 export default function PlayerPage(){
     const { playerId } = useParams();
@@ -36,18 +37,28 @@ export default function PlayerPage(){
     if ((error?.status && error.status >= 500) || !player) return <ServerErrorComponent/>
 
     return(
-        <div className="w-full max-w-[77vw] flex flex-col gap-6 self-center bg-[#f3f1f1] p-6 rounded-3xl">
+        <div className="w-full sm:max-w-[77vw] flex flex-col flex-1 justify-center gap-6 self-center bg-[#f3f1f1] py-2 sm:p-6 sm:rounded-3xl">
             <div className="flex flex-col md:flex-row gap-6">
                 <MainPlayerInfo player={player} />
                 <div className="border-t md:border-gray-300 md:py-2">
-                    <div className="flex flex-col rounded-2xl border border-[#ec95233b] overflow-hidden">
-                        <p className="text-black text-sm bg-[#f09c2f3b] p-2">Explorá los tokens disponibles y elegí los tuyos.</p>
+                    <div className="rounded-2xl border border-[#ec952377] overflow-hidden">
+                        <div className="flex items-center gap-3 text-black text-sm bg-[#f09c2f3b] p-3">
+                            <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-orange-500/15">
+                                <TrendingUp className="size-5 text-orange-500" />
+                            </div>
+
+                            <p>
+                                Explorá los tokens disponibles y elegí los tuyos.
+                            </p>
+                        </div>
+
                         <div className="flex p-2 justify-center bg-[#f09c2f3b] md:bg-transparent">
                             <PageLink className="w-full text-center bg-orange-500" to={"/market"}>
                                 Ir al mercado
                             </PageLink>
                         </div>
                     </div>
+
                 </div>
             </div>
 

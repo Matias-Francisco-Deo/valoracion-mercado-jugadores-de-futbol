@@ -14,6 +14,7 @@ export interface PlayerGameData{
     shotsOnTarget: number;
     tackles: number;
     rating: number;
+    position:string;
 }
 
 export interface Team{

@@ -22,21 +22,12 @@ const currency = new Intl.NumberFormat("es-AR", {
     maximumFractionDigits: 2,
 });
 
-export function PlayerQuoteChart({
-    quotes,
-    loading = false,
-}: Props) {
+export function PlayerQuoteChart({quotes,loading = false,}: Props) {
     const [period, setPeriod] = useState<Period>("30d");
 
-    const data = useMemo(
-        () => filterQuotesByPeriod(quotes, period),
-        [quotes, period]
-    );
+    const data = useMemo(() => filterQuotesByPeriod(quotes, period),[quotes, period]);
 
-    const stats = useMemo(
-        () => calculateQuoteStats(data),
-        [data]
-    );
+    const stats = useMemo(() => calculateQuoteStats(data),[data]);
 
     if (loading) {
         return (
@@ -53,7 +44,7 @@ export function PlayerQuoteChart({
     }
 
     return (
-        <section className="min-w-0 rounded-2xl bg-white p-3 shadow-sm sm:p-6">
+        <section className="min-w-0 rounded-2xl bg-white p-3 shadow-sm sm:p-6 overflow-hidden sm:overflow-visible">
             <div className="flex min-w-0 flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-4">
                 <div className="flex min-w-0 flex-col gap-2">
                     <h2 className="flex gap-4 text-base font-semibold text-gray-900 sm:text-lg">
