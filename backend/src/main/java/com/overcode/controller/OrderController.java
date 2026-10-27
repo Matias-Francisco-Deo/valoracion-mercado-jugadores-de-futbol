@@ -43,17 +43,14 @@ public class OrderController {
     }
 
     private Long getUserId(Principal principal) {
-        if (principal == null) {
-            throw new IllegalStateException(UNAUTHORIZED_MESSAGE);
-        }
-        User user = userService.recuperarPorEmail(principal.getName())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+        long id = Long.parseLong(principal.getName());
+        User user = userService.recuperar(id);
         return user.getId();
     }
 
     /** Buys instantly against the resting SELL book, at the player's current price. All-or-nothing. */
     @PostMapping("/buy")
-    public ResponseEntity<Object> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
+    public ResponseEntity<Object> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) { // TODO mezcla controller con service
         try {
             Long userId = getUserId(principal);
             BuyOrder buyOrder = request.aModelo(userId);
@@ -77,7 +74,7 @@ public class OrderController {
 
     /** Publishes resting SELL orders (one per token) for the requested quantity. */
     @PostMapping("/sell")
-    public ResponseEntity<Object> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) {
+    public ResponseEntity<Object> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) { // TODO mezcla controller con service
         try {
             Long userId = getUserId(principal);
             SellPost command = request.aModelo(userId);
@@ -92,7 +89,7 @@ public class OrderController {
     }
 
     /** Cancels a resting SELL order and returns the token to the seller. */
-    @PostMapping("/{id}/cancel")
+    @PostMapping("/{id}/cancel") // TODO mezcla controller con service
     public ResponseEntity<Object> cancelOrder(
             Principal principal,
             @PathVariable("id") Long orderId) {

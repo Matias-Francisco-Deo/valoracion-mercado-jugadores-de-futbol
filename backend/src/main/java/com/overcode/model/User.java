@@ -1,5 +1,8 @@
 package com.overcode.model;
 
+import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.EstadoBonus;
+import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.transaction.Transaction;
@@ -9,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +30,8 @@ public class User {
     private String password;
     private Double creditBalance;
     private List<Token> tokens;
+    private Integer streakCount = 0;
+    private LocalDate lastBonusClaimDate;
 
     public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setId(id);
@@ -32,6 +40,7 @@ public class User {
         setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
+        setStreakCount(0);
     }
 
     public User(String username, String email, String password, Double creditBalance, List<Token> tokens) {
@@ -40,6 +49,7 @@ public class User {
         setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
+        setStreakCount(0);
     }
 
     public User(String username, String email, String password) {
@@ -48,6 +58,19 @@ public class User {
         setPassword(password);
         setCreditBalance(0d);
         setTokens(new ArrayList<>());
+        setStreakCount(0);
+    }
+
+    public User(Long userId) {
+        setId(userId);
+    }
+
+    public Integer getStreakCount() {
+        return this.streakCount != null ? this.streakCount : 0;
+    }
+
+    public void setStreakCount(Integer streakCount) {
+        this.streakCount = streakCount != null ? streakCount : 0;
     }
 
     public void setCreditBalance(Double creditBalance) {
@@ -68,7 +91,7 @@ public class User {
         this.creditBalance -= amount;
     }
 
-    public void creditCredits(Double amount) {
+    public void addCredits(Double amount) { // TODO arreglar
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
@@ -174,4 +197,45 @@ public class User {
         return transactions;
     }
 
+
+    public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
+        actualizarRacha();
+        Double bonus = loginBonus.getBonusParaUser(this);
+        Integer racha = aumentarRacha();
+        addCredits(bonus);
+        return new BonusClaim(bonus, racha, getCreditBalance());
+    }
+
+    public LocalDate getFechaActual() {
+        return LocalDate.now(ZoneOffset.UTC);
+    }
+
+    public Boolean yaReclamoBonus(LocalDate hoy) {
+        return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
+    }
+
+    public void actualizarRacha() {
+        if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
+        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), getFechaActual());
+        if (diasEntreReclamos > 1) {
+            setStreakCount(0);
+        }
+    }
+
+    public Integer aumentarRacha() {
+        Integer nuevaRacha = calcularSiguienteRacha();
+        setStreakCount(nuevaRacha);
+        setLastBonusClaimDate(getFechaActual());
+        return nuevaRacha;
+    }
+
+    public Integer calcularSiguienteRacha() {
+        Integer rachaActual = getStreakCount();
+        if (rachaActual == 6) return 0;
+        return rachaActual + 1;
+    }
+
+    public EstadoBonus obtenerEstadoBonus(LoginBonus loginBonus) {
+        return loginBonus.obtenerEstadoBonus(this);
+    }
 }

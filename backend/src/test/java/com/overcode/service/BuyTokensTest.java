@@ -47,7 +47,7 @@ class BuyTokensTest {
         // Buyer with enough credits sweeps the book
         User buyer = new User("buyer-" + UUID.randomUUID(),
                 UUID.randomUUID() + "@gmail.com", "pass");
-        buyer.creditCredits(1000d);
+        buyer.addCredits(1000d);
         buyer = userRepository.guardar(buyer);
 
         p2pOrderService.executeMarketBuy(new BuyOrder(buyer, player, 5));

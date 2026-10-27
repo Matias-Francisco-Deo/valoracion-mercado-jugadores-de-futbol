@@ -406,7 +406,7 @@ class OrderE2eTest {
                 .toEntity(new ParameterizedTypeReference<>() {});
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assert response.getBody() != null;
+        assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());
 
         // Al publicar todos en venta, ya no deben quedar tokens libres del usuario
