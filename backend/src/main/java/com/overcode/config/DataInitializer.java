@@ -22,7 +22,6 @@ public class DataInitializer {
     private final EstrategiaCotizacionService estrategiaCotizacionService;
     private final ConfiguracionCotizacionesService configuracionCotizacionesService;
     private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
-    private final LoginBonusRepository loginBonusRepository;
 
     public DataInitializer(
             UserService userService,
@@ -35,7 +34,6 @@ public class DataInitializer {
         this.estrategiaCotizacionService = estrategiaCotizacionService;
         this.configuracionCotizacionesService = configuracionCotizacionesService;
         this.configuracionCotizacionesRepository = configuracionCotizacionesRepository;
-        this.loginBonusRepository = loginBonusRepository;
     }
 
     @PostConstruct

@@ -296,22 +296,6 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.content").isEmpty())
                 .andExpect(jsonPath("$.totalElements").value(0));
     }
-//
-//    @Test
-//    void searchOpenOrdersSellConPrincipalCuyoUsuarioNoExisteDevuelve409() throws Exception {
-//        P2POrderService p2pOrderService = mock(P2POrderService.class);
-//        UserService userService = mock(UserService.class);
-//
-//        when(userService.recuperarPorEmail("ivan@gmail.com")).thenReturn(Optional.empty());
-//
-//        MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
-//
-//        mockMvc.perform(get("/orders/for-sell").principal(principal))
-//                .andExpect(status().isConflict())
-//                .andExpect(jsonPath("$.message").value("User not found"));
-//
-//        verifyNoInteractions(p2pOrderService);
-//    }
 
     // ------------------------------ /orders/{id}/ordersSell ------------------------------
 
