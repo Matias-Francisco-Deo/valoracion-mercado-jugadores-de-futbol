@@ -85,7 +85,7 @@ public class TestService {
         estrategiaCotizacionDAO.deleteAll();
     }
 
-    private void eliminarConfig() {
+    public void eliminarConfig() {
         entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
         configuracionCotizacionesDAO.deleteAll();
     }

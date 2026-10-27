@@ -1,6 +1,6 @@
 package com.overcode.model.bonus;
 
-import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
+import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

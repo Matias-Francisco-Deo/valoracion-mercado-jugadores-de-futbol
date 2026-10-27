@@ -1,4 +1,4 @@
-package com.overcode.service;
+package com.overcode.service.cotizaciones;
 
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;

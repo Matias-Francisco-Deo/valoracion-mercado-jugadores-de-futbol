@@ -4,7 +4,7 @@ import com.overcode.model.bonus.EstadoBonus;
 
 import java.util.List;
 
-public record DailyBonusStatusResponseDTO(Integer currentStreak, Double todayBonus, Boolean alreadyClaimedToday, List<Double> weeklyBonuses) {
+public record DailyBonusStatusResponseDTO(Integer currentStreak, Double nextBonus, Boolean alreadyClaimedToday, List<Double> weeklyBonusRewards) {
 
     public static DailyBonusStatusResponseDTO desdeModelo(EstadoBonus estadoBonus) {
         return new DailyBonusStatusResponseDTO(

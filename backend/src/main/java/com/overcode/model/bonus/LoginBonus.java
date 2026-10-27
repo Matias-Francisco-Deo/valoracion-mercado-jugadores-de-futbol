@@ -1,9 +1,9 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.User;
-import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
-import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
-import com.overcode.model.bonus.exception.LoginBonusInvalidoException;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
+import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -67,7 +67,7 @@ public class LoginBonus {
             throw new BonusYaReclamadoHoyException("El bonus diario de hoy ya ha sido reclamado.");
         }
         if (ultimoReclamo != null && fechaActual.isBefore(ultimoReclamo)) {
-            throw new FechaReclamoInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
+            throw new FechaReclamoBonusLoginInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
         }
     }
 

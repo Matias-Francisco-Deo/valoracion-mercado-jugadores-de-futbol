@@ -1,8 +1,8 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.User;
-import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
-import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.testUtils.TestLoginBonusUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -145,7 +145,7 @@ class LoginBonusTest {
         loginBonus = spy(loginBonus);
         doReturn(ayer).when(loginBonus).getFechaActual();
 
-        assertThrows(FechaReclamoInvalidaException.class, () ->
+        assertThrows(FechaReclamoBonusLoginInvalidaException.class, () ->
                 loginBonus.verificarPuedeReclamarBonus(user1)
         );
     }

@@ -90,7 +90,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 
 **Acceptance Scenarios**:
 
-1. **Given** an authenticated user who has not claimed today, **When** their streak status is queried via `GET /api/daily-bonus`, **Then** the response indicates `alreadyClaimedToday: false`, the current active streak count, today's projected bonus amount (`Double`), and the complete `weeklyBonuses` map.
+1. **Given** an authenticated user who has not claimed today, **When** their streak status is queried via `GET /api/daily-bonus`, **Then** the response indicates `alreadyClaimedToday: false`, the current active streak count, today's projected bonus amount (`Double`), and the complete `weeklyBonusRewards` map.
 2. **Given** an authenticated user who has already received today's bonus, **When** their streak status is queried via `GET /api/daily-bonus`, **Then** the response indicates `alreadyClaimedToday: true`, current streak count, and today's claimed bonus amount.
 
 ---
@@ -121,7 +121,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 - **FR-006**: The system MUST ensure that only one bonus is credited per user per calendar day (UTC); additional claim requests on the same day MUST throw `BonusYaReclamadoHoyException` returning HTTP 400 Bad Request and MUST NOT award credits or alter streak progression.
 - **FR-007**: The system MUST add awarded bonus credits (`Double`) directly to the user's credit balance upon a successful claim.
 - **FR-008**: The system MUST provide the outcome of the daily login bonus (`givenBonus`, `newStreak`, `currentCreditBalance`, `claimDate`, `message`) in the response to `POST /api/daily-bonus/claim`.
-- **FR-009**: The system MUST provide an endpoint `GET /api/daily-bonus` to inspect the user's current streak status (`currentStreak`, `nextBonus`, `alreadyClaimedToday`, and `weeklyBonuses`).
+- **FR-009**: The system MUST provide an endpoint `GET /api/daily-bonus` to inspect the user's current streak status (`currentStreak`, `nextBonus`, `alreadyClaimedToday`, and `weeklyBonusRewards`).
 - **FR-010**: The system MUST persist the reward schedule as a `LoginBonus` entity (`Map<DiaDeLaSemana, Double>`) in the database with base default values, with the active instance linked to `ConfiguracionCotizaciones`.
 - **FR-011**: *(Deferred)* Dynamic administrator modification via endpoint is deferred to a future administrative feature.
 - **FR-012**: *(Deferred)* Dynamic administrator validation rules are deferred.

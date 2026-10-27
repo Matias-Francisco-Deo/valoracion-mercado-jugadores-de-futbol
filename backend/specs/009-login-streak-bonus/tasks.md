@@ -32,7 +32,7 @@
 **⚠️ CRITICAL**: Must be completed before any user story endpoint or service workflow is implemented.
 
 ### Custom Exception Hierarchy (Zero Java Default Exceptions)
-- [X] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
+- [X] T003 [P] Create custom domain exceptions for model layer: `BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoBonusLoginInvalidaException`, and `LoginBonusInvalidoException` in `src/main/java/com/overcode/model/bonus/exception/`
 - [X] T004 [P] Create custom service exceptions: `LoginBonusNoConfiguradoException` and `ReclamoBonusNoPermitidoException` in `src/main/java/com/overcode/service/exception/`
 
 ### Domain Enums and Core Models

@@ -26,7 +26,7 @@ This feature introduces a daily login streak bonus system into the backend. User
   - `DiaInvalidoException`: Streak count outside expected bounds.
   - `DiaDeLaSemanaInvalidoException`: Null or unmapped day of week.
   - `ValorBonusInvalidoException`: Bonus reward amount is null, $\le 0.0$.
-  - `FechaReclamoInvalidaException`: Claim date is null or invalid.
+  - `FechaReclamoBonusLoginInvalidaException`: Claim date is null or invalid.
   - `LoginBonusInvalidoException`: LoginBonus map does not contain all 7 days or is improperly constructed.
 - **Service Layer Exceptions** (`com.overcode.service.exception`):
   - `LoginBonusNoConfiguradoException`: No active `LoginBonus` configured in `ConfiguracionCotizaciones`.

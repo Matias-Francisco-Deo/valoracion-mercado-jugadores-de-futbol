@@ -1,11 +1,11 @@
 package com.overcode.controller.exception;
 
-import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
-import com.overcode.model.bonus.exception.DiaInvalidoException;
-import com.overcode.model.bonus.exception.FechaReclamoInvalidaException;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.exception.InsufficientFundsException;
 import com.overcode.model.exception.InvalidOrderQuantityException;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
+import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import com.overcode.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -113,21 +113,15 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(FechaReclamoInvalidaException.class)
+    @ExceptionHandler(FechaReclamoBonusLoginInvalidaException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDTO handleFechaReclamoInvalida(FechaReclamoInvalidaException ex) {
+    public ErrorResponseDTO handleFechaReclamoInvalida(FechaReclamoBonusLoginInvalidaException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(DiaInvalidoException.class)
+    @ExceptionHandler(LoginBonusInvalidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDTO handleRachaInvalida(DiaInvalidoException ex) {
-        return new ErrorResponseDTO(ex.getMessage());
-    }
-
-    @ExceptionHandler(LoginBonusNoConfiguradoException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponseDTO handleLoginBonusNoConfigurado(LoginBonusNoConfiguradoException ex) {
+    public ErrorResponseDTO loginBonusInvalido(LoginBonusInvalidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

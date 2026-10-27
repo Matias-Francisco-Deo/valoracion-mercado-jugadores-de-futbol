@@ -84,7 +84,7 @@ Run End-to-End API tests (RestClient + SpringBootTest):
 - **Validation Before Claim**:
   - `alreadyClaimedToday`: `false`.
   - `nextBonus`: `1.0` (or next scheduled amount based on streak).
-  - `weeklyBonuses`: Map containing `LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`.
+  - `weeklyBonusRewards`: Map containing `LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`.
 - **Validation After Claim**:
   - `alreadyClaimedToday`: `true`.
   - `currentStreak`: `1`.

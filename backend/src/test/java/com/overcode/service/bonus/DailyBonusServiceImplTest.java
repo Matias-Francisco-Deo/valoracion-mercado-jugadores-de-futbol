@@ -1,15 +1,15 @@
-package com.overcode.service;
+package com.overcode.service.bonus;
 
 import com.overcode.model.User;
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.model.bonus.exception.BonusYaReclamadoHoyException;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
-import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestLoginBonusUtil;
@@ -43,26 +43,24 @@ class DailyBonusServiceImplTest {
     private LoginBonusRepository loginBonusRepository;
 
     @Autowired
-    private ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
-
-    @Autowired
     private TestService testService;
 
     private User USER_1;
-    private LoginBonus bonusBase;
+    @Autowired
+    private ConfiguracionCotizacionesService configuracionCotizacionesService;
 
     @BeforeEach
     void setUp() {
         testService.eliminarUsuarios();
         testService.eliminarLoginBonuses();
+        testService.eliminarConfig();
 
-        bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
+        LoginBonus bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
 
-        ConfiguracionCotizaciones config = configuracionCotizacionesRepository.recuperarPorId(1L)
-                .orElse(new ConfiguracionCotizaciones(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase));
+        ConfiguracionCotizaciones config = new ConfiguracionCotizaciones(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
         config.setLoginBonus(bonusBase);
-        configuracionCotizacionesRepository.guardar(config);
+        configuracionCotizacionesService.crearConfiguracionSiNoExiste(config);
 
         USER_1 = userService.guardar(getUsuarioConRacha("pepito", 0, null));
     }

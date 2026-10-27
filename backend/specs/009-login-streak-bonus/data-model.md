@@ -37,10 +37,10 @@ Encapsulates daily bonus credit calculations, daily values, and streak scaling l
 - `public Double getBonusParaRacha(int racha)`:
   - Calls `getBonusParaDia(DiaDeLaSemana.desdeRacha(racha))`.
 - `public int calcularSiguienteRacha(LocalDate ultimoReclamo, LocalDate fechaActual, int rachaActual)`:
-  - If `fechaActual == null`: throws `FechaReclamoInvalidaException`
+  - If `fechaActual == null`: throws `FechaReclamoBonusLoginInvalidaException`
   - If `ultimoReclamo == null`: returns `1`
   - If `fechaActual.isEqual(ultimoReclamo)`: throws `BonusYaReclamadoHoyException`
-  - If `fechaActual.isBefore(ultimoReclamo)`: throws `FechaReclamoInvalidaException`
+  - If `fechaActual.isBefore(ultimoReclamo)`: throws `FechaReclamoBonusLoginInvalidaException`
   - If `ChronoUnit.DAYS.between(ultimoReclamo, fechaActual) == 1`:
     - If `rachaActual >= 7`: returns `1` (cycle restart on Day 8)
     - Else: returns `rachaActual + 1`
@@ -94,7 +94,7 @@ Modified with streak tracking and explicit claim domain method.
 - `DiaInvalidoException`: Thrown when a streak value is outside 1..7 or invalid.
 - `DiaDeLaSemanaInvalidoException`: Thrown when a `DiaDeLaSemana` argument is null or cannot be resolved.
 - `ValorBonusInvalidoException`: Thrown when a reward amount in the bonus map is null or $\le 0.0$.
-- `FechaReclamoInvalidaException`: Thrown when a claim date is null or chronologically inconsistent.
+- `FechaReclamoBonusLoginInvalidaException`: Thrown when a claim date is null or chronologically inconsistent.
 - `LoginBonusInvalidoException`: Thrown when a `LoginBonus` definition is incomplete, missing days, or null.
 
 ### 2.2 Service Exceptions (`com.overcode.service.exception`)
