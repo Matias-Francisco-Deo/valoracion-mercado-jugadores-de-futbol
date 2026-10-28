@@ -88,8 +88,6 @@ class PlayerE2eTest {
             .body(req)
             .retrieve()
             .toEntity(AuthResponse.class);
-
-        assert response.getBody() != null;
         return response.getBody().token();
     }
 

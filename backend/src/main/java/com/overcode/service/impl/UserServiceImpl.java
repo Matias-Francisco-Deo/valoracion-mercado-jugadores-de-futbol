@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("El monto a depositar debe ser mayor a cero");
         }
         User user = recuperar(userId);
-        user.creditCredits(amount);
+        user.addCredits(amount);
         return userRepository.guardar(user);
     }
 

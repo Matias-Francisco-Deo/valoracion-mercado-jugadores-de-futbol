@@ -258,7 +258,7 @@ class UserControllerTest {
     void getUserDevuelveOkConDatosDelUsuario() throws Exception {
         User user = new User("ivan", "ivan@gmail.com", "pass");
         user.setId(USER_ID);
-        user.creditCredits(50d);
+        user.addCredits(50d);
         when(userService.recuperar(USER_ID)).thenReturn(user);
 
         mockMvc.perform(get("/users/" + USER_ID))
