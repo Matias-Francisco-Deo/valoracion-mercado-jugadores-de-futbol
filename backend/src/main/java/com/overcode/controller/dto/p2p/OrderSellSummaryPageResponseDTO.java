@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.p2p;
 
-import com.overcode.model.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.OrderSellSummary;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

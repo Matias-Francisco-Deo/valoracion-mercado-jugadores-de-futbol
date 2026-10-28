@@ -23,7 +23,7 @@ Goals
 Key business rules
 - Each player: total_issued = 100 tokens; current_price default 100 (mutable later).
 - Tokens are integer units.
-- All trades use the football player current price at transaction time.
+- All trades use the football player current price at transaccionFinanciera time.
 - Users may transact with any user (peer-to-peer allowed). However, the superuser starts owning all tokens so until others acquire tokens the superuser is the only seller with inventory.
 - Transactions are internal credit transfers (no external money integration in v1).
 
@@ -34,16 +34,16 @@ User scenarios & acceptance tests
 
 2) Buy tokens (typical flow)
 - Precondition: seller_account.tokens[player_id] >= quantity.
-- Action: buyer requests purchase of N tokens; system computes cost = N * player.current_price; verifies buyer has sufficient credits; transfers tokens and credits; records transaction.
+- Action: buyer requests purchase of N tokens; system computes cost = N * player.current_price; verifies buyer has sufficient credits; transfers tokens and credits; records transaccionFinanciera.
 - Acceptance: buyer position increased by N, seller decreased by N, balances adjusted, ledger record created, sum of tokens for player == 100.
 
 3) Sell tokens (typical flow)
 - Precondition: seller.position[player_id] >= quantity.
-- Action: seller initiates sale to a chosen buyer (peer or superuser); system computes proceeds = N * player.current_price; transfers tokens and credits; records transaction.
+- Action: seller initiates sale to a chosen buyer (peer or superuser); system computes proceeds = N * player.current_price; transfers tokens and credits; records transaccionFinanciera.
 - Acceptance: seller position decreased, buyer increased, balances adjusted, ledger record created, token conservation holds.
 
 4) View portfolio & history
-- Users can view positions and transaction history; responses match ledger and positions.
+- Users can view positions and transaccionFinanciera history; responses match ledger and positions.
 
 Functional Requirements (testable)
 FR-01: Superuser creation
@@ -56,16 +56,16 @@ FR-03: User registration
 - Create users with unique id and initial credit balance (0). Test: GET returns profile.
 
 FR-04: Purchase flow
-- Verify seller inventory; verify buyer credits; compute cost using current_price; atomically transfer tokens and credits; create immutable transaction record with fields: id, timestamp, type, buyer_id, seller_id, player_id, quantity, unit_price, total_amount. Test: positions, balances, and ledger match.
+- Verify seller inventory; verify buyer credits; compute cost using current_price; atomically transfer tokens and credits; create immutable transaccionFinanciera record with fields: id, timestamp, type, buyer_id, seller_id, player_id, quantity, unit_price, total_amount. Test: positions, balances, and ledger match.
 
 FR-05: Sale flow
-- Verify seller owns tokens; compute proceeds using current_price; atomically transfer tokens and credits to designated buyer; record transaction. Test: positions, balances, ledger match.
+- Verify seller owns tokens; compute proceeds using current_price; atomically transfer tokens and credits to designated buyer; record transaccionFinanciera. Test: positions, balances, ledger match.
 
 FR-06: Atomicity and consistency
 - Trades must be atomic. On any failure, rollback state. Test: simulate partial failure and assert no state change.
 
 FR-07: Audit ledger
-- All transactions stored and queryable by user and player.
+- All transaccionFinancieras stored and queryable by user and player.
 
 FR-08: Token conservation
 - For each player, sum of tokens across accounts must equal total_issued (100). Test: invariants hold after operations.

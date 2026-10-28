@@ -4,10 +4,10 @@ import com.overcode.controller.dto.position.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.Position;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -56,7 +56,7 @@ public class UserController {
             @PathVariable Long userId,
             Pageable pageable
     ){
-        Page<Transaction> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
+        Page<TransaccionFinanciera> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
 
         return ResponseEntity.ok(TransactionPageResponseDTO.desdeModelo(transactions));
     }

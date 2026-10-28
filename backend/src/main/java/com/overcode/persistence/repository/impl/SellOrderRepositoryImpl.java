@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.orden.OrderSellSummary;
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.SellOrder;
+import com.overcode.model.venta.OrdenDeCompra;
+import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
@@ -25,13 +25,13 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
 
     @Override
     @Transactional
-    public SellOrder save(SellOrder order) {
+    public OrdenDeCompra save(OrdenDeCompra order) {
         return dao.save(SellOrderJPADTO.desdeModelo(order)).aModelo();
     }
 
     @Override
     @Transactional
-    public List<SellOrder> saveAll(List<SellOrder> orders) {
+    public List<OrdenDeCompra> saveAll(List<OrdenDeCompra> orders) {
         if (orders == null || orders.isEmpty()) {
             return List.of();
         }
@@ -45,7 +45,7 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<SellOrder> findById(Long id) {
+    public Optional<OrdenDeCompra> findById(Long id) {
         return dao.findById(id).map(SellOrderJPADTO::aModelo);
     }
 
@@ -56,7 +56,7 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
 
     @Override
     @Transactional(readOnly = true)//trae las ordenes abiertas de un jugador, excluyendo al comprador
-    public List<SellOrder> findOpenSellOrders(Long playerId,Long buyerId) {
+    public List<OrdenDeCompra> findOpenSellOrders(Long playerId, Long buyerId) {
         return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)
                 .stream()
                 .map(SellOrderJPADTO::aModelo)

@@ -5,8 +5,8 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
-import com.overcode.model.orden.OrderStatus;
 import com.overcode.model.player.Player;
+import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
@@ -85,8 +85,6 @@ class OrderE2eTest {
     private void limpiarBaseDeDatos() {
         jdbcTemplate.execute("DELETE FROM transactions");
         jdbcTemplate.execute("DELETE FROM sell_orders");
-        jdbcTemplate.execute("DELETE FROM token_holding");
-        jdbcTemplate.execute("DELETE FROM portfolio");
         jdbcTemplate.execute("DELETE FROM tokens");
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
@@ -125,10 +123,7 @@ class OrderE2eTest {
     }
 
     private BuyTokenRequest crearBuyRequest(Long playerId, Integer quantity) {
-        BuyTokenRequest req = new BuyTokenRequest();
-        req.setPlayerId(playerId);
-        req.setQuantity(quantity);
-        return req;
+        return new BuyTokenRequest(playerId, quantity);
     }
 
     private void comprarTokens(String token, BuyTokenRequest body) {

@@ -1,9 +1,9 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.Position;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +22,7 @@ public interface UserService {
 
     Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable);
 
-    Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable);
+    Page<TransaccionFinanciera> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable);
 
     List<Position> recuperarPortfolioDeUser(Long userId);
 }

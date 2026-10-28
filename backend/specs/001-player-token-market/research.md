@@ -3,8 +3,8 @@
 ## Decision
 
 - Use a single Spring Boot backend module with PostgreSQL as the durable store and JPA repositories for persistence.
-- Keep the market engine in the service layer with transaction boundaries and atomic updates for credit and token movement.
-- Model the market as four primary entities: `Player`, `User`, `Position`, and `Transaction`.
+- Keep the market engine in the service layer with transaccionFinanciera boundaries and atomic updates for credit and token movement.
+- Model the market as four primary entities: `Player`, `User`, `Position`, and `TransaccionFinanciera`.
 - Keep the initial v1 scope intentionally security-light: no JWT, no OAuth, no session auth, and plain-text user credential storage as explicitly required by the product spec.
 - Use eager fetching for all entity relationships to keep portfolio and ledger reads simple and deterministic under the repository’s architecture rules.
 - Add a `GlobalExceptionHandler` with a consistent API error contract and custom `ServiceException` / `ModelException` hierarchies for validation and invariant failures.

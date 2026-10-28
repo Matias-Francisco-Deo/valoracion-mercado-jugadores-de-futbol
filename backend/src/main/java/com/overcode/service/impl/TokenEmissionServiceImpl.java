@@ -1,8 +1,9 @@
 package com.overcode.service.impl;
-import com.overcode.model.SellOrder;
-import com.overcode.model.token.Token;
-import com.overcode.model.User;
+
 import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -40,7 +41,7 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
         for (Player player : players) {
             List<Token> tokens = player.assignInitialTokensTo(superadmin);
 
-            List<SellOrder> orders = superadmin.sellTokens(player,tokens.size());
+            List<OrdenDeCompra> orders = superadmin.sellTokens(player,tokens.size());
 
             sellOrderRepository.saveAll(orders);
         }

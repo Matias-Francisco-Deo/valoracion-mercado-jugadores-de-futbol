@@ -6,9 +6,9 @@
 
 ## Summary
 
-Implement a Spring Boot web-service backend for a football player token market in which a single superuser owns the initial token supply, users register with credits and token positions, and every buy/sell operation is validated, executed atomically, and recorded to an immutable ledger. The design follows the repository’s layered architecture, keeps business rules in the domain layer, and enforces transaction safety via PostgreSQL-backed JPA repositories and Testcontainers integration tests.
+Implement a Spring Boot web-service backend for a football player token market in which a single superuser owns the initial token supply, users register with credits and token positions, and every buy/sell operation is validated, executed atomically, and recorded to an immutable ledger. The design follows the repository’s layered architecture, keeps business rules in the domain layer, and enforces transaccionFinanciera safety via PostgreSQL-backed JPA repositories and Testcontainers integration tests.
 
-This plan explicitly includes: a `GlobalExceptionHandler` for API-level error mapping; custom service-layer and model-layer exceptions for business failures; a shared `executeTransaction` flow in the service layer that abstracts buy/sell execution behind the same transaction contract; domain model classes that remain free of persistence annotations and are initialized via constructor-based creation; persistence DTOs implemented as Java `record`s for ORM mapping; and Lombok-based accessors plus no-arg constructors only where required by the framework while avoiding setter-based mutation for newly created domain objects.
+This plan explicitly includes: a `GlobalExceptionHandler` for API-level error mapping; custom service-layer and model-layer exceptions for business failures; a shared `executeTransaction` flow in the service layer that abstracts buy/sell execution behind the same transaccionFinanciera contract; domain model classes that remain free of persistence annotations and are initialized via constructor-based creation; persistence DTOs implemented as Java `record`s for ORM mapping; and Lombok-based accessors plus no-arg constructors only where required by the framework while avoiding setter-based mutation for newly created domain objects.
 
 ## Technical Context
 
@@ -28,13 +28,13 @@ This plan explicitly includes: a `GlobalExceptionHandler` for API-level error ma
 
 **Constraints**: No external money integration; integer-only token and credit arithmetic; strict validation before and during trade execution; no JWT/auth layer in v1; all relationships fetched eagerly; domain invariants enforced at model/service boundaries; model classes remain persistence-agnostic; persistence DTOs are database-oriented records; constructor-based object creation is required for all newly created domain objects; error handling uses a global exception handler plus custom service/model exceptions
 
-**Scale/Scope**: Monolithic backend with one market, one superuser, player catalog, user portfolio, and transaction ledger; no separate frontend in this phase
+**Scale/Scope**: Monolithic backend with one market, one superuser, player catalog, user portfolio, and transaccionFinanciera ledger; no separate frontend in this phase
 
 ### Architecture decisions
 
 - Global exception handling: controller-facing failures are normalized through `@ControllerAdvice` / `GlobalExceptionHandler`, mapping domain and service exceptions to consistent HTTP responses.
 - Custom error taxonomy: `ServiceException` / `ModelException` hierarchy with specific subclasses for validation, not-found, and invariant violations.
-- Shared transaction flow: both buy and sell operations delegate to a common `executeTransaction` method in the service layer so pricing, ledger creation, and atomic state updates follow one path.
+- Shared transaccionFinanciera flow: both buy and sell operations delegate to a common `executeTransaction` method in the service layer so pricing, ledger creation, and atomic state updates follow one path.
 - Persistence separation: JPA annotations live in persistence DTO records only; domain model classes remain plain Java objects without ORM metadata.
 - Lombok + constructor-based creation: domain and aggregate objects use Lombok for getters/setters/no-arg constructors where necessary, but object creation occurs via constructor arguments instead of empty instantiation followed by mutation.
 

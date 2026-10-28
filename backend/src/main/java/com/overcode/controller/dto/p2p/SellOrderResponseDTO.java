@@ -1,7 +1,7 @@
 package com.overcode.controller.dto.p2p;
 
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.SellOrder;
+import com.overcode.model.venta.OrdenDeCompra;
+import com.overcode.model.venta.orden.OrderStatus;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -17,7 +17,7 @@ public class SellOrderResponseDTO {
     private final OrderStatus status;
     private final Instant createdAt;
 
-    public SellOrderResponseDTO(SellOrder order) {
+    public SellOrderResponseDTO(OrdenDeCompra order) {
         this.id = order.getId();
         this.userId = order.getOwner().getId();
         this.playerId = order.getPlayer().getId();
@@ -27,11 +27,11 @@ public class SellOrderResponseDTO {
         this.createdAt = order.getCreatedAt();
     }
 
-    public static SellOrderResponseDTO from(SellOrder order) {
+    public static SellOrderResponseDTO from(OrdenDeCompra order) {
         return new SellOrderResponseDTO(order);
     }
 
-    public static List<SellOrderResponseDTO> from(List<SellOrder> orders) {
+    public static List<SellOrderResponseDTO> from(List<OrdenDeCompra> orders) {
         if (orders == null) {
             return java.util.Collections.emptyList();
         }

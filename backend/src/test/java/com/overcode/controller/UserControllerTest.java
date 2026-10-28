@@ -1,12 +1,12 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
-import com.overcode.model.transaction.TransactionType;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.Position;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -143,7 +143,7 @@ class UserControllerTest {
     @Test
     void getPortfolioDevuelveListaDePosicionesDelUsuario() throws Exception {
         Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120d);
-        Transaction tx = new Transaction(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
+        TransaccionFinanciera tx = new TransaccionFinanciera(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
         Position position = new Position(player, List.of(tx));
 
         when(userService.recuperarPortfolioDeUser(USER_ID)).thenReturn(List.of(position));
@@ -190,9 +190,9 @@ class UserControllerTest {
     void getTransaccionesDevuelvePaginaDeTransaccionesDelUsuario() throws Exception {
         Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 50d);
         LocalDateTime fecha = LocalDateTime.of(2026, 10, 15, 14, 30, 0);
-        Transaction tx = new Transaction(1L, null, player, fecha, TransactionType.BUY, 4, 50.0);
+        TransaccionFinanciera tx = new TransaccionFinanciera(1L, null, player, fecha, TransactionType.BUY, 4, 50.0);
 
-        Page<Transaction> page = new PageImpl<>(List.of(tx), PageRequest.of(0, 10), 1);
+        Page<TransaccionFinanciera> page = new PageImpl<>(List.of(tx), PageRequest.of(0, 10), 1);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(page);
 
@@ -214,7 +214,7 @@ class UserControllerTest {
 
     @Test
     void getTransaccionesConPaginacionPersonalizada() throws Exception {
-        Page<Transaction> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 15), 0);
+        Page<TransaccionFinanciera> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 15), 0);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -232,7 +232,7 @@ class UserControllerTest {
 
     @Test
     void getTransaccionesDevuelveListaVaciaCuandoUsuarioNoTieneTransacciones() throws Exception {
-        Page<Transaction> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+        Page<TransaccionFinanciera> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(pageVacia);
 

@@ -1,6 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.persistence.dto.jpa.TransactionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TransactionDAOJPA;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
@@ -20,30 +20,30 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public Transaction guardar(Transaction transaction){
-        TransactionJPADTO dto = TransactionJPADTO.desdeModelo(transaction);
+    public TransaccionFinanciera guardar(TransaccionFinanciera transaccionFinanciera){
+        TransactionJPADTO dto = TransactionJPADTO.desdeModelo(transaccionFinanciera);
         TransactionJPADTO transactionDTO = transactionDAOJPA.save(dto);
         return transactionDTO.aModelo();
     }
 
     @Override
-    public Optional<Transaction> recuperar(Long id) {
+    public Optional<TransaccionFinanciera> recuperar(Long id) {
         return transactionDAOJPA.findById(id).map(TransactionJPADTO::aModelo);
     }
 
     @Override
-    public Page<Transaction> recuperarPorUserId(Long userId, Pageable pageable) {
+    public Page<TransaccionFinanciera> recuperarPorUserId(Long userId, Pageable pageable) {
         return transactionDAOJPA.findAllByOwner_IdOrderByDateDesc(userId,pageable).map(TransactionJPADTO::aModelo);
     }
 
     @Override
-    public List<Transaction> recuperarTodasPorUserId(Long userId) {
+    public List<TransaccionFinanciera> recuperarTodasPorUserId(Long userId) {
         return transactionDAOJPA.findAllByOwner_IdOrderByDateAscIdAsc(userId).stream().map(TransactionJPADTO::aModelo).toList();
     }
 
     @Override
-    public List<Transaction> guardarTodos(List<Transaction> transactions) {
-        List<TransactionJPADTO> transactionDTOS = transactionDAOJPA.saveAll(transactions.stream().map(TransactionJPADTO::desdeModelo).toList());
+    public List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras) {
+        List<TransactionJPADTO> transactionDTOS = transactionDAOJPA.saveAll(transaccionFinancieras.stream().map(TransactionJPADTO::desdeModelo).toList());
         return transactionDTOS.stream().map(TransactionJPADTO::aModelo).toList();
     }
 

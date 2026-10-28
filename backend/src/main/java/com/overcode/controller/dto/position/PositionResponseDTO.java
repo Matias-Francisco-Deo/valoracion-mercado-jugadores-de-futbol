@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.position;
 
-import com.overcode.model.Position;
+import com.overcode.model.venta.Position;
 
 public record PositionResponseDTO(
         Long playerId,

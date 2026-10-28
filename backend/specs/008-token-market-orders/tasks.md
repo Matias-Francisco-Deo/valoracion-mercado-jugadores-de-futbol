@@ -79,7 +79,7 @@
 ### Implementation for User Story 3
 
 - [x] T018 [P] [US3] Create `SellTokenRequest.java` DTO in `src/main/java/com/overcode/controller/dto/SellTokenRequest.java`
-- [x] T019 [US3] Implement `sellTokens` method in `src/main/java/com/overcode/service/impl/TokenMarketServiceImpl.java`
+- [x] T019 [US3] Implement `sell` method in `src/main/java/com/overcode/service/impl/TokenMarketServiceImpl.java`
 - [x] T020 [US3] Implement `POST /orders/sell` endpoint in `src/main/java/com/overcode/controller/TokenMarketController.java`
 
 **Checkpoint**: All user stories should now be independently functional.

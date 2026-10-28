@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,13 +9,13 @@ import java.util.Optional;
 
 public interface TransactionRepository {
 
-    Transaction guardar(Transaction transaction);
+    TransaccionFinanciera guardar(TransaccionFinanciera transaccionFinanciera);
 
-    Optional<Transaction> recuperar(Long id);
+    Optional<TransaccionFinanciera> recuperar(Long id);
 
-    Page<Transaction> recuperarPorUserId(Long userId, Pageable pageable);
+    Page<TransaccionFinanciera> recuperarPorUserId(Long userId, Pageable pageable);
 
-    List<Transaction> guardarTodos(List<Transaction> transactions);
+    List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras);
 
-    List<Transaction> recuperarTodasPorUserId(Long userId);
+    List<TransaccionFinanciera> recuperarTodasPorUserId(Long userId);
 }

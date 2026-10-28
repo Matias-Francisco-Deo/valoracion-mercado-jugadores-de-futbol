@@ -22,7 +22,7 @@ Implement initial token allocation (emission of 100 tokens per new player) and t
 
 **Project Type**: Web Service
 
-**Performance Goals**: Fast atomic transactions for buys/sells to avoid race conditions.
+**Performance Goals**: Fast atomic transaccionFinancieras for buys/sells to avoid race conditions.
 
 **Constraints**: Strict compliance with Constitution (Model-Service-Controller-Persistence boundaries). Transactional integrity must be guaranteed.
 

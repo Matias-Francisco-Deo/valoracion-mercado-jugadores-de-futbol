@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.SellOrder;
+import com.overcode.model.venta.OrdenDeCompra;
+import com.overcode.model.venta.orden.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,11 +54,11 @@ public class SellOrderJPADTO {
         this.createdAt = createdAt;
     }
 
-    public SellOrder aModelo() {
-        return new SellOrder(id, owner.aModelo(), player.aModelo(), token.aModelo(), price, status, createdAt);
+    public OrdenDeCompra aModelo() {
+        return new OrdenDeCompra(id, owner.aModelo(), player.aModelo(), token.aModelo(), price, status, createdAt);
     }
 
-    public static SellOrderJPADTO desdeModelo(SellOrder modelo) {
+    public static SellOrderJPADTO desdeModelo(OrdenDeCompra modelo) {
         if (modelo == null) {
             return null;
         }

@@ -1,8 +1,9 @@
 package com.overcode.service;
-import com.overcode.model.SellOrder;
-import com.overcode.model.User;
+
 import com.overcode.model.player.Player;
-import com.overcode.model.orden.OrderStatus;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.OrdenDeCompra;
+import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.impl.TokenEmissionServiceImpl;
@@ -43,7 +44,7 @@ class TokenEmissionServiceImplUnitTest {
         Player player2 = com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre("Player 2");
         player2.setId(20L);
 
-        ArgumentCaptor<List<SellOrder>> ordersCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<OrdenDeCompra>> ordersCaptor = ArgumentCaptor.forClass(List.class);
 
         tokenEmissionService.emitTokensForNewPlayers(List.of(player1, player2));
 
@@ -51,14 +52,14 @@ class TokenEmissionServiceImplUnitTest {
         verify(userRepository, times(1)).guardar(superadmin);
         verify(sellOrderRepository, times(2)).saveAll(ordersCaptor.capture());
 
-        List<List<SellOrder>> allOrders = ordersCaptor.getAllValues();
+        List<List<OrdenDeCompra>> allOrders = ordersCaptor.getAllValues();
         assertEquals(2, allOrders.size());
         assertEquals(100, player1.getTokens().size());
         assertEquals(100, player2.getTokens().size());
 
-        for (List<SellOrder> orders : allOrders) {
+        for (List<OrdenDeCompra> orders : allOrders) {
             assertEquals(100, orders.size());
-            assertTrue(orders.stream().allMatch(SellOrder::isOpen));
+            assertTrue(orders.stream().allMatch(OrdenDeCompra::isOpen));
             assertTrue(orders.stream().allMatch(order -> order.getStatus() == OrderStatus.OPEN));
         }
     }

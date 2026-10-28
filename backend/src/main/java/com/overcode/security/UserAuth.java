@@ -1,7 +1,7 @@
 package com.overcode.security;
 
-import com.overcode.model.User;
 import com.overcode.model.security.Auth;
+import com.overcode.model.user.User;
 import com.overcode.service.exception.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

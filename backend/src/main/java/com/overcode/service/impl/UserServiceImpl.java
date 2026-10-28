@@ -1,10 +1,10 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.Position;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
+    public Page<TransaccionFinanciera> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
         if (!userRepository.existsById(userId)) {throw new EntidadNoEncontradaException("El usuario no existe");}
 
         return transactionRepository.recuperarPorUserId(userId,pageable);
@@ -108,19 +108,19 @@ public class UserServiceImpl implements UserService {
         if(!userRepository.existsById(userId)){
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
-        List<Transaction> transactions = transactionRepository.recuperarTodasPorUserId(userId);
+        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUserId(userId);
 
-        Map<Long, List<Transaction>> transactionsPorJugador = new java.util.LinkedHashMap<>();
+        Map<Long, List<TransaccionFinanciera>> transactionsPorJugador = new java.util.LinkedHashMap<>();
 
-        for (Transaction transaction : transactions) {
-            Long playerId = transaction.getPlayer().getId();
-            transactionsPorJugador.computeIfAbsent(playerId, id -> new java.util.ArrayList<>()).add(transaction);
+        for (TransaccionFinanciera transaccionFinanciera : transaccionFinancieras) {
+            Long playerId = transaccionFinanciera.getPlayer().getId();
+            transactionsPorJugador.computeIfAbsent(playerId, id -> new java.util.ArrayList<>()).add(transaccionFinanciera);
         }
 
         List<Position> positions = new java.util.ArrayList<>();
 
-        for (Map.Entry<Long, List<Transaction>> entry : transactionsPorJugador.entrySet()) {
-            List<Transaction> transactionsDelJugador = entry.getValue();
+        for (Map.Entry<Long, List<TransaccionFinanciera>> entry : transactionsPorJugador.entrySet()) {
+            List<TransaccionFinanciera> transactionsDelJugador = entry.getValue();
 
             Player player = transactionsDelJugador.get(0).getPlayer();
 

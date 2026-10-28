@@ -3,14 +3,10 @@ package com.overcode.controller;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
-import com.overcode.controller.dto.p2p.SellOrderResponseDTO;
-import com.overcode.model.BuyOrder;
-import com.overcode.model.SellOrder;
-import com.overcode.model.SellPost;
-import com.overcode.model.User;
-import com.overcode.model.orden.OrderSellSummary;
-import com.overcode.service.exception.InsufficientLiquidityException;
-import com.overcode.service.interfaces.P2POrderService;
+import com.overcode.model.venta.BuyOrder;
+import com.overcode.model.venta.SellPost;
+import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,103 +18,59 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
 @Tag(name = "Orders", description = "Endpoints for buying and selling player tokens")
 public class OrderController {
 
-    private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
-    private static final String ERROR_KEY = "error";
+    private final TokenMarketService tokenMarketService;
 
-    private final P2POrderService p2pOrderService;
-    private final UserService userService;
-
-    public OrderController(P2POrderService p2pOrderService, UserService userService) {
-        this.p2pOrderService = p2pOrderService;
-        this.userService = userService;
-    }
-
-    private Long getUserId(Principal principal) {
-        if (principal == null) {
-            throw new IllegalStateException(UNAUTHORIZED_MESSAGE);
-        }
-        User user = userService.recuperarPorEmail(principal.getName())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
-        return user.getId();
+    public OrderController(TokenMarketService tokenMarketService, UserService userService) {
+        this.tokenMarketService = tokenMarketService;
     }
 
     /** Buys instantly against the resting SELL book, at the player's current price. All-or-nothing. */
     @PostMapping("/buy")
-    public ResponseEntity<Object> buyTokens(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
-        try {
-            Long userId = getUserId(principal);
-            BuyOrder buyOrder = request.aModelo(userId);
-            p2pOrderService.executeMarketBuy(buyOrder);
+    public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequest request, Principal principal) { // TODO ver otras requests
+        Long userId = Long.parseLong(principal.getName());
+        BuyOrder buyOrder = request.aModelo(userId);
+        tokenMarketService.buy(buyOrder);
 
-            return ResponseEntity.ok(Map.of(
-                    "message", "Tokens successfully purchased",
-                    "playerId", request.getPlayerId(),
-                    "quantity", request.getQuantity(),
-                    "timestamp", Instant.now().toString()
-            ));
-        } catch (InsufficientLiquidityException e) {
-            return ResponseEntity.status(409).body(Map.of(ERROR_KEY, e.getMessage()));
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
-                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
-            }
-            throw e;
-        }
+        return ResponseEntity.ok().build();
     }
 
     /** Publishes resting SELL orders (one per token) for the requested quantity. */
     @PostMapping("/sell")
-    public ResponseEntity<Object> sellTokens(@Valid @RequestBody SellTokenRequest request, Principal principal) {
-        try {
-            Long userId = getUserId(principal);
-            SellPost command = request.aModelo(userId);
-            List<SellOrder> orders = p2pOrderService.createSellOrders(command);
-            return ResponseEntity.status(HttpStatus.CREATED).body(SellOrderResponseDTO.from(orders));
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
-                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
-            }
-            throw e;
-        }
+    public ResponseEntity<Void> sell(@Valid @RequestBody SellTokenRequest request, Principal principal) {
+        Long userId = Long.parseLong(principal.getName());
+        SellPost command = request.aModelo(userId);
+        tokenMarketService.sell(command);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
 
-    /** Cancels a resting SELL order and returns the token to the seller. */
+    /** Cancels a resting SELL order and returns the token to the seller. No se usa.*/
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<Object> cancelOrder(
+    public ResponseEntity<Void> cancelOrder(
             Principal principal,
             @PathVariable("id") Long orderId) {
+        Long userId = Long.parseLong(principal.getName());
+        tokenMarketService.cancel(orderId, userId);
+        return ResponseEntity.ok().build();
 
-        try {
-            Long userId = getUserId(principal);
-            p2pOrderService.cancelOrder(orderId, userId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals(UNAUTHORIZED_MESSAGE)) {
-                return ResponseEntity.status(401).body(Map.of(ERROR_KEY, e.getMessage()));
-            }
-            throw e;
-        }
     }
 
-    @GetMapping("/for-sell")
+    @GetMapping("/forSell")
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchOpenOrdersSell(
             @RequestParam(required = false) String nombre,
-            @PageableDefault(size = 20, sort = "playerName")
+            @PageableDefault(sort = "playerName") // TODO probar con el front sacar esto
             Pageable pageable,
             Principal principal
     ) {
-        Long userId = principal != null ? getUserId(principal) : null;
+        Long userId = Long.parseLong(principal.getName());
 
-        Page<OrderSellSummary> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
+        Page<OrderSellSummary> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 
@@ -129,10 +81,10 @@ public class OrderController {
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchUserOpenOrdersSell(
             @PathVariable Long id,
             @RequestParam(required = false) String nombre,
-            @PageableDefault(size = 10, sort = "playerName")
+            @PageableDefault(sort = "playerName") // TODO probar con el front sacar esto
             Pageable pageable
     ) {
-        Page<OrderSellSummary> ordersSell = p2pOrderService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);
+        Page<OrderSellSummary> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 

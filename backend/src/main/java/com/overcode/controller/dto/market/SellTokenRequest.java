@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.market;
 
-import com.overcode.model.SellPost;
+import com.overcode.model.venta.SellPost;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;

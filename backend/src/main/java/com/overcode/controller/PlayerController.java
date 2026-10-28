@@ -34,7 +34,7 @@ public class PlayerController {
     }
 
     @GetMapping({"", "/"})
-    public PlayerPageResponseDTO listPlayers(
+    public ResponseEntity<PlayerPageResponseDTO> listPlayers(
             @RequestParam(required = false) String league,
             @RequestParam(required = false) String clubName,
             Pageable pageable
@@ -47,18 +47,18 @@ public class PlayerController {
                 .recuperarTodosConFiltro(filter, pageable)
                 .map(PlayerResponseDTO::desdeModelo);
 
-        return PlayerPageResponseDTO.desdeModelo(page);
+        return ResponseEntity.ok().body(PlayerPageResponseDTO.desdeModelo(page));
     }
 
     @GetMapping("/ranking")
-    public PlayerPageResponseDTO listTopPlayers(
+    public ResponseEntity<PlayerPageResponseDTO> listTopPlayers(
             Pageable pageable
     ) {
         Page<PlayerResponseDTO> page = playerService
                 .recuperarRankingDeJugadoresPorEstrategiaActiva(pageable)
                 .map(PlayerResponseDTO::desdeModelo);
 
-        return PlayerPageResponseDTO.desdeModelo(page);
+        return ResponseEntity.ok().body(PlayerPageResponseDTO.desdeModelo(page));
     }
 
     @GetMapping("/{id}")

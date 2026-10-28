@@ -14,7 +14,7 @@
 
 - Q: What mocking approach should be used to test ScraperHttpClient without connecting to external websites? → A: Option A (Use a local MockWebServer on localhost so Playwright's headless Chromium navigates exclusively to local simulated responses with zero outbound internet traffic).
 - Q: Should the test class for ExternalPlayerWhoScoredScrapper be structured as a pure JUnit 5 and Mockito unit test named ExternalPlayerWhoScoredScrapperTest, or should it run within a @SpringBootTest context? → A: Option B (Spring-managed test with `@SpringBootTest` using `@MockBean` for the HTTP client).
-- Q: May we rename and replace the empty stub file `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/ExternalPlayerWhoScoredScrapper.java` with the standard test class `ExternalPlayerWhoScoredScrapperTest` in package `com.overcode.persistence.repository.dao.external.scrapper.whoscored`? → A: Option A (Affirmative permission granted by project owner to replace and rename the empty stub file into `ExternalPlayerWhoScoredScrapperTest` under the matching package `com.overcode.persistence.repository.dao.external.scrapper.whoscored`).
+- Q: May we rename and replace the empty stub file `scraper` with the standard test class `ExternalPlayerWhoScoredScrapperTest` in package `scraper`? → A: Option A (Affirmative permission granted by project owner to replace and rename the empty stub file into `ExternalPlayerWhoScoredScrapperTest` under the matching package `scraper`).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -83,7 +83,7 @@ The scraper HTTP client (`ScraperHttpClient`) is responsible for executing brows
 
 ### Functional Requirements
 
-- **FR-001**: The test suite for `ExternalPlayerWhoScoredScrapper` MUST be executed within a `@SpringBootTest` context as `ExternalPlayerWhoScoredScrapperTest` in package `com.overcode.persistence.repository.dao.external.scrapper.whoscored`, using `@MockBean` to substitute `ScraperHttpClient` with mock responses to verify player statistic parsing without making live external HTTP requests.
+- **FR-001**: The test suite for `ExternalPlayerWhoScoredScrapper` MUST be executed within a `@SpringBootTest` context as `ExternalPlayerWhoScoredScrapperTest` in package `scraper`, using `@MockBean` to substitute `ScraperHttpClient` with mock responses to verify player statistic parsing without making live external HTTP requests.
 - **FR-002**: The test suite MUST verify that `ExternalPlayerWhoScoredScrapper` filters tournament data to exclusively accumulate statistics from Top-5 European leagues (Premier League: 2, LaLiga: 4, Serie A: 5, Bundesliga: 3, Ligue 1: 22).
 - **FR-003**: The test suite MUST verify that `ExternalPlayerWhoScoredScrapper` correctly computes weighted ratings based on games played per tournament.
 - **FR-004**: The test suite MUST verify that `ExternalPlayerWhoScoredScrapper` calculates pass completion percentage accurately and handles zero pass attempts without error.
@@ -96,7 +96,7 @@ The scraper HTTP client (`ScraperHttpClient`) is responsible for executing brows
 - **FR-011**: The test suite MUST verify that `ScraperHttpClient` throws a `ScraperExtractionException` when the retry limit is exceeded after persistent challenge or navigation failures.
 - **FR-012**: The test suite MUST verify that `ScraperHttpClient` properly initializes and cleans up browser resources during lifecycle management.
 - **FR-013**: All tests MUST run in complete isolation from external internet dependencies, ensuring deterministic execution with zero reliance on live third-party servers.
-- **FR-014**: With affirmative permission granted by the project owner, the empty stub file `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/ExternalPlayerWhoScoredScrapper.java` MUST be renamed and replaced by `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`. All other pre-existing tests in the application MUST be strictly preserved without modification or deletion.
+- **FR-014**: With affirmative permission granted by the project owner, the empty stub file `scraper` MUST be renamed and replaced by `scraper`. All other pre-existing tests in the application MUST be strictly preserved without modification or deletion.
 
 ### Key Entities *(include if feature involves data)*
 

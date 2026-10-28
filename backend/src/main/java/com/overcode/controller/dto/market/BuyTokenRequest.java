@@ -1,25 +1,27 @@
 package com.overcode.controller.dto.market;
 
-import com.overcode.model.User;
 import com.overcode.model.player.Player;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.BuyOrder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
 
-import java.util.ArrayList;
-
-@Data
-public class BuyTokenRequest {
+public record BuyTokenRequest (
     @NotNull(message = "Player ID must not be null")
-    private Long playerId;
+    Long playerId,
 
     @NotNull(message = "Quantity must not be null")
     @Positive(message = "Quantity must be greater than zero")
-    private Integer quantity;
+    Integer quantity
+) {
 
-    public com.overcode.model.BuyOrder aModelo(Long userId) {
-        return new com.overcode.model.BuyOrder(
-                new User(userId, "placeholder", "placeholderEmail", "placeholder", 0d, new ArrayList<>()),
+    public BuyOrder aModelo(Long userId) {
+        User seller = new User();
+        seller.setId(userId);
+        seller.setUsername("placeholder");
+
+        return new BuyOrder(
+                seller,
                 new Player(playerId),
                 this.quantity);
     }

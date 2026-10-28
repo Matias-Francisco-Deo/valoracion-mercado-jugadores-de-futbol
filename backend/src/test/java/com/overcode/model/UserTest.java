@@ -1,5 +1,6 @@
 package com.overcode.model;
 
+import com.overcode.model.user.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

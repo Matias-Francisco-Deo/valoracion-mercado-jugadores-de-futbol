@@ -78,14 +78,14 @@ Independent Test: POST /orders/sell with valid sellerId, buyerId, playerId, quan
 
 ## Phase 6: User Story 4 - View portfolio & history (Priority: P3)
 
-Goal: Retrieve a user's positions and transaction history via API.
+Goal: Retrieve a user's positions and transaccionFinanciera history via API.
 
-Independent Test: GET /users/{id}/portfolio returns positions and credit; GET /users/{id}/transactions returns ledger entries.
+Independent Test: GET /users/{id}/portfolio returns positions and credit; GET /users/{id}/transaccionFinancieras returns ledger entries.
 
 - [ ] T036 [US4] Implement GET /users/{id}/portfolio in backend/src/main/java/com/overcode/controller/UserController.java
-- [ ] T037 [US4] Implement GET /users/{id}/transactions in backend/src/main/java/com/overcode/controller/UserController.java
+- [ ] T037 [US4] Implement GET /users/{id}/transaccionFinancieras in backend/src/main/java/com/overcode/controller/UserController.java
 - [ ] T038 [US4] Add service methods to aggregate portfolio and ledger data in backend/src/main/java/com/overcode/service/impl/UserServiceImpl.java
-- [ ] T039 [US4] Add integration tests validating portfolio and transactions endpoints in backend/src/test/java/com/overcode/integration/PortfolioAndLedgerIT.java
+- [ ] T039 [US4] Add integration tests validating portfolio and transaccionFinancieras endpoints in backend/src/test/java/com/overcode/integration/PortfolioAndLedgerIT.java
 
 ---
 

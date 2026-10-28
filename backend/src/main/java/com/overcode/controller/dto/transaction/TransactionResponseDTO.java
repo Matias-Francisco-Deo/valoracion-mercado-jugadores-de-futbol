@@ -1,7 +1,7 @@
 package com.overcode.controller.dto.transaction;
 
-import com.overcode.model.transaction.Transaction;
-import com.overcode.model.transaction.TransactionType;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.venta.transaction.TransactionType;
 
 import java.time.LocalDateTime;
 
@@ -14,15 +14,15 @@ public record TransactionResponseDTO(
         Double totalPrice,
         TransactionType type
 ) {
-    public static TransactionResponseDTO desdeModelo(Transaction transaction) {
+    public static TransactionResponseDTO desdeModelo(TransaccionFinanciera transaccionFinanciera) {
         return new TransactionResponseDTO(
-                transaction.getId(),
-                transaction.getPlayer().getName(),
-                transaction.getDate(),
-                transaction.getQuantity(),
-                transaction.getUnitPrice(),
-                transaction.getTotalPrice(),
-                transaction.getType()
+                transaccionFinanciera.getId(),
+                transaccionFinanciera.getPlayer().getName(),
+                transaccionFinanciera.getDate(),
+                transaccionFinanciera.getQuantity(),
+                transaccionFinanciera.getUnitPrice(),
+                transaccionFinanciera.getTotalPrice(),
+                transaccionFinanciera.getType()
         );
     }
 }
