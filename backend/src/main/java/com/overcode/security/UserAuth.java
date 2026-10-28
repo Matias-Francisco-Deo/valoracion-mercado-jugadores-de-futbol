@@ -34,7 +34,7 @@ public class UserAuth {
     public Auth login(User user) {
         AuthClaims claims = new AuthClaims(user.getId(), user.getUsername());
 
-        String token = jwtUtil.generateToken(user.getEmail(), claims);
+        String token = jwtUtil.generateToken(String.valueOf(user.getId()), claims);
         var expires = jwtUtil.getExpiration(token).toInstant();
         log.debug("JWT generated for user ID: {}", user.getId());
         return new Auth(token, expires, user);
