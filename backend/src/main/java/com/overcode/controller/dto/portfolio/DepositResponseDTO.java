@@ -15,6 +15,10 @@ public class DepositResponseDTO {
         return new DepositResponseDTO("Credits deposited successfully", credits);
     }
 
+    public static DepositResponseDTO of(Double credits) {
+        return of(credits != null ? BigDecimal.valueOf(credits) : BigDecimal.ZERO);
+    }
+
     public String getMessage() { return message; }
     public BigDecimal getCredits() { return credits; }
 }

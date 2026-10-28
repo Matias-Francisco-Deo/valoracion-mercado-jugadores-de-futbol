@@ -17,20 +17,23 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
 
     return(
         <button type="button" aria-pressed={isSelected} onClick={() => onSelect(position)}
-        className={cn('flex min-w-0 flex-col max-w-67 gap-2 p-4 rounded-2xl border border-gray-500 bg-gray-400 shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl text-black',isSelected
-        ? "border-hover-orange ring-2 ring-hover-orange"
-        : "border-gray-300"
-        , className)} {...props}>
+        className={cn(
+            'flex min-w-0 flex-col max-w-67 gap-2 p-2.5 rounded-xl border-2 bg-gray-400 shadow-md transition-all text-black',
+            isSelected
+                ? "border-hover-orange"
+                : "border-gray-300 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg",
+            className
+        )} {...props}>
 
-            <header className="flex items-center gap-3">
+            <header className="flex items-start gap-2">
                 <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-titles text-start font-semibold  text-wrap">
+                    <h3 className="truncate font-titles text-start font-semibold text-wrap leading-tight">
                         {position.playerName}
                     </h3>
                 </div>
 
                 <div className="flex flex-col gap-1 text-[11px]">
-                    <span className={`shrink-0 rounded-lg px-2.5 py-1.5  font-semibold ${
+                    <span className={`shrink-0 rounded-lg px-2 py-0.5 font-semibold ${
                             isProfit
                             ? "bg-green-900/15 text-green-800"
                             : "bg-red-900/15 text-red-800"
@@ -39,7 +42,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                         {isProfit ? "+" : ""}
                         {profitPercentage.toFixed(2)}%
                     </span>
-                    <span className={`shrink-0 rounded-lg px-2.5 py-1.5 text-[12px] font-semibold ${
+                    <span className={`shrink-0 rounded-lg px-2 py-0.5 text-[12px] font-semibold ${
                             isProfit
                             ? "bg-green-900/15 text-green-800"
                             : "bg-red-900/15 text-red-800"

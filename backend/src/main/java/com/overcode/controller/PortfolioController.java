@@ -40,8 +40,8 @@ public class PortfolioController {
         User user = userService.recuperar(id);
 
         try {
-            Portfolio portfolio = portfolioService.deposit(user.getId(), request.getAmount());
-            return ResponseEntity.ok(DepositResponseDTO.of(portfolio.getCredits()));
+            User updatedUser = userService.depositarCreditos(user.getId(), request.getAmount().doubleValue());
+            return ResponseEntity.ok(DepositResponseDTO.of(updatedUser.getCreditBalance()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, e.getMessage()));
         }
