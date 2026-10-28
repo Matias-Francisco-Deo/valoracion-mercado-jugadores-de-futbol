@@ -550,7 +550,7 @@ class OrderE2eTest {
     }
 
     // ============================================================================================
-    // --------------------------------- Tests de GET /orders/for-sell ----------------------------
+    // --------------------------------- Tests de GET /orders/forSell ----------------------------
     // ============================================================================================
 
     @Test
@@ -571,7 +571,7 @@ class OrderE2eTest {
                 .toBodilessEntity();
 
         ResponseEntity<OrderSellSummaryPageResponseDTO> response = restClient.get()
-                .uri("/orders/for-sell")
+                .uri("/orders/forSell")
                 .header("Authorization", "Bearer " + buyerAuth.token())
                 .retrieve()
                 .toEntity(OrderSellSummaryPageResponseDTO.class);
@@ -600,9 +600,9 @@ class OrderE2eTest {
                 .retrieve()
                 .toBodilessEntity();
 
-        // El propio vendedor consulta el endpoint for-sell
+        // El propio vendedor consulta el endpoint forSell
         ResponseEntity<OrderSellSummaryPageResponseDTO> response = restClient.get()
-                .uri("/orders/for-sell")
+                .uri("/orders/forSell")
                 .header("Authorization", "Bearer " + sellerAuth.token())
                 .retrieve()
                 .toEntity(OrderSellSummaryPageResponseDTO.class);
@@ -618,7 +618,7 @@ class OrderE2eTest {
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
 
         ResponseEntity<OrderSellSummaryPageResponseDTO> response = restClient.get()
-                .uri("/orders/for-sell")
+                .uri("/orders/forSell")
                 .header("Authorization", "Bearer " + buyerAuth.token())
                 .retrieve()
                 .toEntity(OrderSellSummaryPageResponseDTO.class);
@@ -645,7 +645,7 @@ class OrderE2eTest {
                 .contentType(MediaType.APPLICATION_JSON).body(crearSellRequest(p2.getId(), 2)).retrieve().toBodilessEntity();
 
         ResponseEntity<OrderSellSummaryPageResponseDTO> response = restClient.get()
-                .uri("/orders/for-sell?nombre=Messi")
+                .uri("/orders/forSell?nombre=Messi")
                 .header("Authorization", "Bearer " + buyerAuth.token())
                 .retrieve()
                 .toEntity(OrderSellSummaryPageResponseDTO.class);
@@ -673,7 +673,7 @@ class OrderE2eTest {
                 .contentType(MediaType.APPLICATION_JSON).body(crearSellRequest(p2.getId(), 1)).retrieve().toBodilessEntity();
 
         ResponseEntity<OrderSellSummaryPageResponseDTO> response = restClient.get()
-                .uri("/orders/for-sell?page=0&size=1")
+                .uri("/orders/forSell?page=0&size=1")
                 .header("Authorization", "Bearer " + buyerAuth.token())
                 .retrieve()
                 .toEntity(OrderSellSummaryPageResponseDTO.class);
