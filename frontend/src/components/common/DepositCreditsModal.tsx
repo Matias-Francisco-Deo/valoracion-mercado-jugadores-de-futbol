@@ -38,7 +38,9 @@ export const DepositCreditsModal: React.FC<DepositCreditsModalProps> = ({ isOpen
       onClose();
     } catch (err) {
       const httpErr = err as HttpError;
-      setError(httpErr?.message || 'Ocurrió un error al procesar el depósito.');
+      const errorMessage = httpErr?.message || 'Ocurrió un error al procesar el depósito.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -7,7 +7,10 @@ export interface AllocationMetricItem {
   value: number;
   quantity: number;
   percentage: number;
+  isOther?: boolean;
 }
+
+export const TOP_ALLOCATION_LIMIT = 5;
 
 export interface PerformanceMetricItem {
   playerId: number;
@@ -56,7 +59,7 @@ export function usePortfolioMetrics(positions: PositionToken[]): PortfolioMetric
         ? (totalProfitLoss / calculatedTotalInvested) * 100
         : 0;
 
-    const allocationData: AllocationMetricItem[] = positions
+    const rawAllocation: AllocationMetricItem[] = positions
       .map((position) => {
         const value = position.currentValue ?? (position.quantity * position.currentPrice);
         const percentage =
@@ -70,6 +73,26 @@ export function usePortfolioMetrics(positions: PositionToken[]): PortfolioMetric
         };
       })
       .sort((a, b) => b.value - a.value);
+
+    let allocationData: AllocationMetricItem[] = rawAllocation;
+    if (rawAllocation.length > TOP_ALLOCATION_LIMIT) {
+      const topItems = rawAllocation.slice(0, TOP_ALLOCATION_LIMIT);
+      const otherItems = rawAllocation.slice(TOP_ALLOCATION_LIMIT);
+      const otherValue = otherItems.reduce((acc, item) => acc + item.value, 0);
+      const otherQuantity = otherItems.reduce((acc, item) => acc + item.quantity, 0);
+      const otherPercentage = otherItems.reduce((acc, item) => acc + item.percentage, 0);
+
+      const othersItem: AllocationMetricItem = {
+        playerId: -1,
+        name: `Otros (${otherItems.length})`,
+        value: otherValue,
+        quantity: otherQuantity,
+        percentage: otherPercentage,
+        isOther: true,
+      };
+
+      allocationData = [...topItems, othersItem];
+    }
 
     const performanceData: PerformanceMetricItem[] = positions
       .map((position) => {

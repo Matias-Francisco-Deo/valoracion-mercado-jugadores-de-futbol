@@ -70,7 +70,10 @@ export default function MarketPage(){
 
             void refreshOrders();
         })
-        .catch((error: HttpError) => {setModalError(error);});
+        .catch((error: HttpError) => {
+            setModalError(error);
+            toast.error(error.message || 'Ocurrió un error al comprar tokens.');
+        });
     }
 
     const handlePageChange = (page: number) => {

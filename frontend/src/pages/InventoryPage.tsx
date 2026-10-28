@@ -11,6 +11,7 @@ import { getAviableTokens, getOrdersSell, getTransactionHistory, getUserPortfoli
 import type { OrderSell, OrderTokensRequest, PageResponse, PositionToken, TokenSummary, Transaction } from "@/types/inventory";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function InventoryPage() {
   const { userId } = useParams()
@@ -21,8 +22,13 @@ export default function InventoryPage() {
 
   //paginacion de los tokens
   const [positions,setPositions] = useState<PositionToken[]>([]);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
   const [aviableTokens, setAviableTokens] = useState<PageResponse<TokenSummary>|null>(null);
   const [ordersSell, setOrdersSell] = useState<PageResponse<OrderSell>|null>(null);
+
+  const handleSelectPlayerId = (playerId: number) => {
+    setSelectedPlayerId((prev) => (prev === playerId ? null : playerId));
+  };
 
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [modalError,setModalError] = useState<HttpError | null>(null);
@@ -47,10 +53,14 @@ export default function InventoryPage() {
     await listTokensForSale(request).then(()=>{
       setActionModalOpen(false);
       setSelectedToken(null);
+      toast.success(`¡Orden creada! Pusiste a la venta ${quantity} token(s).`);
       
       return refreshInventory();
     })
-    .catch((error: HttpError) => {setModalError(error);});
+    .catch((error: HttpError) => {
+      setModalError(error);
+      toast.error(error.message || 'Ocurrió un error al poner en venta los tokens.');
+    });
   }
 
   //refresh de listas al vender
@@ -144,8 +154,12 @@ export default function InventoryPage() {
             Revisa y gestiona tus tokens
           </span>
         </div>
-        <PortfolioAnalyticsSection positions={positions} />
-        <PortfolioPositionsSection positions={positions}/>
+        <PortfolioAnalyticsSection positions={positions} selectedPlayerId={selectedPlayerId} />
+        <PortfolioPositionsSection
+          positions={positions}
+          selectedPlayerId={selectedPlayerId}
+          onSelectPlayerId={handleSelectPlayerId}
+        />
         <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-117.5 p-4 shadow-sm sm:p-6">
           <div className="flex justify-between px-2 text-black">
             <h3 className="text-xl font-medium">Inventario de Tokens</h3>

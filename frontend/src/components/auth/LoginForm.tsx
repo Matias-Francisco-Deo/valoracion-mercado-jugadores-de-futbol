@@ -56,6 +56,7 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
     setIsSubmitting(true);
 
     return login(formData).then(() => {
+      sessionStorage.removeItem('daily_bonus_auto_shown');
       toast.success('¡Bienvenido! Has iniciado sesión correctamente.');
       navigate('/');
     }).catch((err: unknown) => {
