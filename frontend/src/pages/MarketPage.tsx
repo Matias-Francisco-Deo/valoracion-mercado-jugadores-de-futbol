@@ -6,7 +6,7 @@ import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
-import type { HttpError } from "@/lib/http-error";
+import { HttpError } from "@/lib/http-error";
 import { buyListedTokens, getTokensOnSale } from "@/services/ordersService";
 import type { TokenSummary, PageResponse, OrderTokensRequest, OrderSell } from "@/types/inventory";
 import { useCallback, useEffect, useState } from "react";
@@ -71,8 +71,14 @@ export default function MarketPage(){
             void refreshOrders();
         })
         .catch((error: HttpError) => {
-            setModalError(error);
-            toast.error(error.message || 'Ocurrió un error al comprar tokens.');
+            const friendlyMessage =
+                error.status === 402 ||
+                error.message?.toLowerCase().includes('insufficient funds') ||
+                error.message?.toLowerCase().includes('créditos suficientes')
+                    ? 'No tenés créditos suficientes para comprar estos tokens.'
+                    : error.message || 'Ocurrió un error al comprar tokens.';
+            setModalError(new HttpError(error.status, friendlyMessage));
+            toast.error(friendlyMessage);
         });
     }
 
