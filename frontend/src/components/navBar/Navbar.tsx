@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Plus, Flame } from 'lucide-react';
-import { useDailyBonus } from '../../hooks/useDailyBonus';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useDailyBonus } from '../../hooks/useDailyBonus';
 import { UserMenu } from './UserMenu';
+import { LoginStreak } from './LoginStreak';
+import { CreditsSection } from './CreditsSection';
 import { LogoIcon } from '../../icon/LogoIcon';
 import { PageLink } from '../ui/PageLink';
-import { DepositCreditsModal } from './DepositCreditsModal';
+import { DepositCreditsModal } from '../common/DepositCreditsModal';
 import { DailyBonusModal } from '../bonus/DailyBonusModal';
 
 export const Navbar: React.FC = () => {
@@ -16,7 +17,6 @@ export const Navbar: React.FC = () => {
   const [isBonusModalOpen, setIsBonusModalOpen] = useState(false);
   const { status, isLoading: isBonusLoading, isClaiming, claim, isAvailable } = useDailyBonus();
 
-  // Auto-open daily bonus modal once per session if the user hasn't claimed yet
   useEffect(() => {
     if (isAuthenticated && status && !status.alreadyClaimedToday && isAvailable) {
       const hasShown = sessionStorage.getItem('daily_bonus_auto_shown');
@@ -37,11 +37,11 @@ export const Navbar: React.FC = () => {
             <span>Overcode</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+          <nav className="hidden lg:flex items-center gap-4 lg:gap-6">
             <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/catalogo">
               Catálogo
             </PageLink>
-            <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]"  to="/market">
+            <PageLink className="bg-brand-orange font-medium hover:bg-[#E58600]" to="/market">
               Mercado
             </PageLink>
             {isAuthenticated && user && (
@@ -56,27 +56,27 @@ export const Navbar: React.FC = () => {
           {isAuthenticated && user ? (
             <div className="flex items-center gap-3 sm:gap-4">
 
-              <div className="hidden sm:flex flex-col items-center justify-center" data-testid="user-credits-navbar">
-                <span className="text-xs">Creditos</span>
-                <span className="text-xs font-semibold">${user.creditBalance}</span>
-              </div>
+              <LoginStreak  status={status} onClick={() => setIsBonusModalOpen(true)} className="hidden sm:flex"/>
+
+              <CreditsSection  user={user} onDepositClick={() => setIsDepositModalOpen(true)} className="hidden sm:flex" data-testid="user-credits-navbar"/>
 
               <span className="hidden sm:inline font-medium truncate max-w-30 sm:max-w-40"
                 data-testid="user-name-navbar">
                 {user.username}
               </span>
 
-              <UserMenu user={user} onLogout={logout} />
+              <UserMenu user={user} onLogout={logout} bonusStatus={status} onOpenBonusModal={() => setIsBonusModalOpen(true)} 
+              onOpenDepositModal={() => setIsDepositModalOpen(true)}/>
             </div>
           ) : (
             <>
-              <div className="md:hidden">
-                <UserMenu user={null} onLogout={logout} />
-              </div>
-
               <Link to="/login" className="hidden md:flex px-3 py-1.5 text-center font-medium text-white transition-colors hover:underline" >
                 Iniciar sesión
               </Link>
+              
+              <div className="lg:hidden">
+                <UserMenu user={null} onLogout={logout} />
+              </div>
             </>
           )}
         </div>
