@@ -17,10 +17,14 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     String FIND_BY_LEAGUE = "(:league IS NULL OR unaccent(LOWER(t.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%')))";
 
+    String FIND_BY_POSITION = "(:position IS NULL OR pgd.position = :position)";
+
     String FIND_BY_FILTRO_QUERY =
             "FROM players p LEFT JOIN teams t ON p.team_id = t.id " +
+                    "LEFT JOIN players_game_data pgd ON pgd.player_id = p.id " +
                     "WHERE " + FIND_BY_CLUBNAME + " " +
-                    "AND " + FIND_BY_LEAGUE ;
+                    "AND " + FIND_BY_LEAGUE + " " +
+                    "AND " + FIND_BY_POSITION;
 
     @Query(
             value = "SELECT p.* " + FIND_BY_FILTRO_QUERY,
@@ -29,6 +33,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     Page<PlayerJPADTO> listarJugadores(
             @Param("teamName") String teamName,
             @Param("league") String league,
+            @Param("position") String position,
             Pageable pageable
     );
 

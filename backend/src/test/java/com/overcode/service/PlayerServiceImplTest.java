@@ -3,6 +3,8 @@ package com.overcode.service;
 import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -239,7 +241,7 @@ class PlayerServiceImplTest {
         Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club3");
         playerService.crear(jugador5);
 
-        Page<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1"),PageRequest.of(0, 10));
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1",null),PageRequest.of(0, 10));
         List<Player> expectedPlayers = List.of(jugador1);
 
 
@@ -248,6 +250,20 @@ class PlayerServiceImplTest {
             assertEquals(jugadores.getContent().get(i).getName(), expectedPlayers.get(i).getName());
         }
 
+    }
+
+
+    @Test
+    void listarJugadoresPorPosicion() {
+        Player defensor = getJugadorConPosicion("Defensor", PlayerPosition.DEFENSOR);
+        playerService.crear(defensor);
+        playerService.crear(getJugadorConPosicion("Atacante", PlayerPosition.ATACANTE));
+
+        Page<Player> jugadores = playerService.recuperarTodosConFiltro(
+                PlayerFilter.withPosition("DEFENSOR"), PageRequest.of(0, 10));
+
+        assertEquals(1, jugadores.getContent().size());
+        assertEquals("Defensor", jugadores.getContent().getFirst().getName());
     }
 
     @Test
@@ -268,6 +284,11 @@ class PlayerServiceImplTest {
 
     }
 
+    private Player getJugadorConPosicion(String name, PlayerPosition position) {
+        Player player = getJugadorConNombre(name);
+        player.setPlayerGameData(new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0, position));
+        return player;
+    }
 
     @AfterEach
     void tearDown() {

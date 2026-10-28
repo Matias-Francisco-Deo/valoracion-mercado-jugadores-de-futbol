@@ -45,6 +45,7 @@ public class PlayerGameDataJPADTO {
     @Column(nullable = false, name = "successful_dribbles")
     private Integer successfulDribbles;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "position")
     private PlayerPosition position;
 
