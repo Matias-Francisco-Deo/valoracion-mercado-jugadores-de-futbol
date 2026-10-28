@@ -180,7 +180,7 @@ class OrderControllerTest {
     }
 
 
-    // ------------------------------ /orders/for-sell ------------------------------
+    // ------------------------------ /orders/forSell ------------------------------
 
     @Test
     void searchOpenOrdersSellSinPrincipalDevuelveTodasLasOrdenesAbiertas() throws Exception {
@@ -195,7 +195,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
 
-        mockMvc.perform(get("/orders/for-sell"))
+        mockMvc.perform(get("/orders/forSell"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].playerId").value(PLAYER_ID))
                 .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
@@ -226,7 +226,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
 
-        mockMvc.perform(get("/orders/for-sell").principal(principal))
+        mockMvc.perform(get("/orders/forSell").principal(principal))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].playerId").value(PLAYER_ID))
                 .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
@@ -249,7 +249,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
 
-        mockMvc.perform(get("/orders/for-sell").param("nombre", "Messi"))
+        mockMvc.perform(get("/orders/forSell").param("nombre", "Messi"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
                 .andExpect(jsonPath("$.content[0].quantity").value(2));
@@ -268,7 +268,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
 
-        mockMvc.perform(get("/orders/for-sell")
+        mockMvc.perform(get("/orders/forSell")
                         .param("page", "2")
                         .param("size", "5"))
                 .andExpect(status().isOk())
@@ -291,7 +291,7 @@ class OrderControllerTest {
 
         MockMvc mockMvc = mockMvcWith(p2pOrderService, userService);
 
-        mockMvc.perform(get("/orders/for-sell"))
+        mockMvc.perform(get("/orders/forSell"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isEmpty())
                 .andExpect(jsonPath("$.totalElements").value(0));

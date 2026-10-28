@@ -106,7 +106,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/for-sell")
+    @GetMapping("/forSell")
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchOpenOrdersSell(
             @RequestParam(required = false) String nombre,
             @PageableDefault(size = 20, sort = "playerName")

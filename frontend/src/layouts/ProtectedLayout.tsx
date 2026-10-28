@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Navbar } from '@/components/common/Navbar';
+import { Navbar } from '@/components/navBar/Navbar';
 import { Footer } from '@/components/common/Footer';
 import cancha from '@/assets/cancha.avif';
 

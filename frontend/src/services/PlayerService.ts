@@ -1,4 +1,4 @@
-import type { Player } from "@/types/player";
+import type { Player, RegistroCotizacion } from "@/types/player";
 import { futbolApi } from "./api";
 import type { PlayerFilter, PlayerPageResponse } from "@/types/PlayerFilter";
 import type { PageResponse } from "@/types/inventory";
@@ -40,4 +40,8 @@ export async function getFiltredPlayers(filter:PlayerFilter,page=0,size=20) {
 
     const response = futbolApi.get<PlayerPageResponse>(`/players${query ? `?${query}` : ""}`);
     return response;
+}
+
+export async function getPlayerQuotes(playerId: string): Promise<RegistroCotizacion[]> {
+    return futbolApi.get<RegistroCotizacion[]>(`/players/${playerId}/quotes`);
 }
