@@ -26,5 +26,5 @@ export async function getTokensOnSale(page: number = 0,nombre?: string): Promise
       params.set("nombre", nombre.trim());
   }
 
-  return futbolApi.get<PageResponse<OrderSell>>(`/orders/for-sell?${params.toString()}`);
+  return futbolApi.get<PageResponse<OrderSell>>(`/orders/forSell?${params.toString()}`);
 }
