@@ -1,7 +1,7 @@
 package com.overcode.model.venta;
 
+import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.model.user.User;
-import com.overcode.service.exception.InsufficientLiquidityException;
 
 import java.util.List;
 

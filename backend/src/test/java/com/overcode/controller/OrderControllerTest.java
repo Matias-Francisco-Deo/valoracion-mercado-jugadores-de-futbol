@@ -10,7 +10,7 @@ import com.overcode.model.venta.SellPost;
 import com.overcode.model.venta.orden.OrderSellSummary;
 import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.InsufficientLiquidityException;
+import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.Test;
@@ -104,14 +104,16 @@ class OrderControllerTest {
         doThrow(new InsufficientLiquidityException("Not enough liquidity to buy 5 tokens for player 10"))
                 .when(tokenMarketService).buy(any(BuyOrder.class));
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService))
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
 
         mockMvc.perform(post("/orders/buy")
                         .principal(principal)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"playerId\":10,\"quantity\":5}"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.error").value("Not enough liquidity to buy 5 tokens for player 10"));
+                .andExpect(jsonPath("$.message").value("Not enough liquidity to buy 5 tokens for player 10"));
     }
 
     // ------------------------------ /orders/sell ------------------------------
@@ -214,7 +216,7 @@ class OrderControllerTest {
         OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 2, 25.0);
         Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
 
-        when(tokenMarketService.buscarOrdersSellSummaryAbiertas(isNull(), eq("Messi"), any(Pageable.class)))
+        when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), eq("Messi"), any(Pageable.class)))
                 .thenReturn(page);
 
         MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
@@ -227,7 +229,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.content[0].playerName").value("Lionel Messi"))
                 .andExpect(jsonPath("$.content[0].quantity").value(2));
 
-        verify(tokenMarketService, times(1)).buscarOrdersSellSummaryAbiertas(isNull(), eq("Messi"), any(Pageable.class));
+        verify(tokenMarketService, times(1)).buscarOrdersSellSummaryAbiertas(eq(USER_ID), eq("Messi"), any(Pageable.class));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.overcode.service;
 
 import com.overcode.model.exception.InsufficientFundsException;
+import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
@@ -11,7 +12,6 @@ import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.InsufficientLiquidityException;
 import com.overcode.service.impl.TokenMarketServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

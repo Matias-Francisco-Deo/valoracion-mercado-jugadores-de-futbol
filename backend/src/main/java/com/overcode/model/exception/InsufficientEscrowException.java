@@ -1,4 +1,4 @@
-package com.overcode.service.exception;
+package com.overcode.model.exception;
 
 public class InsufficientEscrowException extends RuntimeException {
     public InsufficientEscrowException(String message) {

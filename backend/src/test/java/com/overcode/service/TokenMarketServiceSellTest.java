@@ -1,5 +1,6 @@
 package com.overcode.service;
 
+import com.overcode.model.exception.InsufficientEscrowException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
@@ -8,7 +9,6 @@ import com.overcode.model.venta.SellPost;
 import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.InsufficientEscrowException;
 import com.overcode.service.exception.OrderNotFoundException;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.impl.TokenMarketServiceImpl;

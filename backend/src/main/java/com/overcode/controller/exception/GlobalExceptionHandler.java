@@ -1,8 +1,6 @@
 package com.overcode.controller.exception;
 
-import com.overcode.model.exception.EstrategiaInvalidaException;
-import com.overcode.model.exception.InsufficientFundsException;
-import com.overcode.model.exception.InvalidOrderQuantityException;
+import com.overcode.model.exception.*;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;
@@ -87,7 +85,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InsufficientLiquidityException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDTO handleInsufficientLiquidity(InsufficientLiquidityException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }

@@ -1,11 +1,12 @@
 package com.overcode.model.user;
 
+import com.overcode.model.exception.InsufficientEscrowException;
+import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.model.venta.transaction.TransactionType;
-import com.overcode.service.exception.InsufficientLiquidityException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -104,7 +105,7 @@ public class User {
         }
         List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {
-            throw new com.overcode.service.exception.InsufficientEscrowException("Not enough tokens to place SELL order.");
+            throw new InsufficientEscrowException("Not enough tokens to place SELL order.");
         }
 
         List<Token> toRelease = new ArrayList<>(playerTokens.subList(0, quantity));
