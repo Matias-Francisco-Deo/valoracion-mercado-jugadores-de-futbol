@@ -133,6 +133,16 @@ public class UserServiceImpl implements UserService {
         return positions;
     }
 
+    @Override
+    public User depositarCreditos(Long userId, Double amount) {
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("El monto a depositar debe ser mayor a cero");
+        }
+        User user = recuperar(userId);
+        user.addCredits(amount);
+        return userRepository.guardar(user);
+    }
+
     private void validarUsuarioNuevo(User userACrear) {
         if (userRepository.existsByUsername(userACrear.getUsername())) {
             throw new NombreRepetidoException("El nombre de usuario " + userACrear.getUsername() + " ya existe");

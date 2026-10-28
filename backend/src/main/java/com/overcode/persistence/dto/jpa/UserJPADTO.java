@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +33,24 @@ public class UserJPADTO {
     @Column(name = "credit_balance", nullable = false)
     private Double creditBalance;
 
+    @Column(name = "streak_count", nullable = false)
+    private Integer streakCount = 0;
+
+    @Column(name = "last_bonus_claim_date")
+    private LocalDate lastBonusClaimDate;
+
     @OrderBy("id ASC")
     @Column(name = "tokens")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TokenJPADTO> tokens = new ArrayList<>();
 
-    public UserJPADTO(Long id, String username, String email, String password, Double creditBalance,  List<TokenJPADTO> tokens) {
+    public UserJPADTO(Long id, String username, String email, String password, Double creditBalance, List<TokenJPADTO> tokens) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.creditBalance = creditBalance;
+        this.streakCount = 0;
         this.tokens = tokens;
     }
 
@@ -57,6 +65,8 @@ public class UserJPADTO {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
         dto.setCreditBalance(user.getCreditBalance());
+        dto.setStreakCount(user.getStreakCount() != null ? user.getStreakCount() : 0);
+        dto.setLastBonusClaimDate(user.getLastBonusClaimDate());
         dto.setTokens(TokenJPADTO.desdeModelo(user.getTokens(), dto));
         return dto;
     }
@@ -71,6 +81,8 @@ public class UserJPADTO {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
         dto.setCreditBalance(user.getCreditBalance());
+        dto.setStreakCount(user.getStreakCount() != null ? user.getStreakCount() : 0);
+        dto.setLastBonusClaimDate(user.getLastBonusClaimDate());
         return dto;
     }
 
@@ -82,6 +94,8 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
+        user.setStreakCount(this.streakCount != null ? this.streakCount : 0);
+        user.setLastBonusClaimDate(this.lastBonusClaimDate);
         user.setTokens(new ArrayList<>(this.tokens.stream().map(token -> token.aModelo(user)).toList()));
         return user;
     }
@@ -93,6 +107,8 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
+        user.setStreakCount(this.streakCount != null ? this.streakCount : 0);
+        user.setLastBonusClaimDate(this.lastBonusClaimDate);
         user.setTokens(new ArrayList<>());
         return user;
     }

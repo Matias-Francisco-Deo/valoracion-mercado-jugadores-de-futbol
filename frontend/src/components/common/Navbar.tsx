@@ -1,12 +1,31 @@
+import { useEffect, useState } from 'react';
+import { Plus, Flame } from 'lucide-react';
+import { useDailyBonus } from '../../hooks/useDailyBonus';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { UserMenu } from './UserMenu';
 import { LogoIcon } from '../../icon/LogoIcon';
 import { PageLink } from '../ui/PageLink';
+import { DepositCreditsModal } from './DepositCreditsModal';
+import { DailyBonusModal } from '../bonus/DailyBonusModal';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isBonusModalOpen, setIsBonusModalOpen] = useState(false);
+  const { status, isLoading: isBonusLoading, isClaiming, claim, isAvailable } = useDailyBonus();
+
+  // Auto-open daily bonus modal once per session if the user hasn't claimed yet
+  useEffect(() => {
+    if (isAuthenticated && status && !status.alreadyClaimedToday && isAvailable) {
+      const hasShown = sessionStorage.getItem('daily_bonus_auto_shown');
+      if (!hasShown) {
+        sessionStorage.setItem('daily_bonus_auto_shown', 'true');
+        setIsBonusModalOpen(true);
+      }
+    }
+  }, [isAuthenticated, status, isAvailable]);
 
   return (
     <header className="h-16 w-full shrink-0 bg-brand-orange shadow-md">
@@ -62,6 +81,18 @@ export const Navbar: React.FC = () => {
           )}
         </div>
       </div>
+      <DepositCreditsModal
+        isOpen={isDepositModalOpen}
+        onClose={() => setIsDepositModalOpen(false)}
+      />
+      <DailyBonusModal
+        isOpen={isBonusModalOpen}
+        onClose={() => setIsBonusModalOpen(false)}
+        status={status}
+        isLoading={isBonusLoading}
+        isClaiming={isClaiming}
+        onClaim={claim}
+      />
     </header>
   );
 };

@@ -24,3 +24,12 @@ export async function getAviableTokens(userId:string,page: number = 0,search: st
   
   return futbolApi.get<PageResponse<TokenSummary>>(`/users/${userId}/tokens?${query.toString()}`);
 }
+
+export interface DepositResponse {
+  message: string;
+  credits: number;
+}
+
+export async function depositCredits(amount: number): Promise<DepositResponse> {
+  return futbolApi.post<DepositResponse>('/portfolio/deposit', { amount });
+}

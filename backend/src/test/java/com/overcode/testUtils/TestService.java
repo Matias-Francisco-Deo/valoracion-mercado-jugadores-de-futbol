@@ -31,6 +31,8 @@ public class TestService {
 
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
+    @Autowired
+    private LoginBonusDAOJPA loginBonusDAO;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -77,11 +79,24 @@ public class TestService {
     }
 
     public void eliminarEstrategiasCotizacion() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
-        configuracionCotizacionesDAO.deleteAll();
+        eliminarConfig();
 
         entityManager.createNativeQuery("DELETE FROM estrategias_cotizacion");
         estrategiaCotizacionDAO.deleteAll();
+    }
+
+    public void eliminarConfig() {
+        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
+        configuracionCotizacionesDAO.deleteAll();
+    }
+
+    public void eliminarLoginBonuses() {
+        eliminarConfig();
+
+        entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM rewards_list").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM login_bonus_rewards_data").executeUpdate();
+
     }
 
 }

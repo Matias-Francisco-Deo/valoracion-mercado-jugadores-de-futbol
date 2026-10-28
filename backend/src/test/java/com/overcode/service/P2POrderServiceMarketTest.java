@@ -70,7 +70,7 @@ class P2POrderServiceMarketTest {
         User user = new User("user-" + userId, "user" + userId + "@gmail.com", "pass");
         user.setId(userId);
         if (credits > 0) {
-            user.creditCredits(credits);
+            user.addCredits(credits);
         }
         return user;
     }

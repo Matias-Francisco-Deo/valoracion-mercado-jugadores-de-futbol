@@ -63,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.*;
                 .retrieve()
                 .toEntity(AuthResponse.class);
 
-        assert response.getBody() != null;
+       assertNotNull(response.getBody());
         assertEquals(0, response.getBody().user().creditBalance());
     }
 

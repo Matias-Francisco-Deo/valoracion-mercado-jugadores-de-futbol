@@ -91,6 +91,24 @@ class UserServiceImplTest {
         assertDoesNotThrow(() -> userService.crearSuperusuario());
     }
 
+    @Test
+    void depositarCreditosSumaCreditosAlUsuario() {
+        User created = userService.guardar(USER1);
+        User updated = userService.depositarCreditos(created.getId(), 500d);
+
+        assertEquals(500d, updated.getCreditBalance());
+        User retrieved = userService.recuperar(created.getId());
+        assertEquals(500d, retrieved.getCreditBalance());
+    }
+
+    @Test
+    void depositarCreditosConMontoInvalidoLanzaExcepcion() {
+        User created = userService.guardar(USER1);
+        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), -10d));
+        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), 0d));
+        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), null));
+    }
+
 
     @AfterEach
     void teardown() {

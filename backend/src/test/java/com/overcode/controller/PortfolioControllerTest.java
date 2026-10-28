@@ -1,8 +1,8 @@
 package com.overcode.controller;
 
 import com.overcode.model.Portfolio;
-import com.overcode.model.token.TokenHolding;
 import com.overcode.model.User;
+import com.overcode.model.token.TokenHolding;
 import com.overcode.service.interfaces.PortfolioService;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -24,7 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class PortfolioControllerTest {
 
-    private final Principal principal = () -> "ivan@gmail.com";
+    public static final Long USER_ID = 1L;
+    public static final User USER_1 = new User("ivan", "ivan@gmail.com", "pass");
+    private final Principal principal = USER_ID::toString;
 
     private PortfolioController controllerWith(PortfolioService portfolioService, UserService userService) {
         return new PortfolioController(portfolioService, userService);
@@ -34,10 +35,10 @@ class PortfolioControllerTest {
     void depositDevuelveOkYLosCreditosActualizados() throws Exception {
         PortfolioService portfolioService = mock(PortfolioService.class);
         UserService userService = mock(UserService.class);
-        when(userService.recuperarPorEmail("ivan@gmail.com"))
-                .thenReturn(Optional.of(new User("ivan", "ivan@gmail.com", "pass")));
-        Portfolio portfolio = new Portfolio(UUID.randomUUID(), 735L, BigDecimal.valueOf(10000), 0L);
-        when(portfolioService.deposit(any(), any())).thenReturn(portfolio);
+        User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
+        when(userService.recuperar(USER_ID)).thenReturn(user);
+        User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
+        when(userService.depositarCreditos(eq(USER_ID), eq(10000d))).thenReturn(updatedUser);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(portfolioService, userService)).build();
 
@@ -49,7 +50,7 @@ class PortfolioControllerTest {
                 .andExpect(jsonPath("$.message").value("Credits deposited successfully"))
                 .andExpect(jsonPath("$.credits").value(10000));
 
-        verify(portfolioService, times(1)).deposit(any(), any());
+        verify(userService, times(1)).depositarCreditos(eq(USER_ID), eq(10000d));
     }
 
     @Test
@@ -85,10 +86,11 @@ class PortfolioControllerTest {
     void getPortfolioDevuelveCreditosYHoldings() throws Exception {
         PortfolioService portfolioService = mock(PortfolioService.class);
         UserService userService = mock(UserService.class);
-        when(userService.recuperarPorEmail("ivan@gmail.com"))
-                .thenReturn(Optional.of(new User("ivan", "ivan@gmail.com", "pass")));
+        when(userService.recuperar(USER_ID))
+                .thenReturn(USER_1);
+
         UUID portfolioId = UUID.randomUUID();
-        Portfolio portfolio = new Portfolio(portfolioId, 735L, BigDecimal.valueOf(500), 0L);
+        Portfolio portfolio = new Portfolio(portfolioId, USER_ID, BigDecimal.valueOf(500), 0L);
         portfolio.addTokenHolding(new TokenHolding(UUID.randomUUID(), portfolioId, 1247L, 5));
         when(portfolioService.getByUserId(any())).thenReturn(portfolio);
 
