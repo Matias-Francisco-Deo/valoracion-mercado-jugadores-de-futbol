@@ -33,6 +33,7 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
       }
 
       let message = data.message || data.error || 'Ocurrió un error inesperado.';
+
       if (response.status === 402 || message === 'Insufficient funds') {
         message = 'No tenés créditos suficientes para realizar esta operación.';
       }
@@ -40,12 +41,14 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
       throw new HttpError(response.status, message)
     }
 
-    // Handle 204 No Content
-    if (response.status === 204) {
-      return {} as T;
-    }
+    // Handle 204 and 205 No Content
+  if (response.status === 204 || response.status === 205) { return {} as T; }
 
-  return response.json()
+  const text = await response.text();
+
+  if (!text.trim()) { return undefined as T; }
+
+  return JSON.parse(text) as T;
 }
 
 export const futbolApi = {
