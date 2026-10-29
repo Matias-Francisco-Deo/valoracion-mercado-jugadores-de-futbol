@@ -1,5 +1,6 @@
 package com.overcode.service.impl;
 
+import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
@@ -113,9 +114,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User depositarCreditos(Long userId, Double amount) {
-        if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("El monto a depositar debe ser mayor a cero");
-        }
+        if (amount <= 0) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero");
+
         User user = recuperar(userId);
         user.addCredits(amount);
         return userRepository.guardar(user);

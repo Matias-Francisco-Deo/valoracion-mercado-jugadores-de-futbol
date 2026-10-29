@@ -1,5 +1,6 @@
 package com.overcode.service;
 
+import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.NombreRepetidoException;
@@ -104,9 +105,8 @@ class UserServiceImplTest {
     @Test
     void depositarCreditosConMontoInvalidoLanzaExcepcion() {
         User created = userService.guardar(USER1);
-        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), -10d));
-        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), 0d));
-        assertThrows(IllegalArgumentException.class, () -> userService.depositarCreditos(created.getId(), null));
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), -10d));
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), 0d));
     }
 
 
