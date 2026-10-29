@@ -117,7 +117,7 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
 
       <div className="mt-3 text-center text-sm font-medium">
         ¿No tienes cuenta? Regístrate{' '}
-        <Link to="/register" className="font-bold text-[#9EE2EE] transition-colors hover:text-[#e08500]">
+        <Link to="/register" className="font-bold text-[#9EE2EE] transition-colors hover:text-hover-orange">
           aquí.
         </Link>
       </div>

@@ -18,7 +18,7 @@ export const DepositCreditsModal: React.FC<DepositCreditsModalProps> = ({ isOpen
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const parsedAmount = Number(amount);
 
@@ -27,6 +27,10 @@ export const DepositCreditsModal: React.FC<DepositCreditsModalProps> = ({ isOpen
       return;
     }
 
+    if (parsedAmount >= 10000) {
+      setError('El monto a depositar debe ser menor a diez mil.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
@@ -75,7 +79,8 @@ export const DepositCreditsModal: React.FC<DepositCreditsModalProps> = ({ isOpen
             <input
               id="deposit-amount"
               type="number"
-              min="1"
+              min={1}
+              max={10000}
               step="any"
               value={amount}
               onChange={(e) => {

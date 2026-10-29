@@ -66,7 +66,7 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
 
   return (
     <form onSubmit={handleSubmit} noValidate
-    className="flex flex-col bg-[#A8A8A8] border border-gray-400/50 shadow-2xl gap-4 p-6 sm:p-8 rounded-xl max-w-md w-full mx-auto backdrop-blur-xs" {...props}>
+    className="flex flex-col bg-card-gray border border-gray-400/50 shadow-2xl gap-4 p-6 sm:p-8 rounded-xl max-w-md w-full mx-auto backdrop-blur-xs" {...props}>
       
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 tracking-tight">
         Registrarse
@@ -128,7 +128,7 @@ export const RegisterForm = (props: React.ComponentProps<'form'>) => {
         ¿Ya tienes cuenta? Inicia sesión{' '}
         <Link
           to="/login"
-          className="font-bold text-[#9EE2EE] hover:text-[#e08500] transition-colors">
+          className="font-bold text-[#9EE2EE] hover:text-hover-orange transition-colors">
           aqui.
         </Link>
       </div>

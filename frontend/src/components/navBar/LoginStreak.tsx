@@ -35,7 +35,7 @@ export const LoginStreak: React.FC<LoginStreakProps> = ({status,onClick,classNam
           Racha
         </span>
         <span className="text-sm font-bold truncate">
-          {status?.currentStreak ?? 0} {status?.currentStreak === 1 ? 'día' : 'días'}
+          {status?.currentStreak ?? 0}10 {status?.currentStreak === 1 ? 'día' : 'días'}
         </span>
       </div>
 

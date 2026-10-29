@@ -29,7 +29,7 @@ export const CreditsSection: React.FC<CreditsSectionProps> = ({
         <span className="text-[10px] font-medium uppercase tracking-wider text-black/70">
           Créditos
         </span>
-        <span className="text-sm font-bold truncate">
+        <span className="text-sm font-bold truncate max-w-20">
           ${user.creditBalance}
         </span>
       </div>
