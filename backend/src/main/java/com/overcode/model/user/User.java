@@ -56,6 +56,10 @@ public class User {
         setTokens(new ArrayList<>());
     }
 
+    public User(Long userId) {
+        setId(userId);
+    }
+
     public void setCreditBalance(Double creditBalance) {
         this.creditBalance = creditBalance != null ? Math.max(creditBalance, 0) : 0;
     }

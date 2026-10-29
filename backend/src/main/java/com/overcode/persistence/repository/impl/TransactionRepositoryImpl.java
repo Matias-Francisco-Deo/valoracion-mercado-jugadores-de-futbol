@@ -37,7 +37,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public List<TransaccionFinanciera> recuperarTodasPorUserId(Long userId) {
+    public List<TransaccionFinanciera> recuperarTodasPorUser(Long userId) {
         return transactionDAOJPA.findAllByOwner_IdOrderByDateAscIdAsc(userId).stream().map(TransactionJPADTO::aModelo).toList();
     }
 

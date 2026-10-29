@@ -1,9 +1,8 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
+import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.Position;
 import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -104,33 +102,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Position> recuperarPortfolioDeUser(Long userId){
-        if(!userRepository.existsById(userId)){
+    public Portfolio recuperarPortfolioDeUser(User user){
+        if(!userRepository.existsById(user.getId())){
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
-        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUserId(userId);
+        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUser(user.getId());
 
-        Map<Long, List<TransaccionFinanciera>> transactionsPorJugador = new java.util.LinkedHashMap<>();
-
-        for (TransaccionFinanciera transaccionFinanciera : transaccionFinancieras) {
-            Long playerId = transaccionFinanciera.getPlayer().getId();
-            transactionsPorJugador.computeIfAbsent(playerId, id -> new java.util.ArrayList<>()).add(transaccionFinanciera);
-        }
-
-        List<Position> positions = new java.util.ArrayList<>();
-
-        for (Map.Entry<Long, List<TransaccionFinanciera>> entry : transactionsPorJugador.entrySet()) {
-            List<TransaccionFinanciera> transactionsDelJugador = entry.getValue();
-
-            Player player = transactionsDelJugador.get(0).getPlayer();
-
-            Position position = new Position(player, transactionsDelJugador);
-            if (position.getQuantity() > 0) {
-                positions.add(position);
-            }
-        }
-
-        return positions;
+        return Portfolio.desdeTransacciones(transaccionFinancieras);
     }
 
     private void validarUsuarioNuevo(User userACrear) {

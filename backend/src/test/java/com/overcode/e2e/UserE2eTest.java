@@ -2,7 +2,7 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
-import com.overcode.controller.dto.position.PositionResponseDTO;
+import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;

@@ -3,6 +3,7 @@ package com.overcode.controller;
 import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
+import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
 import com.overcode.model.venta.Position;
 import com.overcode.model.venta.transaction.TransaccionFinanciera;
@@ -36,6 +37,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private static final Long USER_ID = 1L;
+    public static final User USER = new User(USER_ID);
     private static final Long PLAYER_ID = 10L;
 
     @BeforeEach
@@ -146,7 +148,7 @@ class UserControllerTest {
         TransaccionFinanciera tx = new TransaccionFinanciera(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
         Position position = new Position(player, List.of(tx));
 
-        when(userService.recuperarPortfolioDeUser(USER_ID)).thenReturn(List.of(position));
+        when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of(position)));
 
         mockMvc.perform(get("/users/" + USER_ID + "/portfolio"))
                 .andExpect(status().isOk())
@@ -159,27 +161,27 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].profitLoss").value(100.0))
                 .andExpect(jsonPath("$[0].profitLossPercentage").value(20.0));
 
-        verify(userService, times(1)).recuperarPortfolioDeUser(USER_ID);
+        verify(userService, times(1)).recuperarPortfolioDeUser(any(User.class));
     }
 
     @Test
     void getPortfolioDevuelveListaVaciaCuandoUsuarioNoTienePosiciones() throws Exception {
-        when(userService.recuperarPortfolioDeUser(USER_ID)).thenReturn(List.of());
+        when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of()));
 
         mockMvc.perform(get("/users/" + USER_ID + "/portfolio"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
 
-        verify(userService, times(1)).recuperarPortfolioDeUser(USER_ID);
+        verify(userService, times(1)).recuperarPortfolioDeUser(any(User.class));
     }
 
     @Test
     void getPortfolioDevuelve404CuandoUsuarioNoExiste() throws Exception {
-        when(userService.recuperarPortfolioDeUser(999L))
+        when(userService.recuperarPortfolioDeUser(any(User.class)))
                 .thenThrow(new EntidadNoEncontradaException("El usuario no existe"));
 
-        mockMvc.perform(get("/users/999/portfolio"))
+        mockMvc.perform(get("/users/-1/portfolio"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("El usuario no existe"));
     }

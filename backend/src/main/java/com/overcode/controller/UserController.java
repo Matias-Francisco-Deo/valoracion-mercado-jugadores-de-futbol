@@ -1,12 +1,13 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.position.PositionResponseDTO;
+import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
+import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.token.SummaryTokenPlayer;
+import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.Position;
 import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,10 +64,12 @@ public class UserController {
 
     @GetMapping("/{userId}/portfolio")
     public ResponseEntity<List<PositionResponseDTO>> getPortfolio(@PathVariable Long userId) {
+        User user = new User();
+        user.setId(userId);
+        Portfolio portfolio = userService.recuperarPortfolioDeUser(user);
+        PortfolioResponseDTO portfolioResponseDTO = PortfolioResponseDTO.desdeModelo(portfolio);
 
-        List<Position> positions = userService.recuperarPortfolioDeUser(userId);
-
-        return ResponseEntity.ok(positions.stream().map(PositionResponseDTO::desdeModelo).toList());
+        return ResponseEntity.ok(portfolioResponseDTO.positions());
     }
 
 }

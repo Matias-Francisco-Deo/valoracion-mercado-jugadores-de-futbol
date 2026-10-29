@@ -17,5 +17,5 @@ public interface TransactionRepository {
 
     List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras);
 
-    List<TransaccionFinanciera> recuperarTodasPorUserId(Long userId);
+    List<TransaccionFinanciera> recuperarTodasPorUser(Long userId);
 }
