@@ -1,12 +1,12 @@
 package com.overcode.service.bonus;
 
-import com.overcode.model.User;
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;

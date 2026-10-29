@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.bonus;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 public record ClaimBonusRequestDTO(Long userId) {
 

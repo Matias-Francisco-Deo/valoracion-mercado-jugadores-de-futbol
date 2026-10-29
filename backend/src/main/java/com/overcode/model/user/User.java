@@ -1,11 +1,11 @@
 package com.overcode.model.user;
 
-import com.overcode.model.exception.FondosInsuficientesException;
-import com.overcode.model.exception.ParametroNoValidoException;
-import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.exception.FondosInsuficientesException;
+import com.overcode.model.exception.ParametroNoValidoException;
+import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import lombok.Getter;
@@ -77,10 +77,6 @@ public class User {
         setPassword(password);
         setCreditBalance(0d);
         setTokens(new ArrayList<>());
-    }
-
-    public User(Long userId) {
-        setId(userId);
     }
 
     public void setCreditBalance(Double creditBalance) {

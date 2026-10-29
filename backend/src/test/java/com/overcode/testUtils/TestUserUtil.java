@@ -1,6 +1,6 @@
 package com.overcode.testUtils;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
