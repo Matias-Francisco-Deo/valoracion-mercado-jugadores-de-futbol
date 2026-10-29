@@ -82,7 +82,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
         List<OrdenDeCompra> openOrders = ordenDeCompraRepository.findOpenSellOrders(playerId,buyerId);
 
-        MotorDeMercado motorDeMercado = new MotorDeMercado(); // TODO testear?
+        MotorDeMercado motorDeMercado = new MotorDeMercado();
         TransaccionCompra transaccionCompra = motorDeMercado.comprarOrdenes(openOrders, quantity, buyer);
 
         userRepository.guardar(buyer);
