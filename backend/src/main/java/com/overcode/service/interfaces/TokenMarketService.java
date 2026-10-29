@@ -3,7 +3,7 @@ package com.overcode.service.interfaces;
 import com.overcode.model.venta.BuyOrder;
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.model.venta.SellPost;
-import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +28,7 @@ public interface TokenMarketService {
      */
     void cancel(Long orderId, Long userId);
 
-    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
+    Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
 
-    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable);
+    Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable);
 }

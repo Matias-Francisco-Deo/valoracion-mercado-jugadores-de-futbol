@@ -48,8 +48,6 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     @Override
     public void emitTokensForNewPlayer(Player player) {
-        if (player != null) {
-            emitTokensForNewPlayers(List.of(player));
-        }
+        emitTokensForNewPlayers(List.of(player));
     }
 }

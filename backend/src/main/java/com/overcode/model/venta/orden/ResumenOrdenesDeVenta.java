@@ -1,6 +1,6 @@
 package com.overcode.model.venta.orden;
 
-public record OrderSellSummary(
+public record ResumenOrdenesDeVenta(
         Long playerId,
         String playerName,
         Integer quantity,

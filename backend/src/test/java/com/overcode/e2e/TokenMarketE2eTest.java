@@ -4,7 +4,7 @@ import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
-import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
+import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.player.Player;
 import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
@@ -196,10 +196,7 @@ class TokenMarketE2eTest {
     }
 
     private SellTokenRequest crearSellRequest(Long playerId, Integer quantity) {
-        SellTokenRequest req = new SellTokenRequest();
-        req.setPlayerId(playerId);
-        req.setQuantity(quantity);
-        return req;
+        return new SellTokenRequest(playerId, quantity);
     }
 
     // ============================================================================================

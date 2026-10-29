@@ -3,7 +3,7 @@ package com.overcode.service.impl;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.model.venta.*;
-import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.OrderNotFoundException;
@@ -107,20 +107,17 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     }
 
     @Override
-    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
-        if(userId != null){
-            return sellOrderRepository.buscarOrdersSellAbiertasExcluyendoUsuario(userId,nombre,pageable);
-        }
-        return sellOrderRepository.buscarOrdersSellSummaryAbiertas(nombre,pageable);
+    public Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
+        return sellOrderRepository.buscarOrdenesDeVentaAbiertas(userId, nombre, pageable);
     }
 
     @Override
-    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable) {
+    public Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable) {
         if (!userRepository.existsById(userId)) {
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
 
-        return sellOrderRepository.buscarOrdersSellSummaryAbiertasPorUsuario(userId, nombre,pageable);
+        return sellOrderRepository.buscarOrdenesDeVentaDeUser(userId, nombre,pageable);
     }
 
 }

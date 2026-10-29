@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderSellSummary;
 import com.overcode.model.venta.orden.OrderStatus;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
@@ -64,18 +64,14 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
     }
 
     @Override
-    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas(String nombre, Pageable pageable) {
-        return dao.buscarOrdersSellAbiertas(nombre, pageable);
+    public Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(Long userId, String nombre, Pageable pageable) {
+        return dao.buscarOrdenesDeVentaAbiertas(userId, nombre, pageable);
     }
 
-    @Override
-    public Page<OrderSellSummary> buscarOrdersSellAbiertasExcluyendoUsuario(Long userId, String nombre, Pageable pageable){
-        return dao.buscarOrdersSellAbiertasExcluyendoUsuario(userId, nombre, pageable);
-    }
 
     @Override//recuoera pagina de summary de ordenes abiertas de un usuario
-    public Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable) {
-        return dao.buscarOrdersSellAbiertasPorUsuario(userId, nombre, pageable);
+    public Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(Long userId, String nombre, Pageable pageable) {
+        return dao.buscarOrdenesDeVentaDeUser(userId, nombre, pageable);
     }
 
 }

@@ -1,16 +1,16 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
+import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
 import com.overcode.model.venta.BuyOrder;
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.model.venta.SellPost;
-import com.overcode.model.venta.orden.OrderSellSummary;
 import com.overcode.model.venta.orden.OrderStatus;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.model.exception.InsufficientLiquidityException;
 import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.Test;
@@ -190,8 +190,8 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperar(USER_ID)).thenReturn(user);
 
-        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 3, 20.0);
-        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
+        ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 3, 20.0);
+        Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
 
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(page);
@@ -213,8 +213,8 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 2, 25.0);
-        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
+        ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 2, 25.0);
+        Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
 
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), eq("Messi"), any(Pageable.class)))
                 .thenReturn(page);
@@ -237,7 +237,7 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(2, 5), 0);
+        Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(2, 5), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -261,7 +261,7 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
+        Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -299,8 +299,8 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 4, 30.0);
-        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
+        ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 4, 30.0);
+        Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
 
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(page);
@@ -326,8 +326,8 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        OrderSellSummary summaryDTO = new OrderSellSummary(PLAYER_ID, "Lionel Messi", 1, 35.0);
-        Page<OrderSellSummary> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
+        ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 1, 35.0);
+        Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
 
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), eq("Messi"), any(Pageable.class)))
                 .thenReturn(page);
@@ -347,7 +347,7 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 5), 0);
+        Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 5), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -370,7 +370,7 @@ class OrderControllerTest {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
         UserService userService = mock(UserService.class);
 
-        Page<OrderSellSummary> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+        Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 

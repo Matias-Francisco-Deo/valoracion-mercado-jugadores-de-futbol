@@ -101,4 +101,10 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleExisteOrdenAbiertaParaToken(ExisteOrdenAbiertaParaTokenException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
+
+    @ExceptionHandler(ParametroNoValidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleParametroNoValido(ParametroNoValidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
 }

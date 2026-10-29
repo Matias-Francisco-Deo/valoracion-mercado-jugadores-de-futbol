@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
 import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,9 +20,7 @@ public interface SellOrderRepository {
 
     List<OrdenDeCompra> findOpenSellOrders(Long playerId, Long buyerId);
 
-    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertas (String nombre, Pageable pageable);
+    Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(Long userId, String nombre, Pageable pageable);
 
-    Page<OrderSellSummary> buscarOrdersSellAbiertasExcluyendoUsuario(Long userId, String nombre, Pageable pageable);
-
-    Page<OrderSellSummary> buscarOrdersSellSummaryAbiertasPorUsuario(Long userId, String nombre, Pageable pageable);
+    Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(Long userId, String nombre, Pageable pageable);
 }

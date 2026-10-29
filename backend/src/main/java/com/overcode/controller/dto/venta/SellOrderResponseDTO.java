@@ -1,4 +1,4 @@
-package com.overcode.controller.dto.p2p;
+package com.overcode.controller.dto.venta;
 
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.model.venta.orden.OrderStatus;

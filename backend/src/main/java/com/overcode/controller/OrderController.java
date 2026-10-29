@@ -2,10 +2,10 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
-import com.overcode.controller.dto.p2p.OrderSellSummaryPageResponseDTO;
+import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.venta.BuyOrder;
 import com.overcode.model.venta.SellPost;
-import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,7 +70,7 @@ public class OrderController {
     ) {
         Long userId = Long.parseLong(principal.getName());
 
-        Page<OrderSellSummary> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
+        Page<ResumenOrdenesDeVenta> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 
@@ -84,7 +84,7 @@ public class OrderController {
             @PageableDefault(sort = "playerName") // TODO probar con el front sacar esto
             Pageable pageable
     ) {
-        Page<OrderSellSummary> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);
+        Page<ResumenOrdenesDeVenta> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);
 
         OrderSellSummaryPageResponseDTO response = OrderSellSummaryPageResponseDTO.desdeModelo(ordersSell);
 

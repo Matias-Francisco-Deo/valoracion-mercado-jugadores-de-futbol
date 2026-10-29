@@ -1,6 +1,6 @@
-package com.overcode.controller.dto.p2p;
+package com.overcode.controller.dto.venta;
 
-import com.overcode.model.venta.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public record OrderSellSummaryPageResponseDTO(
         long totalElements,
         int totalPages
 ) {
-    public static OrderSellSummaryPageResponseDTO desdeModelo(Page<OrderSellSummary> modelo) {
+    public static OrderSellSummaryPageResponseDTO desdeModelo(Page<ResumenOrdenesDeVenta> modelo) {
         return new OrderSellSummaryPageResponseDTO(
                 modelo.getContent().stream().map(OrderSellSummaryResponseDTO::desdeModelo).toList(),
                 modelo.getNumber(),
