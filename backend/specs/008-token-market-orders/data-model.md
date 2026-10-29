@@ -14,7 +14,7 @@ Represents a user's total holdings. It holds the user's available credits and a 
 **Behaviors / Invariants**:
 - `hasSufficientCredits(amount)`: Checks if `credits >= amount`.
 - `addCredits(amount)`: Increases credit balance.
-- `deductCredits(amount)`: Decreases balance. Throws `InsufficientFundsException` if resulting balance < 0 (unless it's the super admin, who is allowed negative/infinite credits if configured).
+- `deductCredits(amount)`: Decreases balance. Throws `FondosInsuficientesException` if resulting balance < 0 (unless it's the super admin, who is allowed negative/infinite credits if configured).
 
 ### TokenHolding
 Represents the amount of tokens a portfolio has for a specific player.

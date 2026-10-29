@@ -1,8 +1,8 @@
 package com.overcode.model.exception;
 
 /** Thrown by the domain when a portfolio does not hold enough credits for an operation. */
-public class InsufficientFundsException extends RuntimeException {
-    public InsufficientFundsException(String message) {
+public class FondosInsuficientesException extends RuntimeException {
+    public FondosInsuficientesException(String message) {
         super(message);
     }
 }

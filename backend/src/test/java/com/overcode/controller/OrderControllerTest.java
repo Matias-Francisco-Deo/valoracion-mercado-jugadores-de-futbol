@@ -1,7 +1,7 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
-import com.overcode.model.exception.InsufficientLiquidityException;
+import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
@@ -101,7 +101,7 @@ class OrderControllerTest {
         User user = new User("ivan", "ivan@gmail.com", "pass");
         user.setId(USER_ID);
         when(userService.recuperar(USER_ID)).thenReturn(user);
-        doThrow(new InsufficientLiquidityException("Not enough liquidity to buy 5 tokens for player 10"))
+        doThrow(new TokensInsuficientesParaComprarException("Not enough liquidity to buy 5 tokens for player 10"))
                 .when(tokenMarketService).buy(any(BuyOrder.class));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService))

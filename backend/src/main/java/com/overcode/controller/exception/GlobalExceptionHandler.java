@@ -54,9 +54,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(InsufficientEscrowException.class)
+    @ExceptionHandler(TokensInsuficientesParaVenderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDTO handleInsufficientEscrow(InsufficientEscrowException ex) {
+    public ErrorResponseDTO handleInsufficientEscrow(TokensInsuficientesParaVenderException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
@@ -66,9 +66,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(InsufficientFundsException.class)
+    @ExceptionHandler(FondosInsuficientesException.class)
     @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
-    public ErrorResponseDTO handleInsufficientFunds(InsufficientFundsException ex) {
+    public ErrorResponseDTO handleInsufficientFunds(FondosInsuficientesException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
@@ -84,9 +84,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(InsufficientLiquidityException.class)
+    @ExceptionHandler(TokensInsuficientesParaComprarException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponseDTO handleInsufficientLiquidity(InsufficientLiquidityException ex) {
+    public ErrorResponseDTO handleInsufficientLiquidity(TokensInsuficientesParaComprarException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
@@ -102,9 +102,17 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(RequestNoValidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleRequestNoValida(RequestNoValidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
     @ExceptionHandler(ParametroNoValidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleParametroNoValido(ParametroNoValidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
+
+
 }

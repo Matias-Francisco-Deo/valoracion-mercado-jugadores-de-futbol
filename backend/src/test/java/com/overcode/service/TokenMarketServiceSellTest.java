@@ -1,6 +1,6 @@
 package com.overcode.service;
 
-import com.overcode.model.exception.InsufficientEscrowException;
+import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
@@ -120,7 +120,7 @@ class TokenMarketServiceSellTest {
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
         SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
-        assertThrows(InsufficientEscrowException.class,
+        assertThrows(TokensInsuficientesParaVenderException.class,
                 () -> service.sell(post));
 
         verifyNoInteractions(ordenDeCompraRepository);
@@ -133,7 +133,7 @@ class TokenMarketServiceSellTest {
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
         SellPost post = new SellPost(USER_ID, PLAYER_ID, 5);
-        assertThrows(InsufficientEscrowException.class,
+        assertThrows(TokensInsuficientesParaVenderException.class,
                 () -> service.sell(post));
 
         verifyNoInteractions(ordenDeCompraRepository);

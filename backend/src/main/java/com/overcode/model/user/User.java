@@ -1,21 +1,16 @@
 package com.overcode.model.user;
 
-import com.overcode.model.exception.InsufficientEscrowException;
-import com.overcode.model.exception.InsufficientLiquidityException;
+import com.overcode.model.exception.FondosInsuficientesException;
+import com.overcode.model.exception.ParametroNoValidoException;
+import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Setter @Getter @NoArgsConstructor
 public class User {
@@ -70,18 +65,18 @@ public class User {
     }
 
     public void debitCredits(Double amount) {
-        if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("Amount must be positive");
+        if (amount <= 0) {
+            throw new ParametroNoValidoException("Cantidad debe ser positiva");
         }
         if (!hasSufficientCredits(amount)) {
-            throw new com.overcode.model.exception.InsufficientFundsException("Insufficient funds");
+            throw new FondosInsuficientesException("Fondos insuficientes");
         }
         this.creditBalance -= amount;
     }
 
     public void creditCredits(Double amount) {
         if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("Amount must be positive");
+            throw new ParametroNoValidoException("Cantidad debe ser positiva");
         }
         this.creditBalance = (this.creditBalance != null ? this.creditBalance : 0) + amount;
     }
@@ -101,34 +96,16 @@ public class User {
 
     public List<Token> releaseTokensForSale(Player player, int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive."); // TODO exc
+            throw new ParametroNoValidoException("Quantity must be positive.");
         }
         List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {
-            throw new InsufficientEscrowException("Not enough tokens to place SELL order.");
+            throw new TokensInsuficientesParaVenderException("No hay suficientes tokens para vender la cantidad pedida");
         }
 
         List<Token> toRelease = new ArrayList<>(playerTokens.subList(0, quantity));
         this.tokens.removeAll(toRelease);
         return toRelease;
-    }
-
-    public List<TransaccionFinanciera> buyTokens(List<OrdenDeCompra> orders) {
-        if (orders.isEmpty()) {throw new InsufficientLiquidityException("Not enough tokens to buy.");}
-
-        Map<Long, User> sellersById = new HashMap<>();
-
-        for (OrdenDeCompra order : orders) {
-            User seller = order.getOwner();
-
-            User existingSeller = sellersById.putIfAbsent(seller.getId(), seller);
-
-            if (existingSeller != null) {order.setOwner(existingSeller);}
-
-            order.executePurchase(this);
-        }
-
-        return createTransactions(orders);
     }
 
     public void addToken(Token token) {
@@ -144,26 +121,6 @@ public class User {
 
     public void addTokens(List<Token> newTokens) {
         newTokens.forEach(this::addToken);
-    }
-
-    private List<TransaccionFinanciera> createTransactions(List<OrdenDeCompra> orders) {//crear un objeto aparte para crear las transacciones?
-        List<TransaccionFinanciera> transaccionFinancieras = new ArrayList<>();
-
-        Player player = orders.get(0).getPlayer();
-
-        transaccionFinancieras.add(new TransaccionFinanciera(this, player, TransactionType.BUY, orders.size()));
-
-        Map<User, Integer> quantityBySeller = orders.stream()
-                .collect(Collectors.groupingBy(
-                        OrdenDeCompra::getOwner,
-                        Collectors.summingInt(order -> 1)
-                ));
-
-        quantityBySeller.forEach((seller, quantity) ->
-                transaccionFinancieras.add(new TransaccionFinanciera(seller, player, TransactionType.SELL, quantity))
-        );
-
-        return transaccionFinancieras;
     }
 
 }

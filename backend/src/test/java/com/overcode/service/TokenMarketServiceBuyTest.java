@@ -1,7 +1,7 @@
 package com.overcode.service;
 
-import com.overcode.model.exception.InsufficientFundsException;
-import com.overcode.model.exception.InsufficientLiquidityException;
+import com.overcode.model.exception.FondosInsuficientesException;
+import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
@@ -193,7 +193,7 @@ class TokenMarketServiceBuyTest {
                 .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1d)));
 
         BuyOrder order = new BuyOrder(buyer, player, 5);
-        assertThrows(InsufficientLiquidityException.class,
+        assertThrows(TokensInsuficientesParaComprarException.class,
                 () -> service.buy(order));
 
         verify(ordenDeCompraRepository, never()).saveAll(any());
@@ -212,7 +212,7 @@ class TokenMarketServiceBuyTest {
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
-        assertThrows(InsufficientFundsException.class,
+        assertThrows(FondosInsuficientesException.class,
                 () -> service.buy(order));
 
         verify(ordenDeCompraRepository, never()).saveAll(any());
@@ -230,7 +230,7 @@ class TokenMarketServiceBuyTest {
                 .thenReturn(List.of());
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
-        assertThrows(InsufficientLiquidityException.class,
+        assertThrows(TokensInsuficientesParaComprarException.class,
                 () -> service.buy(order));
 
         verify(ordenDeCompraRepository, never()).saveAll(any());

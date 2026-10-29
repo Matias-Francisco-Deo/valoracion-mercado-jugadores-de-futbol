@@ -1,4 +1,4 @@
-package com.overcode.controller.exception;
+package com.overcode.model.exception;
 
 public class ParametroNoValidoException extends RuntimeException {
     public ParametroNoValidoException(String message) {
