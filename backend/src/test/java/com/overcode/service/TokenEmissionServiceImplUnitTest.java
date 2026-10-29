@@ -4,7 +4,7 @@ import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.impl.TokenEmissionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,13 +23,13 @@ class TokenEmissionServiceImplUnitTest {
 
     private UserRepository userRepository;
     private TokenEmissionServiceImpl tokenEmissionService;
-    private SellOrderRepository sellOrderRepository;
+    private OrdenDeCompraRepository ordenDeCompraRepository;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        sellOrderRepository = mock(SellOrderRepository.class);
-        tokenEmissionService = new TokenEmissionServiceImpl(userRepository,sellOrderRepository);
+        ordenDeCompraRepository = mock(OrdenDeCompraRepository.class);
+        tokenEmissionService = new TokenEmissionServiceImpl(userRepository, ordenDeCompraRepository);
         ReflectionTestUtils.setField(tokenEmissionService, "superuserEmail", "superuser@test.com");
     }
 
@@ -50,7 +50,7 @@ class TokenEmissionServiceImplUnitTest {
 
         verify(userRepository, times(1)).findByEmail("superuser@test.com");
         verify(userRepository, times(1)).guardar(superuser);
-        verify(sellOrderRepository, times(2)).saveAll(ordersCaptor.capture());
+        verify(ordenDeCompraRepository, times(2)).saveAll(ordersCaptor.capture());
 
         List<List<OrdenDeCompra>> allOrders = ordersCaptor.getAllValues();
         assertEquals(2, allOrders.size());

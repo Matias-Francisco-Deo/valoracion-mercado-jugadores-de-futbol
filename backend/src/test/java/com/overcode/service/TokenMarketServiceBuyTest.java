@@ -29,14 +29,14 @@ import static org.mockito.Mockito.*;
 
 class TokenMarketServiceBuyTest {
 
-    private final SellOrderRepository sellOrderRepository = mock(SellOrderRepository.class);
+    private final OrdenDeCompraRepository ordenDeCompraRepository = mock(OrdenDeCompraRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PlayerRepository playerRepository = mock(PlayerRepository.class);
     private final TokenRepository tokenRepository = mock(TokenRepository.class);
     private final TransactionRepository transactionRepository = mock(TransactionRepository.class);
 
     private final TokenMarketServiceImpl service =
-            new TokenMarketServiceImpl(sellOrderRepository, userRepository, playerRepository, tokenRepository, transactionRepository);
+            new TokenMarketServiceImpl(ordenDeCompraRepository, userRepository, playerRepository, tokenRepository, transactionRepository);
 
     private static final Long PLAYER = 10L;
 
@@ -90,7 +90,7 @@ class TokenMarketServiceBuyTest {
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(sellerA));
         when(userRepository.recuperar(3L)).thenReturn(Optional.of(sellerB));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(askA, askB));
+        when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(askA, askB));
 
         service.buy(new BuyOrder(buyer, player, 2));
 
@@ -102,7 +102,7 @@ class TokenMarketServiceBuyTest {
         assertEquals(OrderStatus.COMPLETED, askB.getStatus());
         assertEquals(2, buyer.getTokens().size());
 
-        verify(sellOrderRepository, times(1)).saveAll(List.of(askA, askB));
+        verify(ordenDeCompraRepository, times(1)).saveAll(List.of(askA, askB));
         verify(userRepository, times(1)).guardar(buyer);
         verify(userRepository, times(1)).guardar(sellerA);
         verify(userRepository, times(1)).guardar(sellerB);
@@ -159,7 +159,7 @@ class TokenMarketServiceBuyTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(seller));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask1, ask2, ask3));
+        when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask1, ask2, ask3));
 
         service.buy(new BuyOrder(buyer, player, 3));
 
@@ -189,14 +189,14 @@ class TokenMarketServiceBuyTest {
         User buyer = userWithCredits(1L, 100d);
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId()))
+        when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId()))
                 .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1d)));
 
         BuyOrder order = new BuyOrder(buyer, player, 5);
         assertThrows(InsufficientLiquidityException.class,
                 () -> service.buy(order));
 
-        verify(sellOrderRepository, never()).saveAll(any());
+        verify(ordenDeCompraRepository, never()).saveAll(any());
         verify(transactionRepository, never()).guardarTodos(any());
     }
 
@@ -209,13 +209,13 @@ class TokenMarketServiceBuyTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0d)));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
-        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
+        when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
         assertThrows(InsufficientFundsException.class,
                 () -> service.buy(order));
 
-        verify(sellOrderRepository, never()).saveAll(any());
+        verify(ordenDeCompraRepository, never()).saveAll(any());
         verify(transactionRepository, never()).guardarTodos(any());
     }
 
@@ -226,14 +226,14 @@ class TokenMarketServiceBuyTest {
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         // La única orden pertenece al propio comprador
-        when(sellOrderRepository.findOpenSellOrders(PLAYER,buyer.getId()))
+        when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId()))
                 .thenReturn(List.of());
 
         BuyOrder order = new BuyOrder(buyer, player, 1);
         assertThrows(InsufficientLiquidityException.class,
                 () -> service.buy(order));
 
-        verify(sellOrderRepository, never()).saveAll(any());
+        verify(ordenDeCompraRepository, never()).saveAll(any());
         verify(transactionRepository, never()).guardarTodos(any());
     }
 

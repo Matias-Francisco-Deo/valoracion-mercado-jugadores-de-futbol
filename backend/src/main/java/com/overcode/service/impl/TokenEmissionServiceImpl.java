@@ -4,7 +4,7 @@ import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.model.venta.MotorDeMercado;
 import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.TokenEmissionService;
@@ -19,14 +19,14 @@ import java.util.List;
 public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     private final UserRepository userRepository;
-    private final SellOrderRepository sellOrderRepository;
+    private final OrdenDeCompraRepository ordenDeCompraRepository;
 
     @Value("${superuser.email:overcode@gmail.com}")
     private String superuserEmail;
 
-    public TokenEmissionServiceImpl(UserRepository userRepository,SellOrderRepository sellOrderRepository) {
+    public TokenEmissionServiceImpl(UserRepository userRepository, OrdenDeCompraRepository ordenDeCompraRepository) {
         this.userRepository = userRepository;
-        this.sellOrderRepository = sellOrderRepository;
+        this.ordenDeCompraRepository = ordenDeCompraRepository;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
             MotorDeMercado motorDeMercado = new MotorDeMercado();
             List<OrdenDeCompra> orders = motorDeMercado.publicarJugador(player, superuser);
 
-            sellOrderRepository.saveAll(orders);
+            ordenDeCompraRepository.saveAll(orders);
         }
         userRepository.guardar(superuser);
     }

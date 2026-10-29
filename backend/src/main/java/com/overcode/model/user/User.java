@@ -101,7 +101,7 @@ public class User {
 
     public List<Token> releaseTokensForSale(Player player, int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive.");
+            throw new IllegalArgumentException("Quantity must be positive."); // TODO exc
         }
         List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {

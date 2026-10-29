@@ -32,7 +32,7 @@ public class OrderController {
 
     /** Buys instantly against the resting SELL book, at the player's current price. All-or-nothing. */
     @PostMapping("/buy")
-    public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequest request, Principal principal) { // TODO ver otras requests
+    public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         BuyOrder buyOrder = request.aModelo(userId);
         tokenMarketService.buy(buyOrder);

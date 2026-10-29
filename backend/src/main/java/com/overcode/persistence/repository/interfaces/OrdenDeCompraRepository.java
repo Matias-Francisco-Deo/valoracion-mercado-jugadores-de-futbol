@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-public interface SellOrderRepository {
+public interface OrdenDeCompraRepository {
 
     OrdenDeCompra save(OrdenDeCompra order);
 
     List<OrdenDeCompra> saveAll(List<OrdenDeCompra> orders);
 
-    Optional<OrdenDeCompra> findById(Long id);
+    Optional<OrdenDeCompra> recuperarPorId(Long id);
 
     boolean existsOpenOrderByTokenId(Long tokenId);
 

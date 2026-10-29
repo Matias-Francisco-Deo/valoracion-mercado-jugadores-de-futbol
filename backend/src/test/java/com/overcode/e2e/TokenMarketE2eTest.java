@@ -7,7 +7,10 @@ import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.player.Player;
 import com.overcode.model.venta.orden.OrderStatus;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +47,13 @@ class TokenMarketE2eTest {
     private static final String BUYER_PASSWORD = "Password123!";
 
     private static final Long NON_EXISTENT_ID = 999999L;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private TokenMarketService tokenMarketService;
+
+    @Autowired
+    private OrdenDeCompraRepository ordenDeCompraRepository;
 
     record SellOrderRecord(
             Long id,
@@ -121,6 +132,7 @@ class TokenMarketE2eTest {
 
     private void acreditarFondosAUsuario(Long userId, int creditos) {
         jdbcTemplate.update("UPDATE users SET credit_balance = ? WHERE id = ?", creditos, userId);
+
     }
 
     private BuyTokenRequest crearBuyRequest(Long playerId, Integer quantity) {
@@ -234,19 +246,13 @@ class TokenMarketE2eTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Se verifica que el comprador ahora tiene 2 tokens en base de datos
-        // TODO está feo esto
-        Integer tokensComprador = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM tokens WHERE owner_id = ? AND player_id = ?",
-                Integer.class, buyerAuth.user().id(), player.getId()
-        );
+        Integer tokensComprador = Math.toIntExact(userService.recuperar(buyerAuth.user().id()).getTokens().stream()
+                .filter(t -> t.getPlayer().getId().equals(player.getId())).count());
         assertEquals(2, tokensComprador);
 
         // Se verifica que el vendedor recibió 2 * 20 = 40 créditos
-        // TODO está feo esto
-        Integer balanceVendedor = jdbcTemplate.queryForObject(
-                "SELECT credit_balance FROM users WHERE id = ?",
-                Integer.class, sellerAuth.user().id()
-        );
+        Double balanceVendedor = userService.recuperar(sellerAuth.user().id()).getCreditBalance();
+
         assertEquals(40, balanceVendedor);
     }
 
@@ -279,10 +285,8 @@ class TokenMarketE2eTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Ya no deben quedar órdenes de venta abiertas para este jugador
-        Integer ordenesAbiertas = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM sell_orders WHERE player_id = ? AND status = 'OPEN'",
-                Integer.class, player.getId()
-        );
+        Integer ordenesAbiertas = tokenMarketService.buscarOrdersSellSummaryAbiertas(null, player.getName(), Pageable.unpaged()).getSize();
+
         assertEquals(0, ordenesAbiertas);
     }
 
@@ -465,17 +469,13 @@ class TokenMarketE2eTest {
         assertEquals(HttpStatus.OK, cancelResponse.getStatusCode());
 
         // La orden debe figurar como CANCELLED en base de datos
-        String status = jdbcTemplate.queryForObject(
-                "SELECT status FROM sell_orders WHERE id = ?",
-                String.class, orderId
-        );
-        assertEquals(OrderStatus.CANCELLED.name(), status);
+        OrderStatus status = ordenDeCompraRepository.recuperarPorId(orderId).get().getStatus();
+        assertEquals(OrderStatus.CANCELLED, status);
 
         // El token debe haber retornado al vendedor
-        Integer tokensVendedor = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM tokens WHERE owner_id = ? AND player_id = ?",
-                Integer.class, sellerAuth.user().id(), player.getId()
-        );
+        Integer tokensVendedor = Math.toIntExact(userService.recuperar(sellerAuth.user().id()).getTokens().stream()
+                .filter(t -> t.getPlayer().getId().equals(player.getId())).count());
+
         assertEquals(1, tokensVendedor);
     }
 

@@ -19,18 +19,18 @@ import java.util.List;
 @Service
 public class TokenMarketServiceImpl implements TokenMarketService {
 
-    private final SellOrderRepository sellOrderRepository;
+    private final OrdenDeCompraRepository ordenDeCompraRepository;
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final TokenRepository tokenRepository;
     private final TransactionRepository transactionRepository;
 
-    public TokenMarketServiceImpl(SellOrderRepository sellOrderRepository,
+    public TokenMarketServiceImpl(OrdenDeCompraRepository ordenDeCompraRepository,
                                   UserRepository userRepository,
                                   PlayerRepository playerRepository,
                                   TokenRepository tokenRepository,
                                   TransactionRepository transactionRepository) {
-        this.sellOrderRepository = sellOrderRepository;
+        this.ordenDeCompraRepository = ordenDeCompraRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.tokenRepository = tokenRepository;
@@ -56,7 +56,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         for (OrdenDeCompra order : orders) {
             Long tokenId = order.getToken().getId();
 
-            if (sellOrderRepository.existsOpenOrderByTokenId(tokenId)) {
+            if (ordenDeCompraRepository.existsOpenOrderByTokenId(tokenId)) {
                 throw new ExisteOrdenAbiertaParaTokenException("Ya existe una orden abierta para el token: " + tokenId);
             }
         }
@@ -64,7 +64,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         userRepository.guardar(seller);
         playerRepository.guardar(player);
 
-        return sellOrderRepository.saveAll(orders);
+        return ordenDeCompraRepository.saveAll(orders);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         if (!playerRepository.existsById(playerId)){throw new EntidadNoEncontradaException("El jugador no existe: " + playerId);}
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
-        List<OrdenDeCompra> openOrders = sellOrderRepository.findOpenSellOrders(playerId,buyerId);
+        List<OrdenDeCompra> openOrders = ordenDeCompraRepository.findOpenSellOrders(playerId,buyerId);
 
         MotorDeMercado motorDeMercado = new MotorDeMercado(); // TODO testear?
         TransaccionCompra transaccionCompra = motorDeMercado.comprarOrdenes(openOrders, quantity, buyer);
@@ -89,18 +89,18 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         List<OrdenDeCompra> ordenesDeCompra = transaccionCompra.ordenesCompra();
 
         ordenesDeCompra.stream().map(OrdenDeCompra::getOwner).distinct().forEach(userRepository::guardar);
-        sellOrderRepository.saveAll(ordenesDeCompra);
+        ordenDeCompraRepository.saveAll(ordenesDeCompra);
         transactionRepository.guardarTodos(transaccionCompra.transaccionesFinancieras());
     }
 
     @Override
     @Transactional
     public void cancel(Long orderId, Long userId) {
-        OrdenDeCompra order = sellOrderRepository.findById(orderId)
+        OrdenDeCompra order = ordenDeCompraRepository.recuperarPorId(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Órden no encontrada: " + orderId));
 
         order.cancel(userId);
-        sellOrderRepository.save(order);
+        ordenDeCompraRepository.save(order);
 
         // Devolver el token al vendedor
         tokenRepository.setTokenOwner(order.getToken().getId(), userId);
@@ -108,7 +108,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
 
     @Override
     public Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable) {
-        return sellOrderRepository.buscarOrdenesDeVentaAbiertas(userId, nombre, pageable);
+        return ordenDeCompraRepository.buscarOrdenesDeVentaAbiertas(userId, nombre, pageable);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
 
-        return sellOrderRepository.buscarOrdenesDeVentaDeUser(userId, nombre,pageable);
+        return ordenDeCompraRepository.buscarOrdenesDeVentaDeUser(userId, nombre,pageable);
     }
 
 }

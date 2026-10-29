@@ -5,7 +5,7 @@ import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
-import com.overcode.persistence.repository.interfaces.SellOrderRepository;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class SellOrderRepositoryImpl implements SellOrderRepository {
+public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
 
     private final SellOrderDAOJPA dao;
 
-    public SellOrderRepositoryImpl(SellOrderDAOJPA dao) {
+    public OrdenDeCompraRepositoryImpl(SellOrderDAOJPA dao) {
         this.dao = dao;
     }
 
@@ -45,7 +45,7 @@ public class SellOrderRepositoryImpl implements SellOrderRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<OrdenDeCompra> findById(Long id) {
+    public Optional<OrdenDeCompra> recuperarPorId(Long id) {
         return dao.findById(id).map(SellOrderJPADTO::aModelo);
     }
 
