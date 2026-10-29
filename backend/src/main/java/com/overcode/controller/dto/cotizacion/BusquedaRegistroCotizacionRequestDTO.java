@@ -14,6 +14,7 @@ public record BusquedaRegistroCotizacionRequestDTO(
     public BusquedaRegistroCotizacion aModelo() {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new RequestNoValidaException("La fecha de inicio no puede ser posterior a la fecha de fin");
+
         }
         return new BusquedaRegistroCotizacion(playerId,
                 startDate,
