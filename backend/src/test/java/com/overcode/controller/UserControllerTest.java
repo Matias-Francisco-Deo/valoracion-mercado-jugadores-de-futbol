@@ -18,9 +18,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +40,8 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private static final Long USER_ID = 1L;
+    public static final User USER_1 = new User("ivan", "ivan@gmail.com", "pass");
+    private final Principal principal = USER_ID::toString;
     public static final User USER = new User(USER_ID);
     private static final Long PLAYER_ID = 10L;
 
@@ -275,10 +280,47 @@ class UserControllerTest {
 
     @Test
     void getUserDevuelve404CuandoUsuarioNoExiste() throws Exception {
-        when(userService.recuperar(999L)).thenThrow(new EntidadNoEncontradaException("Usuario no encontrado"));
+        when(userService.recuperar(-1L)).thenThrow(new EntidadNoEncontradaException("Usuario no encontrado"));
 
-        mockMvc.perform(get("/users/999"))
+        mockMvc.perform(get("/users/-1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Usuario no encontrado"));
     }
+
+    // ------------------------------------------------ créditos ----------------------------------------------
+
+
+    @Test
+    void depositDevuelveOkYLosCreditosActualizados() throws Exception {
+        UserService userService = mock(UserService.class);
+        User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
+        when(userService.recuperar(USER_ID)).thenReturn(user);
+        User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
+        when(userService.depositarCreditos(eq(USER_ID), eq(10000d))).thenReturn(updatedUser);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+
+        mockMvc.perform(post("/users/deposit")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":10000}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.credits").value(10000));
+
+        verify(userService, times(1)).depositarCreditos(eq(USER_ID), eq(10000d));
+    }
+
+    @Test
+    void depositConMontoInvalidoDevuelve400() throws Exception {
+        UserService userService = mock(UserService.class);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+
+        mockMvc.perform(post("/users/deposit")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":-5}"))
+                .andExpect(status().isBadRequest());
+    }
+
 }

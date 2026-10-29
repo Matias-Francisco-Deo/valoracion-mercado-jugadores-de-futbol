@@ -4,6 +4,8 @@ import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
+import com.overcode.controller.dto.user.DepositRequest;
+import com.overcode.controller.dto.user.DepositResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
@@ -11,6 +13,7 @@ import com.overcode.model.user.User;
 import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -70,6 +74,17 @@ public class UserController {
         PortfolioResponseDTO portfolioResponseDTO = PortfolioResponseDTO.desdeModelo(portfolio);
 
         return ResponseEntity.ok(portfolioResponseDTO.positions());
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<DepositResponseDTO> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
+
+        long id = Long.parseLong(principal.getName());
+        User user = userService.recuperar(id);
+
+        User updatedUser = userService.depositarCreditos(user.getId(), request.getAmount().doubleValue());
+        return ResponseEntity.ok(DepositResponseDTO.desdeModelo(updatedUser));
+
     }
 
 }

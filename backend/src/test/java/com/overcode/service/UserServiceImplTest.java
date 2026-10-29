@@ -3,6 +3,7 @@ package com.overcode.service;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EmailRepetidoException;
+import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
@@ -108,6 +109,31 @@ class UserServiceImplTest {
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), -10d));
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), 0d));
     }
+
+    @Test
+    void depositSumaCreditosAlUsuarioExistente() {
+        User created = userService.guardar(USER1);
+        userService.depositarCreditos(created.getId(), 500d); // TODO debería recibir un sólo objeto
+
+        User updated = userService.recuperar(created.getId());
+        assertEquals(500d, updated.getCreditBalance());
+
+    }
+
+    @Test
+    void depositDaErrorSiUsuarioNoExiste() {
+
+        assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(-1L, 500d));
+    }
+
+    @Test
+    void depositConMontoNoPositivoLanzaIllegalArgument() {
+        User created = userService.guardar(USER1);
+
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), -10d));
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), 0d));
+    }
+
 
 
     @AfterEach

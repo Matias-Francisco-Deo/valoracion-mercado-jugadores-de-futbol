@@ -78,7 +78,7 @@ public class Player {
     }
 
     public void setCurrentPrice(Double currentPrice) {
-        this.currentPrice = Math.max(currentPrice, 1);
+        this.currentPrice = Math.floor(Math.max(currentPrice, 1) * 100) / 100;
     }
 
     public void recalcularCotizacion(Double cotizacion) {
