@@ -1,8 +1,8 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.player.Player;
-import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
+import com.overcode.model.venta.MotorDeMercado;
 import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.persistence.repository.interfaces.SellOrderRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -22,7 +22,7 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
     private final SellOrderRepository sellOrderRepository;
 
     @Value("${superuser.email:overcode@gmail.com}")
-    private String superadminEmail;
+    private String superuserEmail;
 
     public TokenEmissionServiceImpl(UserRepository userRepository,SellOrderRepository sellOrderRepository) {
         this.userRepository = userRepository;
@@ -31,21 +31,19 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
 
     @Override
     public void emitTokensForNewPlayers(List<Player> players) {
-        if (players == null || players.isEmpty()) {
-            return;
-        }
+        if (players.isEmpty()) return;
 
-        User superadmin = userRepository.findByEmail(superadminEmail)
-                .orElseThrow(() -> new EntidadNoEncontradaException("Super admin not found with email: " + superadminEmail));
+        User superuser = userRepository.findByEmail(superuserEmail)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Superuser not found with email: " + superuserEmail));
 
         for (Player player : players) {
-            List<Token> tokens = player.assignInitialTokensTo(superadmin);
 
-            List<OrdenDeCompra> orders = superadmin.sellTokens(player,tokens.size());
+            MotorDeMercado motorDeMercado = new MotorDeMercado();
+            List<OrdenDeCompra> orders = motorDeMercado.publicarJugador(player, superuser);
 
             sellOrderRepository.saveAll(orders);
         }
-        userRepository.guardar(superadmin);
+        userRepository.guardar(superuser);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.overcode.model.player;
 
 import com.overcode.model.token.Token;
-import com.overcode.model.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -84,13 +83,5 @@ public class Player {
 
     public void recalcularCotizacion(Double cotizacion) {
         setCurrentPrice(cotizacion);
-    }
-
-    public List<Token> assignInitialTokensTo(User owner) {
-        if (this.tokens == null && owner == null) {
-            return tokens;
-        }
-        owner.addTokens(this.tokens);
-        return tokens;
     }
 }

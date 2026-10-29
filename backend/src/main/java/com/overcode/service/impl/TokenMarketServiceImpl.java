@@ -50,7 +50,8 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         User seller = userRepository.recuperar(userId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("User not found: " + userId));
 
-        List<OrdenDeCompra> orders = seller.sellTokens(player,quantity);
+        MotorDeMercado motorDeMercado = new MotorDeMercado();
+        List<OrdenDeCompra> orders = motorDeMercado.venderTokens(seller, player, quantity);
 
         for (OrdenDeCompra order : orders) {
             Long tokenId = order.getToken().getId();
@@ -96,7 +97,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     @Transactional
     public void cancel(Long orderId, Long userId) {
         OrdenDeCompra order = sellOrderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException("Órden no encontrada: " + orderId));
 
         order.cancel(userId);
         sellOrderRepository.save(order);

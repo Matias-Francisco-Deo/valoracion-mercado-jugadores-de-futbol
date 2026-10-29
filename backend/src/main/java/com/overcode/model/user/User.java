@@ -113,13 +113,6 @@ public class User {
         return toRelease;
     }
 
-    public List<OrdenDeCompra> sellTokens(Player player, int quantity) {
-        List<Token> userTokens =  releaseTokensForSale(player, quantity);
-        List<Token> tokensToSell = player.getTokensFrom(userTokens);
-
-        return tokensToSell.stream().map(Token::vender).toList();
-    }
-
     public List<TransaccionFinanciera> buyTokens(List<OrdenDeCompra> orders) {
         if (orders.isEmpty()) {throw new InsufficientLiquidityException("Not enough tokens to buy.");}
 
@@ -150,12 +143,7 @@ public class User {
     }
 
     public void addTokens(List<Token> newTokens) {
-        if (newTokens == null) {
-            return;
-        }
-        for (Token token : newTokens) {
-            addToken(token);
-        }
+        newTokens.forEach(this::addToken);
     }
 
     private List<TransaccionFinanciera> createTransactions(List<OrdenDeCompra> orders) {//crear un objeto aparte para crear las transacciones?

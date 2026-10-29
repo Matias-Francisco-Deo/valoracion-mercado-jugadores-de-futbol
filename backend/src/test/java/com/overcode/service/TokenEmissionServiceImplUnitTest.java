@@ -30,14 +30,14 @@ class TokenEmissionServiceImplUnitTest {
         userRepository = mock(UserRepository.class);
         sellOrderRepository = mock(SellOrderRepository.class);
         tokenEmissionService = new TokenEmissionServiceImpl(userRepository,sellOrderRepository);
-        ReflectionTestUtils.setField(tokenEmissionService, "superadminEmail", "superadmin@test.com");
+        ReflectionTestUtils.setField(tokenEmissionService, "superuserEmail", "superuser@test.com");
     }
 
     @Test
     void emitTokensForNewPlayersEmitsTokensInBatch() {
-        User superadmin = new User("admin", "superadmin@test.com", "pass");
-        superadmin.setId(1L);
-        when(userRepository.findByEmail("superadmin@test.com")).thenReturn(Optional.of(superadmin));
+        User superuser = new User("admin", "superuser@test.com", "pass");
+        superuser.setId(1L);
+        when(userRepository.findByEmail("superuser@test.com")).thenReturn(Optional.of(superuser));
 
         Player player1 = com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre("Player 1");
         player1.setId(10L);
@@ -48,8 +48,8 @@ class TokenEmissionServiceImplUnitTest {
 
         tokenEmissionService.emitTokensForNewPlayers(List.of(player1, player2));
 
-        verify(userRepository, times(1)).findByEmail("superadmin@test.com");
-        verify(userRepository, times(1)).guardar(superadmin);
+        verify(userRepository, times(1)).findByEmail("superuser@test.com");
+        verify(userRepository, times(1)).guardar(superuser);
         verify(sellOrderRepository, times(2)).saveAll(ordersCaptor.capture());
 
         List<List<OrdenDeCompra>> allOrders = ordersCaptor.getAllValues();

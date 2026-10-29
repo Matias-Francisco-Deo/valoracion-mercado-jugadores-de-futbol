@@ -32,7 +32,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class OrderE2eTest {
+class TokenMarketE2eTest {
 
     private static final String SELLER_USERNAME = "orderSellerUser";
     private static final String SELLER_EMAIL = "orderseller@example.com";

@@ -39,7 +39,9 @@ class BuyTokensTest {
         // Seller holds tokens and creates sell orders
         User seller = userRepository.guardar(new User("seller-" + UUID.randomUUID(),
                 UUID.randomUUID() + "@gmail.com", "pass"));
-        player.assignInitialTokensTo(seller);
+        if (player.getTokens() != null || seller != null) {
+            seller.addTokens(player.getTokens());
+        }
         userRepository.guardar(seller);
 
         tokenMarketService.sell(new SellPost(seller.getId(), player.getId(), 5));

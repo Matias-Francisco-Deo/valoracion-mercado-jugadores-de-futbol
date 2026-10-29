@@ -2,7 +2,6 @@ package com.overcode.model.token;
 
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.OrdenDeCompra;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +25,7 @@ public class Token {
         this.player = player;
     }
 
-    public OrdenDeCompra vender() {
-        User seller = this.owner;
-        Player orderPlayer = this.player;
+    public void ponerALaVenta() {
         this.owner = null;
-        return new OrdenDeCompra(seller, orderPlayer, this, orderPlayer.getCurrentPrice()); // TODO generar orden desde maquinita?
     }
 }
