@@ -64,7 +64,6 @@ public class OrderController {
     @GetMapping("/forSell")
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchOpenOrdersSell(
             @RequestParam(required = false) String nombre,
-            @PageableDefault(sort = "playerName") // TODO probar con el front sacar esto
             Pageable pageable,
             Principal principal
     ) {
@@ -81,7 +80,6 @@ public class OrderController {
     public ResponseEntity<OrderSellSummaryPageResponseDTO> searchUserOpenOrdersSell(
             @PathVariable Long id,
             @RequestParam(required = false) String nombre,
-            @PageableDefault(sort = "playerName") // TODO probar con el front sacar esto
             Pageable pageable
     ) {
         Page<ResumenOrdenesDeVenta> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(id,nombre, pageable);

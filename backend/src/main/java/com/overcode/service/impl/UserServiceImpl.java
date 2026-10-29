@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User depositarCreditos(Long userId, Double amount) {
-        if (amount <= 0) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero");
+        if (amount <= 0 || amount > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
 
         User user = recuperar(userId);
         user.addCredits(amount);
