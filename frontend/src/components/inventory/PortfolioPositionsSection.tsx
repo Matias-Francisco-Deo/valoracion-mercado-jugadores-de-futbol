@@ -4,12 +4,17 @@ import { useState } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { Pagination } from "../common/Pagination";
 
-interface PortfolioPositionsSectionProps{
+interface PortfolioPositionsSectionProps {
     positions: PositionToken[];
-
+    selectedPlayerId?: number | null;
+    onSelectPlayerId?: (playerId: number) => void;
 }
 
-export default function PortfolioPositionsSection({positions}:PortfolioPositionsSectionProps){
+export default function PortfolioPositionsSection({
+    positions,
+    selectedPlayerId,
+    onSelectPlayerId,
+}: PortfolioPositionsSectionProps) {
     const [selectedPosition,setSelectedPosition] = useState<PositionToken|null>(null);
 
     const {currentPage,totalPages,paginatedItems,goToPage} = usePagination({
@@ -30,15 +35,16 @@ export default function PortfolioPositionsSection({positions}:PortfolioPositions
 
                 <div className="w-full border-t border-gray-200 pt-4">
                     {paginatedItems.length > 0 ? (
-                        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 p-1">
                             {paginatedItems.map((position) => (
                                 <PositionCard
                                     key={position.playerId}
                                     position={position}
-                                    onSelect={handleSelectPosition}
+                                    onSelect={() => (onSelectPlayerId ? onSelectPlayerId(position.playerId) : handleSelectPosition(position))}
                                     isSelected={
-                                        selectedPosition?.playerId ===
-                                        position.playerId
+                                        selectedPlayerId !== undefined
+                                            ? selectedPlayerId === position.playerId
+                                            : selectedPosition?.playerId === position.playerId
                                     }
                                 />
                             ))}

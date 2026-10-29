@@ -65,7 +65,7 @@ export const CatalogoSection = ({playerPage,filter,onFilterChange,onSearch,handl
                     </>
                 ) : (
                     <p className="py-6 text-center text-gray-500 text-[13px] sm:text-base">
-                        No hay jugadores rankeados en este momento
+                        No hay jugadores en el catalogo en este momento
                     </p>
                 )}
             </div>

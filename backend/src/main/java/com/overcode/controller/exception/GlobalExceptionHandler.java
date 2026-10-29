@@ -1,6 +1,11 @@
 package com.overcode.controller.exception;
 
 import com.overcode.model.exception.*;
+import com.overcode.model.exception.EstrategiaInvalidaException;
+import com.overcode.model.exception.InvalidOrderQuantityException;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
+import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;
@@ -93,6 +98,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidOrderQuantityException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(BonusYaReclamadoHoyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleBonusYaReclamadoHoy(BonusYaReclamadoHoyException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(FechaReclamoBonusLoginInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleFechaReclamoInvalida(FechaReclamoBonusLoginInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(LoginBonusInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO loginBonusInvalido(LoginBonusInvalidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ReclamoBonusNoPermitidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleReclamoBonusNoPermitido(ReclamoBonusNoPermitidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

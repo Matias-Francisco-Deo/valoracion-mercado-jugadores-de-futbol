@@ -49,7 +49,7 @@ public class OrdenDeCompra extends Order {
         }
 
         buyer.debitCredits(price);
-        owner.creditCredits(price);
+        owner.addCredits(price);
         buyer.addToken(token);
 
         markCompleted();

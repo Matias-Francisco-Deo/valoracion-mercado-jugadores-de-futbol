@@ -45,7 +45,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     public Page<Player> listarJugadores(PlayerFilter filtro, Pageable pageable) {
-        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague(),pageable).map(PlayerJPADTO::aModelo);
+        return playerDAOJPA.listarJugadores(filtro.getClubName(), filtro.getLeague(),filtro.getPosition(),pageable).map(PlayerJPADTO::aModelo);
     }
 
     @Override//temporal hasta preguntar si necesitamos traer todos sin paginar

@@ -7,6 +7,8 @@ import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -88,8 +90,6 @@ class PlayerE2eTest {
             .body(req)
             .retrieve()
             .toEntity(AuthResponse.class);
-
-        assert response.getBody() != null;
         return response.getBody().token();
     }
 
@@ -218,6 +218,28 @@ class PlayerE2eTest {
 
         assertEquals(1, players.size());
         assertEquals(PLAYER_NAME, players.getFirst().name());
+    }
+
+    @Test
+    void listarJugadoresConFiltroPorPosicionDevuelveDeEsaPosicion() {
+        String token = obtainAuthToken();
+        playerService.crear(getJugadorConPosicion(PLAYER_NAME, PlayerPosition.DEFENSOR));
+        playerService.crear(getJugadorConPosicion(SECOND_PLAYER_NAME, PlayerPosition.ATACANTE));
+
+        ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
+                .uri("/players?position=DEFENSOR")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<PlayerResponseDTO> players = response.getBody().content();
+
+        assertEquals(1, players.size());
+        assertEquals(PLAYER_NAME, players.getFirst().name());
+        assertEquals(PlayerPosition.DEFENSOR, players.getFirst().playerGameData().position());
     }
 
     @Test
@@ -435,6 +457,10 @@ class PlayerE2eTest {
             .toBodilessEntity());
     }
 
-
+    private Player getJugadorConPosicion(String name, PlayerPosition position) {
+        Player player = getJugadorConNombre(name);
+        player.setPlayerGameData(new PlayerGameData(null, player, 0, 0, 0, 0, 0, 0, 1.0, position));
+        return player;
+    }
 
 }

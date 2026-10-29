@@ -61,6 +61,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional(readOnly = true)
     public Page<Player> recuperarTodosConFiltro(PlayerFilter filter, Pageable pageable) {
+        if (filter.getPosition() != null) {
+            filter.setPosition(filter.getPosition().trim().toUpperCase());
+        }
         return playerRepository.listarJugadores(filter, pageable);
     }
 

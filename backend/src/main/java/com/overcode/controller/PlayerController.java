@@ -37,9 +37,10 @@ public class PlayerController {
     public ResponseEntity<PlayerPageResponseDTO> listPlayers(
             @RequestParam(required = false) String league,
             @RequestParam(required = false) String clubName,
+            @RequestParam(required = false) String position,
             Pageable pageable
     ) {
-        PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(clubName, league);
+        PlayerFilterDTO playerFilterDTO = new PlayerFilterDTO(clubName, league, position);
 
         PlayerFilter filter = playerFilterDTO.aModelo();
 
