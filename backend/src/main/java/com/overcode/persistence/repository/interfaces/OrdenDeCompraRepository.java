@@ -23,4 +23,6 @@ public interface OrdenDeCompraRepository {
     Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(Long userId, String nombre, Pageable pageable);
 
     Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(Long userId, String nombre, Pageable pageable);
+
+    void actualizarPreciosOrdenesAbiertas();
 }
