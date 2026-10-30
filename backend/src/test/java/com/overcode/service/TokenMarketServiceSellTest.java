@@ -75,7 +75,7 @@ class TokenMarketServiceSellTest {
         when(ordenDeCompraRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
         List<OrdenDeVenta> orders =
-                service.sell(new PeticionVenta(USER_ID, PLAYER_ID, 6));
+                service.sell(new PeticionVenta(user, player, 6));
 
         assertEquals(6, orders.size());
 
@@ -97,7 +97,7 @@ class TokenMarketServiceSellTest {
     void createSellOrdersFallaSiElJugadorNoExiste() {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.empty());
 
-        PeticionVenta post = new PeticionVenta(USER_ID, PLAYER_ID, 5);
+        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
         assertThrows(EntidadNoEncontradaException.class,
                 () -> service.sell(post));
 
@@ -110,7 +110,7 @@ class TokenMarketServiceSellTest {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.empty());
 
-        PeticionVenta post = new PeticionVenta(USER_ID, PLAYER_ID, 5);
+        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
         assertThrows(EntidadNoEncontradaException.class,
                 () -> service.sell(post));
 
@@ -123,7 +123,7 @@ class TokenMarketServiceSellTest {
         when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
-        PeticionVenta post = new PeticionVenta(USER_ID, PLAYER_ID, 5);
+        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
         assertThrows(TokensInsuficientesParaVenderException.class,
                 () -> service.sell(post));
 
@@ -133,10 +133,11 @@ class TokenMarketServiceSellTest {
     @Test
     void createSellOrdersFallaSiNoAlcanzaLaCantidadDeTokens() {
         User user = userWithTokens(3);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
+        Player player = playerWithPrice(25d);
+        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
 
-        PeticionVenta post = new PeticionVenta(USER_ID, PLAYER_ID, 5);
+        PeticionVenta post = new PeticionVenta(user, player, 5);
         assertThrows(TokensInsuficientesParaVenderException.class,
                 () -> service.sell(post));
 
@@ -154,7 +155,7 @@ class TokenMarketServiceSellTest {
         when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
         when(ordenDeCompraRepository.existsOpenOrderByTokenId(1L)).thenReturn(true);
 
-        PeticionVenta post = new PeticionVenta(USER_ID, PLAYER_ID, 1);
+        PeticionVenta post = new PeticionVenta(user, player, 1);
         assertThrows(ExisteOrdenAbiertaParaTokenException.class,
                 () -> service.sell(post));
 

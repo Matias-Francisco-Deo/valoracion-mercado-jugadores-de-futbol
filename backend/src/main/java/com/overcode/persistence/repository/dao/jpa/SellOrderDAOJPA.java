@@ -2,7 +2,7 @@ package com.overcode.persistence.repository.dao.jpa;
 
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
-import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
+import com.overcode.persistence.dto.jpa.OrdenDeVentaJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
+public interface SellOrderDAOJPA extends JpaRepository<OrdenDeVentaJPADTO, Long> {
 
     boolean existsByToken_IdAndStatus(Long tokenId, OrderStatus status);
 
     //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
-    List<SellOrderJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
+    List<OrdenDeVentaJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
             Long playerId, OrderStatus status, Long buyerId);
 
     String FILTRO_NOMBRE =

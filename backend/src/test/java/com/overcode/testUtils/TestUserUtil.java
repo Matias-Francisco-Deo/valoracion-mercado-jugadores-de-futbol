@@ -14,6 +14,13 @@ public class TestUserUtil {
         return user;
     }
 
+    public static User getUsuarioConCreditosIniciales(String nombre, Double creditos) {
+        User user = new User(nombre, nombre.toLowerCase() + "@example.com", "Password123!", creditos, new ArrayList<>());
+        user.setStreakCount(0);
+        user.setLastBonusClaimDate(null);
+        return user;
+    }
+
     public static User getUsuarioConRacha(String nombre, int racha, LocalDate ultimoReclamo) {
         User user = getUsuarioDeNombre(nombre);
         user.setStreakCount(racha);

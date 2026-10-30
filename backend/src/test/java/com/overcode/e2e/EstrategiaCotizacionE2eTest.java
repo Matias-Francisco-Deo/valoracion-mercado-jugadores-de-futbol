@@ -325,8 +325,8 @@ class EstrategiaCotizacionE2eTest {
     @Test
     void debeCotizarJugadoresYActualizarPreciosDeMercado() {
         // Sembrar jugadores
-        playerService.crear(getJugadorConNombre("Pepito"));
-        playerService.crear(getJugadorConNombre("Juanito"));
+        playerService.guardar(getJugadorConNombre("Pepito"));
+        playerService.guardar(getJugadorConNombre("Juanito"));
 
 
         crearConfiguracionCotizacionesConEstrategia();

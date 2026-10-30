@@ -40,13 +40,14 @@ public class TestService {
     public void eliminarUsuarios() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM users");
+        entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM users").executeUpdate();
         userDAO.deleteAll();
 
     }
 
     public void eliminarEquipos() {
-        entityManager.createNativeQuery("DELETE FROM teams");
+        entityManager.createNativeQuery("DELETE FROM teams").executeUpdate();
         teamDAO.deleteAll();
 
     }
@@ -54,7 +55,7 @@ public class TestService {
     public void eliminarDatosJugadores() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM players_game_data");
+        entityManager.createNativeQuery("DELETE FROM players_game_data").executeUpdate();
         playerGameDataDAO.deleteAll();
 
     }
@@ -68,12 +69,13 @@ public class TestService {
     private void eliminarJugadores() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM players");
+        entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM players").executeUpdate();
         playerDAO.deleteAll();
     }
 
     public void eliminarCotizaciones() {
-        entityManager.createNativeQuery("DELETE FROM registros_cotizaciones");
+        entityManager.createNativeQuery("DELETE FROM registros_cotizaciones").executeUpdate();
         registroCotizacionDAO.deleteAll();
         eliminarEstrategiasCotizacion();
     }
@@ -81,12 +83,13 @@ public class TestService {
     public void eliminarEstrategiasCotizacion() {
         eliminarConfig();
 
-        entityManager.createNativeQuery("DELETE FROM estrategias_cotizacion");
+        entityManager.createNativeQuery("DELETE FROM estrategias_cotizacion").executeUpdate();
         estrategiaCotizacionDAO.deleteAll();
     }
 
     public void eliminarConfig() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_mercado");
+        entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
         configuracionCotizacionesDAO.deleteAll();
     }
 
@@ -96,6 +99,12 @@ public class TestService {
         entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM rewards_list").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM login_bonus_rewards_data").executeUpdate();
+
+    }
+
+    public void eliminarRegistros() {
+        entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
 
     }
 

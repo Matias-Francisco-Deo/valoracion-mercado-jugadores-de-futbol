@@ -44,7 +44,7 @@ class BuyTokensTest {
         }
         userRepository.guardar(seller);
 
-        tokenMarketService.sell(new PeticionVenta(seller.getId(), player.getId(), 5));
+        tokenMarketService.sell(new PeticionVenta(seller, player, 5));
 
         // Buyer with enough credits sweeps the book
         User buyer = new User("buyer-" + UUID.randomUUID(),

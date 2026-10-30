@@ -1,6 +1,7 @@
 package com.overcode.controller.dto.user;
 
 import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -11,7 +12,7 @@ public record DepositRequest(
 ) {
 
     public PeticionDeposito aModelo(Long userId) {
-        return new PeticionDeposito(userId, amount);
+        return new PeticionDeposito(new User(userId), amount);
     }
 
 }

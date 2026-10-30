@@ -1,7 +1,10 @@
 package com.overcode.model.market;
 
+import com.overcode.model.user.User;
+
 public record PeticionDeposito(
-        Long userId,
+        User user, // User?
         Double cantidad
 ) {
+
 }

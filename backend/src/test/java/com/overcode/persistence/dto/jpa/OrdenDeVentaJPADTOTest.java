@@ -23,7 +23,7 @@ class OrdenDeVentaJPADTOTest {
         Instant now = Instant.now();
         OrdenDeVenta modelo = new OrdenDeVenta(1L, user, player, token, 15d, OrderStatus.OPEN, now);
 
-        SellOrderJPADTO dto = SellOrderJPADTO.desdeModelo(modelo);
+        OrdenDeVentaJPADTO dto = OrdenDeVentaJPADTO.desdeModelo(modelo);
 
         assertEquals(1L, dto.getId());
         assertEquals(10L, dto.getOwner().getId());
@@ -41,7 +41,7 @@ class OrdenDeVentaJPADTOTest {
         TokenJPADTO token = new TokenJPADTO(101L,user,player);
 
         Instant now = Instant.now();
-        SellOrderJPADTO dto = new SellOrderJPADTO(2L, user, player, token, 30d, OrderStatus.COMPLETED, now);
+        OrdenDeVentaJPADTO dto = new OrdenDeVentaJPADTO(2L, user, player, token, 30d, OrderStatus.COMPLETED, now);
 
         OrdenDeVenta modelo = dto.aModelo();
 

@@ -46,10 +46,10 @@ public class TokenMarketServiceImpl implements TokenMarketService {
 
     @Override
     @Transactional
-    public List<OrdenDeVenta> sell(PeticionVenta command) {
-        Long userId = command.userId();
-        Long playerId = command.playerId();
-        int quantity = command.quantity();
+    public List<OrdenDeVenta> sell(PeticionVenta peticionVenta) {
+        Long userId = peticionVenta.user().getId();
+        Long playerId = peticionVenta.player().getId();
+        int quantity = peticionVenta.quantity();
 
         Player player = playerRepository.recuperar(playerId)
                 .orElseThrow(() -> new EntidadNoEncontradaException("Player not found: " + playerId));

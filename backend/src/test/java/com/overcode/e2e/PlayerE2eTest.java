@@ -135,8 +135,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesDevuelveListaCompleta() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConNombre(PLAYER_NAME));
-        playerService.crear(getJugadorConNombre(SECOND_PLAYER_NAME));
+        playerService.guardar(getJugadorConNombre(PLAYER_NAME));
+        playerService.guardar(getJugadorConNombre(SECOND_PLAYER_NAME));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
             .uri("/players")
@@ -157,8 +157,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesConFiltroPorClubDevuelveDeEseClub() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConClub(PLAYER_NAME, "Club1"));
-        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
+        playerService.guardar(getJugadorConClub(PLAYER_NAME, "Club1"));
+        playerService.guardar(getJugadorConClub(SECOND_PLAYER_NAME, "Club2"));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1")
@@ -181,8 +181,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesConFiltroPorClubNameCamelCaseDevuelveDeEseClub() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConClub(PLAYER_NAME, "ClubUno"));
-        playerService.crear(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
+        playerService.guardar(getJugadorConClub(PLAYER_NAME, "ClubUno"));
+        playerService.guardar(getJugadorConClub(SECOND_PLAYER_NAME, "ClubDos"));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=ClubUno")
@@ -202,8 +202,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConJugadoresExistentesConFiltroPorLigaDevuelveDeEsaLiga() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
-        playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
+        playerService.guardar(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
+        playerService.guardar(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?league=Liga1")
@@ -223,8 +223,8 @@ class PlayerE2eTest {
     @Test
     void listarJugadoresConFiltroPorPosicionDevuelveDeEsaPosicion() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConPosicion(PLAYER_NAME, PlayerPosition.DEFENSOR));
-        playerService.crear(getJugadorConPosicion(SECOND_PLAYER_NAME, PlayerPosition.ATACANTE));
+        playerService.guardar(getJugadorConPosicion(PLAYER_NAME, PlayerPosition.DEFENSOR));
+        playerService.guardar(getJugadorConPosicion(SECOND_PLAYER_NAME, PlayerPosition.ATACANTE));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?position=DEFENSOR")
@@ -245,9 +245,9 @@ class PlayerE2eTest {
     @Test
     void ligarJugadoresPorVariosFiltros() {
         String token = obtainAuthToken();
-        playerService.crear(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
-        playerService.crear(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
-        playerService.crear(getJugadorConLigaYClub("Jugador3", "Liga2", "Club3"));
+        playerService.guardar(getJugadorConLigaYClub(PLAYER_NAME, "Liga1", "Club1"));
+        playerService.guardar(getJugadorConLigaYClub(SECOND_PLAYER_NAME, "Liga2", "Club2"));
+        playerService.guardar(getJugadorConLigaYClub("Jugador3", "Liga2", "Club3"));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players?clubName=Club1&league=Liga1")
@@ -270,8 +270,8 @@ class PlayerE2eTest {
 
         configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(getEstrategiaRating())); // esta estrategia discrimina por rating only
 
-        Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5));
-        Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
+        Player player1 = playerService.guardar(getJugadorConRating(PLAYER_NAME, 9.5));
+        Player player2 = playerService.guardar(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
 
         ResponseEntity<PlayerPageResponseDTO> response = restClient.get()
                 .uri("/players/ranking")
@@ -317,7 +317,7 @@ class PlayerE2eTest {
     @Test
     void obtenerJugadorPorIdExistenteDevuelveOkConDatosCorrectos() {
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        Player guardado = playerService.guardar(getJugadorConNombre(PLAYER_NAME));
 
         ResponseEntity<PlayerResponseDTO> response = restClient.get()
             .uri("/players/" + guardado.getId())
@@ -345,7 +345,7 @@ class PlayerE2eTest {
         );
 
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        Player guardado = playerService.guardar(getJugadorConNombre(PLAYER_NAME));
         estrategiaCotizacionService.cotizarJugadores();
 
         LocalDateTime fin = LocalDateTime.now();
@@ -381,7 +381,7 @@ class PlayerE2eTest {
         );
 
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        Player guardado = playerService.guardar(getJugadorConNombre(PLAYER_NAME));
         estrategiaCotizacionService.cotizarJugadores();
 
         LocalDateTime fin = LocalDateTime.now().plusSeconds(20);
@@ -417,7 +417,7 @@ class PlayerE2eTest {
         );
 
         String token = obtainAuthToken();
-        Player guardado = playerService.crear(getJugadorConNombre(PLAYER_NAME));
+        Player guardado = playerService.guardar(getJugadorConNombre(PLAYER_NAME));
         estrategiaCotizacionService.cotizarJugadores();
         estrategiaCotizacionService.cotizarJugadores();
         estrategiaCotizacionService.cotizarJugadores();

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlayerService {
 
-    Player crear(Player player);
+    Player guardar(Player player);
 
     Player recuperar(Long id);
 

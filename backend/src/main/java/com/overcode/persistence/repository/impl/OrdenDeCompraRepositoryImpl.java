@@ -3,7 +3,7 @@ package com.overcode.persistence.repository.impl;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
-import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
+import com.overcode.persistence.dto.jpa.OrdenDeVentaJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
     @Override
     @Transactional
     public OrdenDeVenta save(OrdenDeVenta order) {
-        return dao.save(SellOrderJPADTO.desdeModelo(order)).aModelo();
+        return dao.save(OrdenDeVentaJPADTO.desdeModelo(order)).aModelo();
     }
 
     @Override
@@ -35,18 +35,18 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
         if (orders == null || orders.isEmpty()) {
             return List.of();
         }
-        List<SellOrderJPADTO> entities = orders.stream()
-                .map(SellOrderJPADTO::desdeModelo)
+        List<OrdenDeVentaJPADTO> entities = orders.stream()
+                .map(OrdenDeVentaJPADTO::desdeModelo)
                 .toList();
         return dao.saveAll(entities).stream()
-                .map(SellOrderJPADTO::aModelo)
+                .map(OrdenDeVentaJPADTO::aModelo)
                 .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<OrdenDeVenta> recuperarPorId(Long id) {
-        return dao.findById(id).map(SellOrderJPADTO::aModelo);
+        return dao.findById(id).map(OrdenDeVentaJPADTO::aModelo);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
     public List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId) {
         return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)
                 .stream()
-                .map(SellOrderJPADTO::aModelo)
+                .map(OrdenDeVentaJPADTO::aModelo)
                 .toList();
     }
 

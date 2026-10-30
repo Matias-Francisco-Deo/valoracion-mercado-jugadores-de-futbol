@@ -98,7 +98,7 @@ class UserServiceImplTest {
     void depositarCreditosSumaCreditosAlUsuario() {
         User created = userService.guardar(USER1);
         double amount = 500d;
-        PeticionDeposito petition = new PeticionDeposito(created.getId(), amount);
+        PeticionDeposito petition = new PeticionDeposito(created, amount);
         User updated = userService.depositarCreditos(petition);
 
         assertEquals(amount, updated.getCreditBalance());
@@ -109,10 +109,9 @@ class UserServiceImplTest {
     @Test
     void depositarCreditosConMontoInvalidoLanzaExcepcion() {
         User created = userService.guardar(USER1);
-        Long id = created.getId();
 
-        PeticionDeposito petitionNegativa = new PeticionDeposito(id, -1d);
-        PeticionDeposito petitionCero = new PeticionDeposito(id, 0d);
+        PeticionDeposito petitionNegativa = new PeticionDeposito(created, -1d);
+        PeticionDeposito petitionCero = new PeticionDeposito(created, 0d);
 
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionNegativa));
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionCero));
@@ -122,7 +121,7 @@ class UserServiceImplTest {
     void depositSumaCreditosAlUsuarioExistente() {
         User created = userService.guardar(USER1);
         double amount = 500d;
-        PeticionDeposito petition = new PeticionDeposito(created.getId(), amount);
+        PeticionDeposito petition = new PeticionDeposito(created, amount);
         userService.depositarCreditos(petition);
 
         User updated = userService.recuperar(created.getId());
@@ -132,7 +131,7 @@ class UserServiceImplTest {
 
     @Test
     void depositDaErrorSiUsuarioNoExiste() {
-        PeticionDeposito peticionDeposito = new PeticionDeposito(-1L, 5600d);
+        PeticionDeposito peticionDeposito = new PeticionDeposito(new User(-1L), 5600d);
         assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(peticionDeposito));
     }
 
