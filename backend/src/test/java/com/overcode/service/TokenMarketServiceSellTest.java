@@ -162,15 +162,20 @@ class TokenMarketServiceSellTest {
 
     @Test
     void cancelOrderFallaSiLaOrdenNoExiste() {
-        assertThrows(OrderNotFoundException.class, () -> tokenMarketService.cancel(-1L, seller.getId()));
+        Long sellerId = seller.getId();
+
+        assertThrows(OrderNotFoundException.class,
+                () -> tokenMarketService.cancel(-1L, sellerId));
     }
 
     @Test
     @Disabled("Esta feature no está en funcionamiento todavía")
     void cancelOrderFallaSiNoEsElDueño() {
         OrdenDeVenta order = tokenMarketService.sell(new PeticionVenta(seller, player, 1)).getFirst();
+        Long orderId = order.getId();
+        Long buyerId = buyer.getId();
 
         assertThrows(OperacionInvalidaOrdenException.class,
-                () -> tokenMarketService.cancel(order.getId(), buyer.getId()));
+                () -> tokenMarketService.cancel(orderId, buyerId));
     }
 }
