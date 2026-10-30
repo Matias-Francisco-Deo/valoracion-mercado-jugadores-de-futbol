@@ -74,4 +74,8 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
         return dao.buscarOrdenesDeVentaDeUser(userId, nombre, pageable);
     }
 
+    @Override
+    public void actualizarPreciosOrdenesAbiertas() {
+        dao.actualizarPreciosOrdenesAbiertas();
+    }
 }

@@ -25,11 +25,11 @@ export const AppRoutes: React.FC = () => {
           <Route path="/" Component={HomePage} />
           <Route path="/catalogo" Component={CatalogoPage} />
           <Route path="/p/:playerId" Component={PlayerPage} />
+          <Route path="/market" Component={MarketPage} />
           <Route path="*" Component={NotFoundPage} errorElement/>
       </Route>
       <Route Component={ProtectedLayout}>
         <Route path="/inventario/:userId" Component={InventoryPage} />
-        <Route path="/market" Component={MarketPage} />
       </Route>
 
     </Routes>

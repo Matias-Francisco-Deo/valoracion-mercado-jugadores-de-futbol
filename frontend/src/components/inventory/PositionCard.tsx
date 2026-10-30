@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/playerQuoteUtils";
 import { cn } from "@/lib/utils";
 import type { PositionToken } from "@/types/inventory";
 
@@ -10,10 +11,6 @@ type  PositionCardProps =  {
 
 export const PositionCard= ({ position , isSelected, onSelect, className, ...props }: PositionCardProps) =>{
     const isProfit = position.profitLoss >= 0;
-    const invested = position.quantity * position.averagePurchasePrice;
-    const currentValue = position.quantity * position.currentPrice;
-
-    const profitPercentage = invested !== 0 ? (position.profitLoss / invested) * 100 : 0;
 
     return(
         <button type="button" aria-pressed={isSelected} onClick={() => onSelect(position)}
@@ -40,7 +37,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                         }`}
                         >
                         {isProfit ? "+" : ""}
-                        {profitPercentage.toFixed(2)}%
+                        {position.profitLossPercentage?.toFixed(2)}%
                     </span>
                     <span className={`shrink-0 rounded-lg px-2 py-0.5 text-[12px] font-semibold ${
                             isProfit
@@ -49,7 +46,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                         }`}
                         >
                         {isProfit ? "+" : ""}
-                        ${position.profitLoss}
+                        {formatPrice(position.profitLoss)}
                     </span>
                 </div>
             </header>
@@ -60,7 +57,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                 </p>
 
                 <p className="text-md sm:text-xl  font-semibold tracking-tight">
-                    {currentValue}
+                    {formatPrice(position.currentValue)}
                 </p>
             </div>
 
@@ -80,7 +77,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                         Precio promedio
                     </p>
                     <p className="wrap-break-words font-semibold">
-                        {position.averagePurchasePrice}
+                        {formatPrice(position.averagePurchasePrice)}
                     </p>
                 </div>
             </section>

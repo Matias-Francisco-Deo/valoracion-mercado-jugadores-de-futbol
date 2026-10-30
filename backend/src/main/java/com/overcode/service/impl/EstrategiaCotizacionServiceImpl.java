@@ -5,10 +5,7 @@ import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
-import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
-import com.overcode.persistence.repository.interfaces.PlayerRepository;
-import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
+import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -30,14 +27,16 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
+    private final OrdenDeCompraRepository ordenDeCompraRepository;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService,OrdenDeCompraRepository ordenDeCompraRepository) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionMercadoService = configuracionMercadoService;
         this.configuracionMercadoRepository = configuracionMercadoRepository;
         this.registroCotizacionRepository = registroCotizacionRepository;
         this.playerRepository = playerRepository;
         this.playerService = playerService;
+        this.ordenDeCompraRepository = ordenDeCompraRepository;
     }
 
 
@@ -95,6 +94,8 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         registroCotizacionRepository.guardarTodos(registros);
 
         playerRepository.guardarTodos(jugadores);
+
+        ordenDeCompraRepository.actualizarPreciosOrdenesAbiertas();
     }
 
     private static void verificarFactorEscalaPositivo(Double factorEscala) {

@@ -73,6 +73,7 @@ export const placeholderPositions: PositionToken[] = [
     quantity: 100,
     averagePurchasePrice: 1500,
     currentPrice: 1800,
+    currentValue: 180000,
     profitLoss: 3000,
   },
   {
@@ -81,6 +82,7 @@ export const placeholderPositions: PositionToken[] = [
     quantity: 5,
     averagePurchasePrice: 2000,
     currentPrice: 1850,
+    currentValue: 9250,
     profitLoss: -750,
   },
   {
@@ -89,6 +91,7 @@ export const placeholderPositions: PositionToken[] = [
     quantity: 8,
     averagePurchasePrice: 1200,
     currentPrice: 1350,
+    currentValue: 10800,
     profitLoss: 1200,
   },
   {
@@ -97,6 +100,7 @@ export const placeholderPositions: PositionToken[] = [
     quantity: 12,
     averagePurchasePrice: 950,
     currentPrice: 1100,
+    currentValue: 13200,
     profitLoss: 1800,
   },
   {
@@ -105,6 +109,7 @@ export const placeholderPositions: PositionToken[] = [
     quantity: 3,
     averagePurchasePrice: 2500,
     currentPrice: 2200,
+    currentValue: 6600,
     profitLoss: -900,
   },
 ];

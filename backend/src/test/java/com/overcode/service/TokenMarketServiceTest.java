@@ -13,7 +13,6 @@ import com.overcode.testUtils.TestService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -191,22 +190,21 @@ public class TokenMarketServiceTest {
 
 
     @Test
-    @Disabled("Relacionado a actualizar las órdenes")
     void venderConSubidasDePrecioGeneraGanancia() {
 
         userService.depositarCreditos(new PeticionDeposito(user2, 10000d));
         userService.depositarCreditos(new PeticionDeposito(user2, 10000d));
         userService.depositarCreditos(new PeticionDeposito(user2, 10000d));
         userService.depositarCreditos(new PeticionDeposito(user2, 10000d));
-        // tiene mucha plata
+        // tiene mucha plata 40100 creditos
 
         tokenMarketService.buy(ordenDeCompraDeUser1DeTodosPlayer1());
 
         tokenMarketService.sell(ordenDeVentaUser1DeTodosPlayer1(user1, 100));
 
-        estrategiaCotizacionService.cotizarJugadores(); // ahora el jugador vale mucho más
+        estrategiaCotizacionService.cotizarJugadores(); // ahora el jugador vale 1000
 
-        tokenMarketService.buy(new OrdenDeCompra(user2, player1, 100));
+        tokenMarketService.buy(new OrdenDeCompra(user2, player1, 40));
 
         User user1Recuperado = userService.recuperar(user1.getId());
 

@@ -26,7 +26,7 @@ export interface PositionToken {
   quantity: number;
   averagePurchasePrice: number;
   currentPrice: number;
-  currentValue?: number;
+  currentValue: number;
   profitLoss: number;
   profitLossPercentage?: number;
 }

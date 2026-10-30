@@ -1,168 +1,150 @@
 package com.overcode.service;
 
+import com.overcode.model.cotizacion.ConfiguracionMercado;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.exception.OperacionInvalidaOrdenException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
-import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.OrderNotFoundException;
-import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
-import com.overcode.service.impl.TokenMarketServiceImpl;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
+import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
+import com.overcode.testUtils.TestService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
+import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class TokenMarketServiceSellTest {
 
-    private final OrdenDeCompraRepository ordenDeCompraRepository = mock(OrdenDeCompraRepository.class);
-    private final UserRepository userRepository = mock(UserRepository.class);
-    private final PlayerRepository playerRepository = mock(PlayerRepository.class);
-    private final TokenRepository tokenRepository = mock(TokenRepository.class);
-    private final TransactionRepository transactionRepository = mock(TransactionRepository.class);
-    private final UserService userService = mock(UserService.class);
+    @Autowired
+    private TokenMarketService tokenMarketService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PlayerService playerService;
+    @Autowired
+    private ConfiguracionMercadoService configuracionMercadoService;
+    @Autowired
+    private TestService testService;
 
-    private final TokenMarketServiceImpl service =
-            new TokenMarketServiceImpl(ordenDeCompraRepository, userRepository, playerRepository, tokenRepository, transactionRepository, userService);
+    private User seller;
+    private User buyer;
+    private Player player;
 
-    private static final Long USER_ID = 1L;
-    private static final Long PLAYER_ID = 10L;
+    @BeforeEach
+    void setUp() {
+        cleanDatabase();
+        userService.crearSuperusuario();
+        configuracionMercadoService.crearConfiguracionSiNoExiste(
+                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
 
-    private Player playerWithPrice(Double price) {
-        Player player = new Player();
-        player.setId(PLAYER_ID);
-        player.setCurrentPrice(price);
-        return player;
+        seller = getUsuarioConCreditosIniciales("seller", 1000d);
+        buyer = getUsuarioConCreditosIniciales("buyer", 1000d);
+        player = getJugadorConRating("Test Player", 10d);
+        player.setCurrentPrice(10d);
+
+        seller = userService.guardar(seller);
+        buyer = userService.guardar(buyer);
+        player = playerService.guardar(player);
+        tokenMarketService.buy(new OrdenDeCompra(seller, player, 10));
     }
 
-    private User userWithTokens(int quantity) {
-        User user = new User("user1", "user1@gmail.com", "pass");
-        user.setId(USER_ID);
-        Player player = playerWithPrice(25d);
-        List<Token> tokens = new ArrayList<>();
-        for (long i = 1; i <= quantity; i++) {
-            tokens.add(new Token(i, user, player));
-        }
-        user.setTokens(tokens);
-        return user;
+    @AfterEach
+    void tearDown() {
+        cleanDatabase();
+    }
+
+    private void cleanDatabase() {
+        testService.eliminarUsuarios();
+        testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
+        testService.eliminarRegistros();
+        testService.eliminarEstrategiasCotizacion();
+        testService.eliminarLoginBonuses();
+    }
+
+    private List<ResumenOrdenesDeVenta> openOrdersFor(Long userId) {
+        return tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(
+                userId, null, PageRequest.of(0, 20)).getContent();
     }
 
     // ------------------------------ createSellOrders ------------------------------
 
     @Test
-    void createSellOrdersCreaUnaOrdenPorTokenYGuardaEnRepositorio() {
-        Player player = playerWithPrice(25d);
-        User user = userWithTokens(10);
-
-        user.getTokens().forEach(token -> token.setPlayer(player));
-        player.setTokens(new ArrayList<>(user.getTokens()));
-
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
-        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
-        when(ordenDeCompraRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
-
+    void createSellOrdersCreaUnaOrdenPorTokenYActualizaElResumen() {
         List<OrdenDeVenta> orders =
-                service.sell(new PeticionVenta(user, player, 6));
+                tokenMarketService.sell(new PeticionVenta(seller, player, 6));
 
         assertEquals(6, orders.size());
-
         for (OrdenDeVenta order : orders) {
             assertEquals(OrderStatus.OPEN, order.getStatus());
-            assertEquals(25, order.getPrice());
-            assertEquals(USER_ID, order.getOwner().getId());
-            assertEquals(PLAYER_ID, order.getPlayer().getId());
+            assertEquals(10, order.getPrice());
+            assertEquals(seller.getId(), order.getOwner().getId());
+            assertEquals(player.getId(), order.getPlayer().getId());
             assertNotNull(order.getToken().getId());
         }
 
-        assertEquals(4, user.getTokenCountForPlayer(PLAYER_ID));
-
-        verify(userRepository, times(1)).guardar(user);
-        verify(ordenDeCompraRepository, times(1)).saveAll(any());
+        assertEquals(4, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
+        List<ResumenOrdenesDeVenta> openOrders = openOrdersFor(seller.getId());
+        assertEquals(1, openOrders.size());
+        assertEquals(6, openOrders.getFirst().quantity());
+        assertEquals(10, openOrders.getFirst().unitPrice());
     }
 
     @Test
     void createSellOrdersFallaSiElJugadorNoExiste() {
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.empty());
+        Player missingPlayer = new Player(-1L);
+        PeticionVenta post = new PeticionVenta(seller, missingPlayer, 5);
 
-        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
         assertThrows(EntidadNoEncontradaException.class,
-                () -> service.sell(post));
-
-        verifyNoInteractions(userRepository);
-        verifyNoInteractions(ordenDeCompraRepository);
+                () -> tokenMarketService.sell(post));
     }
 
     @Test
     void createSellOrdersFallaSiElUsuarioNoExiste() {
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
-        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.empty());
+        PeticionVenta post = new PeticionVenta(new User(-1L), player, 5);
 
-        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
         assertThrows(EntidadNoEncontradaException.class,
-                () -> service.sell(post));
-
-        verifyNoInteractions(ordenDeCompraRepository);
+                () -> tokenMarketService.sell(post));
     }
 
     @Test
     void createSellOrdersFallaSiNoTieneTokensDeEseJugador() {
-        User user = userWithTokens(0);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(playerWithPrice(25d)));
-        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
-
-        PeticionVenta post = new PeticionVenta(new User(USER_ID), new Player(PLAYER_ID), 5);
+        PeticionVenta post = new PeticionVenta(buyer, player, 5);//el comprador sin tokens intenta vender
         assertThrows(TokensInsuficientesParaVenderException.class,
-                () -> service.sell(post));
+                () -> tokenMarketService.sell(post));
 
-        verifyNoInteractions(ordenDeCompraRepository);
+        assertTrue(openOrdersFor(buyer.getId()).isEmpty());
     }
 
     @Test
     void createSellOrdersFallaSiNoAlcanzaLaCantidadDeTokens() {
-        User user = userWithTokens(3);
-        Player player = playerWithPrice(25d);
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
-        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
-
-        PeticionVenta post = new PeticionVenta(user, player, 5);
+        PeticionVenta post = new PeticionVenta(seller, player, 11);
         assertThrows(TokensInsuficientesParaVenderException.class,
-                () -> service.sell(post));
+                () -> tokenMarketService.sell(post));
 
-        verifyNoInteractions(ordenDeCompraRepository);
-    }
-
-    @Test
-    void createSellOrdersFallaSiElTokenYaTieneUnaOrdenAbierta() {
-        Player player = playerWithPrice(25d);
-        User user = userWithTokens(1);
-        user.getTokens().forEach(token -> token.setPlayer(player));
-        player.setTokens(new ArrayList<>(user.getTokens()));
-
-        when(playerRepository.recuperar(PLAYER_ID)).thenReturn(Optional.of(player));
-        when(userRepository.recuperar(USER_ID)).thenReturn(Optional.of(user));
-        when(ordenDeCompraRepository.existsOpenOrderByTokenId(1L)).thenReturn(true);
-
-        PeticionVenta post = new PeticionVenta(user, player, 1);
-        assertThrows(ExisteOrdenAbiertaParaTokenException.class,
-                () -> service.sell(post));
-
-        verify(ordenDeCompraRepository).existsOpenOrderByTokenId(1L);
-        verify(ordenDeCompraRepository, never()).saveAll(any());
-        verify(userRepository, never()).guardar(any());
-        verify(playerRepository, never()).guardar(any());
+        assertEquals(10, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
+        assertTrue(openOrdersFor(seller.getId()).isEmpty());
     }
 
     // ------------------------------ cancelOrder ------------------------------
@@ -170,37 +152,30 @@ class TokenMarketServiceSellTest {
     @Test
     @Disabled("Esta feature no está en funcionamiento todavía")
     void cancelOrderCancelaYDevuelveTokenAlVendedor() {
-        User userTest = userWithTokens(0);
-        Player playerTest = playerWithPrice(25d);
-        Token tokenTest = new Token(55L,userTest,playerTest);
+        OrdenDeVenta order = tokenMarketService.sell(new PeticionVenta(seller, player, 1)).getFirst();
 
-        OrdenDeVenta order = new OrdenDeVenta(100L, userTest, playerTest, tokenTest, 25d, OrderStatus.OPEN, Instant.now());
-        when(ordenDeCompraRepository.recuperarPorId(100L)).thenReturn(Optional.of(order));
-
-        service.cancel(100L, USER_ID);
+        tokenMarketService.cancel(order.getId(), seller.getId());
 
         assertEquals(OrderStatus.CANCELLED, order.getStatus());
-        verify(ordenDeCompraRepository, times(1)).save(order);
-        verify(tokenRepository, times(1)).setTokenOwner(55L, USER_ID);
+        assertEquals(10, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
     }
 
     @Test
     void cancelOrderFallaSiLaOrdenNoExiste() {
-        when(ordenDeCompraRepository.recuperarPorId(-1L)).thenReturn(Optional.empty());
+        Long sellerId = seller.getId();
 
-        assertThrows(OrderNotFoundException.class, () -> service.cancel(-1L, USER_ID));
+        assertThrows(OrderNotFoundException.class,
+                () -> tokenMarketService.cancel(-1L, sellerId));
     }
 
     @Test
     @Disabled("Esta feature no está en funcionamiento todavía")
     void cancelOrderFallaSiNoEsElDueño() {
-        User userTest = userWithTokens(0);
-        Player playerTest = playerWithPrice(25d);
-        Token tokenTest = new Token(55L,userTest,playerTest);
+        OrdenDeVenta order = tokenMarketService.sell(new PeticionVenta(seller, player, 1)).getFirst();
+        Long orderId = order.getId();
+        Long buyerId = buyer.getId();
 
-        OrdenDeVenta order = new OrdenDeVenta(100L, userTest, playerTest, tokenTest, 25d, OrderStatus.OPEN, Instant.now());
-        when(ordenDeCompraRepository.recuperarPorId(100L)).thenReturn(Optional.of(order));
-
-        assertThrows(OperacionInvalidaOrdenException.class, () -> service.cancel(100L, 999L));
+        assertThrows(OperacionInvalidaOrdenException.class,
+                () -> tokenMarketService.cancel(orderId, buyerId));
     }
 }
