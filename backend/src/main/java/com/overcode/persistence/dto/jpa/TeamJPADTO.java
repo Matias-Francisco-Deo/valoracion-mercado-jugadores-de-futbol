@@ -81,13 +81,4 @@ public class TeamJPADTO {
         return team;
     }
 
-    public void addPlayer(PlayerJPADTO player) {
-        players.add(player);
-        player.setTeam(this);
-    }
-
-    public void removePlayer(PlayerJPADTO player) {
-        players.remove(player);
-        player.setTeam(null);
-    }
 }

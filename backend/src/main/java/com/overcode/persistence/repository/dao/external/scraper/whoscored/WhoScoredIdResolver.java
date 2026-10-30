@@ -53,7 +53,7 @@ public class WhoScoredIdResolver {
         int maxScore = -1;
 
         while (matcher.find()) {
-            Long currentId = Long.parseLong(matcher.group(1));
+            long currentId = Long.parseLong(matcher.group(1));
             String slug = matcher.group(2); // ej: "eder-militao"
 
             int score = 0;

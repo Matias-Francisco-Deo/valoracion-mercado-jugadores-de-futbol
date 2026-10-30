@@ -74,7 +74,4 @@ public class TransactionJPADTO {
         return transaccionFinanciera;
     }
 
-    public Double getTotalPrice(){
-        return this.unitPrice*this.quantity;
-    }
 }

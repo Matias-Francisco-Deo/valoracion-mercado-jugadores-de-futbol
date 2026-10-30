@@ -9,7 +9,7 @@ public interface LoginBonusRepository {
     LoginBonus guardar(LoginBonus loginBonus);
     Optional<LoginBonus> recuperarPorId(Long id);
     Optional<LoginBonus> recuperarPorNombre(String nombre);
-    boolean existePorId(Long id);
+
     boolean existePorNombre(String nombre);
     List<LoginBonus> recuperarTodos();
 }

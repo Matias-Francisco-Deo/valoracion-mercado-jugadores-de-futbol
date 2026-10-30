@@ -36,12 +36,6 @@ public class LoginBonusRepositoryImpl implements LoginBonusRepository {
     }
 
     @Override
-    public boolean existePorId(Long id) {
-        return loginBonusDAOJPA.existsById(id);
-
-    }
-
-    @Override
     public boolean existePorNombre(String nombre) {
 
         return loginBonusDAOJPA.existsByNombre(nombre);

@@ -15,9 +15,6 @@ import java.util.List;
 @Repository
 public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
 
-    List<SellOrderJPADTO> findByPlayerIdAndStatusOrderByPriceAscCreatedAtAsc(
-            Long playerId, OrderStatus status);
-
     boolean existsByToken_IdAndStatus(Long tokenId, OrderStatus status);
 
     //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
@@ -34,20 +31,6 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "INNER JOIN players p ON p.id = s.player_id " +
                     "WHERE s.status = 'OPEN' " +
                     "AND " + FILTRO_NOMBRE;
-
-//    @Query(value =
-//            "SELECT s.player_id AS playerId, " +
-//                    "p.name AS playerName, " +
-//                    "COUNT(s.id)::integer AS quantity, " +
-//                    "MIN(s.price)::double precision AS unitPrice " +
-//                    CONSULTA_RESUMEN_ORDENES + " " +
-//                    "GROUP BY s.player_id, p.name " +
-//                    "ORDER BY p.name ASC",
-//            nativeQuery = true)
-//    Page<OrderSellSummary> buscarOrdersSellAbiertas(
-//            @Param("nombre") String nombre,
-//            Pageable pageable
-//    );
 
     @Query(value =
             "SELECT s.player_id AS playerId, " +
