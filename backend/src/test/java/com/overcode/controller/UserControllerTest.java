@@ -1,14 +1,14 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.controller.exception.GlobalExceptionHandler;
+import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.market.Position;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.Position;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -295,7 +295,7 @@ class UserControllerTest {
         User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
         when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
         User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
-        when(userServiceMock.depositarCreditos(any(DepositPetition.class))).thenReturn(updatedUser);
+        when(userServiceMock.depositarCreditos(any(PeticionDeposito.class))).thenReturn(updatedUser);
 
         MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
 
@@ -306,7 +306,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.credits").value(10000));
 
-        verify(userServiceMock, times(1)).depositarCreditos(any(DepositPetition.class));
+        verify(userServiceMock, times(1)).depositarCreditos(any(PeticionDeposito.class));
     }
 
     @Test

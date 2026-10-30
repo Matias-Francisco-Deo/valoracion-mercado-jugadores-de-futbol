@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.portfolio;
 
-import com.overcode.model.venta.Position;
+import com.overcode.model.market.Position;
 
 public record PositionResponseDTO(
         Long playerId,

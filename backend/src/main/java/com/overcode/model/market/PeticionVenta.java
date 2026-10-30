@@ -1,9 +1,9 @@
-package com.overcode.model.venta;
+package com.overcode.model.market;
 
 import com.overcode.model.exception.ParametroNoValidoException;
 
-public record SellPost(Long userId, Long playerId, int quantity) {
-    public SellPost {
+public record PeticionVenta(Long userId, Long playerId, int quantity) {
+    public PeticionVenta {
         if (quantity <= 0) {
             throw new ParametroNoValidoException("La amount debe ser positiva");
         }

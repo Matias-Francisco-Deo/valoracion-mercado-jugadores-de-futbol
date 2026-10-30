@@ -1,9 +1,9 @@
-package com.overcode.model.venta;
+package com.overcode.model.market.orden;
 
+import com.overcode.model.exception.OperacionInvalidaOrdenException;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.orden.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,25 +11,25 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public class OrdenDeCompra extends Order {
+public class OrdenDeVenta extends Orden {
 
     private Token token;
     private Double price;
     private OrderStatus status;
 
-    public OrdenDeCompra() {
+    public OrdenDeVenta() {
         super();
         this.status = OrderStatus.OPEN;
     }
 
-    public OrdenDeCompra(Long id, User seller, Player player, Token token, Double price, OrderStatus status, Instant createdAt) {
+    public OrdenDeVenta(Long id, User seller, Player player, Token token, Double price, OrderStatus status, Instant createdAt) {
         super(id, seller, player, createdAt);
         this.token = token;
         this.price = price;
         this.status = status != null ? status : OrderStatus.OPEN;
     }
 
-    public OrdenDeCompra(User seller, Player player, Token token, Double price) {
+    public OrdenDeVenta(User seller, Player player, Token token, Double price) {
         this(null, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
@@ -37,14 +37,14 @@ public class OrdenDeCompra extends Order {
         return this.status == OrderStatus.OPEN;
     }
 
-    public boolean belongsTo(Long candidateUserId) {
-        return this.owner != null && this.owner.getId().equals(candidateUserId);
+    public boolean belongsTo(User anotherUser) {
+        return this.owner != null && this.owner.getId().equals(anotherUser.getId());
     }
 
-    public void executePurchase(User buyer) {
+    public void comprarPorUsuario(User buyer) {
         if (!isOpen()) {
-            throw new IllegalStateException(
-                    "Only OPEN orders can be purchased."
+            throw new OperacionInvalidaOrdenException(
+                    "Sólo se pueden comprar órdenes abiertas"
             );
         }
 
@@ -57,17 +57,17 @@ public class OrdenDeCompra extends Order {
 
     public void markCompleted() {
         if (!isOpen()) {
-            throw new IllegalStateException("Only OPEN orders can be completed.");
+            throw new OperacionInvalidaOrdenException("Only OPEN orders can be completed.");
         }
         this.status = OrderStatus.COMPLETED;
     }
 
-    public void cancel(Long userId) {
-        if (!belongsTo(userId)) {
-            throw new IllegalStateException("You can only cancel your own orders.");
+    public void cancel(User owner) {
+        if (!belongsTo(owner)) {
+            throw new OperacionInvalidaOrdenException("You can only cancel your own orders.");
         }
         if (!isOpen()) {
-            throw new IllegalStateException("Only OPEN orders can be cancelled.");
+            throw new OperacionInvalidaOrdenException("Only OPEN orders can be cancelled.");
         }
         this.status = OrderStatus.CANCELLED;
     }

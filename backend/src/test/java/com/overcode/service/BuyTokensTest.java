@@ -1,9 +1,9 @@
 package com.overcode.service;
 
+import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.BuyOrder;
-import com.overcode.model.venta.SellPost;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.TokenMarketService;
@@ -44,7 +44,7 @@ class BuyTokensTest {
         }
         userRepository.guardar(seller);
 
-        tokenMarketService.sell(new SellPost(seller.getId(), player.getId(), 5));
+        tokenMarketService.sell(new PeticionVenta(seller.getId(), player.getId(), 5));
 
         // Buyer with enough credits sweeps the book
         User buyer = new User("buyer-" + UUID.randomUUID(),
@@ -52,7 +52,7 @@ class BuyTokensTest {
         buyer.addCredits(1000d);
         buyer = userRepository.guardar(buyer);
 
-        tokenMarketService.buy(new BuyOrder(buyer, player, 5));
+        tokenMarketService.buy(new OrdenDeCompra(buyer, player, 5));
 
         User buyerAfter = userRepository.recuperar(buyer.getId()).orElseThrow();
         assertEquals(5, buyerAfter.getTokenCountForPlayer(player.getId()), "buyer should hold the 5 purchased tokens");

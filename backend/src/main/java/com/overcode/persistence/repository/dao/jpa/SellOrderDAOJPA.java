@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.dao.jpa;
 
-import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

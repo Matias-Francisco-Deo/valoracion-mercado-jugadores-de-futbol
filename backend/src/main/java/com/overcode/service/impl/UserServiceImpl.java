@@ -1,11 +1,11 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.market.DepositPetition;
+import com.overcode.model.market.PeticionDeposito;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -118,9 +118,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User depositarCreditos(DepositPetition depositPetition) {
-        Long userId = depositPetition.userId();
-        Double cantidad = depositPetition.cantidad();
+    public User depositarCreditos(PeticionDeposito peticionDeposito) {
+        Long userId = peticionDeposito.userId();
+        Double cantidad = peticionDeposito.cantidad();
 
         if (cantidad <= 0 || cantidad > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
 

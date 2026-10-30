@@ -1,10 +1,10 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.controller.dto.market.DepositPetition;
+import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,5 +26,5 @@ public interface UserService {
 
     Portfolio recuperarPortfolioDeUser(User user);
 
-    User depositarCreditos(DepositPetition depositPetition);
+    User depositarCreditos(PeticionDeposito peticionDeposito);
 }

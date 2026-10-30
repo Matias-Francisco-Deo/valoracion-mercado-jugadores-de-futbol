@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.venta;
 
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 
 public record OrderSellSummaryResponseDTO(
         Long playerId,

@@ -1,8 +1,6 @@
 package com.overcode.controller.exception;
 
 import com.overcode.model.exception.*;
-import com.overcode.model.exception.EstrategiaInvalidaException;
-import com.overcode.model.exception.InvalidOrderQuantityException;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
@@ -128,6 +126,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExisteOrdenAbiertaParaTokenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDTO handleExisteOrdenAbiertaParaToken(ExisteOrdenAbiertaParaTokenException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(OperacionInvalidaOrdenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleOperacionInvalidaOrden(OperacionInvalidaOrdenException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.persistence.dto.jpa.TransactionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TransactionDAOJPA;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;

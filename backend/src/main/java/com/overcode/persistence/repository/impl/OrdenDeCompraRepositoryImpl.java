@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
@@ -25,13 +25,13 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
 
     @Override
     @Transactional
-    public OrdenDeCompra save(OrdenDeCompra order) {
+    public OrdenDeVenta save(OrdenDeVenta order) {
         return dao.save(SellOrderJPADTO.desdeModelo(order)).aModelo();
     }
 
     @Override
     @Transactional
-    public List<OrdenDeCompra> saveAll(List<OrdenDeCompra> orders) {
+    public List<OrdenDeVenta> saveAll(List<OrdenDeVenta> orders) {
         if (orders == null || orders.isEmpty()) {
             return List.of();
         }
@@ -45,7 +45,7 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<OrdenDeCompra> recuperarPorId(Long id) {
+    public Optional<OrdenDeVenta> recuperarPorId(Long id) {
         return dao.findById(id).map(SellOrderJPADTO::aModelo);
     }
 
@@ -56,7 +56,7 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
 
     @Override
     @Transactional(readOnly = true)//trae las ordenes abiertas de un jugador, excluyendo al comprador
-    public List<OrdenDeCompra> findOpenSellOrders(Long playerId, Long buyerId) {
+    public List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId) {
         return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)
                 .stream()
                 .map(SellOrderJPADTO::aModelo)

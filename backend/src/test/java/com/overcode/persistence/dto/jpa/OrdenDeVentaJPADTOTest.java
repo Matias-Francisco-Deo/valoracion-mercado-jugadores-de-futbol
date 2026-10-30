@@ -1,10 +1,10 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class OrdenDeCompraJPADTOTest {
+class OrdenDeVentaJPADTOTest {
 
     @Test
     void desdeModeloMapeaTodosLosCamposCorrectamente() {
@@ -21,7 +21,7 @@ class OrdenDeCompraJPADTOTest {
         Token token = new Token(100L,user,player);
 
         Instant now = Instant.now();
-        OrdenDeCompra modelo = new OrdenDeCompra(1L, user, player, token, 15d, OrderStatus.OPEN, now);
+        OrdenDeVenta modelo = new OrdenDeVenta(1L, user, player, token, 15d, OrderStatus.OPEN, now);
 
         SellOrderJPADTO dto = SellOrderJPADTO.desdeModelo(modelo);
 
@@ -43,7 +43,7 @@ class OrdenDeCompraJPADTOTest {
         Instant now = Instant.now();
         SellOrderJPADTO dto = new SellOrderJPADTO(2L, user, player, token, 30d, OrderStatus.COMPLETED, now);
 
-        OrdenDeCompra modelo = dto.aModelo();
+        OrdenDeVenta modelo = dto.aModelo();
 
         assertEquals(2L, modelo.getId());
         assertEquals(11L, modelo.getOwner().getId());

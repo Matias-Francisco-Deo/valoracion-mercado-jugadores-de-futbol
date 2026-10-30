@@ -1,69 +1,64 @@
 package com.overcode.model;
 
+import com.overcode.model.exception.InvalidOrderQuantityException;
+import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.player.Player;
-import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderStatus;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrdenDeCompraTest {
+    private User user;
+    private Player player;
 
-    private final User SELLER = new User(10L, "seller", "seller@gmail.com", "pass");
+    @BeforeEach
+    void setUp() {
+        user = new User(1L, "testuser", "test@email.com", "password", 1000d, new ArrayList<>());
 
-    private OrdenDeCompra openOrder(Double price) {
-
-        Player player = new Player();
-        player.setId(20L);
-
-        Token token = new Token(100L, null, player);
-        return new OrdenDeCompra(1L, SELLER, player, token, price, OrderStatus.OPEN, Instant.now());
+        player = new Player(10L, 100L, "Test Player", null, null);
     }
 
     @Test
-    void isOpenReflectsStatus() {
-        OrdenDeCompra order = openOrder(25d);
-        assertTrue(order.isOpen());
-        order.markCompleted();
-        assertFalse(order.isOpen());
-        assertEquals(OrderStatus.COMPLETED, order.getStatus());
+    void createsBuyOrderSuccessfullyWithValidQuantity() {
+        OrdenDeCompra order = new OrdenDeCompra(user, player, 5);
+
+        assertEquals(1L, order.getOwner().getId());
+        assertEquals(10L, order.getPlayer().getId());
+        assertEquals(5, order.getQuantity());
+        assertNotNull(order.getCreatedAt());
     }
 
     @Test
-    void belongsToMatchesSeller() {
-        OrdenDeCompra order = openOrder(25d);
-        assertTrue(order.belongsTo(10L));
-        assertFalse(order.belongsTo(99L));
+    void throwsInvalidOrderQuantityExceptionWhenQuantityIsZero() {
+        assertThrows(
+                InvalidOrderQuantityException.class,
+                () -> new OrdenDeCompra(user, player, 0)
+        );
     }
 
     @Test
-    @Disabled("Esta feature todavía no está en uso")
-    void cancelOrderMarksCancelled() {
-        OrdenDeCompra order = openOrder(25d);
-        order.cancel(SELLER.getId());
-        assertEquals(OrderStatus.CANCELLED, order.getStatus());
-        assertFalse(order.isOpen());
+    void throwsInvalidOrderQuantityExceptionWhenQuantityIsNegative() {
+        assertThrows(
+                InvalidOrderQuantityException.class,
+                () -> new OrdenDeCompra(user, player, -3)
+        );
     }
 
     @Test
-    @Disabled("Esta feature todavía no está en uso")
-    void cannotCompleteACancelledOrder() {
-        OrdenDeCompra order = openOrder(25d);
-        order.cancel(SELLER.getId());
-        assertThrows(IllegalStateException.class, order::markCompleted);
+    void throwsInvalidOrderQuantityExceptionWhenQuantityIsNull() {
+        assertThrows(
+                InvalidOrderQuantityException.class,
+                () -> new OrdenDeCompra(user, player, null)
+        );
     }
 
     @Test
-    @Disabled("Esta feature todavía no está en uso")
-    void cannotCancelACompletedOrder() {
-        OrdenDeCompra order = openOrder(25d);
-        order.markCompleted();
-        Long sellerId = SELLER.getId();
-        assertThrows(IllegalStateException.class, () -> order.cancel(sellerId));
+    void defaultConstructorInstantiatesSuccessfully() {
+        OrdenDeCompra order = new OrdenDeCompra();
+        assertNull(order.getQuantity());
     }
 }

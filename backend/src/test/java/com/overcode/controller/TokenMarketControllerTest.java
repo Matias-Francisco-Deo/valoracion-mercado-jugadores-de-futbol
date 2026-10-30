@@ -2,14 +2,14 @@ package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
+import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.market.orden.OrdenDeCompra;
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.BuyOrder;
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.SellPost;
-import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
@@ -70,7 +70,7 @@ class TokenMarketControllerTest {
                         .content("{\"playerId\":10,\"quantity\":5}"))
                 .andExpect(status().isOk());
 
-        verify(tokenMarketService, times(1)).buy(any(BuyOrder.class));
+        verify(tokenMarketService, times(1)).buy(any(OrdenDeCompra.class));
     }
 
 
@@ -98,7 +98,7 @@ class TokenMarketControllerTest {
         user.setId(USER_ID);
         when(userService.recuperar(USER_ID)).thenReturn(user);
         doThrow(new TokensInsuficientesParaComprarException("Not enough liquidity to buy 5 tokens for player 10"))
-                .when(tokenMarketService).buy(any(BuyOrder.class));
+                .when(tokenMarketService).buy(any(OrdenDeCompra.class));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService))
                 .setControllerAdvice(new GlobalExceptionHandler())
@@ -127,8 +127,8 @@ class TokenMarketControllerTest {
         Player player = new Player();
         player.setId(PLAYER_ID);
         Token token = new Token(101L, seller, player);
-        OrdenDeCompra createdOrder = new OrdenDeCompra(1L, seller, player, token, 12d, OrderStatus.OPEN, Instant.now());
-        when(tokenMarketService.sell(any(SellPost.class))).thenReturn(List.of(createdOrder));
+        OrdenDeVenta createdOrder = new OrdenDeVenta(1L, seller, player, token, 12d, OrderStatus.OPEN, Instant.now());
+        when(tokenMarketService.sell(any(PeticionVenta.class))).thenReturn(List.of(createdOrder));
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 

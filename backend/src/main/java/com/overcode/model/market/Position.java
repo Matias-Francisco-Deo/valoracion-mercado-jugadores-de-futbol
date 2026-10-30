@@ -1,8 +1,8 @@
-package com.overcode.model.venta;
+package com.overcode.model.market;
 
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.player.Player;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +24,7 @@ public class Position {
 
     public Position(Player player, List<TransaccionFinanciera> transaccionFinancieras) {
         setPlayer(player);
-        setCurrentPrice(player.getCurrentPrice().doubleValue());
+        setCurrentPrice(player.getCurrentPrice());
 
         calcularPositions(transaccionFinancieras);
     }

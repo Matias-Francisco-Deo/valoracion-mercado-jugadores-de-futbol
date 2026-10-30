@@ -1,6 +1,5 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
@@ -8,10 +7,11 @@ import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.DepositRequest;
 import com.overcode.controller.dto.user.DepositResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
+import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -82,9 +82,9 @@ public class UserController {
 
         long userId = Long.parseLong(principal.getName());
 
-        DepositPetition depositPetition = request.aModelo(userId);
+        PeticionDeposito peticionDeposito = request.aModelo(userId);
 
-        User updatedUser = userService.depositarCreditos(depositPetition);
+        User updatedUser = userService.depositarCreditos(peticionDeposito);
         return ResponseEntity.ok(DepositResponseDTO.desdeModelo(updatedUser));
 
     }

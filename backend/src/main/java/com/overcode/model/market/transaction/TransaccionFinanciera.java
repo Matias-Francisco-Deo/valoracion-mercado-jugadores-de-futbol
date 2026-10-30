@@ -1,4 +1,4 @@
-package com.overcode.model.venta.transaction;
+package com.overcode.model.market.transaction;
 
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;

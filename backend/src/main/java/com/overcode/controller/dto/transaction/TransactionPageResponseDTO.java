@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.transaction;
 
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

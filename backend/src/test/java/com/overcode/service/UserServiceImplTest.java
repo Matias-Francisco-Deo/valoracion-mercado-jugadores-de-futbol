@@ -1,7 +1,7 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.model.exception.ParametroNoValidoException;
+import com.overcode.model.market.PeticionDeposito;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -98,7 +98,7 @@ class UserServiceImplTest {
     void depositarCreditosSumaCreditosAlUsuario() {
         User created = userService.guardar(USER1);
         double amount = 500d;
-        DepositPetition petition = new DepositPetition(created.getId(), amount);
+        PeticionDeposito petition = new PeticionDeposito(created.getId(), amount);
         User updated = userService.depositarCreditos(petition);
 
         assertEquals(amount, updated.getCreditBalance());
@@ -111,8 +111,8 @@ class UserServiceImplTest {
         User created = userService.guardar(USER1);
         Long id = created.getId();
 
-        DepositPetition petitionNegativa = new DepositPetition(id, -1d);
-        DepositPetition petitionCero = new DepositPetition(id, 0d);
+        PeticionDeposito petitionNegativa = new PeticionDeposito(id, -1d);
+        PeticionDeposito petitionCero = new PeticionDeposito(id, 0d);
 
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionNegativa));
         assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionCero));
@@ -122,7 +122,7 @@ class UserServiceImplTest {
     void depositSumaCreditosAlUsuarioExistente() {
         User created = userService.guardar(USER1);
         double amount = 500d;
-        DepositPetition petition = new DepositPetition(created.getId(), amount);
+        PeticionDeposito petition = new PeticionDeposito(created.getId(), amount);
         userService.depositarCreditos(petition);
 
         User updated = userService.recuperar(created.getId());
@@ -132,8 +132,8 @@ class UserServiceImplTest {
 
     @Test
     void depositDaErrorSiUsuarioNoExiste() {
-        DepositPetition depositPetition = new DepositPetition(-1L, 5600d);
-        assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(depositPetition));
+        PeticionDeposito peticionDeposito = new PeticionDeposito(-1L, 5600d);
+        assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(peticionDeposito));
     }
 
 

@@ -1,4 +1,4 @@
-package com.overcode.model.venta.transaction;
+package com.overcode.model.market.transaction;
 
 public enum TransactionType {
     BUY,
