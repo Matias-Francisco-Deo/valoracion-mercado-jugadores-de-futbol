@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import { PlayerCard } from "@/components/player/PlayerCard.tsx";
-import { getFiltredPlayers } from "@/services/PlayerService";
+import { useState, useEffect, useRef } from 'react';
+import { getFiltredPlayers, getRankingPage } from "@/services/PlayerService";
 import { Loading } from "@/components/common/Loading";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import type { HttpError } from "@/lib/http-error";
-import { MessajeBox } from '@/components/common/MessageBox';
-import { FilterSearch } from '@/components/common/FilterSearch';
 import type { PlayerFilter, PlayerPageResponse } from '@/types/PlayerFilter';
 import { useSearchParams } from 'react-router-dom';
-import { Pagination } from '@/components/common/Pagination';
+import type { Player } from '@/types/player';
+import type { PageResponse } from '@/types/inventory';
+import {RankingSection} from '@/components/catalogo/RankingSection';
+import { CatalogoSection } from '@/components/catalogo/CatalogoSection';
+import { Button } from '@/components/ui/Button';
 
 const filtroPlaceholder = {
     clubName: "",
@@ -17,6 +18,7 @@ const filtroPlaceholder = {
 }
 
 export default function CatalogoPage() {
+    const topRef = useRef<HTMLDivElement>(null);
     const [filter,setFilter] = useState<PlayerFilter>(filtroPlaceholder);
     const [searchParams, setSearchParams] = useSearchParams();
     const [playerPage, setPlayerPage] = useState<PlayerPageResponse | null>(null);
@@ -25,6 +27,11 @@ export default function CatalogoPage() {
 
     const [initialLoading, setInitialLoading] = useState(true);
     const [searchLoading, setSearchLoading] = useState(false);
+
+    const [rankingPage, setRankingPage] = useState<PageResponse<Player>|null>(null);
+    const [rankingError, setRankingError] = useState<HttpError | null>(null);
+
+    const [activeSection, setActiveSection] = useState<"catalogo"|"ranking">("catalogo");
 
     const handleSearch = (filtro:PlayerFilter) => {
 
@@ -38,23 +45,41 @@ export default function CatalogoPage() {
             params.league = filtro.league;
         }
 
-        /*if (filtro.position) {
+        if (filtro.position) {
             params.position = filtro.position;
-        }*/
+        }
         params.page = "0";
         setSearchParams(params);
     };
 
     const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams);
 
-    params.set("page", page.toString());
+        params.set("page", page.toString());
 
-    setSearchParams(params);
-};
+        setSearchParams(params);
+    };
 
+    const handleRankingPageChange= (page:number) => {
+        setRankingError(null);
+
+        getRankingPage(page)
+        .then((data) => setRankingPage(data))
+        .catch((error: HttpError) => setRankingError(error));
+    }
 
     useEffect(() => {
+        getRankingPage()
+        .then((data) => setRankingPage(data))
+        .catch((error: HttpError) => setRankingError(error));
+    },[]);
+
+    useEffect(() => {
+        topRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+        
         const filtro: PlayerFilter = {
             clubName: searchParams.get("clubName") || "",
             league: searchParams.get("league") || "",
@@ -79,37 +104,50 @@ export default function CatalogoPage() {
     if (error) return <ServerErrorComponent />
 
     return (
-        <div className="flex flex-col flex-1 gap-10 w-full px-4 py-8 relative">
-            <FilterSearch filter={filter} onChange={setFilter} onSearch={handleSearch}
-                    filterOptions={[
-                        {key: "clubName",label: "Equipo",},
-                        {key: "league",label: "Liga",},
-                        {key: "position",label: "Posición",},
-                    ]}
-                    className='absolute z-50 right-0 -top-5'/>
-            {searchLoading ? (
-                <Loading text="Buscando jugadores..." />
-            ):( playerPage && playerPage.content.length > 0 ? (
-                <>
-                    <div className="flex justify-center gap-8 flex-wrap">
-                        {playerPage.content.map(player => (
-                            <PlayerCard
-                                key={player.id}
-                                player={player}
-                            />
-                        ))}
-                    </div>
-                    <Pagination
-            currentPage={playerPage?.number ?? 0}
-            totalPages={playerPage?.totalPages ?? 0}
-            onPageChange={handlePageChange}
-        />
-                </>
-                ) : (
-                    <MessajeBox title='Catálogo de Jugadores' text='No hay jugadores disponibles en el catálogo en este momento.'
-                    className='items-center'/>
-            ))}
-            
+        <div className='flex w-full justify-center px-4 py-8' ref={topRef}>
+            <div className="flex flex-col max-w-[77vw] gap-5 w-full bg-[#f3f1f1] rounded-2xl md:p-6">
+                <div className="flex gap-2 text-[12px] lg:hidden px-6 pt-6 md:p-0">
+                    <Button onClick={() => setActiveSection("catalogo")}
+                        className={`flex-1 rounded-lg px-4 py-2 font-semibold ${
+                            activeSection === "catalogo"
+                            ? "bg-hover-orange"
+                            : "bg-[#faa42b]"
+                        }`}
+                        >
+                        Catálogo
+                    </Button>
+
+                    <Button onClick={() => setActiveSection("ranking")}
+                        className={`flex-1 rounded-lg px-4 py-2 font-semibold ${
+                            activeSection === "ranking"
+                            ? "bg-hover-orange"
+                            : "bg-[#faa42b]"
+                        }`}
+                        >
+                        Ranking
+                    </Button>
+                </div>
+                <div className={`${activeSection === "ranking" ? "flex" : "hidden"} flex-col gap-5 lg:flex`}>
+                    <RankingSection
+                        playerPage={rankingPage}
+                        handlePageChange={handleRankingPageChange}
+                        error={rankingError}
+                        />
+                </div>
+
+                <div className="border border-gray-200 hidden lg:block" />
+
+                <div className={`${activeSection === "catalogo" ? "flex" : "hidden"} flex-col gap-5 lg:flex`}>
+                    <CatalogoSection
+                        playerPage={playerPage}
+                        filter={filter}
+                        onFilterChange={setFilter}
+                        onSearch={handleSearch}
+                        handlePageChange={handlePageChange}
+                        searchLoading={searchLoading}
+                        />
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,7 +1,8 @@
 import React, { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthLayout } from '../layouts/AuthLayout';
-import {ProtectedLayout} from "@/layouts/ProtectedLayout.tsx";
+import { GeneralLayout } from '@/layouts/GeneralLayout';
+import { ProtectedLayout } from '@/layouts/ProtectedLayout';
 
 const HomePage = lazy(() => import('@/pages/HomePage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
@@ -9,6 +10,8 @@ const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const PlayerPage = lazy(() => import('@/pages/PlayerPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const CatalogoPage = lazy(() => import('@/pages/CatalogoPage'))
+const InventoryPage = lazy(() => import('@/pages/InventoryPage'))
+const MarketPage = lazy(()=> import ('@/pages/MarketPage'))
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -18,11 +21,15 @@ export const AppRoutes: React.FC = () => {
         <Route path="/login" Component={LoginPage} />
         
       </Route>
-      <Route Component={ProtectedLayout}>{/*layout general*/}
+      <Route Component={GeneralLayout}>{/*layout general publico*/}
           <Route path="/" Component={HomePage} />
           <Route path="/catalogo" Component={CatalogoPage} />
           <Route path="/p/:playerId" Component={PlayerPage} />
+          <Route path="/market" Component={MarketPage} />
           <Route path="*" Component={NotFoundPage} errorElement/>
+      </Route>
+      <Route Component={ProtectedLayout}>
+        <Route path="/inventario/:userId" Component={InventoryPage} />
       </Route>
 
     </Routes>

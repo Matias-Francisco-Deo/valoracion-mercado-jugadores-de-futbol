@@ -1,13 +1,13 @@
 package com.overcode.controller.dto.player;
 
 import com.overcode.controller.dto.token.TokenResponseDTO;
-import com.overcode.model.Player;
+import com.overcode.model.player.Player;
 
 import java.util.List;
 
 public record PlayerResponseDTO(Long id,
                                 String name,
-                                Integer currentPrice,
+                                Double currentPrice,
                                 TeamResponseDTO team,
                                 PlayerGameDataResponseDTO playerGameData,
                                 List<TokenResponseDTO> tokens) {

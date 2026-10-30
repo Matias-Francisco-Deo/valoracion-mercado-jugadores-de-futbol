@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 import java.util.Optional;
 
@@ -9,6 +9,8 @@ public interface UserRepository {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    boolean existsById(Long userId);
 
     Optional<User> findByUsername(String username);
 

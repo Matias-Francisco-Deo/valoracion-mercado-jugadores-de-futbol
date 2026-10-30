@@ -103,7 +103,7 @@ public class ExternalPlayerDAOFootballDataAPIImplTest {
 
     @Test
     void encuentraTodosLosJugadoresMock() {
-        // listarJugadores() makes multiple calls: 1 to /competitions and 1 per competition to /competitions/{id}/teams
+        // listarJugadores() makes multiple calls: 1 to /competitions and 1 per competition to /competitions/{playerId}/teams
         // Use a Dispatcher to handle different endpoints:
 
         mockWebServer.enqueue(new MockResponse()

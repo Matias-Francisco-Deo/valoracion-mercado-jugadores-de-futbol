@@ -2,7 +2,7 @@
 
 ## Decision: Use the existing User model and a JWT access token separate from User.tokens
 
-- The application already defines `com.overcode.model.User` with `id`, `username`, `email`, `password`, `creditBalance`, and `tokens`.
+- The application already defines `com.overcode.model.user.User` with `id`, `username`, `email`, `password`, `creditBalance`, and `tokens`.
 - `User.tokens` is an application-specific balance value and must not be confused with a JWT token. The JWT is a transient bearer token generated for authentication, not persisted in the `User` entity.
 - The auth feature will therefore reuse the same `User` record for identity and credential storage, while the JWT is generated and validated outside the model.
 

@@ -26,7 +26,7 @@ Develop a comprehensive automated test suite for [`ExternalPlayerWhoScoredScrapp
 
 | Constitution Principle | Requirement | Compliance Status | Justification / Details |
 |---|---|---|---|
-| **I. Layered Architecture** | Scraper and HTTP client remain in persistence/infrastructure boundaries | **PASS** | Tests reside in matching packages under `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/...` |
+| **I. Layered Architecture** | Scraper and HTTP client remain in persistence/infrastructure boundaries | **PASS** | Tests reside in matching packages under `scraper` |
 | **II. Rich Model** | Domain entities (`Player`) encapsulate domain logic without external leakage | **PASS** | Scraper maps raw external DTO data into standard `Player` model without introducing unauthorized models |
 | **III. Validation at Every Layer** | Boundary checks and domain-specific exceptions | **PASS** | Tests verify explicit validation: missing tournaments, 0 games played, and malformed JSON throw `ScraperExtractionException` |
 | **IV. Testing as a Delivery Gate** | Proper scope, clear naming, happy path before border cases | **PASS** | Test methods named in descriptive Latin American Spanish; order proceeds from happy path extraction to division-by-zero and error flows |
@@ -70,7 +70,7 @@ backend/
         └── WhoScoredTestFixtures.java               # Shared mock HTML and JSON statistics fixtures
 ```
 
-**Structure Decision**: Test classes are placed in packages exactly mirroring the production classes (`com.overcode.persistence.repository.dao.external.scrapper.whoscored` and `com.overcode.persistence.repository.dao.external.scrapper.http`), satisfying standard Maven directory conventions.
+**Structure Decision**: Test classes are placed in packages exactly mirroring the production classes (`scraper` and `scraper`), satisfying standard Maven directory conventions.
 
 ## Complexity Tracking
 

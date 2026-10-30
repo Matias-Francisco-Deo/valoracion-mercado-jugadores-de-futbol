@@ -1,8 +1,9 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
+import com.overcode.model.player.Team;
 import com.overcode.persistence.repository.dao.jpa.PlayerGameDataDAOJPA;
 import com.overcode.persistence.repository.interfaces.PlayerGameDataRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
@@ -44,7 +45,8 @@ class PlayerGameDataRepositoryTest {
                 623,
                 914,
                 838,
-                9.91
+                9.91,
+                PlayerPosition.ATACANTE
         );
         Player player = getJugadorConGameData("Jorgelín", playerGameData);
         playerGameData.setPlayer(player);
@@ -84,7 +86,8 @@ class PlayerGameDataRepositoryTest {
                 623,
                 914,
                 838,
-                9.91
+                9.91,
+                PlayerPosition.CENTROCAMPISTA
         );
         Player player = getJugadorConGameData("Jorgelín", playerGameData);
         playerGameData.setPlayer(player);
@@ -103,6 +106,7 @@ class PlayerGameDataRepositoryTest {
         assertEquals(914, recuperado.get().getTackles());
         assertEquals(838, recuperado.get().getSuccessfulDribbles());
         assertEquals(9.91, recuperado.get().getRating());
+        assertEquals(PlayerPosition.CENTROCAMPISTA, recuperado.get().getPosition());
     }
 
     @Test

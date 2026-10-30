@@ -1,6 +1,7 @@
 package com.overcode.controller.dto.player;
 
-import com.overcode.model.PlayerGameData;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.PlayerPosition;
 
 public record PlayerGameDataResponseDTO(
                                         Long id,
@@ -8,7 +9,8 @@ public record PlayerGameDataResponseDTO(
                                         Integer goals,
                                         Integer shotsOnTarget,
                                         Integer tackles,
-                                        Double rating
+                                        Double rating,
+                                        PlayerPosition position
 ) {
 
     public static PlayerGameDataResponseDTO desdeModelo(PlayerGameData playerGameData, Long playerId) {
@@ -19,7 +21,8 @@ public record PlayerGameDataResponseDTO(
                 playerGameData.getGoals(),
                 playerGameData.getShotsOnTarget(),
                 playerGameData.getTackles(),
-                playerGameData.getRating()
+                playerGameData.getRating(),
+                playerGameData.getPosition()
         );
     }
 }

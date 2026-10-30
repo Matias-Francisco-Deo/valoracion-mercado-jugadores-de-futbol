@@ -30,7 +30,7 @@ This plan outlines the technical implementation for the manual synchronization o
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - **Layered Architecture**: PASS. The plan explicitly enforces moving external clients to `persistence` (Tarea 1) and keeping orchestrators in `service` (Tarea 3).
-- **Rich Model**: PASS. The metrics update logic will reside inside the `Player` domain entity (`actualizarMetricas()`) rather than being a setter-heavy transaction in the service (Tarea 2).
+- **Rich Model**: PASS. The metrics update logic will reside inside the `Player` domain entity (`actualizarMetricas()`) rather than being a setter-heavy transaccionFinanciera in the service (Tarea 2).
 - **Validation**: PASS. The controller will handle the trigger, and the service will orchestrate without mixing responsibilities.
 - **Testing**: PASS. Integration tests (with Testcontainers) and Unit tests will be required for the new service and model behaviors.
 

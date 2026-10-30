@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.Player;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -81,13 +81,4 @@ public class TeamJPADTO {
         return team;
     }
 
-    public void addPlayer(PlayerJPADTO player) {
-        players.add(player);
-        player.setTeam(this);
-    }
-
-    public void removePlayer(PlayerJPADTO player) {
-        players.remove(player);
-        player.setTeam(null);
-    }
 }

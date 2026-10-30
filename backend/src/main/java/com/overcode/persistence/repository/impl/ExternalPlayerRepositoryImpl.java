@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.Player;
-import com.overcode.model.PlayerGameData;
-import com.overcode.model.Team;
+import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerGameData;
+import com.overcode.model.player.Team;
 import com.overcode.persistence.dto.external.TeamDraftDTO;
 import com.overcode.persistence.repository.dao.external.ExternalDraftPlayerDAO;
 import com.overcode.persistence.repository.dao.external.ExternalPlayerDataDAO;
@@ -62,18 +62,10 @@ public class ExternalPlayerRepositoryImpl implements ExternalPlayerRepository {
                 playerGameData.getTackles(),
                 playerGameData.getKeyPasses(),
                 playerGameData.getRating(),
-                playerGameData.getSuccessfulDribbles()
+                playerGameData.getSuccessfulDribbles(),
+                playerGameData.getPosition()
         );
 
-        if (player.getPosition() != null) {
-            playerDAOJPA.updatePosition(player.getExternalId(), player.getPosition());
-        }
-
-//        Optional<PlayerJPADTO> optionalPlayerJPADTO = playerDAOJPA.findByExternalId(player.getExternalId());
-//
-//        if (optionalPlayerJPADTO.isEmpty()) return player;
-//
-//        return optionalPlayerJPADTO.get().aModelo();
     }
 
 }

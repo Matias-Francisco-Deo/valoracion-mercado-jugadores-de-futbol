@@ -1,5 +1,6 @@
 package com.overcode.persistence.repository.dao.jpa;
 
+import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.PlayerGameDataJPADTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +20,8 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                     "pgd.tackles = :tackles," +
                     "pgd.keyPasses = :keyPasses," +
                     "pgd.rating = :rating," +
-                    "pgd.successfulDribbles = :successfulDribbles " +
+                    "pgd.successfulDribbles = :successfulDribbles, " +
+                    "pgd.position = :position " +
                     "where pgd.player.externalId = :externalId"
     )
     void updateWithExternalPlayerId(@Param("externalId") Long externalId,
@@ -29,5 +31,6 @@ public interface PlayerGameDataDAOJPA extends JpaRepository<PlayerGameDataJPADTO
                                     @Param("tackles") Integer tackles,
                                     @Param("keyPasses") Integer keyPasses,
                                     @Param("rating") Double rating,
-                                    @Param("successfulDribbles") Integer successfulDribbles);
+                                    @Param("successfulDribbles") Integer successfulDribbles,
+                                    @Param("position") PlayerPosition position);
 }

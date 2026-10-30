@@ -1,6 +1,11 @@
 package com.overcode.controller.exception;
 
+import com.overcode.model.exception.*;
+import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
+import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import com.overcode.service.exception.*;
+import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,5 +56,96 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleRepeatedEmail(EmailRepetidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
+
+    @ExceptionHandler(TokensInsuficientesParaVenderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleInsufficientEscrow(TokensInsuficientesParaVenderException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleOrderNotFound(OrderNotFoundException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(FondosInsuficientesException.class)
+    @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
+    public ErrorResponseDTO handleInsufficientFunds(FondosInsuficientesException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(EstrategiaInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleEstrategiaInvalida(EstrategiaInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(RangoBusquedaInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleRangoBusquedaInvalido(RangoBusquedaInvalidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(TokensInsuficientesParaComprarException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleInsufficientLiquidity(TokensInsuficientesParaComprarException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidOrderQuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(BonusYaReclamadoHoyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleBonusYaReclamadoHoy(BonusYaReclamadoHoyException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(FechaReclamoBonusLoginInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleFechaReclamoInvalida(FechaReclamoBonusLoginInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(LoginBonusInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO loginBonusInvalido(LoginBonusInvalidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ReclamoBonusNoPermitidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleReclamoBonusNoPermitido(ReclamoBonusNoPermitidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ExisteOrdenAbiertaParaTokenException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleExisteOrdenAbiertaParaToken(ExisteOrdenAbiertaParaTokenException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(OperacionInvalidaOrdenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleOperacionInvalidaOrden(OperacionInvalidaOrdenException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(RequestNoValidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleRequestNoValida(RequestNoValidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(ParametroNoValidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleParametroNoValido(ParametroNoValidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
 
 }

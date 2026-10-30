@@ -20,8 +20,32 @@ export function getSession(): AuthSession | null {
       return null;
     }
 
-    return JSON.parse(stored) as AuthSession;
+    const session = JSON.parse(stored) as AuthSession;
+
+    // validar los datos mínimos de la sesión
+    if (
+      !session.token ||
+      !session.expiresAt ||
+      !session.user?.id
+    ) {
+      removeSession();
+      return null;
+    }
+
+    //comprobar si el token ya venció
+    const expirationTime = new Date(session.expiresAt).getTime();
+
+    if (
+      !Number.isFinite(expirationTime) ||
+      expirationTime <= Date.now()
+    ) {
+      removeSession();
+      return null;
+    }
+
+    return session;
   } catch {
+    removeSession();
     return null;
   }
 }

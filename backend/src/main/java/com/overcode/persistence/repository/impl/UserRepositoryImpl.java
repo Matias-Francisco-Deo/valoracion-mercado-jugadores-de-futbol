@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.impl;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 import com.overcode.persistence.dto.jpa.UserJPADTO;
 import com.overcode.persistence.repository.dao.jpa.UserDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -27,6 +27,9 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByEmail(String email) {
         return userDAOJPA.existsByEmail(email);
     }
+
+    @Override
+    public boolean existsById(Long userId){return userDAOJPA.existsById(userId);}
 
     @Override
     @Transactional(readOnly = true)

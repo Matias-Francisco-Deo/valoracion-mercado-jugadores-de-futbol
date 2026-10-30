@@ -17,7 +17,7 @@ public class OpenApiConfig {
         return new OpenAPI()
             .info(new Info()
                 .title("Player Token Market API")
-                .description("REST API for football player index trading and audit ledger.")
+                .description("REST API for football player index trading.")
                 .version("1.0.0"))
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
             .components(new Components()

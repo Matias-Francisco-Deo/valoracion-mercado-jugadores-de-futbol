@@ -3,11 +3,10 @@
  */
 
 export interface UserProfile {
-  id: string | number;
+  id: string;
   email: string;
   username: string;
   creditBalance: number;
-  tokens:number[];
 }
 
 export interface RegisterCredentials {
@@ -35,6 +34,7 @@ export interface AuthContextType {
   register: (credentials: RegisterCredentials) => Promise<void>;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 export interface RegisterFormErrors {

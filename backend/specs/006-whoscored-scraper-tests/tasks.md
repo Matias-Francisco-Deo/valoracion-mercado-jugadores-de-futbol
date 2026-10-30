@@ -18,8 +18,8 @@
 **Purpose**: Verify dependencies, clean up deprecated stubs, and prepare package directory structure
 
 - [X] T001 Verify test dependencies and Playwright/MockWebServer test configuration in `pom.xml`
-- [X] T002 [P] Remove obsolete empty stub test file `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/ExternalPlayerWhoScoredScrapper.java` per FR-014 permission
-- [X] T003 [P] Create package directories for new test classes in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/` and `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/`
+- [X] T002 [P] Remove obsolete empty stub test file `scraper` per FR-014 permission
+- [X] T003 [P] Create package directories for new test classes in `scraper` and `scraper`
 
 ---
 
@@ -29,9 +29,9 @@
 
 **⚠️ CRITICAL**: Foundational fixtures must be available before user story tests can execute
 
-- [X] T004 [P] Implement mock HTML and JSON payload fixtures in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/WhoScoredTestFixtures.java`
-- [X] T005 [P] Initialize `@SpringBootTest` test class skeleton with `@MockBean ScraperHttpClient` in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T006 [P] Initialize Playwright test class skeleton with `MockWebServer` lifecycle setup and teardown in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
+- [X] T004 [P] Implement mock HTML and JSON payload fixtures in `scraper`
+- [X] T005 [P] Initialize `@SpringBootTest` test class skeleton with `@MockBean ScraperHttpClient` in `scraper`
+- [X] T006 [P] Initialize Playwright test class skeleton with `MockWebServer` lifecycle setup and teardown in `scraper`
 
 **Checkpoint**: Shared test fixtures and skeletons ready - user story testing can now begin
 
@@ -41,13 +41,13 @@
 
 **Goal**: Verify that `ExternalPlayerWhoScoredScrapper` correctly queries player statistics, isolates Top-5 league tournaments (Premier League: 2, LaLiga: 4, Serie A: 5, Bundesliga: 3, Ligue 1: 22), aggregates performance metrics, calculates weighted ratings and pass accuracy, and constructs the domain `Player` model without making real network requests.
 
-**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ExternalPlayerWhoScoredScrapperTest#extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5,ExternalPlayerWhoScoredScrapperTest#calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` to verify happy-path extraction and weighted aggregation against mocked HTML in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`.
+**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ExternalPlayerWhoScoredScrapperTest#extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5,ExternalPlayerWhoScoredScrapperTest#calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` to verify happy-path extraction and weighted aggregation against mocked HTML in `scraper`.
 
 ### Implementation for User Story 1
 
-- [X] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, preservation of player draft metadata (name, club, league, externalId), and exclusion of non-Top-5 tournaments in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T008 [US1] Implement test `calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` verifying weighted average rating and rounded pass accuracy in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T009 [US1] Validate User Story 1 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T007 [US1] Implement test `extraeMetricasDeJugadorConExitoYFiltraTorneosNoTop5` verifying accumulation of goals, assists, shots, tackles, preservation of player draft metadata (name, club, league, externalId), and exclusion of non-Top-5 tournaments in `scraper`
+- [X] T008 [US1] Implement test `calculaRatingPonderadoYPorcentajeDePasesExitososCorrectamente` verifying weighted average rating and rounded pass accuracy in `scraper`
+- [X] T009 [US1] Validate User Story 1 test execution passes cleanly with 0 outbound network calls via `scraper`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently (MVP complete)
 
@@ -57,17 +57,17 @@
 
 **Goal**: Verify that `ScraperHttpClient` executes headless Chromium navigation via Playwright against local loopback `MockWebServer`, intercepts and aborts unneeded media/stylesheet/tracker assets, handles anti-bot challenge retries, handles fatal navigation failures, and manages browser lifecycle without external network connections.
 
-**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ScraperHttpClientTest` to verify that Playwright Chromium navigates exclusively against `MockWebServer` on localhost, properly retrying on Cloudflare challenges, aborting media assets, and cleaning up browser instances in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`.
+**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ScraperHttpClientTest` to verify that Playwright Chromium navigates exclusively against `MockWebServer` on localhost, properly retrying on Cloudflare challenges, aborting media assets, and cleaning up browser instances in `scraper`.
 
 ### Implementation for User Story 3
 
-- [X] T010 [US3] Implement test `obtieneHtmlExitosamenteDesdeMockWebServer` verifying successful page navigation and HTML extraction from local loopback in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T011 [US3] Implement test `reintentaYObtieneHtmlCuandoElPrimerIntentoEncuentraDesafioCloudflare` simulating Cloudflare response on attempt 1 followed by valid HTML on attempt 2 in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T012 [US3] Implement test `lanzaExcepcionCuandoSeSuperanLosReintentosPorDesafioCloudflare` verifying `ScraperExtractionException` when challenge persists across maxRetries in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T013 [US3] Implement test `lanzaExcepcionCuandoLaNavegacionFallaCompletamenteTrasReintentos` simulating unrecoverable server connection failure in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T014 [US3] Implement test `abortaPeticionesDeImagenesEstilosYTrackersDuranteLaNavegacion` verifying route filtering for images, stylesheets, fonts, and trackers in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T015 [US3] Implement test `inicializaYCierraRecursosDeNavegadorCorrectamente` verifying Playwright lifecycle methods `init()` and `cleanup()` in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
-- [X] T016 [US3] Validate User Story 3 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
+- [X] T010 [US3] Implement test `obtieneHtmlExitosamenteDesdeMockWebServer` verifying successful page navigation and HTML extraction from local loopback in `scraper`
+- [X] T011 [US3] Implement test `reintentaYObtieneHtmlCuandoElPrimerIntentoEncuentraDesafioCloudflare` simulating Cloudflare response on attempt 1 followed by valid HTML on attempt 2 in `scraper`
+- [X] T012 [US3] Implement test `lanzaExcepcionCuandoSeSuperanLosReintentosPorDesafioCloudflare` verifying `ScraperExtractionException` when challenge persists across maxRetries in `scraper`
+- [X] T013 [US3] Implement test `lanzaExcepcionCuandoLaNavegacionFallaCompletamenteTrasReintentos` simulating unrecoverable server connection failure in `scraper`
+- [X] T014 [US3] Implement test `abortaPeticionesDeImagenesEstilosYTrackersDuranteLaNavegacion` verifying route filtering for images, stylesheets, fonts, and trackers in `scraper`
+- [X] T015 [US3] Implement test `inicializaYCierraRecursosDeNavegadorCorrectamente` verifying Playwright lifecycle methods `init()` and `cleanup()` in `scraper`
+- [X] T016 [US3] Validate User Story 3 test execution passes cleanly with 0 outbound network calls via `scraper`
 
 **Checkpoint**: At this point, User Stories 1 AND 3 both work and pass independently
 
@@ -77,17 +77,17 @@
 
 **Goal**: Verify that `ExternalPlayerWhoScoredScrapper` safely handles edge cases (zero pass attempts, zero rated games) without division-by-zero errors, and throws explicit `ScraperExtractionException` for players with zero Top-5 league games, missing tournaments node, corrupt JSON syntax, unparseable HTML, and upstream HTTP client failures.
 
-**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ExternalPlayerWhoScoredScrapperTest#manejaSinErrores*,ExternalPlayerWhoScoredScrapperTest#lanzaExcepcion*,ExternalPlayerWhoScoredScrapperTest#propagaExcepcion*` to verify boundary handling and exception propagation in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`.
+**Independent Test**: Execute `.\mvnw.cmd test -Dtest=ExternalPlayerWhoScoredScrapperTest#manejaSinErrores*,ExternalPlayerWhoScoredScrapperTest#lanzaExcepcion*,ExternalPlayerWhoScoredScrapperTest#propagaExcepcion*` to verify boundary handling and exception propagation in `scraper`.
 
 ### Implementation for User Story 2
 
-- [X] T017 [US2] Implement test `manejaSinErroresJugadorConCeroPasesIntentadosYCeroPartidosConRating` verifying safe zero handling in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T018 [US2] Implement test `lanzaExcepcionCuandoJugadorNoRegistraPartidosEnLasCincoLigasPrincipales` verifying exception on zero Top-5 appearances in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T019 [US2] Implement test `lanzaExcepcionCuandoElJsonNoContieneElNodoTournamentsOEsInvalido` verifying exception on missing tournaments array in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T020 [US2] Implement test `lanzaExcepcionCuandoElHtmlNoContieneElBloqueJsonEsperado` verifying exception on missing script block in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T021 [US2] Implement test `lanzaExcepcionCuandoElJsonTieneSintaxisCorrupta` verifying Jackson parsing exception wrapping in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T022 [US2] Implement test `propagaExcepcionCuandoElHttpClientFalla` verifying exception propagation from mocked client in `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
-- [X] T023 [US2] Validate User Story 2 test execution passes cleanly with 0 outbound network calls via `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- [X] T017 [US2] Implement test `manejaSinErroresJugadorConCeroPasesIntentadosYCeroPartidosConRating` verifying safe zero handling in `scraper`
+- [X] T018 [US2] Implement test `lanzaExcepcionCuandoJugadorNoRegistraPartidosEnLasCincoLigasPrincipales` verifying exception on zero Top-5 appearances in `scraper`
+- [X] T019 [US2] Implement test `lanzaExcepcionCuandoElJsonNoContieneElNodoTournamentsOEsInvalido` verifying exception on missing tournaments array in `scraper`
+- [X] T020 [US2] Implement test `lanzaExcepcionCuandoElHtmlNoContieneElBloqueJsonEsperado` verifying exception on missing script block in `scraper`
+- [X] T021 [US2] Implement test `lanzaExcepcionCuandoElJsonTieneSintaxisCorrupta` verifying Jackson parsing exception wrapping in `scraper`
+- [X] T022 [US2] Implement test `propagaExcepcionCuandoElHttpClientFalla` verifying exception propagation from mocked client in `scraper`
+- [X] T023 [US2] Validate User Story 2 test execution passes cleanly with 0 outbound network calls via `scraper`
 
 **Checkpoint**: All user stories (US1, US2, US3) are now independently functional and fully verified
 
