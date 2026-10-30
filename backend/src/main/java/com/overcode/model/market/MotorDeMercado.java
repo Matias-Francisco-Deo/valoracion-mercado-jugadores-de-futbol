@@ -1,11 +1,12 @@
-package com.overcode.model.venta;
+package com.overcode.model.market;
 
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class MotorDeMercado {
 
     public TransaccionCompra comprarOrdenes(
-            List<OrdenDeCompra> openOrders,
+            List<OrdenDeVenta> openOrders,
             Integer quantity,
             User buyer
     ) {
@@ -25,18 +26,18 @@ public class MotorDeMercado {
                     "No hay suficientes órdenes para comprar " + quantity + " tokens del jugador");
         }
 
-        List<OrdenDeCompra> ordersToFill = openOrders.subList(0, quantity);
+        List<OrdenDeVenta> ordersToFill = openOrders.subList(0, quantity);
 
         Map<Long, User> sellersById = new HashMap<>();
 
-        for (OrdenDeCompra order : ordersToFill) {
+        for (OrdenDeVenta order : ordersToFill) {
             User seller = order.getOwner();
 
             User existingSeller = sellersById.putIfAbsent(seller.getId(), seller);
 
             if (existingSeller != null) {order.setOwner(existingSeller);}
 
-            order.executePurchase(buyer);
+            order.comprarPorUsuario(buyer);
         }
 
         //crear un objeto aparte para crear las transacciones?
@@ -45,7 +46,7 @@ public class MotorDeMercado {
         return new TransaccionCompra(transaccionFinancieras, ordersToFill);
     }
 
-    private List<TransaccionFinanciera> crearTransacciones(User buyer, List<OrdenDeCompra> ordersToFill) {
+    private List<TransaccionFinanciera> crearTransacciones(User buyer, List<OrdenDeVenta> ordersToFill) {
         List<TransaccionFinanciera> transaccionFinancieras = new ArrayList<>();
 
         Player player = ordersToFill.get(0).getPlayer();
@@ -54,7 +55,7 @@ public class MotorDeMercado {
 
         Map<User, Integer> quantityBySeller = ordersToFill.stream()
                 .collect(Collectors.groupingBy(
-                        OrdenDeCompra::getOwner,
+                        OrdenDeVenta::getOwner,
                         Collectors.summingInt(order -> 1)
                 ));
 
@@ -64,23 +65,23 @@ public class MotorDeMercado {
         return transaccionFinancieras;
     }
 
-    public List<OrdenDeCompra> venderTokens(User seller, Player player, int quantity) {
+    public List<OrdenDeVenta> venderTokens(User seller, Player player, int quantity) {
         List<Token> userTokens =  seller.releaseTokensForSale(player, quantity);
         List<Token> tokensToSell = player.getTokensFrom(userTokens);
 
         return tokensToSell.stream().map(token -> this.venderToken(token, player, seller)).toList();
     }
 
-    private OrdenDeCompra venderToken(Token token, Player player, User seller) {
+    private OrdenDeVenta venderToken(Token token, Player player, User seller) {
         token.ponerALaVenta();
-        return new OrdenDeCompra(
+        return new OrdenDeVenta(
                 seller,
                 player,
                 token,
                 player.getCurrentPrice());
     }
 
-    public List<OrdenDeCompra> publicarJugador(Player player, User superuser) {
+    public List<OrdenDeVenta> publicarJugador(Player player, User superuser) {
         List<Token> tokens = player.getTokens(); // se lo damos al superuser
         superuser.addTokens(tokens);
         return venderTokens(superuser, player, tokens.size());

@@ -38,7 +38,7 @@ This feature delivers the REST controller layer exposing four capabilities of `E
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - **I. Layered Architecture**: PASS. The controller (`EstrategiaCotizacionController`) communicates exclusively with `EstrategiaCotizacionService`. All DTOs are isolated under `com.overcode.controller.dto.cotizacion`. Persistence layer remains behind its repository interface.
-- **II. Rich Model**: PASS. All domain rules (pricing calculations, factor thresholds) remain inside `EstrategiaCotizacion` and `ConfiguracionCotizaciones`. No business logic is placed in controllers. No unauthorized domain models are added to the model package.
+- **II. Rich Model**: PASS. All domain rules (pricing calculations, factor thresholds) remain inside `EstrategiaCotizacion` and `ConfiguracionMercado`. No business logic is placed in controllers. No unauthorized domain models are added to the model package.
 - **III. Validation at Every Layer**: PASS. Input DTOs validate format, nullability, and positive numerical bounds (`@Positive`, `@PositiveOrZero`). Domain exceptions (`EstrategiaInvalidaException`) are mapped to `400 Bad Request` via `GlobalExceptionHandler`.
 - **IV. Testing as a Delivery Gate**: PASS. The feature is verified by an E2E test suite in `src/test/java/com/overcode/e2e` using `@SpringBootTest` and `RestClient`. Tests are written in Latin American Spanish, ordered from happy path to boundary/error cases, and verify real database persistence.
 - **V. Definition of Done**: PASS. The feature will be considered complete when all E2E tests pass, the controller is wired to the service, and the build succeeds without error.

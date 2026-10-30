@@ -127,14 +127,6 @@ public final class WhoScoredTestFixtures {
                 """);
     }
 
-    public static String createNonArrayTournamentsNodeHtml() {
-        return createHtmlWithArgsJson("""
-                {
-                  "tournaments": "invalid-non-array-string"
-                }
-                """);
-    }
-
     public static String createCorruptedJsonHtml() {
         return """
                 <!DOCTYPE html>

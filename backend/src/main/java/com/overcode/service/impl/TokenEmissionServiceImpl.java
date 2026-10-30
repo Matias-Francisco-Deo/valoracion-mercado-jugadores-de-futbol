@@ -1,9 +1,9 @@
 package com.overcode.service.impl;
 
+import com.overcode.model.market.MotorDeMercado;
+import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.MotorDeMercado;
-import com.overcode.model.venta.OrdenDeCompra;
 import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
@@ -39,7 +39,7 @@ public class TokenEmissionServiceImpl implements TokenEmissionService {
         for (Player player : players) {
 
             MotorDeMercado motorDeMercado = new MotorDeMercado();
-            List<OrdenDeCompra> orders = motorDeMercado.publicarJugador(player, superuser);
+            List<OrdenDeVenta> orders = motorDeMercado.publicarJugador(player, superuser);
 
             ordenDeCompraRepository.saveAll(orders);
         }

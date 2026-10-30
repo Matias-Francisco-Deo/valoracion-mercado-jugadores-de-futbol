@@ -1,8 +1,8 @@
 package com.overcode.model.user;
 
+import com.overcode.model.market.Position;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.model.player.Player;
-import com.overcode.model.venta.Position;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

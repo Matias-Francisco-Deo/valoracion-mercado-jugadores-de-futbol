@@ -2,17 +2,18 @@ package com.overcode.service;
 
 import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
+import com.overcode.model.market.orden.OrdenDeCompra;
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.model.venta.BuyOrder;
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.impl.TokenMarketServiceImpl;
+import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,9 +35,10 @@ class TokenMarketServiceBuyTest {
     private final PlayerRepository playerRepository = mock(PlayerRepository.class);
     private final TokenRepository tokenRepository = mock(TokenRepository.class);
     private final TransactionRepository transactionRepository = mock(TransactionRepository.class);
+    private final UserService userService = mock(UserService.class);
 
     private final TokenMarketServiceImpl service =
-            new TokenMarketServiceImpl(ordenDeCompraRepository, userRepository, playerRepository, tokenRepository, transactionRepository);
+            new TokenMarketServiceImpl(ordenDeCompraRepository, userRepository, playerRepository, tokenRepository, transactionRepository, userService);
 
     private static final Long PLAYER = 10L;
 
@@ -53,18 +55,18 @@ class TokenMarketServiceBuyTest {
         return player;
     }
 
-    private OrdenDeCompra sellOrder(Long id, Long userId, Long tokenId, Double price) {
+    private OrdenDeVenta sellOrder(Long id, Long userId, Long tokenId, Double price) {
         User seller = new User("user-" + userId, "user" + userId + "@gmail.com", "pass");
         seller.setId(userId);
         Player player = new Player();
         player.setId(PLAYER);
         Token token = new Token(tokenId, null, player);
-        return new OrdenDeCompra(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
+        return new OrdenDeVenta(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
-    private OrdenDeCompra sellOrder(Long id, User seller, Player player, Long tokenId, Double price) {
+    private OrdenDeVenta sellOrder(Long id, User seller, Player player, Long tokenId, Double price) {
         Token token = new Token(tokenId, null, player);
-        return new OrdenDeCompra(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
+        return new OrdenDeVenta(id, seller, player, token, price, OrderStatus.OPEN, Instant.now());
     }
 
     private User userWithCredits(Long userId, Double credits) {
@@ -83,8 +85,8 @@ class TokenMarketServiceBuyTest {
         User sellerA = userWithCredits(2L, 0d);
         User sellerB = userWithCredits(3L, 0d);
 
-        OrdenDeCompra askA = sellOrder(101L, sellerA, player, 201L, 1d);
-        OrdenDeCompra askB = sellOrder(102L, sellerB, player, 202L, 2d);
+        OrdenDeVenta askA = sellOrder(101L, sellerA, player, 201L, 1d);
+        OrdenDeVenta askB = sellOrder(102L, sellerB, player, 202L, 2d);
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(sellerA));
@@ -92,7 +94,7 @@ class TokenMarketServiceBuyTest {
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(askA, askB));
 
-        service.buy(new BuyOrder(buyer, player, 2));
+        service.buy(new OrdenDeCompra(buyer, player, 2));
 
         // 1 + 2 = 3 debitados del comprador -> 97 restantes
         assertEquals(97, buyer.getCreditBalance());
@@ -152,16 +154,16 @@ class TokenMarketServiceBuyTest {
         User buyer = userWithCredits(1L, 100d);
         User seller = userWithCredits(2L, 0d);
 
-        OrdenDeCompra ask1 = sellOrder(101L, seller, player, 201L, 5d);
-        OrdenDeCompra ask2 = sellOrder(102L, seller, player, 202L, 5d);
-        OrdenDeCompra ask3 = sellOrder(103L, seller, player, 203L, 5d);
+        OrdenDeVenta ask1 = sellOrder(101L, seller, player, 201L, 5d);
+        OrdenDeVenta ask2 = sellOrder(102L, seller, player, 202L, 5d);
+        OrdenDeVenta ask3 = sellOrder(103L, seller, player, 203L, 5d);
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(seller));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask1, ask2, ask3));
 
-        service.buy(new BuyOrder(buyer, player, 3));
+        service.buy(new OrdenDeCompra(buyer, player, 3));
 
         assertEquals(85, buyer.getCreditBalance());
         assertEquals(15, seller.getCreditBalance());
@@ -192,7 +194,7 @@ class TokenMarketServiceBuyTest {
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId()))
                 .thenReturn(List.of(sellOrder(101L, 2L, 201L, 1d)));
 
-        BuyOrder order = new BuyOrder(buyer, player, 5);
+        OrdenDeCompra order = new OrdenDeCompra(buyer, player, 5);
         assertThrows(TokensInsuficientesParaComprarException.class,
                 () -> service.buy(order));
 
@@ -204,14 +206,14 @@ class TokenMarketServiceBuyTest {
     void executeMarketBuyFallaPorFondosInsuficientesDelComprador() {
         Player player = playerWithPrice(10d);
         User buyer = userWithCredits(1L, 1d); // solo 1 crédito
-        OrdenDeCompra ask = sellOrder(101L, 2L, 201L, 10d); // cuesta 10
+        OrdenDeVenta ask = sellOrder(101L, 2L, 201L, 10d); // cuesta 10
 
         when(userRepository.recuperar(1L)).thenReturn(Optional.of(buyer));
         when(userRepository.recuperar(2L)).thenReturn(Optional.of(userWithCredits(2L, 0d)));
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.of(player));
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId())).thenReturn(List.of(ask));
 
-        BuyOrder order = new BuyOrder(buyer, player, 1);
+        OrdenDeCompra order = new OrdenDeCompra(buyer, player, 1);
         assertThrows(FondosInsuficientesException.class,
                 () -> service.buy(order));
 
@@ -229,7 +231,7 @@ class TokenMarketServiceBuyTest {
         when(ordenDeCompraRepository.findOpenSellOrders(PLAYER,buyer.getId()))
                 .thenReturn(List.of());
 
-        BuyOrder order = new BuyOrder(buyer, player, 1);
+        OrdenDeCompra order = new OrdenDeCompra(buyer, player, 1);
         assertThrows(TokensInsuficientesParaComprarException.class,
                 () -> service.buy(order));
 
@@ -243,7 +245,7 @@ class TokenMarketServiceBuyTest {
 
         User ghostBuyer = new User("ghost", "ghost@gmail.com", "pass");
         ghostBuyer.setId(1L);
-        BuyOrder order = new BuyOrder(ghostBuyer, new Player(), 1);
+        OrdenDeCompra order = new OrdenDeCompra(ghostBuyer, new Player(), 1);
         assertThrows(EntidadNoEncontradaException.class,
                 () -> service.buy(order));
     }
@@ -256,7 +258,7 @@ class TokenMarketServiceBuyTest {
         when(playerRepository.existsById(PLAYER)).thenReturn(false);
         when(playerRepository.recuperar(PLAYER)).thenReturn(Optional.empty());
 
-        BuyOrder order = new BuyOrder(buyer, player, 1);
+        OrdenDeCompra order = new OrdenDeCompra(buyer, player, 1);
         assertThrows(EntidadNoEncontradaException.class,
                 () -> service.buy(order));
     }

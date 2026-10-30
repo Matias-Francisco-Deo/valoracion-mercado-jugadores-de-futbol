@@ -1,10 +1,10 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
-import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2JPADTO;
@@ -20,10 +20,10 @@ import static org.mockito.Mockito.mockStatic;
 
 
 @SpringBootTest()
-class ConfiguracionCotizacionesRepositoryTest {
+class ConfiguracionMercadoRepositoryTest {
 
     @Autowired
-    private ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private ConfiguracionMercadoRepository configuracionMercadoRepository;
     @Autowired
     private TestService testService;
 
@@ -40,12 +40,12 @@ class ConfiguracionCotizacionesRepositoryTest {
 
     @Test
     void siNoHayConfiguracionGuardadaDevuelveVacio() {
-        assertTrue(configuracionCotizacionesRepository.recuperarPorId(1L).isEmpty());
+        assertTrue(configuracionMercadoRepository.recuperarPorId(1L).isEmpty());
     }
 
     @Test
     void siNoHayConfiguracionGuardadaNoExiste() {
-        assertFalse(configuracionCotizacionesRepository.existePorId(1L));
+        assertFalse(configuracionMercadoRepository.existePorId(1L));
     }
 
     @Test
@@ -55,21 +55,21 @@ class ConfiguracionCotizacionesRepositoryTest {
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
         estrategiaDTO.setValorBase(estrategia.getValorBase());
 
-        ConfiguracionCotizaciones configuracionCotizaciones;
-        ConfiguracionCotizaciones configuracionACrear;
+        ConfiguracionMercado configuracionMercado;
+        ConfiguracionMercado configuracionACrear;
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(estrategia))
                     .thenReturn(estrategiaDTO);
 
 
-            configuracionACrear = new ConfiguracionCotizaciones(1L, estrategia);
-            configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
+            configuracionACrear = new ConfiguracionMercado(1L, estrategia);
+            configuracionMercado = configuracionMercadoRepository.guardar(configuracionACrear);
 
         }
 
-        assertNotNull(configuracionCotizaciones);
-        assertNotNull(configuracionCotizaciones.getId());
+        assertNotNull(configuracionMercado);
+        assertNotNull(configuracionMercado.getId());
         assertEquals(estrategia.getValorBase(), configuracionACrear.getEstrategiaCotizacion().getValorBase());
 
     }
@@ -81,20 +81,20 @@ class ConfiguracionCotizacionesRepositoryTest {
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
         estrategiaDTO.setValorBase(estrategia.getValorBase());
 
-        ConfiguracionCotizaciones configuracionCotizaciones;
-        ConfiguracionCotizaciones configuracionACrear;
+        ConfiguracionMercado configuracionMercado;
+        ConfiguracionMercado configuracionACrear;
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(estrategia))
                     .thenReturn(estrategiaDTO);
 
 
-            configuracionACrear = new ConfiguracionCotizaciones(1L, estrategia);
-            configuracionCotizaciones = configuracionCotizacionesRepository.guardar(configuracionACrear);
+            configuracionACrear = new ConfiguracionMercado(1L, estrategia);
+            configuracionMercado = configuracionMercadoRepository.guardar(configuracionACrear);
 
         }
 
-        assertTrue(configuracionCotizacionesRepository.existePorId(configuracionCotizaciones.getId()));
+        assertTrue(configuracionMercadoRepository.existePorId(configuracionMercado.getId()));
 
     }
 

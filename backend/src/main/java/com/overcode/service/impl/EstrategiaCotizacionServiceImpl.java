@@ -1,16 +1,16 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.exception.EstrategiaInvalidaException;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.repository.interfaces.ConfiguracionCotizacionesRepository;
+import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.RegistroCotizacionRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import org.springframework.stereotype.Service;
@@ -24,17 +24,17 @@ import java.util.Optional;
 public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionService {
 
     private final EstrategiaCotizacionRepository estrategiaCotizacionRepository;
-    private final ConfiguracionCotizacionesService configuracionCotizacionesService;
-    private final ConfiguracionCotizacionesRepository configuracionCotizacionesRepository;
+    private final ConfiguracionMercadoService configuracionMercadoService;
+    private final ConfiguracionMercadoRepository configuracionMercadoRepository;
     private final RegistroCotizacionRepository registroCotizacionRepository;
 
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionCotizacionesService configuracionCotizacionesService, ConfiguracionCotizacionesRepository configuracionCotizacionesRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
-        this.configuracionCotizacionesService = configuracionCotizacionesService;
-        this.configuracionCotizacionesRepository = configuracionCotizacionesRepository;
+        this.configuracionMercadoService = configuracionMercadoService;
+        this.configuracionMercadoRepository = configuracionMercadoRepository;
         this.registroCotizacionRepository = registroCotizacionRepository;
         this.playerRepository = playerRepository;
         this.playerService = playerService;
@@ -53,21 +53,21 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     @Override
     public EstrategiaCotizacion recuperarEstrategiaSeleccionada() {
-        return configuracionCotizacionesService.recuperar().getEstrategiaCotizacion();
+        return configuracionMercadoService.recuperar().getEstrategiaCotizacion();
     }
 
     @Override
     public void seleccionarEstrategia(Long id) {
         Optional<EstrategiaCotizacion> optionalEstrategiaCotizacion = estrategiaCotizacionRepository.recuperar(id);
-        ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();
+        ConfiguracionMercado configuracionMercado = configuracionMercadoService.recuperar();
 
         if (optionalEstrategiaCotizacion.isEmpty()) throw new EntidadNoEncontradaException("La estrategia a seleccionar no existe");
 
         EstrategiaCotizacion estrategiaCotizacion = optionalEstrategiaCotizacion.get();
 
-        configuracionCotizaciones.cambiarEstrategiaDeCotizacionPor(estrategiaCotizacion);
+        configuracionMercado.cambiarEstrategiaDeCotizacionPor(estrategiaCotizacion);
 
-        configuracionCotizacionesRepository.guardar(configuracionCotizaciones);
+        configuracionMercadoRepository.guardar(configuracionMercado);
 
     }
 
@@ -85,9 +85,9 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
     @Override
     public void cotizarJugadores() {
-        ConfiguracionCotizaciones configuracionCotizaciones = configuracionCotizacionesService.recuperar();
+        ConfiguracionMercado configuracionMercado = configuracionMercadoService.recuperar();
 
-        EstrategiaCotizacion estrategia = configuracionCotizaciones.getEstrategiaCotizacion();
+        EstrategiaCotizacion estrategia = configuracionMercado.getEstrategiaCotizacion();
 
         List<Player> jugadores = playerService.recuperarTodos();
 

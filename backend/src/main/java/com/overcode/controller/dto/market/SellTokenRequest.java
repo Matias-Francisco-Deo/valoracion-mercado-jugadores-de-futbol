@@ -1,6 +1,8 @@
 package com.overcode.controller.dto.market;
 
-import com.overcode.model.venta.SellPost;
+import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.player.Player;
+import com.overcode.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -13,7 +15,7 @@ public record SellTokenRequest(
                 Integer quantity)
     {
 
-    public SellPost aModelo(Long userId) {
-        return new SellPost(userId, this.playerId, this.quantity);
+    public PeticionVenta aModelo(Long userId) {
+        return new PeticionVenta(new User(userId), new Player(playerId), this.quantity);
     }
 }

@@ -1,14 +1,18 @@
 package com.overcode.controller.dto.user;
 
+import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
 
-import java.math.BigDecimal;
+public record DepositRequest(
+        @NotNull(message = "Cantidad no puede ser nula")
+        @Positive(message = "Cantidad debe ser mayor que cero")
+        Double amount
+) {
 
-@Data
-public class DepositRequest {
-    @NotNull(message = "Amount must not be null")
-    @Positive(message = "Amount must be greater than zero")
-    private BigDecimal amount;
+    public PeticionDeposito aModelo(Long userId) {
+        return new PeticionDeposito(new User(userId), amount);
+    }
+
 }

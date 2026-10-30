@@ -12,8 +12,4 @@ public class TestLoginBonusUtil {
         return new LoginBonus("Bonus Base Semanal", rewardsBase);
     }
 
-    public static LoginBonus getLoginBonusPersonalizado(List<Double> rewards) {
-        LoginBonusRewards rewardsBase = new LoginBonusRewards(rewards);
-        return new LoginBonus("Bonus Personalizado", rewardsBase);
-    }
 }

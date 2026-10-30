@@ -8,7 +8,7 @@
 - Credit-related values use `Double` (not `Integer`), while streak counts remain `Integer`.
 - Explicit custom exceptions for model, service, and persistence layers. **Java default exceptions (like `IllegalArgumentException`) CANNOT be used**.
 - `DataInitializer` seeds base `LoginBonus` with values: `LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`.
-- System supports multiple `LoginBonus` rows in the database, with one active instance linked to `ConfiguracionCotizaciones`.
+- System supports multiple `LoginBonus` rows in the database, with one active instance linked to `ConfiguracionMercado`.
 - `GET /api/daily-bonus` returns current streak, today's bonus, claim status, and weekly bonus schedule.
 - `POST /api/daily-bonus/claim` submits an explicit claim request.
 - The bonus is **never** granted automatically on login or registration; the user MUST use the POST endpoint.
@@ -18,7 +18,7 @@
 
 ## Summary
 
-The Login Streak Bonus feature provides daily credit rewards mapped through a dedicated `DiaDeLaSemana` enum and an internal `Map<DiaDeLaSemana, Double>` in the `LoginBonus` domain model. All credit values are typed as `Double`, streak counts as `Integer`. Errors and invalid states throw dedicated domain, service, or persistence exceptions without relying on Java default exceptions. Only one active `LoginBonus` is linked inside `ConfiguracionCotizaciones`, and bonus claims require an explicit HTTP `POST` action.
+The Login Streak Bonus feature provides daily credit rewards mapped through a dedicated `DiaDeLaSemana` enum and an internal `Map<DiaDeLaSemana, Double>` in the `LoginBonus` domain model. All credit values are typed as `Double`, streak counts as `Integer`. Errors and invalid states throw dedicated domain, service, or persistence exceptions without relying on Java default exceptions. Only one active `LoginBonus` is linked inside `ConfiguracionMercado`, and bonus claims require an explicit HTTP `POST` action.
 
 ---
 
@@ -46,7 +46,7 @@ The Login Streak Bonus feature provides daily credit rewards mapped through a de
 
 | Principle | Requirement | Compliance Analysis | Status |
 |---|---|---|---|
-| **I. Layered Architecture** | Controller -> Service -> Model & Persistence. DTOs in `controller/dto`, repositories in `persistence/repository`. | Controller `DailyBonusController` communicates solely with `DailyBonusService`. Domain models remain independent of persistence annotations. JPA DTOs live in `persistence/dto/jpa/bonus`. Repositories live behind `interfaces` and `impl` packages. Custom persistence exceptions in `persistence/exception`. | PASS |
+| **I. Layered Architecture** | Controller -> Service -> Model & Persistence. DTOs in `controller/dto`, repositories in `persistence/repository`. | Controller `DailyBonusController` communicates solely with `BonusService`. Domain models remain independent of persistence annotations. JPA DTOs live in `persistence/dto/jpa/bonus`. Repositories live behind `interfaces` and `impl` packages. Custom persistence exceptions in `persistence/exception`. | PASS |
 | **II. Rich Model** | All domain logic lives in model objects. New model object explicitly approved. | `LoginBonus` and `DiaDeLaSemana` approved. Scaling and calculation methods live inside `LoginBonus` and `User`. No business rules in controllers or repositories. | PASS |
 | **III. Validation at Every Layer** | Validate at each layer; domain exceptions for invalid states; NO Java default exceptions. | Custom exceptions defined for each failure mode (`BonusYaReclamadoHoyException`, `DiaInvalidoException`, `DiaDeLaSemanaInvalidoException`, `ValorBonusInvalidoException`, `FechaReclamoBonusLoginInvalidaException`, `LoginBonusInvalidoException`, `LoginBonusNoConfiguradoException`, `LoginBonusPersistenciaException`). | PASS |
 | **IV. Testing as Delivery Gate** | Unit tests for model; Testcontainers for services/repos; RestClient for E2E. Tests in Latin American Spanish covering edge cases. | Pure unit tests without Spring context for models/enums; Testcontainers integration tests for repository/service; RestClient E2E tests. Tests in Latin American Spanish using static helpers. | PASS |
@@ -156,7 +156,7 @@ backend/src/test/java/com/overcode/
   3. `LoginBonus` class with `Map<DiaDeLaSemana, Double>` & unit tests (`LoginBonusTest`).
   4. `User` adaptations (Double credits, streak tracking, `UserBonusTest`, `TestUserUtil`, `TestLoginBonusUtil`).
   5. Persistence layer (`LoginBonusJPADTO`, `LoginBonusDAOJPA`, `LoginBonusRepository`, `LoginBonusPersistenciaException`).
-  6. `ConfiguracionCotizaciones` & `DataInitializer` integration.
-  7. Service layer (`DailyBonusService`, custom service exceptions, integration tests).
+  6. `ConfiguracionMercado` & `DataInitializer` integration.
+  7. Service layer (`BonusService`, custom service exceptions, integration tests).
   8. Controller & DTOs (`DailyBonusController`, `GlobalExceptionHandler` mapping).
   9. End-to-End API tests (`DailyBonusE2eTest`).

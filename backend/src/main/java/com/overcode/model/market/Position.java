@@ -1,8 +1,8 @@
-package com.overcode.model.venta;
+package com.overcode.model.market;
 
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.player.Player;
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,13 +24,13 @@ public class Position {
 
     public Position(Player player, List<TransaccionFinanciera> transaccionFinancieras) {
         setPlayer(player);
-        setCurrentPrice(player.getCurrentPrice().doubleValue());
+        setCurrentPrice(player.getCurrentPrice());
 
-        calcularPositions(transaccionFinancieras);
+        actualizarDesdeTransacciones(transaccionFinancieras);
     }
 
 
-    private void calcularPositions(List<TransaccionFinanciera> transaccionFinancieras) {
+    private void actualizarDesdeTransacciones(List<TransaccionFinanciera> transaccionFinancieras) {
         int tokensEnPosesion = 0;
         double costoAcumulado = 0.0; // Costo de adquisición de los tokens que quedan
 
@@ -42,9 +42,6 @@ public class Position {
                 costoAcumulado += transaccion.getTotalPrice();
 
             } else if (transaccion.getType() == TransactionType.SELL) {
-                if (tokensDeTransaccion > tokensEnPosesion) {
-                    throw new IllegalStateException("La venta supera la cantidad de tokens disponibles");
-                }
 
                 double costoPromedioAnterior = tokensEnPosesion > 0 ? costoAcumulado / tokensEnPosesion : 0.0; // Costo promedio por token antes de la venta
 
@@ -57,10 +54,14 @@ public class Position {
 
         double valorActualCalculado = tokensEnPosesion * getCurrentPrice();
 
-        double rendimientoCalculado = valorActualCalculado - costoAcumulado;// cantidad de ganancia o pérdida no realizada
+        double rendimientoCalculado = valorActualCalculado - costoAcumulado;// amount de ganancia o pérdida no realizada
 
         double rendimientoPorcentualCalculado = costoAcumulado > 0 ? (rendimientoCalculado / costoAcumulado) * 100 : 0.0; // Ganancia o pérdida como porcentaje del costo restante
 
+        actualizarPosicion(tokensEnPosesion, precioPromedioCalculado, valorActualCalculado, rendimientoCalculado, rendimientoPorcentualCalculado);
+    }
+
+    private void actualizarPosicion(int tokensEnPosesion, double precioPromedioCalculado, double valorActualCalculado, double rendimientoCalculado, double rendimientoPorcentualCalculado) {
         setQuantity(tokensEnPosesion);
         setAveragePurchasePrice(precioPromedioCalculado);
         setCurrentValue(valorActualCalculado);

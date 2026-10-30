@@ -1,7 +1,7 @@
 package com.overcode.controller.dto.transaction;
 
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 
 import java.time.LocalDateTime;
 

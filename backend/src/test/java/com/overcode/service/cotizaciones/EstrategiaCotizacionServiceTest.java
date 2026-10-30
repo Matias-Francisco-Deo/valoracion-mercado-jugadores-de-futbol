@@ -1,6 +1,6 @@
 package com.overcode.service.cotizaciones;
 
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
@@ -10,7 +10,7 @@ import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.persistence.repository.impl.EstrategiaCotizacionRepositoryImpl;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
+import com.overcode.service.impl.ConfiguracionMercadoServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
 import com.overcode.service.impl.RegistroCotizacionServiceImpl;
@@ -47,7 +47,7 @@ class EstrategiaCotizacionServiceTest {
     private EstrategiaCotizacionServiceImpl estrategiaCotizacionService;
 
     @Autowired
-    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesService;
+    private ConfiguracionMercadoServiceImpl configuracionCotizacionesService;
 
     @Autowired
     private TestService testService;
@@ -173,8 +173,8 @@ class EstrategiaCotizacionServiceTest {
 
     @Test
     void sePuedeElegirLaEstrategiaYLaConfiguracionQuedaEstablecidaConElla() {
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacionSiempre2[]{ESTRATEGIA_COTIZACION_1};
-        final EstrategiaCotizacion[] estrategiaCotizacion2 = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_2};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion2 = {ESTRATEGIA_COTIZACION_2};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
         contextoConDTODeEstrategia2(() -> estrategiaCotizacion2[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2));
@@ -183,25 +183,25 @@ class EstrategiaCotizacionServiceTest {
             EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
             EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaActual));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaActual));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
-            ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
+            ConfiguracionMercado config = configuracionCotizacionesService.recuperar();
             assertEquals(estrategiaAUsar.getId(), config.getEstrategiaCotizacion().getId());
         });
     }
 
     @Test
     void sePuedeElegirLaEstrategiaYaUsadaYSeSigueUsando() {
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
-            ConfiguracionCotizaciones config = configuracionCotizacionesService.recuperar();
+            ConfiguracionMercado config = configuracionCotizacionesService.recuperar();
             assertEquals(estrategiaCotizacionMisma.getId(), config.getEstrategiaCotizacion().getId());
         });
     }
@@ -209,14 +209,14 @@ class EstrategiaCotizacionServiceTest {
     @Test
     void elegirEstrategiaQueNoExisteDaError() {
 
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaCotizacionMisma.getId());
 
             assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.seleccionarEstrategia(-1L));
@@ -226,8 +226,8 @@ class EstrategiaCotizacionServiceTest {
 
     @Test
     void sePuedeVerLaEstrategiaSeleccionada() {
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacionSiempre2[]{ESTRATEGIA_COTIZACION_1};
-        final EstrategiaCotizacion[] estrategiaCotizacion2 = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_2};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion2 = {ESTRATEGIA_COTIZACION_2};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
         contextoConDTODeEstrategia2(() -> estrategiaCotizacion2[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_2));
@@ -236,7 +236,7 @@ class EstrategiaCotizacionServiceTest {
             EstrategiaCotizacion estrategiaActual = estrategiaCotizacion[0];
             EstrategiaCotizacion estrategiaAUsar = estrategiaCotizacion2[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaActual));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaActual));
             estrategiaCotizacionService.seleccionarEstrategia(estrategiaAUsar.getId());
             EstrategiaCotizacion estrategiaSeleccionada = estrategiaCotizacionService.recuperarEstrategiaSeleccionada();
             assertEquals(estrategiaAUsar.getId(), estrategiaSeleccionada.getId());
@@ -283,16 +283,16 @@ class EstrategiaCotizacionServiceTest {
     void seActualizanCotizacionesDeJugadoresUsandoEstrategia() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.crear(player);
+        Player playerPersistido = playerServiceImpl.guardar(player);
 
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
 
             estrategiaCotizacionService.cotizarJugadores();
 
@@ -309,16 +309,16 @@ class EstrategiaCotizacionServiceTest {
     void seCotizanJugadoresYQuedaUnRegistro() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.crear(player);
+        Player playerPersistido = playerServiceImpl.guardar(player);
 
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
 
             estrategiaCotizacionService.cotizarJugadores();
 
@@ -339,14 +339,14 @@ class EstrategiaCotizacionServiceTest {
     @Test
     void cotizarNoDaErrorSinJugadores() {
 
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
 
             assertDoesNotThrow(() -> estrategiaCotizacionService.cotizarJugadores());
         });

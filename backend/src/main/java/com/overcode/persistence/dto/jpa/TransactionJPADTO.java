@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
-import com.overcode.model.venta.transaction.TransactionType;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -74,7 +74,4 @@ public class TransactionJPADTO {
         return transaccionFinanciera;
     }
 
-    public Double getTotalPrice(){
-        return this.unitPrice*this.quantity;
-    }
 }

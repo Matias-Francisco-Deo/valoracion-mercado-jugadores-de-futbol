@@ -13,7 +13,7 @@
 ### Session 2026-10-22
 
 - Q: How do users receive their daily bonus? → A: Users must explicitly claim it via `POST /api/daily-bonus/claim`. The bonus is **never** granted automatically upon login or registration; the user MUST explicitly call the claim endpoint.
-- Q: Where and how should the weekly bonus reward amounts (credits for Days 1 through 7) be configured? → A: Encapsulated in the `LoginBonus` domain model as `Map<DiaDeLaSemana, Double>`, stored in the database with multiple rows supported, and one active instance linked to `ConfiguracionCotizaciones`. Seeded by `DataInitializer`. (Admin dynamic PATCH endpoint deferred).
+- Q: Where and how should the weekly bonus reward amounts (credits for Days 1 through 7) be configured? → A: Encapsulated in the `LoginBonus` domain model as `Map<DiaDeLaSemana, Double>`, stored in the database with multiple rows supported, and one active instance linked to `ConfiguracionMercado`. Seeded by `DataInitializer`. (Admin dynamic PATCH endpoint deferred).
 - Q: Should the Day 1 login bonus be automatically granted upon user registration or login? → A: No. Registration and credential authentication alone do NOT award bonus credits or modify streak progression.
 
 ## User Scenarios & Testing *(mandatory)*
@@ -97,7 +97,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 
 ### User Story 6 - Administrator Modifies Bonus Rewards (Deferred / Out of Scope for Phase 1)
 
-*(Deferred)* Dynamic administrator updates via a dedicated REST endpoint are deferred to a subsequent administrative release. In this release, the active `LoginBonus` schedule is seeded and configured in `ConfiguracionCotizaciones` during application initialization.
+*(Deferred)* Dynamic administrator updates via a dedicated REST endpoint are deferred to a subsequent administrative release. In this release, the active `LoginBonus` schedule is seeded and configured in `ConfiguracionMercado` during application initialization.
 
 ---
 
@@ -122,7 +122,7 @@ As a user or client application, I want to query `GET /api/daily-bonus` to inspe
 - **FR-007**: The system MUST add awarded bonus credits (`Double`) directly to the user's credit balance upon a successful claim.
 - **FR-008**: The system MUST provide the outcome of the daily login bonus (`givenBonus`, `newStreak`, `currentCreditBalance`, `claimDate`, `message`) in the response to `POST /api/daily-bonus/claim`.
 - **FR-009**: The system MUST provide an endpoint `GET /api/daily-bonus` to inspect the user's current streak status (`currentStreak`, `nextBonus`, `alreadyClaimedToday`, and `weeklyBonusRewards`).
-- **FR-010**: The system MUST persist the reward schedule as a `LoginBonus` entity (`Map<DiaDeLaSemana, Double>`) in the database with base default values, with the active instance linked to `ConfiguracionCotizaciones`.
+- **FR-010**: The system MUST persist the reward schedule as a `LoginBonus` entity (`Map<DiaDeLaSemana, Double>`) in the database with base default values, with the active instance linked to `ConfiguracionMercado`.
 - **FR-011**: *(Deferred)* Dynamic administrator modification via endpoint is deferred to a future administrative feature.
 - **FR-012**: *(Deferred)* Dynamic administrator validation rules are deferred.
 

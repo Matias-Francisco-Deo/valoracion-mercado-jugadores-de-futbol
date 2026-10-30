@@ -1,4 +1,4 @@
-package com.overcode.model.venta;
+package com.overcode.model.market.orden;
 
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
@@ -9,18 +9,18 @@ import java.time.Instant;
 
 @Getter
 @Setter
-public abstract class Order {
+public abstract class Orden {
 
     protected Long id;
     protected User owner;
     protected Player player;
     protected Instant createdAt;
 
-    protected Order() {
+    protected Orden() {
         this.createdAt = Instant.now();
     }
 
-    protected Order(Long id, User owner, Player player, Instant createdAt) {
+    protected Orden(Long id, User owner, Player player, Instant createdAt) {
         this.id = id;
         this.owner = owner;
         this.player = player;

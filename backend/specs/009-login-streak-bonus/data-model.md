@@ -51,7 +51,7 @@ Encapsulates daily bonus credit calculations, daily values, and streak scaling l
 
 ---
 
-### 1.3 ConfiguracionCotizaciones (`com.overcode.model.cotizacion.ConfiguracionCotizaciones`)
+### 1.3 ConfiguracionCotizaciones (`com.overcode.model.cotizacion.ConfiguracionMercado`)
 Modified to reference the currently selected `LoginBonus`.
 
 | Field | Type | Description | Invariants / Constraints |
@@ -98,7 +98,7 @@ Modified with streak tracking and explicit claim domain method.
 - `LoginBonusInvalidoException`: Thrown when a `LoginBonus` definition is incomplete, missing days, or null.
 
 ### 2.2 Service Exceptions (`com.overcode.service.exception`)
-- `LoginBonusNoConfiguradoException`: Thrown when `ConfiguracionCotizaciones` has no active `LoginBonus` set.
+- `LoginBonusNoConfiguradoException`: Thrown when `ConfiguracionMercado` has no active `LoginBonus` set.
 - `ReclamoBonusNoPermitidoException`: Thrown when service validation denies a claim operation.
 
 ---
@@ -115,7 +115,7 @@ Modified with streak tracking and explicit claim domain method.
   - `public LoginBonus aModelo()`: Converts to domain model `LoginBonus(id, nombre, rewards)`.
   - `public static LoginBonusJPADTO desdeModelo(LoginBonus modelo)`: Converts domain model to JPA entity.
 
-### 3.2 ConfiguracionCotizacionesJPADTO (`com.overcode.persistence.dto.jpa.cotizacion.ConfiguracionCotizacionesJPADTO`)
+### 3.2 ConfiguracionCotizacionesJPADTO (`com.overcode.persistence.dto.jpa.cotizacion.ConfiguracionMercadoJPADTO`)
 - Adds relation:
   ```java
   @ManyToOne(fetch = FetchType.EAGER)

@@ -3,9 +3,9 @@ package com.overcode.controller;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
-import com.overcode.model.venta.BuyOrder;
-import com.overcode.model.venta.SellPost;
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
+import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.market.orden.OrdenDeCompra;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.service.interfaces.TokenMarketService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class TokenMarketController {
     @PostMapping("/buy")
     public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        BuyOrder buyOrder = request.aModelo(userId);
+        OrdenDeCompra buyOrder = request.aModelo(userId);
         tokenMarketService.buy(buyOrder);
 
         return ResponseEntity.ok().build();
@@ -42,7 +42,7 @@ public class TokenMarketController {
     @PostMapping("/sell")
     public ResponseEntity<Void> sell(@Valid @RequestBody SellTokenRequest request, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        SellPost command = request.aModelo(userId);
+        PeticionVenta command = request.aModelo(userId);
         tokenMarketService.sell(command);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 

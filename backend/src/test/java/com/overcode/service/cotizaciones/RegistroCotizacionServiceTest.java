@@ -60,15 +60,15 @@ class RegistroCotizacionServiceTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarJugadoresYEquipos();
         testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarJugadoresYEquipos();
         testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
         TipoEstrategiaCotizacion.eliminarMapEstrategia(estrategiaADTO);
     }
 

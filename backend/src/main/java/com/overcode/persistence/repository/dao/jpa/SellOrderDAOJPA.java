@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository.dao.jpa;
 
-import com.overcode.model.venta.orden.OrderStatus;
-import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
-import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
+import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
+import com.overcode.persistence.dto.jpa.OrdenDeVentaJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,15 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
-
-    List<SellOrderJPADTO> findByPlayerIdAndStatusOrderByPriceAscCreatedAtAsc(
-            Long playerId, OrderStatus status);
+public interface SellOrderDAOJPA extends JpaRepository<OrdenDeVentaJPADTO, Long> {
 
     boolean existsByToken_IdAndStatus(Long tokenId, OrderStatus status);
 
     //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
-    List<SellOrderJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
+    List<OrdenDeVentaJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
             Long playerId, OrderStatus status, Long buyerId);
 
     String FILTRO_NOMBRE =
@@ -34,20 +31,6 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "INNER JOIN players p ON p.id = s.player_id " +
                     "WHERE s.status = 'OPEN' " +
                     "AND " + FILTRO_NOMBRE;
-
-//    @Query(value =
-//            "SELECT s.player_id AS playerId, " +
-//                    "p.name AS playerName, " +
-//                    "COUNT(s.id)::integer AS quantity, " +
-//                    "MIN(s.price)::double precision AS unitPrice " +
-//                    CONSULTA_RESUMEN_ORDENES + " " +
-//                    "GROUP BY s.player_id, p.name " +
-//                    "ORDER BY p.name ASC",
-//            nativeQuery = true)
-//    Page<OrderSellSummary> buscarOrdersSellAbiertas(
-//            @Param("nombre") String nombre,
-//            Pageable pageable
-//    );
 
     @Query(value =
             "SELECT s.player_id AS playerId, " +

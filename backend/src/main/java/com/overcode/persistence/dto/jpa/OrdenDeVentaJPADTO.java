@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.venta.OrdenDeCompra;
-import com.overcode.model.venta.orden.OrderStatus;
+import com.overcode.model.market.orden.OrdenDeVenta;
+import com.overcode.model.market.orden.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SellOrderJPADTO {
+public class OrdenDeVentaJPADTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class SellOrderJPADTO {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    public SellOrderJPADTO(Long id, UserJPADTO owner, PlayerJPADTO player, TokenJPADTO token, Double price, OrderStatus status, Instant createdAt) {
+    public OrdenDeVentaJPADTO(Long id, UserJPADTO owner, PlayerJPADTO player, TokenJPADTO token, Double price, OrderStatus status, Instant createdAt) {
         this.id = id;
         this.owner = owner;
         this.player = player;
@@ -54,15 +54,15 @@ public class SellOrderJPADTO {
         this.createdAt = createdAt;
     }
 
-    public OrdenDeCompra aModelo() {
-        return new OrdenDeCompra(id, owner.aModelo(), player.aModelo(), token.aModelo(), price, status, createdAt);
+    public OrdenDeVenta aModelo() {
+        return new OrdenDeVenta(id, owner.aModelo(), player.aModelo(), token.aModelo(), price, status, createdAt);
     }
 
-    public static SellOrderJPADTO desdeModelo(OrdenDeCompra modelo) {
+    public static OrdenDeVentaJPADTO desdeModelo(OrdenDeVenta modelo) {
         if (modelo == null) {
             return null;
         }
-        SellOrderJPADTO dto = new SellOrderJPADTO();
+        OrdenDeVentaJPADTO dto = new OrdenDeVentaJPADTO();
         dto.setId(modelo.getId());
         dto.setOwner(UserJPADTO.desdeModelo(modelo.getOwner()));
         dto.setPlayer(PlayerJPADTO.desdeModelo(modelo.getPlayer()));

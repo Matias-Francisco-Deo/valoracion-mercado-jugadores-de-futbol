@@ -5,7 +5,7 @@ import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
-import com.overcode.service.interfaces.DailyBonusService;
+import com.overcode.service.interfaces.BonusService;
 import com.overcode.service.interfaces.LoginBonusService;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class DailyBonusServiceImpl implements DailyBonusService {
+public class BonusServiceImpl implements BonusService {
 
     private final UserRepository userRepository;
     private final LoginBonusService loginBonusService;
     private final UserService userService;
 
-    public DailyBonusServiceImpl(UserRepository userRepository,
-                                 LoginBonusService loginBonusService, UserService userService) {
+    public BonusServiceImpl(UserRepository userRepository,
+                            LoginBonusService loginBonusService, UserService userService) {
         this.userRepository = userRepository;
         this.loginBonusService = loginBonusService;
         this.userService = userService;
@@ -45,6 +45,6 @@ public class DailyBonusServiceImpl implements DailyBonusService {
 
         LoginBonus loginBonus = loginBonusService.recuperarSeleccionado();
 
-        return userRecuperado.obtenerEstadoBonus(loginBonus); // TODO método de user
+        return userRecuperado.obtenerEstadoBonus(loginBonus);
     }
 }

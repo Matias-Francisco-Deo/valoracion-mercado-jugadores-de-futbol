@@ -1,4 +1,4 @@
-package com.overcode.model.venta.orden;
+package com.overcode.model.market.orden;
 
 public enum OrderStatus {
     OPEN, COMPLETED, CANCELLED

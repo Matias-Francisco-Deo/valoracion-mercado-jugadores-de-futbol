@@ -1,11 +1,11 @@
 package com.overcode.service.cotizaciones;
 
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
+import com.overcode.service.impl.ConfiguracionMercadoServiceImpl;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2JPADTO;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.mockStatic;
 
 
 @SpringBootTest()
-class ConfiguracionCotizacionesServiceImplTest {
+class ConfiguracionMercadoServiceImplTest {
 
     @Autowired
-    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesService;
+    private ConfiguracionMercadoServiceImpl configuracionCotizacionesService;
 
     @Autowired
     private TestService testService;
@@ -55,21 +55,21 @@ class ConfiguracionCotizacionesServiceImplTest {
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
         estrategiaDTO.setValorBase(estrategia.getValorBase());
 
-        ConfiguracionCotizaciones configuracionCotizaciones;
-        ConfiguracionCotizaciones configuracionACrear;
+        ConfiguracionMercado configuracionMercado;
+        ConfiguracionMercado configuracionACrear;
 
         try (MockedStatic<TipoEstrategiaCotizacion> tipo = mockStatic(TipoEstrategiaCotizacion.class)) {
             tipo.when(() -> TipoEstrategiaCotizacion.getValueOf(isA(EstrategiaCotizacion.class)))
                     .thenReturn(estrategiaDTO);
 
 
-            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
-            configuracionCotizaciones = configuracionCotizacionesService.crearConfiguracionSiNoExiste(configuracionACrear);
+            configuracionACrear = new ConfiguracionMercado(estrategia);
+            configuracionMercado = configuracionCotizacionesService.crearConfiguracionSiNoExiste(configuracionACrear);
 
         }
 
-        assertNotNull(configuracionCotizaciones);
-        assertNotNull(configuracionCotizaciones.getId());
+        assertNotNull(configuracionMercado);
+        assertNotNull(configuracionMercado.getId());
         assertEquals(estrategia.getValorBase(), configuracionACrear.getEstrategiaCotizacion().getValorBase());
 
     }
@@ -81,7 +81,7 @@ class ConfiguracionCotizacionesServiceImplTest {
         EstrategiaCotizacionJPADTO estrategiaDTO = new EstrategiaCotizacionSiempre2JPADTO();
         estrategiaDTO.setFactorEscala(estrategia.getFactorEscala());
         estrategiaDTO.setValorBase(estrategia.getValorBase());
-        ConfiguracionCotizaciones configuracionACrear;
+        ConfiguracionMercado configuracionACrear;
 
 
         EstrategiaCotizacion estrategiaConValorBase = new EstrategiaCotizacionSiempre2(2.0, 1.0);
@@ -95,20 +95,20 @@ class ConfiguracionCotizacionesServiceImplTest {
 
 
 
-            configuracionACrear = new ConfiguracionCotizaciones(estrategia);
+            configuracionACrear = new ConfiguracionMercado(estrategia);
             configuracionCotizacionesService.crearConfiguracionSiNoExiste(configuracionACrear);
 
-            ConfiguracionCotizaciones configuracionCotizacionesOriginal = configuracionCotizacionesService.recuperar();
+            ConfiguracionMercado configuracionMercadoOriginal = configuracionCotizacionesService.recuperar();
 
-            ConfiguracionCotizaciones configuracionCotizacionesNueva = new ConfiguracionCotizaciones();
-            configuracionCotizacionesNueva.setId(2L);
-            configuracionCotizacionesNueva.setEstrategiaCotizacion(estrategiaConValorBase);
+            ConfiguracionMercado configuracionMercadoNueva = new ConfiguracionMercado();
+            configuracionMercadoNueva.setId(2L);
+            configuracionMercadoNueva.setEstrategiaCotizacion(estrategiaConValorBase);
 
-            ConfiguracionCotizaciones configuracionCotizacionesCreada = configuracionCotizacionesService
-                    .crearConfiguracionSiNoExiste(configuracionCotizacionesNueva);
+            ConfiguracionMercado configuracionMercadoCreada = configuracionCotizacionesService
+                    .crearConfiguracionSiNoExiste(configuracionMercadoNueva);
 
-            assertEquals(configuracionCotizacionesOriginal.getId(), configuracionCotizacionesCreada.getId());
-            assertEquals(estrategia.getValorBase(), configuracionCotizacionesCreada.getEstrategiaCotizacion().getValorBase());
+            assertEquals(configuracionMercadoOriginal.getId(), configuracionMercadoCreada.getId());
+            assertEquals(estrategia.getValorBase(), configuracionMercadoCreada.getEstrategiaCotizacion().getValorBase());
 
         }
 

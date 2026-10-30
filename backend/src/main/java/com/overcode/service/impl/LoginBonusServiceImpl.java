@@ -1,8 +1,8 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.LoginBonusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LoginBonusServiceImpl implements LoginBonusService {
 
-    private final ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private final ConfiguracionMercadoService configuracionMercadoService;
 
-    public LoginBonusServiceImpl(ConfiguracionCotizacionesService configuracionCotizacionesService) {
-        this.configuracionCotizacionesService = configuracionCotizacionesService;
+    public LoginBonusServiceImpl(ConfiguracionMercadoService configuracionMercadoService) {
+        this.configuracionMercadoService = configuracionMercadoService;
     }
 
     @Override
     public LoginBonus recuperarSeleccionado() {
-        ConfiguracionCotizaciones configuracion = configuracionCotizacionesService.recuperar();
-        return configuracion.getLoginBonus(); // TODO cambiarle nombre a la config
+        ConfiguracionMercado configuracion = configuracionMercadoService.recuperar();
+        return configuracion.getLoginBonus();
     }
 }

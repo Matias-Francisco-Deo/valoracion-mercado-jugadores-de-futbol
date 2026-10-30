@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

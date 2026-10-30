@@ -5,8 +5,8 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.market.BuyTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
+import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.player.Player;
-import com.overcode.model.venta.orden.OrderStatus;
 import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.TokenMarketService;
@@ -406,7 +406,7 @@ class TokenMarketE2eTest {
 
     @Test
     void publicarOrdenesDeVentaConCantidadInvalidaDevuelveBadRequest() {
-        // Flujo excepcional: cantidad <= 0
+        // Flujo excepcional: amount <= 0
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Bukayo Saka", 25d);
         SellTokenRequest body = crearSellRequest(player.getId(), -1);

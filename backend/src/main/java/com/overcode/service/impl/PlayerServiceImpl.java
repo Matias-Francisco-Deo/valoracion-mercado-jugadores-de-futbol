@@ -35,7 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player crear(Player player) {
+    public Player guardar(Player player) {
         validarJugador(player);
 
         Team team = player.getTeam();
