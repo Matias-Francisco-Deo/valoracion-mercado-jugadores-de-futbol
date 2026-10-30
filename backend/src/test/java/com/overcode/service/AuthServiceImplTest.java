@@ -1,7 +1,7 @@
 package com.overcode.service;
 
-import com.overcode.model.User;
 import com.overcode.model.security.Auth;
+import com.overcode.model.user.User;
 import com.overcode.service.exception.AuthenticationException;
 import com.overcode.service.exception.EmailRepetidoException;
 import com.overcode.service.impl.AuthServiceImpl;

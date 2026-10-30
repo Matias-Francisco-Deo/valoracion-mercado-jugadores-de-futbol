@@ -35,7 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player crear(Player player) { // TODO hay que borrar este método, no se usa
+    public Player crear(Player player) {
         validarJugador(player);
 
         Team team = player.getTeam();
@@ -46,8 +46,7 @@ public class PlayerServiceImpl implements PlayerService {
         player.setTeam(teamGuardado);
         Player savedPlayer = playerRepository.guardar(player);
         
-        // Emit tokens automatically for the new player to the SuperAdmin
-        tokenEmissionService.emitTokensForNewPlayer(savedPlayer); // TODO esto creo que directamente no va acá
+        tokenEmissionService.emitTokensForNewPlayer(savedPlayer);
         
         return savedPlayer;
     }

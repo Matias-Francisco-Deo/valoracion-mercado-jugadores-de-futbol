@@ -1,8 +1,8 @@
 package com.overcode.model.bonus;
 
-import com.overcode.model.User;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
+import com.overcode.model.user.User;
 import com.overcode.testUtils.TestLoginBonusUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

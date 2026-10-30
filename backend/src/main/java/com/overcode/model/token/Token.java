@@ -1,8 +1,7 @@
 package com.overcode.model.token;
 
 import com.overcode.model.player.Player;
-import com.overcode.model.SellOrder;
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,14 +25,7 @@ public class Token {
         this.player = player;
     }
 
-    public boolean isInEscrow() {
-        return this.owner == null;
-    }
-
-    public SellOrder vender(Double price) {
-        User seller = this.owner != null ? this.owner : null;
-        Player orderPlayer = this.player != null ? this.player : null;
+    public void ponerALaVenta() {
         this.owner = null;
-        return new SellOrder(seller, orderPlayer, this, price);
     }
 }

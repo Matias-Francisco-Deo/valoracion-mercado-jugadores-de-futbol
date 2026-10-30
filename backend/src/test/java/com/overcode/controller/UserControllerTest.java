@@ -1,12 +1,13 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
-import com.overcode.model.transaction.TransactionType;
+import com.overcode.model.user.Portfolio;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.Position;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +18,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,6 +40,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private static final Long USER_ID = 1L;
+    private final Principal principal = USER_ID::toString;
     private static final Long PLAYER_ID = 10L;
 
     @BeforeEach
@@ -143,10 +148,10 @@ class UserControllerTest {
     @Test
     void getPortfolioDevuelveListaDePosicionesDelUsuario() throws Exception {
         Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120d);
-        Transaction tx = new Transaction(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
+        TransaccionFinanciera tx = new TransaccionFinanciera(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
         Position position = new Position(player, List.of(tx));
 
-        when(userService.recuperarPortfolioDeUser(USER_ID)).thenReturn(List.of(position));
+        when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of(position)));
 
         mockMvc.perform(get("/users/" + USER_ID + "/portfolio"))
                 .andExpect(status().isOk())
@@ -159,27 +164,27 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].profitLoss").value(100.0))
                 .andExpect(jsonPath("$[0].profitLossPercentage").value(20.0));
 
-        verify(userService, times(1)).recuperarPortfolioDeUser(USER_ID);
+        verify(userService, times(1)).recuperarPortfolioDeUser(any(User.class));
     }
 
     @Test
     void getPortfolioDevuelveListaVaciaCuandoUsuarioNoTienePosiciones() throws Exception {
-        when(userService.recuperarPortfolioDeUser(USER_ID)).thenReturn(List.of());
+        when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of()));
 
         mockMvc.perform(get("/users/" + USER_ID + "/portfolio"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
 
-        verify(userService, times(1)).recuperarPortfolioDeUser(USER_ID);
+        verify(userService, times(1)).recuperarPortfolioDeUser(any(User.class));
     }
 
     @Test
     void getPortfolioDevuelve404CuandoUsuarioNoExiste() throws Exception {
-        when(userService.recuperarPortfolioDeUser(999L))
+        when(userService.recuperarPortfolioDeUser(any(User.class)))
                 .thenThrow(new EntidadNoEncontradaException("El usuario no existe"));
 
-        mockMvc.perform(get("/users/999/portfolio"))
+        mockMvc.perform(get("/users/-1/portfolio"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("El usuario no existe"));
     }
@@ -190,9 +195,9 @@ class UserControllerTest {
     void getTransaccionesDevuelvePaginaDeTransaccionesDelUsuario() throws Exception {
         Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 50d);
         LocalDateTime fecha = LocalDateTime.of(2026, 10, 15, 14, 30, 0);
-        Transaction tx = new Transaction(1L, null, player, fecha, TransactionType.BUY, 4, 50.0);
+        TransaccionFinanciera tx = new TransaccionFinanciera(1L, null, player, fecha, TransactionType.BUY, 4, 50.0);
 
-        Page<Transaction> page = new PageImpl<>(List.of(tx), PageRequest.of(0, 10), 1);
+        Page<TransaccionFinanciera> page = new PageImpl<>(List.of(tx), PageRequest.of(0, 10), 1);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(page);
 
@@ -214,7 +219,7 @@ class UserControllerTest {
 
     @Test
     void getTransaccionesConPaginacionPersonalizada() throws Exception {
-        Page<Transaction> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 15), 0);
+        Page<TransaccionFinanciera> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 15), 0);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -232,7 +237,7 @@ class UserControllerTest {
 
     @Test
     void getTransaccionesDevuelveListaVaciaCuandoUsuarioNoTieneTransacciones() throws Exception {
-        Page<Transaction> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
+        Page<TransaccionFinanciera> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(userService.recuperarTransaccionesDeUnUser(eq(USER_ID), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
@@ -273,10 +278,47 @@ class UserControllerTest {
 
     @Test
     void getUserDevuelve404CuandoUsuarioNoExiste() throws Exception {
-        when(userService.recuperar(999L)).thenThrow(new EntidadNoEncontradaException("Usuario no encontrado"));
+        when(userService.recuperar(-1L)).thenThrow(new EntidadNoEncontradaException("Usuario no encontrado"));
 
-        mockMvc.perform(get("/users/999"))
+        mockMvc.perform(get("/users/-1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Usuario no encontrado"));
     }
+
+    // ------------------------------------------------ créditos ----------------------------------------------
+
+
+    @Test
+    void depositDevuelveOkYLosCreditosActualizados() throws Exception {
+        UserService userServiceMock = mock(UserService.class);
+        User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
+        when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
+        User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
+        when(userServiceMock.depositarCreditos(USER_ID, 10000d)).thenReturn(updatedUser);
+
+        MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
+
+        userControllerMock.perform(post("/users/deposit")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":10000}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.credits").value(10000));
+
+        verify(userServiceMock, times(1)).depositarCreditos(USER_ID, 10000d);
+    }
+
+    @Test
+    void depositConMontoInvalidoDevuelve400() throws Exception {
+        UserService userServiceMock = mock(UserService.class);
+
+        MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
+
+        userControllerMock.perform(post("/users/deposit")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"amount\":-5}"))
+                .andExpect(status().isBadRequest());
+    }
+
 }

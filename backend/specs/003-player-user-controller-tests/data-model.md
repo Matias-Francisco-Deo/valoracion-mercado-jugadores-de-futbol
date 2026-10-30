@@ -17,7 +17,7 @@ Reuses existing `com.overcode.model.player.Player` and its serialized representa
 
 ### 2. User
 
-Reuses existing `com.overcode.model.User` and its serialized representation `UserResponseDTO`.
+Reuses existing `com.overcode.model.user.User` and its serialized representation `UserResponseDTO`.
 
 | Field | Type | Description | In Response DTO? |
 |---|---|---|---|

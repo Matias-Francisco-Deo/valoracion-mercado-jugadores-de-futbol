@@ -14,7 +14,7 @@ Represents a user's total holdings. It holds the user's available credits and a 
 **Behaviors / Invariants**:
 - `hasSufficientCredits(amount)`: Checks if `credits >= amount`.
 - `addCredits(amount)`: Increases credit balance.
-- `deductCredits(amount)`: Decreases balance. Throws `InsufficientFundsException` if resulting balance < 0 (unless it's the super admin, who is allowed negative/infinite credits if configured).
+- `deductCredits(amount)`: Decreases balance. Throws `FondosInsuficientesException` if resulting balance < 0 (unless it's the super admin, who is allowed negative/infinite credits if configured).
 
 ### TokenHolding
 Represents the amount of tokens a portfolio has for a specific player.
@@ -39,7 +39,7 @@ Immutable record of an operation.
 - `counterpartyId` (UUID): The super admin ID.
 - `playerId` (Long): The player token involved.
 - `tokenAmount` (Integer): Amount of tokens traded.
-- `pricePerToken` (BigDecimal): The price at the moment of the transaction.
+- `pricePerToken` (BigDecimal): The price at the moment of the transaccionFinanciera.
 - `timestamp` (Instant)
 
 **Behaviors**:
@@ -62,5 +62,5 @@ Immutable record of an operation.
 
 ## State Transitions
 1. **Emission**: New player saved -> `TokenMarketService.emitTokens(playerId)` -> Super Admin Portfolio gains 100 `TokenHolding`, AuditLog(EMISSION) created.
-2. **Buy**: `TokenMarketService.buyTokens(userId, playerId, amount, price)` -> User portfolio credits deducted, user holdings increased. Admin holdings decreased, admin credits increased. AuditLog(BUY) created. All in one transaction.
-3. **Sell**: `TokenMarketService.sellTokens(userId, playerId, amount, price)` -> User portfolio credits increased, user holdings decreased. Admin holdings increased, admin credits decreased. AuditLog(SELL) created. All in one transaction.
+2. **Buy**: `TokenMarketService.buyTokens(userId, playerId, amount, price)` -> User portfolio credits deducted, user holdings increased. Admin holdings decreased, admin credits increased. AuditLog(BUY) created. All in one transaccionFinanciera.
+3. **Sell**: `TokenMarketService.sellTokens(userId, playerId, amount, price)` -> User portfolio credits increased, user holdings decreased. Admin holdings increased, admin credits decreased. AuditLog(SELL) created. All in one transaccionFinanciera.

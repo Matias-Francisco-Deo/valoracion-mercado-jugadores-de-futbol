@@ -1,11 +1,10 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.User;
 import com.overcode.model.security.Auth;
+import com.overcode.model.user.User;
 import com.overcode.security.UserAuth;
 import com.overcode.service.exception.AuthenticationException;
 import com.overcode.service.interfaces.AuthService;
-import com.overcode.service.interfaces.PortfolioService;
 import com.overcode.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +21,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
     private final UserAuth userAuth;
-    private final PortfolioService portfolioService;
 
-    public AuthServiceImpl(UserService userService, UserAuth userAuth, PortfolioService portfolioService) {
+    public AuthServiceImpl(UserService userService, UserAuth userAuth) {
         this.userService = userService;
         this.userAuth = userAuth;
-        this.portfolioService = portfolioService;
     }
 
     @Override
@@ -37,9 +34,6 @@ public class AuthServiceImpl implements AuthService {
 
         User saved = userService.guardar(user);
         log.info("User registered successfully with ID: {}", saved.getId());
-
-        // Every user gets an (empty) portfolio so they can later deposit credits and trade.
-        portfolioService.createForUser(saved.getId());
 
         return userAuth.login(saved);
     }

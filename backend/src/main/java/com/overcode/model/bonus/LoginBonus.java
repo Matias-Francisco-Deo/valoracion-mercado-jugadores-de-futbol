@@ -1,16 +1,17 @@
 package com.overcode.model.bonus;
 
-import com.overcode.model.User;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
+import com.overcode.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+
+import static com.overcode.config.Reloj.getLocalDate;
 
 @Getter
 @Setter
@@ -73,7 +74,7 @@ public class LoginBonus {
 
     @NonNull
     public LocalDate getFechaActual() {
-        return LocalDate.now(ZoneOffset.UTC);
+        return getLocalDate();
     }
 
     public LoginBonusRewards getBonusesDeLaSemana() {

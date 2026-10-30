@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.transaction.Transaction;
-import com.overcode.model.transaction.TransactionType;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.venta.transaction.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -49,29 +49,29 @@ public class TransactionJPADTO {
         setUnitPrice(unitPrice);
     }
 
-    public static TransactionJPADTO desdeModelo(Transaction transaction){
-        if(transaction == null){return null;}
+    public static TransactionJPADTO desdeModelo(TransaccionFinanciera transaccionFinanciera){
+        if(transaccionFinanciera == null){return null;}
         return new TransactionJPADTO(
-                transaction.getId(),
-                UserJPADTO.desdeModelo(transaction.getOwner()),
-                PlayerJPADTO.desdeModelo(transaction.getPlayer()),
-                transaction.getDate(),
-                transaction.getType(),
-                transaction.getQuantity(),
-                transaction.getUnitPrice()
+                transaccionFinanciera.getId(),
+                UserJPADTO.desdeModelo(transaccionFinanciera.getOwner()),
+                PlayerJPADTO.desdeModelo(transaccionFinanciera.getPlayer()),
+                transaccionFinanciera.getDate(),
+                transaccionFinanciera.getType(),
+                transaccionFinanciera.getQuantity(),
+                transaccionFinanciera.getUnitPrice()
         );
     }
 
-    public Transaction aModelo() {
-        Transaction transaction = new Transaction();
-        transaction.setId(this.id);
-        transaction.setOwner(this.owner.aModelo());
-        transaction.setPlayer(this.player.aModelo());
-        transaction.setDate(this.date);
-        transaction.setType(this.type);
-        transaction.setQuantity(this.quantity);
-        transaction.setUnitPrice(this.unitPrice);
-        return transaction;
+    public TransaccionFinanciera aModelo() {
+        TransaccionFinanciera transaccionFinanciera = new TransaccionFinanciera();
+        transaccionFinanciera.setId(this.id);
+        transaccionFinanciera.setOwner(this.owner.aModelo());
+        transaccionFinanciera.setPlayer(this.player.aModelo());
+        transaccionFinanciera.setDate(this.date);
+        transaccionFinanciera.setType(this.type);
+        transaccionFinanciera.setQuantity(this.quantity);
+        transaccionFinanciera.setUnitPrice(this.unitPrice);
+        return transaccionFinanciera;
     }
 
     public Double getTotalPrice(){

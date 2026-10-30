@@ -12,7 +12,7 @@ public interface PlayerRepository {
 
     boolean existsByName(String name);
 
-    boolean existeById(Long id);
+    boolean existsById(Long id);
 
     Player guardar(Player player);
 

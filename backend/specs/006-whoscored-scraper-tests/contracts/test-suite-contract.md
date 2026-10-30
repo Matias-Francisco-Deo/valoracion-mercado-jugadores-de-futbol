@@ -6,7 +6,7 @@
 
 ## 1. Class: `ExternalPlayerWhoScoredScrapperTest`
 
-- **Location**: `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/whoscored/ExternalPlayerWhoScoredScrapperTest.java`
+- **Location**: `scraper`
 - **Annotations**: `@SpringBootTest`
 - **Dependencies**:
   - `@MockBean private ScraperHttpClient httpClient;`
@@ -29,7 +29,7 @@
 
 ## 2. Class: `ScraperHttpClientTest`
 
-- **Location**: `src/test/java/com/overcode/persistence/repository/dao/external/scrapper/http/ScraperHttpClientTest.java`
+- **Location**: `scraper`
 - **Isolation Mechanism**: Local `MockWebServer` (`okhttp3.mockwebserver.MockWebServer`) on `localhost`
 - **Network Boundaries**: 0 external network requests; all URLs target `mockWebServer.url("/...").toString()`
 

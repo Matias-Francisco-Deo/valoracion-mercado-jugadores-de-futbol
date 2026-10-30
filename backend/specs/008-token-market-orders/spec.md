@@ -20,7 +20,7 @@ As the system, I need to automatically issue tokens when a new player is discove
 
 **Acceptance Scenarios**:
 
-1. **Given** a new player is successfully scraped and persisted in the system, **When** the transaction completes, **Then** 100 tokens for that player are allocated to the super admin's portfolio.
+1. **Given** a new player is successfully scraped and persisted in the system, **When** the transaccionFinanciera completes, **Then** 100 tokens for that player are allocated to the super admin's portfolio.
 2. **Given** a new player is saved, **When** checking the market, **Then** the initial price of the player's token is set to 1 credit.
 3. **Given** a new player is saved, **When** the emission occurs, **Then** an immutable audit record is created detailing the emission.
 
@@ -37,8 +37,8 @@ As a user, I want to buy player tokens from the market using my credits, so that
 **Acceptance Scenarios**:
 
 1. **Given** the super admin has available tokens for a player and the user has sufficient credits, **When** the user submits a buy order for N tokens, **Then** the user's credits are deducted by N * current price, their token balance increases by N, the super admin's token balance decreases by N, the super admin's credits increase, and an audit log is created.
-2. **Given** the user does not have enough credits, **When** they attempt to buy tokens, **Then** the transaction is rejected with an insufficient funds error and no balances are changed.
-3. **Given** the super admin does not have enough tokens, **When** the user attempts to buy more than available, **Then** the transaction is rejected with an insufficient availability error.
+2. **Given** the user does not have enough credits, **When** they attempt to buy tokens, **Then** the transaccionFinanciera is rejected with an insufficient funds error and no balances are changed.
+3. **Given** the super admin does not have enough tokens, **When** the user attempts to buy more than available, **Then** the transaccionFinanciera is rejected with an insufficient availability error.
 
 ---
 
@@ -53,11 +53,11 @@ As a user, I want to sell my player tokens back to the market to realize profits
 **Acceptance Scenarios**:
 
 1. **Given** a user owns N tokens of a player, **When** they submit a sell order for N tokens, **Then** their token balance decreases by N, their credits increase by N * current price, the super admin's token balance increases by N, and an audit log is created.
-2. **Given** a user tries to sell more tokens than they own, **When** they submit the sell order, **Then** the transaction is rejected with an insufficient tokens error.
+2. **Given** a user tries to sell more tokens than they own, **When** they submit the sell order, **Then** the transaccionFinanciera is rejected with an insufficient tokens error.
 
 ### Edge Cases
 
-- What happens when a transaction fails midway (e.g., database connection drops)? The system must ensure atomicity; the entire buy/sell process rolls back, leaving balances unchanged.
+- What happens when a transaccionFinanciera fails midway (e.g., database connection drops)? The system must ensure atomicity; the entire buy/sell process rolls back, leaving balances unchanged.
 - What happens if the super admin's credit balance goes negative when buying back tokens from users? The super admin acts as the market maker and can have a negative credit balance (or is assumed to have infinite liquidity).
 - What happens if multiple users try to buy the last remaining tokens concurrently? Database locks or optimistic locking must prevent overselling the super admin's token balance.
 
@@ -81,7 +81,7 @@ As a user, I want to sell my player tokens back to the market to realize profits
 
 - **Portfolio / Position**: Represents a user's holdings, including their available credits and the quantities of various player tokens they own.
 - **Order / Trade**: Represents the intent and execution of buying or selling tokens.
-- **Audit Log**: An immutable record of any transaction that changes token or credit balances.
+- **Audit Log**: An immutable record of any transaccionFinanciera that changes token or credit balances.
 
 ## Success Criteria *(mandatory)*
 
@@ -89,13 +89,13 @@ As a user, I want to sell my player tokens back to the market to realize profits
 
 - **SC-001**: 100% of newly persisted players automatically generate exactly 100 tokens assigned to the super admin.
 - **SC-002**: 100% of successful buy and sell operations atomically update both the buyer's and seller's (super admin's) balances without discrepancies.
-- **SC-003**: 100% of transactions generate a corresponding immutable audit log entry.
+- **SC-003**: 100% of transaccionFinancieras generate a corresponding immutable audit log entry.
 - **SC-004**: System successfully rejects 100% of orders where the user lacks sufficient funds or tokens, preventing negative balances for regular users.
 
 ## Assumptions
 
 - The "super admin" user already exists in the system and can be identified reliably (e.g., via a specific role or well-known ID).
 - The super admin acts as the automatic counterparty for all sell orders and has no limit on the amount of credits they can owe/spend to buy back tokens.
-- There are no transaction fees applied to buy or sell orders in this initial version.
+- There are no transaccionFinanciera fees applied to buy or sell orders in this initial version.
 - User credit funding (deposits) is handled outside the scope of this feature.
 - Authentication and authorization are already in place; endpoints will receive the identity of the authenticated user making the request.

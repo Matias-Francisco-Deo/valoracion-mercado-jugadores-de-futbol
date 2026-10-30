@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.dao.jpa;
 
-import com.overcode.model.orden.OrderStatus;
-import com.overcode.model.orden.OrderSellSummary;
+import com.overcode.model.venta.orden.OrderStatus;
+import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.persistence.dto.jpa.SellOrderJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,19 +35,19 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "WHERE s.status = 'OPEN' " +
                     "AND " + FILTRO_NOMBRE;
 
-    @Query(value =
-            "SELECT s.player_id AS playerId, " +
-                    "p.name AS playerName, " +
-                    "COUNT(s.id)::integer AS quantity, " +
-                    "MIN(s.price)::double precision AS unitPrice " +
-                    CONSULTA_RESUMEN_ORDENES + " " +
-                    "GROUP BY s.player_id, p.name " +
-                    "ORDER BY p.name ASC",
-            nativeQuery = true)
-    Page<OrderSellSummary> buscarOrdersSellAbiertas(
-            @Param("nombre") String nombre,
-            Pageable pageable
-    );
+//    @Query(value =
+//            "SELECT s.player_id AS playerId, " +
+//                    "p.name AS playerName, " +
+//                    "COUNT(s.id)::integer AS quantity, " +
+//                    "MIN(s.price)::double precision AS unitPrice " +
+//                    CONSULTA_RESUMEN_ORDENES + " " +
+//                    "GROUP BY s.player_id, p.name " +
+//                    "ORDER BY p.name ASC",
+//            nativeQuery = true)
+//    Page<OrderSellSummary> buscarOrdersSellAbiertas(
+//            @Param("nombre") String nombre,
+//            Pageable pageable
+//    );
 
     @Query(value =
             "SELECT s.player_id AS playerId, " +
@@ -55,11 +55,11 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "COUNT(s.id)::integer AS quantity, " +
                     "MIN(s.price)::double precision AS unitPrice " +
                     CONSULTA_RESUMEN_ORDENES + " " +
-                    "AND s.user_id <> :userId " +
+                    "AND (:userId IS NULL OR s.user_id <> :userId)" +
                     "GROUP BY s.player_id, p.name " +
                     "ORDER BY p.name ASC",
             nativeQuery = true)
-    Page<OrderSellSummary> buscarOrdersSellAbiertasExcluyendoUsuario(
+    Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(
             @Param("userId") Long userId,
             @Param("nombre") String nombre,
             Pageable pageable
@@ -76,7 +76,7 @@ public interface SellOrderDAOJPA extends JpaRepository<SellOrderJPADTO, Long> {
                     "GROUP BY s.player_id, p.name " +
                     "ORDER BY p.name ASC",
             nativeQuery = true)
-    Page<OrderSellSummary> buscarOrdersSellAbiertasPorUsuario(
+    Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(
             @Param("userId") Long userId,
             @Param("nombre") String nombre,
             Pageable pageable

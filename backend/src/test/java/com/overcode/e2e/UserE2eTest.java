@@ -2,14 +2,14 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
-import com.overcode.controller.dto.position.PositionResponseDTO;
+import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
-import com.overcode.model.User;
 import com.overcode.model.player.Player;
-import com.overcode.model.transaction.Transaction;
-import com.overcode.model.transaction.TransactionType;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
+import com.overcode.model.venta.transaction.TransactionType;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -100,15 +100,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
     private void registrarTransaccion(Long userId, Player player, TransactionType type, int quantity) {
         User user = new User(userId, DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, 0d, new ArrayList<>());
-        Transaction tx = new Transaction(user, player, type, quantity);
+        TransaccionFinanciera tx = new TransaccionFinanciera(user, player, type, quantity);
         transactionRepository.guardar(tx);
     }
 
     private void limpiarBaseDeDatos() {
         jdbcTemplate.execute("DELETE FROM transactions");
         jdbcTemplate.execute("DELETE FROM sell_orders");
-        jdbcTemplate.execute("DELETE FROM token_holding");
-        jdbcTemplate.execute("DELETE FROM portfolio");
         jdbcTemplate.execute("DELETE FROM tokens");
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();

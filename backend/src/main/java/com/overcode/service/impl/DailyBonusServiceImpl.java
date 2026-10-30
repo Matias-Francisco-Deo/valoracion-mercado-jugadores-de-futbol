@@ -1,9 +1,9 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.User;
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.LoginBonusService;

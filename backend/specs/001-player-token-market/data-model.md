@@ -6,8 +6,8 @@ The project will keep two parallel representations for each aggregate:
 
 - Domain model objects live under `model/` and contain business logic, validation, and invariants. They are not annotated with JPA or persistence metadata.
 - Persistence DTOs live under `persistency/dto/` and are implemented as Java `record`s. Those records carry the database mapping, column metadata, and repository conversion logic.
-- Domain object creation is constructor-driven: any new `User`, `Player`, or `Transaction` is instantiated with its required values in the constructor instead of creating empty objects and mutating fields afterward.
-- Lombok is used for accessors and framework-friendly constructors, but object mutation is intentionally minimized; domain state changes occur through explicit business methods and transaction execution rather than ad hoc setters.
+- Domain object creation is constructor-driven: any new `User`, `Player`, or `TransaccionFinanciera` is instantiated with its required values in the constructor instead of creating empty objects and mutating fields afterward.
+- Lombok is used for accessors and framework-friendly constructors, but object mutation is intentionally minimized; domain state changes occur through explicit business methods and transaccionFinanciera execution rather than ad hoc setters.
 
 ## Core entities
 
@@ -20,7 +20,7 @@ The project will keep two parallel representations for each aggregate:
 | currentPrice | Integer | > 0, default 100 | Price used for trade calculations |
 | totalIssued | Integer | fixed at 100 | Initial token supply per player |
 | positions | Set<Position> | EAGER | Positions held across users |
-| transactions | Set<Transaction> | EAGER | Ledger entries referencing the player |
+| transaccionFinancieras | Set<Transaction> | EAGER | Ledger entries referencing the player |
 
 Rules:
 - Each player is initialized with `currentPrice = 100` and `totalIssued = 100`.
@@ -70,7 +70,7 @@ Rules:
 | seller | User | nullable for system-driven issuance | Seller account |
 | player | Player | not null | Player affected |
 | quantity | Integer | > 0 | Token quantity bought/sold |
-| unitPrice | Integer | > 0 | Price at transaction time |
+| unitPrice | Integer | > 0 | Price at transaccionFinanciera time |
 | totalAmount | Integer | > 0 | `quantity * unitPrice` |
 | metadata | String | optional | Audit details if needed |
 
@@ -81,8 +81,8 @@ Rules:
 
 ## Relationships
 
-- `User` 1:N `Position` and `User` 1:N `Transaction` (buyer/seller sides)
-- `Player` 1:N `Position` and `Player` 1:N `Transaction`
+- `User` 1:N `Position` and `User` 1:N `TransaccionFinanciera` (buyer/seller sides)
+- `Player` 1:N `Position` and `Player` 1:N `TransaccionFinanciera`
 - All association fetches must be `EAGER` per project requirement
 
 ## Validation rules
@@ -107,7 +107,7 @@ Rules:
 2. Check buyer funds and seller inventory.
 3. Compute `totalAmount = quantity * currentPrice`.
 4. Route both buy and sell flows through a shared service method: `executeTransaction(...)`.
-5. Update both user positions and balances in one transaction.
+5. Update both user positions and balances in one transaccionFinanciera.
 6. Persist ledger row.
 7. Commit only if all checks pass; otherwise roll back.
 

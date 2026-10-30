@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.user;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 public record UserResponseDTO(Long id, String username, String email, Double creditBalance) {
     public static UserResponseDTO desdeModelo(User user) {

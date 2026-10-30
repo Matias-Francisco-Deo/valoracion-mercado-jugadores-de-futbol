@@ -1,7 +1,7 @@
 package com.overcode.service;
 
 import com.overcode.model.player.Player;
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.TokenEmissionService;
 import org.junit.jupiter.api.Disabled;

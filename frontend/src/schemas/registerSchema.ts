@@ -11,7 +11,7 @@ export const registerSchema = yup.object({
     .trim()
     .required('El nombre de usuario es requerido.')
     .min(3, 'El nombre de usuario debe tener al menos 3 caracteres.')
-    .max(30, 'El nombre de usuario no puede superar los 30 caracteres.')
+    .max(25, 'El nombre de usuario no puede superar los 25 caracteres.')
     .matches(
       /^[a-zA-Z0-9_]+$/,
       'El nombre de usuario solo puede contener letras, números y guiones bajos.',

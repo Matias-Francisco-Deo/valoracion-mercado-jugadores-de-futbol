@@ -27,7 +27,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public boolean existeById(Long playerId) {
+    public boolean existsById(Long playerId) {
         return playerDAOJPA.existsById(playerId);
     }
 

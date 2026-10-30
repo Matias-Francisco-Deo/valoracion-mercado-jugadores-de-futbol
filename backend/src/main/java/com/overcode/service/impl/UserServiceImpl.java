@@ -1,10 +1,10 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.Position;
-import com.overcode.model.User;
-import com.overcode.model.player.Player;
+import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.user.Portfolio;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.persistence.repository.interfaces.TokenRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -97,47 +96,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<Transaction> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
+    public Page<TransaccionFinanciera> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
         if (!userRepository.existsById(userId)) {throw new EntidadNoEncontradaException("El usuario no existe");}
 
         return transactionRepository.recuperarPorUserId(userId,pageable);
     }
 
     @Override
-    public List<Position> recuperarPortfolioDeUser(Long userId){
-        if(!userRepository.existsById(userId)){
+    public Portfolio recuperarPortfolioDeUser(User user){
+        if(!userRepository.existsById(user.getId())){
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
-        List<Transaction> transactions = transactionRepository.recuperarTodasPorUserId(userId);
+        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUser(user.getId());
 
-        Map<Long, List<Transaction>> transactionsPorJugador = new java.util.LinkedHashMap<>();
-
-        for (Transaction transaction : transactions) {
-            Long playerId = transaction.getPlayer().getId();
-            transactionsPorJugador.computeIfAbsent(playerId, id -> new java.util.ArrayList<>()).add(transaction);
-        }
-
-        List<Position> positions = new java.util.ArrayList<>();
-
-        for (Map.Entry<Long, List<Transaction>> entry : transactionsPorJugador.entrySet()) {
-            List<Transaction> transactionsDelJugador = entry.getValue();
-
-            Player player = transactionsDelJugador.get(0).getPlayer();
-
-            Position position = new Position(player, transactionsDelJugador);
-            if (position.getQuantity() > 0) {
-                positions.add(position);
-            }
-        }
-
-        return positions;
+        return Portfolio.desdeTransacciones(transaccionFinancieras);
     }
 
     @Override
     public User depositarCreditos(Long userId, Double amount) {
-        if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("El monto a depositar debe ser mayor a cero");
-        }
+        if (amount <= 0 || amount > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
+
         User user = recuperar(userId);
         user.addCredits(amount);
         return userRepository.guardar(user);

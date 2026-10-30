@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 import java.util.Optional;
 

@@ -1,5 +1,5 @@
-import type { OrderSell, PageResponse, PositionToken, TokenSummary, Transaction,  } from "@/types/inventory";
-import { futbolApi } from "./api";
+import type {OrderSell, PageResponse, PositionToken, TokenSummary, Transaction,} from "@/types/inventory";
+import {futbolApi} from "./api";
 
 export async function getUserPortfolio(userId: string,page: number = 0): Promise<PositionToken[]> {//recupera las posiciones del user
   return futbolApi.get<PositionToken[]>(`/users/${userId}/portfolio?page=${page}`);
@@ -31,5 +31,5 @@ export interface DepositResponse {
 }
 
 export async function depositCredits(amount: number): Promise<DepositResponse> {
-  return futbolApi.post<DepositResponse>('/portfolio/deposit', { amount });
+  return futbolApi.post<DepositResponse>('/users/deposit', { amount });
 }

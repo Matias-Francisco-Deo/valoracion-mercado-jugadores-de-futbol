@@ -60,7 +60,7 @@ export const Navbar: React.FC = () => {
 
               <CreditsSection  user={user} onDepositClick={() => setIsDepositModalOpen(true)} className="hidden sm:flex" data-testid="user-credits-navbar"/>
 
-              <span className="hidden sm:inline font-medium truncate max-w-30 sm:max-w-40"
+              <span className="hidden sm:inline font-medium truncate max-w-30"
                 data-testid="user-name-navbar">
                 {user.username}
               </span>

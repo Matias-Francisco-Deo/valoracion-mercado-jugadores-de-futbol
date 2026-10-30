@@ -4,7 +4,7 @@
 
 ### User
 
-The feature reuses the existing `com.overcode.model.User` entity and does not create an auth-specific user model.
+The feature reuses the existing `com.overcode.model.user.User` entity and does not create an auth-specific user model.
 
 | Field | Type | Notes |
 | --- | --- | --- |

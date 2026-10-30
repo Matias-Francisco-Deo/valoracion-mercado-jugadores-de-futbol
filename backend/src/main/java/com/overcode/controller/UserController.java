@@ -1,15 +1,19 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.position.PositionResponseDTO;
+import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
+import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
+import com.overcode.controller.dto.user.DepositRequest;
+import com.overcode.controller.dto.user.DepositResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
-import com.overcode.model.Position;
-import com.overcode.model.User;
 import com.overcode.model.token.SummaryTokenPlayer;
-import com.overcode.model.transaction.Transaction;
+import com.overcode.model.user.Portfolio;
+import com.overcode.model.user.User;
+import com.overcode.model.venta.transaction.TransaccionFinanciera;
 import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -56,17 +61,30 @@ public class UserController {
             @PathVariable Long userId,
             Pageable pageable
     ){
-        Page<Transaction> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
+        Page<TransaccionFinanciera> transactions = userService.recuperarTransaccionesDeUnUser(userId, pageable);
 
         return ResponseEntity.ok(TransactionPageResponseDTO.desdeModelo(transactions));
     }
 
     @GetMapping("/{userId}/portfolio")
     public ResponseEntity<List<PositionResponseDTO>> getPortfolio(@PathVariable Long userId) {
+        User user = new User();
+        user.setId(userId);
+        Portfolio portfolio = userService.recuperarPortfolioDeUser(user);
+        PortfolioResponseDTO portfolioResponseDTO = PortfolioResponseDTO.desdeModelo(portfolio);
 
-        List<Position> positions = userService.recuperarPortfolioDeUser(userId);
+        return ResponseEntity.ok(portfolioResponseDTO.positions());
+    }
 
-        return ResponseEntity.ok(positions.stream().map(PositionResponseDTO::desdeModelo).toList());
+    @PostMapping("/deposit")
+    public ResponseEntity<DepositResponseDTO> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
+
+        long id = Long.parseLong(principal.getName());
+        User user = userService.recuperar(id);
+
+        User updatedUser = userService.depositarCreditos(user.getId(), request.getAmount().doubleValue());
+        return ResponseEntity.ok(DepositResponseDTO.desdeModelo(updatedUser));
+
     }
 
 }
