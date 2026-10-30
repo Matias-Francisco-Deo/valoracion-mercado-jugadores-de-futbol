@@ -1,15 +1,11 @@
 package com.overcode.model.venta;
 
+import com.overcode.model.exception.ParametroNoValidoException;
+
 public record SellPost(Long userId, Long playerId, int quantity) {
     public SellPost {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID must not be null");
-        }
-        if (playerId == null) {
-            throw new IllegalArgumentException("Player ID must not be null");
-        }
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
+            throw new ParametroNoValidoException("La cantidad debe ser positiva");
         }
     }
 }

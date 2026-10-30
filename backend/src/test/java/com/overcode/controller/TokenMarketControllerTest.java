@@ -15,7 +15,6 @@ import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,21 +35,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class OrderControllerTest {
+class TokenMarketControllerTest {
 
     private static final Long USER_ID = 735L;
     private final Principal principal = USER_ID::toString;
     private static final Long PLAYER_ID = 10L;
 
-    @Autowired
-    private UserService userService;
-
-    private OrderController controllerWith(TokenMarketService tokenMarketService, UserService userService) {
-        return new OrderController(tokenMarketService, userService);
+    private TokenMarketController controllerWith(TokenMarketService tokenMarketService) {
+        return new TokenMarketController(tokenMarketService);
     }
 
-    private MockMvc mockMvcWith(TokenMarketService tokenMarketService, UserService userService) {
-        return MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService))
+    private MockMvc mockMvcWith(TokenMarketService tokenMarketService) {
+        return MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
@@ -66,7 +62,7 @@ class OrderControllerTest {
         user.setId(USER_ID);
         when(userService.recuperar(USER_ID)).thenReturn(user);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
         mockMvc.perform(post("/orders/buy")
                         .principal(principal)
@@ -81,9 +77,9 @@ class OrderControllerTest {
     @Test
     void buyTokensConCantidadInvalidaDevuelve400() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
         mockMvc.perform(post("/orders/buy")
                         .principal(principal)
@@ -104,7 +100,7 @@ class OrderControllerTest {
         doThrow(new TokensInsuficientesParaComprarException("Not enough liquidity to buy 5 tokens for player 10"))
                 .when(tokenMarketService).buy(any(BuyOrder.class));
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService))
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
 
@@ -134,7 +130,7 @@ class OrderControllerTest {
         OrdenDeCompra createdOrder = new OrdenDeCompra(1L, seller, player, token, 12d, OrderStatus.OPEN, Instant.now());
         when(tokenMarketService.sell(any(SellPost.class))).thenReturn(List.of(createdOrder));
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
         mockMvc.perform(post("/orders/sell")
                         .principal(principal)
@@ -147,9 +143,9 @@ class OrderControllerTest {
     @Test
     void sellTokensConCantidadInvalidaDevuelve400() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
         mockMvc.perform(post("/orders/sell")
                         .principal(principal)
@@ -171,7 +167,7 @@ class OrderControllerTest {
         when(userService.recuperar(USER_ID)).thenReturn(user);
 
         Long orderId = 123L;
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService, userService)).build();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
         mockMvc.perform(post("/orders/" + orderId + "/cancel").principal(principal))
                 .andExpect(status().isOk());
@@ -196,7 +192,7 @@ class OrderControllerTest {
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(page);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/forSell").principal(principal))
                 .andExpect(status().isOk())
@@ -211,7 +207,6 @@ class OrderControllerTest {
     @Test
     void searchOpenOrdersSellConFiltroPorNombreDeJugadorDevuelveOrdenesFiltradas() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 2, 25.0);
         Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 20), 1);
@@ -219,7 +214,7 @@ class OrderControllerTest {
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), eq("Messi"), any(Pageable.class)))
                 .thenReturn(page);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/forSell")
                         .principal(principal)
@@ -235,13 +230,12 @@ class OrderControllerTest {
     @Test
     void searchOpenOrdersSellConPaginacionPersonalizada() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(2, 5), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/forSell")
                         .principal(principal)
@@ -259,13 +253,12 @@ class OrderControllerTest {
     @Test
     void searchOpenOrdersSellDevuelveListaVaciaCuandoNoHayOrdenes() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/forSell")
                         .principal(principal))
@@ -282,7 +275,7 @@ class OrderControllerTest {
         when(tokenMarketService.buscarOrdersSellSummaryAbiertas(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenThrow(new EntidadNoEncontradaException("User not found"));
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/forSell")
                         .principal(principal))
@@ -297,7 +290,6 @@ class OrderControllerTest {
     @Test
     void searchUserOpenOrdersSellDevuelveOrdenesAbiertasDelUsuario() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 4, 30.0);
         Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
@@ -305,7 +297,7 @@ class OrderControllerTest {
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(page);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell"))
                 .andExpect(status().isOk())
@@ -324,7 +316,6 @@ class OrderControllerTest {
     @Test
     void searchUserOpenOrdersSellConFiltroPorNombreDeJugadorDevuelveOrdenesFiltradas() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         ResumenOrdenesDeVenta summaryDTO = new ResumenOrdenesDeVenta(PLAYER_ID, "Lionel Messi", 1, 35.0);
         Page<ResumenOrdenesDeVenta> page = new PageImpl<>(List.of(summaryDTO), PageRequest.of(0, 10), 1);
@@ -332,7 +323,7 @@ class OrderControllerTest {
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), eq("Messi"), any(Pageable.class)))
                 .thenReturn(page);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell").param("nombre", "Messi"))
                 .andExpect(status().isOk())
@@ -345,13 +336,12 @@ class OrderControllerTest {
     @Test
     void searchUserOpenOrdersSellConPaginacionPersonalizada() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(1, 5), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell")
                         .param("page", "1")
@@ -368,13 +358,12 @@ class OrderControllerTest {
     @Test
     void searchUserOpenOrdersSellDevuelveListaVaciaCuandoUsuarioNoTieneOrdenes() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
         Page<ResumenOrdenesDeVenta> pageVacia = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(USER_ID), isNull(), any(Pageable.class)))
                 .thenReturn(pageVacia);
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
         mockMvc.perform(get("/orders/" + USER_ID + "/ordersSell"))
                 .andExpect(status().isOk())
@@ -385,14 +374,13 @@ class OrderControllerTest {
     @Test
     void searchUserOpenOrdersSellDevuelve404CuandoUsuarioNoExiste() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
 
-        when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(999L), isNull(), any(Pageable.class)))
+        when(tokenMarketService.buscarOrdersSellSummaryAbiertasPorUsuario(eq(-1L), isNull(), any(Pageable.class)))
                 .thenThrow(new EntidadNoEncontradaException("El usuario no existe"));
 
-        MockMvc mockMvc = mockMvcWith(tokenMarketService, userService);
+        MockMvc mockMvc = mockMvcWith(tokenMarketService);
 
-        mockMvc.perform(get("/orders/999/ordersSell"))
+        mockMvc.perform(get("/orders/-1/ordersSell"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("El usuario no existe"));
     }

@@ -40,9 +40,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private static final Long USER_ID = 1L;
-    public static final User USER_1 = new User("ivan", "ivan@gmail.com", "pass");
     private final Principal principal = USER_ID::toString;
-    public static final User USER = new User(USER_ID);
     private static final Long PLAYER_ID = 10L;
 
     @BeforeEach
@@ -292,31 +290,31 @@ class UserControllerTest {
 
     @Test
     void depositDevuelveOkYLosCreditosActualizados() throws Exception {
-        UserService userService = mock(UserService.class);
+        UserService userServiceMock = mock(UserService.class);
         User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
-        when(userService.recuperar(USER_ID)).thenReturn(user);
+        when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
         User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
-        when(userService.depositarCreditos(eq(USER_ID), eq(10000d))).thenReturn(updatedUser);
+        when(userServiceMock.depositarCreditos(USER_ID, 10000d)).thenReturn(updatedUser);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+        MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
 
-        mockMvc.perform(post("/users/deposit")
+        userControllerMock.perform(post("/users/deposit")
                         .principal(principal)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"amount\":10000}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.credits").value(10000));
 
-        verify(userService, times(1)).depositarCreditos(eq(USER_ID), eq(10000d));
+        verify(userServiceMock, times(1)).depositarCreditos(USER_ID, 10000d);
     }
 
     @Test
     void depositConMontoInvalidoDevuelve400() throws Exception {
-        UserService userService = mock(UserService.class);
+        UserService userServiceMock = mock(UserService.class);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+        MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
 
-        mockMvc.perform(post("/users/deposit")
+        userControllerMock.perform(post("/users/deposit")
                         .principal(principal)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"amount\":-5}"))

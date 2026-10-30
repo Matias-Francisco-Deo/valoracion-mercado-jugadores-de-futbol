@@ -106,8 +106,9 @@ class UserServiceImplTest {
     @Test
     void depositarCreditosConMontoInvalidoLanzaExcepcion() {
         User created = userService.guardar(USER1);
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), -10d));
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), 0d));
+        Long id = created.getId();
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(id, -10d));
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(id, 0d));
     }
 
     @Test
@@ -124,14 +125,6 @@ class UserServiceImplTest {
     void depositDaErrorSiUsuarioNoExiste() {
 
         assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(-1L, 500d));
-    }
-
-    @Test
-    void depositConMontoNoPositivoLanzaIllegalArgument() {
-        User created = userService.guardar(USER1);
-
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), -10d));
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(created.getId(), 0d));
     }
 
 

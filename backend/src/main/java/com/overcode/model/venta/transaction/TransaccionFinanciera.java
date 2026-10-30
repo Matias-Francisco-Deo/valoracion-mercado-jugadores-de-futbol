@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import static com.overcode.config.Reloj.getLocalDateTime;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -21,7 +23,7 @@ public class TransaccionFinanciera {
     private Double unitPrice;
 
     public TransaccionFinanciera(User user, Player player, TransactionType type, Integer quantity){
-        setDate(LocalDateTime.now());
+        setDate(getLocalDateTime());
         setOwner(user);
         setPlayer(player);
         setType(type);

@@ -10,7 +10,8 @@ import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+
+import static com.overcode.config.Reloj.getLocalDate;
 
 @Getter
 @Setter
@@ -73,7 +74,7 @@ public class LoginBonus {
 
     @NonNull
     public LocalDate getFechaActual() {
-        return LocalDate.now(ZoneOffset.UTC);
+        return getLocalDate();
     }
 
     public LoginBonusRewards getBonusesDeLaSemana() {

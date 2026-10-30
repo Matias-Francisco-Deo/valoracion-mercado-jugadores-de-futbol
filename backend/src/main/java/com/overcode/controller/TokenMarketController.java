@@ -7,12 +7,10 @@ import com.overcode.model.venta.BuyOrder;
 import com.overcode.model.venta.SellPost;
 import com.overcode.model.venta.orden.ResumenOrdenesDeVenta;
 import com.overcode.service.interfaces.TokenMarketService;
-import com.overcode.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,12 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/orders")
-@Tag(name = "Orders", description = "Endpoints for buying and selling player tokens")
-public class OrderController {
+@Tag(name = "Market", description = "Endpoints for buying and selling player tokens")
+public class TokenMarketController {
 
     private final TokenMarketService tokenMarketService;
 
-    public OrderController(TokenMarketService tokenMarketService, UserService userService) {
+    public TokenMarketController(TokenMarketService tokenMarketService) {
         this.tokenMarketService = tokenMarketService;
     }
 
