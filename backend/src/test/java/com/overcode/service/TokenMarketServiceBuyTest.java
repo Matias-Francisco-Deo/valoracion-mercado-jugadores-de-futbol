@@ -6,7 +6,6 @@ import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
-import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.market.transaction.TransaccionFinanciera;
 import com.overcode.model.market.transaction.TransactionType;
