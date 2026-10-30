@@ -1,7 +1,7 @@
 package com.overcode.config;
 
 import com.overcode.persistence.repository.interfaces.UserRepository;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -28,7 +28,7 @@ class DataInitializerTest {
     private EstrategiaCotizacionService estrategiaCotizacionService;
 
     @Autowired
-    private ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private ConfiguracionMercadoService configuracionMercadoService;
 
     @Autowired
     private TestService testService;
@@ -51,7 +51,7 @@ class DataInitializerTest {
     void alInvocarInitializeSeGeneraConfiguracion() {
         dataInitializer.initialize();
 
-        assertDoesNotThrow(() -> configuracionCotizacionesService.recuperar());
+        assertDoesNotThrow(() -> configuracionMercadoService.recuperar());
     }
 
     @Test

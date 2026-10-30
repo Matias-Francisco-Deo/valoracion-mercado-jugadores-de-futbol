@@ -1,5 +1,6 @@
 package com.overcode.service;
 
+import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EmailRepetidoException;
@@ -96,35 +97,43 @@ class UserServiceImplTest {
     @Test
     void depositarCreditosSumaCreditosAlUsuario() {
         User created = userService.guardar(USER1);
-        User updated = userService.depositarCreditos(created.getId(), 500d);
+        double amount = 500d;
+        DepositPetition petition = new DepositPetition(created.getId(), amount);
+        User updated = userService.depositarCreditos(petition);
 
-        assertEquals(500d, updated.getCreditBalance());
+        assertEquals(amount, updated.getCreditBalance());
         User retrieved = userService.recuperar(created.getId());
-        assertEquals(500d, retrieved.getCreditBalance());
+        assertEquals(amount, retrieved.getCreditBalance());
     }
 
     @Test
     void depositarCreditosConMontoInvalidoLanzaExcepcion() {
         User created = userService.guardar(USER1);
         Long id = created.getId();
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(id, -10d));
-        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(id, 0d));
+
+        DepositPetition petitionNegativa = new DepositPetition(id, -1d);
+        DepositPetition petitionCero = new DepositPetition(id, 0d);
+
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionNegativa));
+        assertThrows(ParametroNoValidoException.class, () -> userService.depositarCreditos(petitionCero));
     }
 
     @Test
     void depositSumaCreditosAlUsuarioExistente() {
         User created = userService.guardar(USER1);
-        userService.depositarCreditos(created.getId(), 500d); // TODO debería recibir un sólo objeto
+        double amount = 500d;
+        DepositPetition petition = new DepositPetition(created.getId(), amount);
+        userService.depositarCreditos(petition);
 
         User updated = userService.recuperar(created.getId());
-        assertEquals(500d, updated.getCreditBalance());
+        assertEquals(amount, updated.getCreditBalance());
 
     }
 
     @Test
     void depositDaErrorSiUsuarioNoExiste() {
-
-        assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(-1L, 500d));
+        DepositPetition depositPetition = new DepositPetition(-1L, 5600d);
+        assertThrows(EntidadNoEncontradaException.class, () -> userService.depositarCreditos(depositPetition));
     }
 
 

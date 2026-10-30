@@ -43,7 +43,7 @@ public class Position {
 
             } else if (transaccion.getType() == TransactionType.SELL) {
                 if (tokensDeTransaccion > tokensEnPosesion) {
-                    throw new IllegalStateException("La venta supera la cantidad de tokens disponibles");
+                    throw new IllegalStateException("La venta supera la amount de tokens disponibles");
                 }
 
                 double costoPromedioAnterior = tokensEnPosesion > 0 ? costoAcumulado / tokensEnPosesion : 0.0; // Costo promedio por token antes de la venta
@@ -57,7 +57,7 @@ public class Position {
 
         double valorActualCalculado = tokensEnPosesion * getCurrentPrice();
 
-        double rendimientoCalculado = valorActualCalculado - costoAcumulado;// cantidad de ganancia o pérdida no realizada
+        double rendimientoCalculado = valorActualCalculado - costoAcumulado;// amount de ganancia o pérdida no realizada
 
         double rendimientoPorcentualCalculado = costoAcumulado > 0 ? (rendimientoCalculado / costoAcumulado) * 100 : 0.0; // Ganancia o pérdida como porcentaje del costo restante
 

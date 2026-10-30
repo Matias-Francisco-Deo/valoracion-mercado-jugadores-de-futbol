@@ -2,10 +2,10 @@ package com.overcode.e2e;
 
 import com.overcode.controller.dto.cotizacion.ActualizarFactorEscalaRequestDTO;
 import com.overcode.controller.dto.cotizacion.EstrategiaCotizacionResponseDTO;
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
-import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
+import com.overcode.service.impl.ConfiguracionMercadoServiceImpl;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.UserService;
@@ -63,7 +63,7 @@ class EstrategiaCotizacionE2eTest {
     private RestClient restClient;
 
     @Autowired
-    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesServiceImpl;
+    private ConfiguracionMercadoServiceImpl configuracionCotizacionesServiceImpl;
 
     @Autowired
     private UserService userService;
@@ -101,13 +101,13 @@ class EstrategiaCotizacionE2eTest {
     }
 
     private EstrategiaCotizacion crearConfiguracionCotizacionesConEstrategiaSecundaria() {
-        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_2))
+        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionMercado(ESTRATEGIA_2))
                     .getEstrategiaCotizacion();
 
     }
 
     private EstrategiaCotizacion crearConfiguracionCotizacionesConEstrategia() {
-        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(ESTRATEGIA_1))
+        return configuracionCotizacionesServiceImpl.crearConfiguracionSiNoExiste(new ConfiguracionMercado(ESTRATEGIA_1))
                     .getEstrategiaCotizacion();
 
     }

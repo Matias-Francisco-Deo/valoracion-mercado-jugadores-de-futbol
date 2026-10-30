@@ -97,11 +97,11 @@ public class User {
         this.creditBalance -= amount;
     }
 
-    public void addCredits(Double amount) { // TODO arreglar
+    public void addCredits(Double amount) {
         if (amount == null || amount <= 0) {
             throw new ParametroNoValidoException("Cantidad debe ser positiva");
         }
-        this.creditBalance = (this.creditBalance != null ? this.creditBalance : 0) + amount;
+        this.creditBalance += amount;
     }
 
     public List<Token> getTokensForPlayer(Long playerId) {
@@ -123,7 +123,7 @@ public class User {
         }
         List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {
-            throw new TokensInsuficientesParaVenderException("No hay suficientes tokens para vender la cantidad pedida");
+            throw new TokensInsuficientesParaVenderException("No hay suficientes tokens para vender la amount pedida");
         }
 
         List<Token> toRelease = new ArrayList<>(playerTokens.subList(0, quantity));

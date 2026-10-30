@@ -1,14 +1,14 @@
 package com.overcode.service;
 
 import com.overcode.controller.dto.player.PlayerFilter;
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.player.Player;
 import com.overcode.model.player.PlayerGameData;
 import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
@@ -48,15 +48,15 @@ class PlayerServiceImplTest {
 
     private final EstrategiaCotizacionTestRatingMapAJPADTO estrategiaADTO = new EstrategiaCotizacionTestRatingMapAJPADTO();
     @Autowired
-    private ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private ConfiguracionMercadoService configuracionMercadoService;
 
     @BeforeEach
     void setUp() {
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
-                new ConfiguracionCotizaciones(getEstrategiaRating())
+        configuracionMercadoService.crearConfiguracionSiNoExiste(
+                new ConfiguracionMercado(getEstrategiaRating())
         );
     }
 

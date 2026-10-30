@@ -1,5 +1,6 @@
 package com.overcode.service.impl;
 
+import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
@@ -62,6 +63,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User recuperar(Long id) {
+        return recuperarPorId(id);
+    }
+
+    private User recuperarPorId(Long id) {
         return userRepository.recuperar(id)
                 .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
     }
@@ -113,11 +118,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User depositarCreditos(Long userId, Double amount) {
-        if (amount <= 0 || amount > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
+    public User depositarCreditos(DepositPetition depositPetition) {
+        Long userId = depositPetition.userId();
+        Double cantidad = depositPetition.cantidad();
 
-        User user = recuperar(userId);
-        user.addCredits(amount);
+        if (cantidad <= 0 || cantidad > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
+
+        User user = recuperarPorId(userId);
+        user.addCredits(cantidad);
+
         return userRepository.guardar(user);
     }
 

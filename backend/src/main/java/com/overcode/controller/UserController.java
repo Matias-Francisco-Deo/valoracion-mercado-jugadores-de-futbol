@@ -1,5 +1,6 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
@@ -79,10 +80,11 @@ public class UserController {
     @PostMapping("/deposit")
     public ResponseEntity<DepositResponseDTO> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
 
-        long id = Long.parseLong(principal.getName());
-        User user = userService.recuperar(id);
+        long userId = Long.parseLong(principal.getName());
 
-        User updatedUser = userService.depositarCreditos(user.getId(), request.getAmount().doubleValue());
+        DepositPetition depositPetition = request.aModelo(userId);
+
+        User updatedUser = userService.depositarCreditos(depositPetition);
         return ResponseEntity.ok(DepositResponseDTO.desdeModelo(updatedUser));
 
     }

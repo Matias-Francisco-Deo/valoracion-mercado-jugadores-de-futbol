@@ -8,21 +8,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ConfiguracionCotizaciones {
+public class ConfiguracionMercado {
     private Long id;
     private EstrategiaCotizacion estrategiaCotizacion;
     private LoginBonus loginBonus;
 
-    public ConfiguracionCotizaciones(EstrategiaCotizacion estrategiaCotizacion) {
+    public ConfiguracionMercado(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public ConfiguracionCotizaciones(Long id, EstrategiaCotizacion estrategiaCotizacion) {
+    public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion) {
         setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public ConfiguracionCotizaciones(Long id, EstrategiaCotizacion estrategiaCotizacion, LoginBonus loginBonus) {
+    public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion, LoginBonus loginBonus) {
         setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);
         setLoginBonus(loginBonus);

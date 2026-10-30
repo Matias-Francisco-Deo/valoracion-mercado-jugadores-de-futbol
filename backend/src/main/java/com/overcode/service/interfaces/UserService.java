@@ -1,5 +1,6 @@
 package com.overcode.service.interfaces;
 
+import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
@@ -25,5 +26,5 @@ public interface UserService {
 
     Portfolio recuperarPortfolioDeUser(User user);
 
-    User depositarCreditos(Long userId, Double amount);
+    User depositarCreditos(DepositPetition depositPetition);
 }

@@ -1,5 +1,6 @@
 package com.overcode.controller;
 
+import com.overcode.controller.dto.market.DepositPetition;
 import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.SummaryTokenPlayer;
@@ -294,7 +295,7 @@ class UserControllerTest {
         User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
         when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
         User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
-        when(userServiceMock.depositarCreditos(USER_ID, 10000d)).thenReturn(updatedUser);
+        when(userServiceMock.depositarCreditos(any(DepositPetition.class))).thenReturn(updatedUser);
 
         MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();
 
@@ -305,7 +306,7 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.credits").value(10000));
 
-        verify(userServiceMock, times(1)).depositarCreditos(USER_ID, 10000d);
+        verify(userServiceMock, times(1)).depositarCreditos(any(DepositPetition.class));
     }
 
     @Test

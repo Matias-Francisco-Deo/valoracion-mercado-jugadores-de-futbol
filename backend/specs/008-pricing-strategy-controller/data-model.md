@@ -64,7 +64,7 @@ REST Controller exposing the administrative endpoints.
 - `factorEscala`: `Double` (invariant: > 0)
 - Invariants enforced by setter methods throwing `EstrategiaInvalidaException`.
 
-#### `ConfiguracionCotizaciones` (`com.overcode.model.cotizacion`)
+#### `ConfiguracionMercado` (`com.overcode.model.cotizacion`)
 - `id`: `Long`
 - `estrategiaCotizacion`: `EstrategiaCotizacion` (currently active strategy)
 

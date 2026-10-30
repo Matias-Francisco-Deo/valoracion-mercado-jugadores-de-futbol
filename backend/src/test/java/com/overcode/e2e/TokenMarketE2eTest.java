@@ -406,7 +406,7 @@ class TokenMarketE2eTest {
 
     @Test
     void publicarOrdenesDeVentaConCantidadInvalidaDevuelveBadRequest() {
-        // Flujo excepcional: cantidad <= 0
+        // Flujo excepcional: amount <= 0
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Bukayo Saka", 25d);
         SellTokenRequest body = crearSellRequest(player.getId(), -1);

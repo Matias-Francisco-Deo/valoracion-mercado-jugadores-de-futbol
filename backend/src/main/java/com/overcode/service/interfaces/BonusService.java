@@ -4,7 +4,7 @@ import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.user.User;
 
-public interface DailyBonusService {
+public interface BonusService {
     BonusClaim reclamarBonus(User user);
     EstadoBonus obtenerEstadoBonus(User user);
 }

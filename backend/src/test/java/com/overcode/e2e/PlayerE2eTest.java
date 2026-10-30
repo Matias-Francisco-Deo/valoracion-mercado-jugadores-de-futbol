@@ -5,12 +5,12 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
 import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.player.Player;
 import com.overcode.model.player.PlayerGameData;
 import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
@@ -68,7 +68,7 @@ class PlayerE2eTest {
     private EstrategiaCotizacionService estrategiaCotizacionService;
 
     @Autowired
-    private ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private ConfiguracionMercadoService configuracionMercadoService;
 
     private static final EstrategiaCotizacionSiempre2 ESTRATEGIA_1 =
             new EstrategiaCotizacionSiempre2(0.0, 1.0);
@@ -268,7 +268,7 @@ class PlayerE2eTest {
     void listarRankingDeJugadoresTraeOrdenadosPorRating() {
         String token = obtainAuthToken();
 
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(getEstrategiaRating())); // esta estrategia discrimina por rating only
+        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(getEstrategiaRating())); // esta estrategia discrimina por rating only
 
         Player player1 = playerService.crear(getJugadorConRating(PLAYER_NAME, 9.5));
         Player player2 = playerService.crear(getJugadorConRating(SECOND_PLAYER_NAME, 6.0));
@@ -340,8 +340,8 @@ class PlayerE2eTest {
 
         LocalDateTime inicio = LocalDateTime.now();
 
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
-                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        configuracionMercadoService.crearConfiguracionSiNoExiste(
+                new ConfiguracionMercado(ESTRATEGIA_1)
         );
 
         String token = obtainAuthToken();
@@ -376,8 +376,8 @@ class PlayerE2eTest {
 
         LocalDateTime inicio = LocalDateTime.now();
 
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
-                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        configuracionMercadoService.crearConfiguracionSiNoExiste(
+                new ConfiguracionMercado(ESTRATEGIA_1)
         );
 
         String token = obtainAuthToken();
@@ -412,8 +412,8 @@ class PlayerE2eTest {
 
         LocalDateTime inicio = LocalDateTime.now();
 
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(
-                new ConfiguracionCotizaciones(ESTRATEGIA_1)
+        configuracionMercadoService.crearConfiguracionSiNoExiste(
+                new ConfiguracionMercado(ESTRATEGIA_1)
         );
 
         String token = obtainAuthToken();

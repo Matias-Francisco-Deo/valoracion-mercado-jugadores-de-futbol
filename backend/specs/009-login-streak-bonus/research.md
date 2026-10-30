@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature introduces a daily login streak bonus system into the backend. Users receive credits based on their daily streak progression (1 to 7 days), which cycles back to Day 1 after reaching Day 7 or upon missing a day. The bonus calculation and scaling logic is encapsulated in a dedicated `LoginBonus` domain model. The system allows multiple `LoginBonus` definitions to be stored in the database, while one active instance is configured in `ConfiguracionCotizaciones`. Bonuses are never granted automatically upon login/registration; users must explicitly invoke a claim endpoint.
+This feature introduces a daily login streak bonus system into the backend. Users receive credits based on their daily streak progression (1 to 7 days), which cycles back to Day 1 after reaching Day 7 or upon missing a day. The bonus calculation and scaling logic is encapsulated in a dedicated `LoginBonus` domain model. The system allows multiple `LoginBonus` definitions to be stored in the database, while one active instance is configured in `ConfiguracionMercado`. Bonuses are never granted automatically upon login/registration; users must explicitly invoke a claim endpoint.
 
 ---
 
@@ -29,15 +29,15 @@ This feature introduces a daily login streak bonus system into the backend. User
   - `FechaReclamoBonusLoginInvalidaException`: Claim date is null or invalid.
   - `LoginBonusInvalidoException`: LoginBonus map does not contain all 7 days or is improperly constructed.
 - **Service Layer Exceptions** (`com.overcode.service.exception`):
-  - `LoginBonusNoConfiguradoException`: No active `LoginBonus` configured in `ConfiguracionCotizaciones`.
+  - `LoginBonusNoConfiguradoException`: No active `LoginBonus` configured in `ConfiguracionMercado`.
   - `ReclamoBonusNoPermitidoException`: Business rule check fails during bonus claim.
 
-### 4. Active Bonus Configuration in `ConfiguracionCotizaciones`
-- `ConfiguracionCotizaciones` holds the active `LoginBonus`:
+### 4. Active Bonus Configuration in `ConfiguracionMercado`
+- `ConfiguracionMercado` holds the active `LoginBonus`:
   ```java
   private LoginBonus loginBonus;
   ```
-- Multiple `LoginBonus` entities can reside in the database, but only one is selected in `ConfiguracionCotizaciones`.
+- Multiple `LoginBonus` entities can reside in the database, but only one is selected in `ConfiguracionMercado`.
 - In `DataInitializer`:
   - Instantiates default `LoginBonus` with `Map<DiaDeLaSemana, Double>`:
     - `LUNES`: `1.0`
@@ -48,7 +48,7 @@ This feature introduces a daily login streak bonus system into the backend. User
     - `SABADO`: `10.0`
     - `DOMINGO`: `15.0`
   - Saves the instance in `LoginBonusRepository` if not present.
-  - Sets it as the active bonus in `ConfiguracionCotizaciones`.
+  - Sets it as the active bonus in `ConfiguracionMercado`.
 
 ### 5. Explicit User Claim Requirement
 - **Rule**: A login bonus is **NEVER** awarded just for logging in or registering.

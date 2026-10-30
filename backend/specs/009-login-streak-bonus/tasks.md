@@ -39,12 +39,12 @@
 - [X] T006 [P] Create `DiaDeLaSemana` enum (`LUNES`, `MARTES`, `MIERCOLES`, `JUEVES`, `VIERNES`, `SABADO`, `DOMINGO`) with `desdeRacha(int racha)` and `desdeDayOfWeek(DayOfWeek dayOfWeek)` methods enforcing custom exceptions in `src/main/java/com/overcode/model/bonus/DiaDeLaSemana.java`
 - [X] T007 [P] Create unit test in Spanish `DiaDeLaSemanaTest` verifying valid mappings and that invalid values throw `DiaInvalidoException` and `DiaDeLaSemanaInvalidoException` in `src/test/java/com/overcode/model/bonus/DiaDeLaSemanaTest.java`
 - [X] T008 Implement `LoginBonus` domain class with `Map<DiaDeLaSemana, Double> bonusRewards`, `getBonusParaDia(DiaDeLaSemana)`, `getBonusParaRacha(int)`, `calcularSiguienteRacha(LocalDate, LocalDate, int)`, `puedeReclamarHoy(LocalDate, LocalDate)`, and unmodifiable schedule getter in `src/main/java/com/overcode/model/bonus/LoginBonus.java`
-- [X] T009 Update `ConfiguracionCotizaciones` domain class to include `loginBonus` field, getter/setter, and `cambiarLoginBonusPor(LoginBonus)` in `src/main/java/com/overcode/model/cotizacion/ConfiguracionCotizaciones.java`
+- [X] T009 Update `ConfiguracionMercado` domain class to include `loginBonus` field, getter/setter, and `cambiarLoginBonusPor(LoginBonus)` in `src/main/java/com/overcode/model/cotizacion/ConfiguracionCotizaciones.java`
 - [X] T010 Update `User` domain model to support `Double creditBalance`, add `Integer streakCount = 0`, `LocalDate lastBonusClaimDate`, and domain methods `puedeReclamarBonusDiarioHoy` and `reclamarBonusDiario` in `src/main/java/com/overcode/model/User.java`
 
 ### Persistence Layer
 - [X] T011 [P] Create JPA entity `LoginBonusJPADTO` with `@ElementCollection` map of `DiaDeLaSemana` to `Double` and bidirectional `aModelo()` / `desdeModelo()` mappers in `src/main/java/com/overcode/persistence/dto/jpa/bonus/LoginBonusJPADTO.java`
-- [X] T012 Update `ConfiguracionCotizacionesJPADTO` to add `@ManyToOne` relation to `LoginBonusJPADTO` and bidirectional domain mappings in `src/main/java/com/overcode/persistence/dto/jpa/cotizacion/ConfiguracionCotizacionesJPADTO.java`
+- [X] T012 Update `ConfiguracionMercadoJPADTO` to add `@ManyToOne` relation to `LoginBonusJPADTO` and bidirectional domain mappings in `src/main/java/com/overcode/persistence/dto/jpa/cotizacion/ConfiguracionCotizacionesJPADTO.java`
 - [X] T013 Update `UserJPADTO` to persist `Double creditBalance`, `streak_count`, and `last_bonus_claim_date` with domain mappers in `src/main/java/com/overcode/persistence/dto/jpa/UserJPADTO.java`
 - [X] T014 [P] Create Spring Data JPA repository `LoginBonusDAOJPA` in `src/main/java/com/overcode/persistence/repository/dao/jpa/LoginBonusDAOJPA.java`
 - [X] T015 [P] Create repository interface `LoginBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/LoginBonusRepository.java`
@@ -52,7 +52,7 @@
 - [X] T017 Create repository integration test `LoginBonusRepositoryTest` with PostgreSQL in `src/test/java/com/overcode/persistence/repository/LoginBonusRepositoryTest.java`
 
 ### Database Seeding & Global Configuration
-- [X] T018 Update `DataInitializer` to instantiate default `LoginBonus` with base credit streak map (`LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`), save it via repository if absent, and link it in `ConfiguracionCotizaciones` in `src/main/java/com/overcode/config/DataInitializer.java`
+- [X] T018 Update `DataInitializer` to instantiate default `LoginBonus` with base credit streak map (`LUNES: 1.0, MARTES: 2.0, MIERCOLES: 2.0, JUEVES: 5.0, VIERNES: 5.0, SABADO: 10.0, DOMINGO: 15.0`), save it via repository if absent, and link it in `ConfiguracionMercado` in `src/main/java/com/overcode/config/DataInitializer.java`
 
 **Checkpoint**: Foundation ready - all models, repositories, exceptions, and baseline data initialized.
 
@@ -67,13 +67,13 @@
 ### Tests for User Story 1
 - [X] T019 [P] [US1] Unit test in Spanish `LoginBonusTest` testing consecutive streak calculations and bonus value retrieval in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
 - [X] T020 [P] [US1] Unit test in Spanish `UserBonusTest` verifying `reclamarBonusDiario` updates `streakCount`, credits balance with `Double`, and verifies login never alters balance in `src/test/java/com/overcode/model/UserBonusTest.java`
-- [X] T021 [P] [US1] Service integration test in Spanish `DailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T021 [P] [US1] Service integration test in Spanish `BonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
 - [X] T022 [P] [US1] End-to-End API test in Spanish `DailyBonusE2eTest` verifying `POST /api/daily-bonus/claim` for Day 1 and Day 2 progression and ensuring `POST /auth/login` does not award bonus in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 1
 - [X] T023 [P] [US1] Create DTO `ClaimBonusResponseDTO` (creditsAwarded Double, newStreak Integer, currentCreditBalance Double, claimDate LocalDate, message String) in `src/main/java/com/overcode/controller/dto/bonus/ClaimBonusResponseDTO.java`
-- [X] T024 [US1] Define service interface `DailyBonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
-- [X] T025 [US1] Implement `DailyBonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionCotizaciones`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T024 [US1] Define service interface `BonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
+- [X] T025 [US1] Implement `BonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionMercado`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
 - [X] T026 [US1] Create controller `DailyBonusController` with `POST /api/daily-bonus/claim` secured with `@AuthenticationPrincipal UserAuth` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: User Story 1 (MVP) is fully functional, independently tested, and proven to never grant bonuses on login.
@@ -147,7 +147,7 @@
 
 ### Implementation for User Story 5
 - [X] T042 [P] [US5] Create DTO `DailyBonusStatusResponseDTO` (`currentStreak Integer`, `todayBonus Double`, `alreadyClaimedToday Boolean`, `weeklyBonuses Map<DiaDeLaSemana, Double>`) in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
-- [X] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `DailyBonusService` and `DailyBonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `BonusService` and `BonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
 - [X] T044 [US5] Add endpoint `GET /api/daily-bonus` in `DailyBonusController` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: Streak query endpoint fully functional and integrated with status response.
@@ -195,7 +195,7 @@ Phase 8: Polish & Build Verification
   - Enum T006, tests T007, and JPA DTO T011 can run in parallel.
   - DAO T014 and Interface T015 can be defined in parallel.
 - In **Phase 3**:
-  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`DailyBonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
+  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`BonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
 - In **Phase 7**: DTO T042 and test T040 can run in parallel.
 - In **Phase 8**: T045 and T046 can be executed concurrently.
 

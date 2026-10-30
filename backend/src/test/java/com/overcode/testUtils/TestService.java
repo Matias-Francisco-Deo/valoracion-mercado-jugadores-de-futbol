@@ -27,7 +27,7 @@ public class TestService {
     private EstrategiaCotizacionDAOJPA estrategiaCotizacionDAO;
 
     @Autowired
-    private ConfiguracionCotizacionesDAOJPA configuracionCotizacionesDAO;
+    private ConfiguracionMercadoDAOJPA configuracionCotizacionesDAO;
 
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
@@ -86,7 +86,7 @@ public class TestService {
     }
 
     public void eliminarConfig() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_cotizaciones");
+        entityManager.createNativeQuery("DELETE FROM configuraciones_mercado");
         configuracionCotizacionesDAO.deleteAll();
     }
 

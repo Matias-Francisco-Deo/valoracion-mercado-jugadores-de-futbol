@@ -1,13 +1,13 @@
 package com.overcode.service.cotizaciones;
 
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.player.Player;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
-import com.overcode.service.impl.ConfiguracionCotizacionesServiceImpl;
+import com.overcode.service.impl.ConfiguracionMercadoServiceImpl;
 import com.overcode.service.impl.EstrategiaCotizacionServiceImpl;
 import com.overcode.service.impl.PlayerServiceImpl;
 import com.overcode.service.impl.RegistroCotizacionServiceImpl;
@@ -36,7 +36,7 @@ class EstrategiaCotizacionServiceManualTest {
     private EstrategiaCotizacionServiceImpl estrategiaCotizacionService;
 
     @Autowired
-    private ConfiguracionCotizacionesServiceImpl configuracionCotizacionesService;
+    private ConfiguracionMercadoServiceImpl configuracionCotizacionesService;
 
     @Autowired
     private PlayerServiceImpl playerServiceImpl;
@@ -57,14 +57,14 @@ class EstrategiaCotizacionServiceManualTest {
     @Disabled("Usar manualmente para testear")
     void cotizarJugadoresManual() {
 
-        final EstrategiaCotizacion[] estrategiaCotizacion = new EstrategiaCotizacion[]{ESTRATEGIA_COTIZACION_1};
+        final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
         contextoConDTODeEstrategia1(() -> estrategiaCotizacion[0] = estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
 
         contextoConDTODeEstrategia1(() -> {
             EstrategiaCotizacion estrategiaCotizacionMisma = estrategiaCotizacion[0];
 
-            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionCotizaciones(estrategiaCotizacionMisma));
+            configuracionCotizacionesService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(estrategiaCotizacionMisma));
 
             estrategiaCotizacionService.cotizarJugadores();
 

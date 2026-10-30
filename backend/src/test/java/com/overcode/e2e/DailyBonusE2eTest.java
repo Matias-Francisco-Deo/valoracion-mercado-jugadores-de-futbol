@@ -6,10 +6,10 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
 import com.overcode.model.bonus.LoginBonus;
-import com.overcode.model.cotizacion.ConfiguracionCotizaciones;
+import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
-import com.overcode.service.interfaces.ConfiguracionCotizacionesService;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.testUtils.DateMockConfiguration;
 import com.overcode.testUtils.RequestDate;
 import com.overcode.testUtils.TestLoginBonusUtil;
@@ -50,7 +50,7 @@ class DailyBonusE2eTest {
     private LoginBonusRepository loginBonusRepository;
 
     @Autowired
-    private ConfiguracionCotizacionesService configuracionCotizacionesService;
+    private ConfiguracionMercadoService configuracionMercadoService;
 
     private RestClient restClient;
     private String token;
@@ -70,10 +70,10 @@ class DailyBonusE2eTest {
 
         LoginBonus bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
 
-        ConfiguracionCotizaciones config = new ConfiguracionCotizaciones(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
+        ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
         config.setLoginBonus(bonusBase);
-        configuracionCotizacionesService.crearConfiguracionSiNoExiste(config);
+        configuracionMercadoService.crearConfiguracionSiNoExiste(config);
 
         RegisterRequest registerReq = new RegisterRequest(USERNAME, EMAIL, PASSWORD);
         ResponseEntity<AuthResponse> registerRes = restClient.post()
