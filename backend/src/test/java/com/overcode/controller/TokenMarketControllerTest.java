@@ -181,14 +181,20 @@ class TokenMarketControllerTest {
 
     @Test
     void cancelOrderFallaConCantidadCero() {
+        User user = new User(USER_ID);
+        Player player = new Player(PLAYER_ID);
+
         assertThrows(ParametroNoValidoException.class,
-                () -> new PeticionCancelacion(new User(USER_ID), new Player(PLAYER_ID), 0));
+                () -> new PeticionCancelacion(user, player, 0));
     }
 
     @Test
     void cancelOrderFallaConCantidadNegativa() {
+        User user = new User(USER_ID);
+        Player player = new Player(PLAYER_ID);
+
         assertThrows(ParametroNoValidoException.class,
-                () -> new PeticionCancelacion(new User(USER_ID), new Player(PLAYER_ID), -1));
+                () -> new PeticionCancelacion(user, player, -1));
     }
 
 
