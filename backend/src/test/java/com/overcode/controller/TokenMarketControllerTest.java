@@ -1,6 +1,7 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
+import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
@@ -30,6 +31,7 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -157,7 +159,7 @@ class TokenMarketControllerTest {
         verifyNoInteractions(tokenMarketService);
     }
 
-    // ------------------------------ /orders/{playerId}/cancel ------------------------------
+    // ------------------------------ /orders/cancel ------------------------------
 
     @Test
     void cancelOrderDevuelveOkCuandoSeCancela() throws Exception {
@@ -175,6 +177,18 @@ class TokenMarketControllerTest {
         assertEquals(USER_ID, captor.getValue().user().getId());
         assertEquals(PLAYER_ID, captor.getValue().player().getId());
         assertEquals(1, captor.getValue().quantity());
+    }
+
+    @Test
+    void cancelOrderFallaConCantidadCero() {
+        assertThrows(ParametroNoValidoException.class,
+                () -> new PeticionCancelacion(new User(USER_ID), new Player(PLAYER_ID), 0));
+    }
+
+    @Test
+    void cancelOrderFallaConCantidadNegativa() {
+        assertThrows(ParametroNoValidoException.class,
+                () -> new PeticionCancelacion(new User(USER_ID), new Player(PLAYER_ID), -1));
     }
 
 

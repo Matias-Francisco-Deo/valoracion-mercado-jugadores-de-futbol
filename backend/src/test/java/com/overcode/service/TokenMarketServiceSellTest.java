@@ -2,6 +2,7 @@ package com.overcode.service;
 
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
+import com.overcode.model.exception.OrdenesInsuficientesParaCancelarException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
@@ -167,6 +168,15 @@ class TokenMarketServiceSellTest {
         assertEquals(6, orders.size());
         assertEquals(9, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
         assertEquals(1, openOrdersFor(seller.getId()).getFirst().quantity());
+    }
+
+    @Test
+    void cancelOrderFallaSiLaCantidadSuperaLasOrdenesAbiertas() {
+        tokenMarketService.sell(new PeticionVenta(seller, player, 1));
+        PeticionCancelacion post = new PeticionCancelacion(seller, player, 2);
+
+        assertThrows(OrdenesInsuficientesParaCancelarException.class,
+                () -> tokenMarketService.cancel(post));
     }
 
     @Test

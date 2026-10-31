@@ -173,14 +173,6 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
     }
 
-    private void cancelarOrden(Long orderId, String token) {
-        restClient.post()
-                .uri("/orders/" + orderId + "/cancel")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toBodilessEntity();
-    }
-
     private void cancelarOrdenSinAutenticacion(Long orderId) {
         restClient.post()
                 .uri("/orders/" + orderId + "/cancel")
