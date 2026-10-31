@@ -65,7 +65,7 @@ public class TokenMarketController {
             Pageable pageable,
             Principal principal
     ) {
-        Long userId = Long.parseLong(principal.getName());
+        Long userId = principal != null ? Long.parseLong(principal.getName()) : null;
 
         Page<ResumenOrdenesDeVenta> ordersSell = tokenMarketService.buscarOrdersSellSummaryAbiertas(userId,nombre, pageable);
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -59,6 +60,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/players/**").permitAll()
                 .requestMatchers("/users/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/orders/forSell").permitAll()
                 .requestMatchers("/api/admin/players/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .requestMatchers("/api/admin/quotes/**").permitAll() // Protegido por el ApiKeyAuthFilter
                 .anyRequest().authenticated()
