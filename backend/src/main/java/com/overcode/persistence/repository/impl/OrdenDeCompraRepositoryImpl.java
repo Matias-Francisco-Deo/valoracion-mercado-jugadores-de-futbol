@@ -63,15 +63,23 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
                 .toList();
     }
 
-    @Override
+    @Override//recupera pagina de summary de ordenes abiertas excluyendo al usuario logueado
     public Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(Long userId, String nombre, Pageable pageable) {
         return dao.buscarOrdenesDeVentaAbiertas(userId, nombre, pageable);
     }
 
 
-    @Override//recuoera pagina de summary de ordenes abiertas de un usuario
+    @Override//recupera pagina de summary de ordenes abiertas de un usuario
     public Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(Long userId, String nombre, Pageable pageable) {
         return dao.buscarOrdenesDeVentaDeUser(userId, nombre, pageable);
+    }
+
+    @Override
+    public List<OrdenDeVenta> recuperarOrdenesDeVentaAbiertasDelUser(Long playerId,Long userId){
+        return dao.findAllByPlayer_IdAndOwner_IdAndStatusOrderByCreatedAtAsc(playerId,userId,OrderStatus.OPEN)
+                .stream()
+                .map(OrdenDeVentaJPADTO::aModelo)
+                .toList();
     }
 
     @Override

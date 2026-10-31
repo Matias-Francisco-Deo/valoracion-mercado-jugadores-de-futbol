@@ -1,8 +1,10 @@
 package com.overcode.controller;
 
 import com.overcode.controller.dto.market.BuyTokenRequest;
+import com.overcode.controller.dto.market.CancellTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
@@ -49,12 +51,13 @@ public class TokenMarketController {
     }
 
     /** Cancels a resting SELL order and returns the token to the seller. No se usa.*/
-    @PostMapping("/{id}/cancel")
+    @PostMapping("/cancel")
     public ResponseEntity<Void> cancelOrder(
-            Principal principal,
-            @PathVariable("id") Long orderId) {
+            @Valid @RequestBody CancellTokenRequest request,
+            Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        tokenMarketService.cancel(orderId, userId);
+        PeticionCancelacion command = request.aModelo(userId);
+        tokenMarketService.cancel(command);
         return ResponseEntity.ok().build();
 
     }

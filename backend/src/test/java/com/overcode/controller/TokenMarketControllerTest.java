@@ -2,6 +2,7 @@ package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
@@ -161,18 +162,19 @@ class TokenMarketControllerTest {
     @Test
     void cancelOrderDevuelveOkCuandoSeCancela() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
-        User user = new User("ivan", "ivan@gmail.com", "pass");
-        user.setId(USER_ID);
-        when(userService.recuperar(USER_ID)).thenReturn(user);
-
-        Long orderId = 123L;
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
-        mockMvc.perform(post("/orders/" + orderId + "/cancel").principal(principal))
+        mockMvc.perform(post("/orders/cancel")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"playerId\":10,\"quantity\":1}"))
                 .andExpect(status().isOk());
 
-        verify(tokenMarketService, times(1)).cancel(orderId, USER_ID);
+        ArgumentCaptor<PeticionCancelacion> captor = ArgumentCaptor.forClass(PeticionCancelacion.class);
+        verify(tokenMarketService).cancel(captor.capture());
+        assertEquals(USER_ID, captor.getValue().user().getId());
+        assertEquals(PLAYER_ID, captor.getValue().player().getId());
+        assertEquals(1, captor.getValue().quantity());
     }
 
 

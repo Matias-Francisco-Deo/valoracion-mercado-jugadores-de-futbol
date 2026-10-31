@@ -3,11 +3,11 @@ package com.overcode.e2e;
 import com.overcode.controller.dto.auth.AuthResponse;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.market.BuyTokenRequest;
+import com.overcode.controller.dto.market.CancellTokenRequest;
 import com.overcode.controller.dto.market.SellTokenRequest;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.TokenMarketService;
 import com.overcode.service.interfaces.UserService;
@@ -15,7 +15,6 @@ import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,14 +45,11 @@ class TokenMarketE2eTest {
     private static final String BUYER_EMAIL = "orderbuyer@example.com";
     private static final String BUYER_PASSWORD = "Password123!";
 
-    private static final Long NON_EXISTENT_ID = 999999L;
+    private static final Long NON_EXISTENT_ID = -1L;
     @Autowired
     private UserService userService;
     @Autowired
     private TokenMarketService tokenMarketService;
-
-    @Autowired
-    private OrdenDeCompraRepository ordenDeCompraRepository;
 
     record SellOrderRecord(
             Long id,
@@ -440,37 +436,43 @@ class TokenMarketE2eTest {
     }
 
     // ============================================================================================
-    // -------------------------------- Tests de POST /orders/{id}/cancel -------------------------
+    // -------------------------------- Tests de POST /orders/cancel -------------------------
     // ============================================================================================
 
     @Test
-    @Disabled("Esta funcionalidad todavía no está implementada")
-    void cancelarOrdenDeVentaPropiaExitosamente() {
+    void cancelarOrdenDeVentaExitosamente() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Kevin De Bruyne", 45d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
 
-        ResponseEntity<List<SellOrderRecord>> sellResponse = restClient.post()
+        ResponseEntity<Void> sellResponse = restClient.post()
                 .uri("/orders/sell")
                 .header("Authorization", "Bearer " + sellerAuth.token())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(crearSellRequest(player.getId(), 1))
                 .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {});
+                .toBodilessEntity();
 
-        Long orderId = sellResponse.getBody().getFirst().id();
+        assertEquals(HttpStatus.CREATED, sellResponse.getStatusCode());
+
+        var ordenesPublicadas = tokenMarketService.buscarOrdersSellSummaryAbiertas(null, player.getName(), Pageable.unpaged());
+        assertEquals(1, ordenesPublicadas.getTotalElements());
+        assertEquals(player.getId(), ordenesPublicadas.getContent().getFirst().playerId());
+        assertEquals(1, ordenesPublicadas.getContent().getFirst().quantity());
 
         ResponseEntity<Void> cancelResponse = restClient.post()
-                .uri("/orders/" + orderId + "/cancel")
+                .uri("/orders/cancel")
                 .header("Authorization", "Bearer " + sellerAuth.token())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new CancellTokenRequest(player.getId(), 1))
                 .retrieve()
                 .toBodilessEntity();
 
         assertEquals(HttpStatus.OK, cancelResponse.getStatusCode());
 
-        // La orden debe figurar como CANCELLED en base de datos
-        OrderStatus status = ordenDeCompraRepository.recuperarPorId(orderId).get().getStatus();
-        assertEquals(OrderStatus.CANCELLED, status);
+        // La orden ya no debe figurar entre las órdenes de venta abiertas
+        var ordenesAbiertas = tokenMarketService.buscarOrdersSellSummaryAbiertas(null, player.getName(), Pageable.unpaged());
+        assertEquals(0, ordenesAbiertas.getTotalElements());
 
         // El token debe haber retornado al vendedor
         Integer tokensVendedor = Math.toIntExact(userService.recuperar(sellerAuth.user().id()).getTokens().stream()
@@ -488,39 +490,6 @@ class TokenMarketE2eTest {
         assertTrue(ex.getStatusCode() == HttpStatus.UNAUTHORIZED || ex.getStatusCode() == HttpStatus.FORBIDDEN);
     }
 
-    @Test
-    void cancelarOrdenInexistenteDevuelveNotFound() {
-        var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        Long orderId = NON_EXISTENT_ID;
-        String token = sellerAuth.token();
-
-        assertThrows(HttpClientErrorException.NotFound.class, () -> cancelarOrden(orderId, token));
-    }
-
-    @Test
-    @Disabled("Esta feature todavía no se usa")
-    void cancelarOrdenDeOtroUsuarioDevuelveConflict() {
-        // Flujo excepcional: un usuario intenta cancelar una orden que pertenece a otro usuario
-        var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        var otherAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
-
-        Player player = crearJugador("Bernardo Silva", 30d);
-        asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
-
-        ResponseEntity<List<SellOrderRecord>> sellResponse = restClient.post()
-                .uri("/orders/sell")
-                .header("Authorization", "Bearer " + sellerAuth.token())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(crearSellRequest(player.getId(), 1))
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<>() {});
-
-        Long orderId = sellResponse.getBody().getFirst().id();
-        String token = otherAuth.token();
-
-        // El otro usuario intenta cancelarla
-        assertThrows(HttpClientErrorException.Conflict.class, () -> cancelarOrden(orderId, token));
-    }
 
     // ============================================================================================
     // --------------------------------- Tests de GET /orders/forSell ----------------------------

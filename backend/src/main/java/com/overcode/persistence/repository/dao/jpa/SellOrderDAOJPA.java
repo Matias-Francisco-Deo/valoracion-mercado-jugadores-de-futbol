@@ -18,6 +18,12 @@ public interface SellOrderDAOJPA extends JpaRepository<OrdenDeVentaJPADTO, Long>
 
     boolean existsByToken_IdAndStatus(Long tokenId, OrderStatus status);
 
+    List<OrdenDeVentaJPADTO> findAllByPlayer_IdAndOwner_IdAndStatusOrderByCreatedAtAsc(
+            Long playerId,
+            Long userId,
+            OrderStatus status
+    );
+
     //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
     List<OrdenDeVentaJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
             Long playerId, OrderStatus status, Long buyerId);

@@ -2,8 +2,8 @@ package com.overcode.service;
 
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
-import com.overcode.model.exception.OperacionInvalidaOrdenException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
@@ -12,7 +12,6 @@ import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.OrderNotFoundException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenMarketService;
@@ -20,7 +19,6 @@ import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -150,32 +148,40 @@ class TokenMarketServiceSellTest {
     // ------------------------------ cancelOrder ------------------------------
 
     @Test
-    @Disabled("Esta feature no está en funcionamiento todavía")
     void cancelOrderCancelaYDevuelveTokenAlVendedor() {
-        OrdenDeVenta order = tokenMarketService.sell(new PeticionVenta(seller, player, 1)).getFirst();
+        tokenMarketService.sell(new PeticionVenta(seller, player, 1));
 
-        tokenMarketService.cancel(order.getId(), seller.getId());
+        tokenMarketService.cancel(new PeticionCancelacion(seller, player, 1));
 
-        assertEquals(OrderStatus.CANCELLED, order.getStatus());
         assertEquals(10, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
+        assertTrue(openOrdersFor(seller.getId()).isEmpty());
     }
 
     @Test
-    void cancelOrderFallaSiLaOrdenNoExiste() {
-        Long sellerId = seller.getId();
+    void cancelOrderCancelaLaCantidadSolicitadaSiNoSuperaElMaximoPermitido() {
+        List<OrdenDeVenta> orders =
+                tokenMarketService.sell(new PeticionVenta(seller, player, 6));
 
-        assertThrows(OrderNotFoundException.class,
-                () -> tokenMarketService.cancel(-1L, sellerId));
+        tokenMarketService.cancel(new PeticionCancelacion(seller, player, 5));
+
+        assertEquals(6, orders.size());
+        assertEquals(9, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
+        assertEquals(1, openOrdersFor(seller.getId()).getFirst().quantity());
     }
 
     @Test
-    @Disabled("Esta feature no está en funcionamiento todavía")
-    void cancelOrderFallaSiNoEsElDueño() {
-        OrdenDeVenta order = tokenMarketService.sell(new PeticionVenta(seller, player, 1)).getFirst();
-        Long orderId = order.getId();
-        Long buyerId = buyer.getId();
+    void cancelOrderFallaSiElUsuarioNoExiste() {
+        PeticionCancelacion post = new PeticionCancelacion(new User(-1L), player, 1);
 
-        assertThrows(OperacionInvalidaOrdenException.class,
-                () -> tokenMarketService.cancel(orderId, buyerId));
+        assertThrows(EntidadNoEncontradaException.class,
+                () -> tokenMarketService.cancel(post));
+    }
+
+    @Test
+    void cancelOrderFallaSiElJugadorNoExiste() {
+        PeticionCancelacion post = new PeticionCancelacion(seller, new Player(-1L), 1);
+
+        assertThrows(EntidadNoEncontradaException.class,
+                () -> tokenMarketService.cancel(post));
     }
 }

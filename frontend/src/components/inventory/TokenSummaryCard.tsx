@@ -45,7 +45,7 @@ export const TokenSummaryCard = ({ token, actionType, onActionClick, className, 
         
       </div>
 
-      {actionType!=='Cancelar venta' && onActionClick &&(
+      {onActionClick &&(
         <div className="p-3">
           <Button className="w-full py-2.5 text-sm text-white cursor-pointer"
             onClick={()=>onActionClick(token)}
