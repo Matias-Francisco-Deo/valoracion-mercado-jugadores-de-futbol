@@ -1,5 +1,6 @@
 package com.overcode.service.interfaces;
 
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.PeticionVenta;
@@ -26,7 +27,7 @@ public interface TokenMarketService {
     /**
      * Cancels a resting SELL order owned by userId and returns the token to the seller.
      */
-    void cancel(Long orderId, Long userId);
+    void cancel(PeticionCancelacion command);
 
     Page<ResumenOrdenesDeVenta> buscarOrdersSellSummaryAbiertas(Long userId, String nombre, Pageable pageable);
 

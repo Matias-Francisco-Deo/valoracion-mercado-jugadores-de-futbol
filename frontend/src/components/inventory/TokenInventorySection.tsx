@@ -1,4 +1,4 @@
-import type { OrderSell, PageResponse, TokenSummary } from "@/types/inventory";
+import type { InventoryToken, OrderSell, PageResponse, TokenActionType, TokenSummary } from "@/types/inventory";
 import { Input } from "../ui/Input";
 import { TokenSummaryCard } from "./TokenSummaryCard";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ type InventoryTab = "available" | "for_sale";
 interface TokenInventorySectionProps {
     aviableTokens: PageResponse<TokenSummary> |null;
     ordersSell: PageResponse<OrderSell> |null;
-    onActionClick: (token: TokenSummary) => void;
+    onActionClick: (token: InventoryToken, actionType: TokenActionType) => void;
 
     onAvailablePageChange?: (page: number,search: string) => void;
     onSellingPageChange?: (page: number,search: string) => void;
@@ -109,7 +109,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                     <TokenSummaryCard
                         key={token.playerId}
                         token={token}
-                        onActionClick={() => onActionClick(token)}
+                        onActionClick={() => onActionClick(token, "Vender")}
                         actionType="Vender"
                     />
                     ))
@@ -123,7 +123,7 @@ export default function TokenInventorySection({aviableTokens,ordersSell,onAction
                     <TokenSummaryCard
                     key={token.playerId}
                     token={token}
-                    onActionClick={() => onActionClick(token)}
+                    onActionClick={() => onActionClick(token, "Cancelar venta")}
                     actionType="Cancelar venta"
                     />
                 ))

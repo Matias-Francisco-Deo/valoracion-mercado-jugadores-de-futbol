@@ -1,6 +1,5 @@
 export interface OrderTokensRequest {
   playerId: number;
-  //userId: string;//quitar?
   quantity: number;
 }
 
@@ -17,8 +16,6 @@ export interface OrderSell{
   unitPrice : number;
   quantity: number;
 }
-
-export type InventoryToken = TokenSummary | OrderSell;//todavia no se usa de verdad
 
 export interface PositionToken {
   playerId: number;
@@ -50,3 +47,8 @@ export interface PageResponse<T> {
     totalElements:number;
 }
 
+export type InventoryToken = TokenSummary | OrderSell;
+
+export type TokenActionType = "Vender" | "Cancelar venta" | "Comprar";
+
+export type InventoryTab = "available" | "for_sale";

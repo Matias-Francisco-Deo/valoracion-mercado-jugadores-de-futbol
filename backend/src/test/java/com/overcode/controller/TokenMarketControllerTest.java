@@ -1,7 +1,9 @@
 package com.overcode.controller;
 
 import com.overcode.controller.exception.GlobalExceptionHandler;
+import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
@@ -29,6 +31,7 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -156,23 +159,42 @@ class TokenMarketControllerTest {
         verifyNoInteractions(tokenMarketService);
     }
 
-    // ------------------------------ /orders/{playerId}/cancel ------------------------------
+    // ------------------------------ /orders/cancel ------------------------------
 
     @Test
     void cancelOrderDevuelveOkCuandoSeCancela() throws Exception {
         TokenMarketService tokenMarketService = mock(TokenMarketService.class);
-        UserService userService = mock(UserService.class);
-        User user = new User("ivan", "ivan@gmail.com", "pass");
-        user.setId(USER_ID);
-        when(userService.recuperar(USER_ID)).thenReturn(user);
-
-        Long orderId = 123L;
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controllerWith(tokenMarketService)).build();
 
-        mockMvc.perform(post("/orders/" + orderId + "/cancel").principal(principal))
+        mockMvc.perform(post("/orders/cancel")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"playerId\":10,\"quantity\":1}"))
                 .andExpect(status().isOk());
 
-        verify(tokenMarketService, times(1)).cancel(orderId, USER_ID);
+        ArgumentCaptor<PeticionCancelacion> captor = ArgumentCaptor.forClass(PeticionCancelacion.class);
+        verify(tokenMarketService).cancel(captor.capture());
+        assertEquals(USER_ID, captor.getValue().user().getId());
+        assertEquals(PLAYER_ID, captor.getValue().player().getId());
+        assertEquals(1, captor.getValue().quantity());
+    }
+
+    @Test
+    void cancelOrderFallaConCantidadCero() {
+        User user = new User(USER_ID);
+        Player player = new Player(PLAYER_ID);
+
+        assertThrows(ParametroNoValidoException.class,
+                () -> new PeticionCancelacion(user, player, 0));
+    }
+
+    @Test
+    void cancelOrderFallaConCantidadNegativa() {
+        User user = new User(USER_ID);
+        Player player = new Player(PLAYER_ID);
+
+        assertThrows(ParametroNoValidoException.class,
+                () -> new PeticionCancelacion(user, player, -1));
     }
 
 

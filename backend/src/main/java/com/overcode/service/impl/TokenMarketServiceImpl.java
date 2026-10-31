@@ -1,6 +1,7 @@
 package com.overcode.service.impl;
 
 import com.overcode.model.market.MotorDeMercado;
+import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.TransaccionCompra;
 import com.overcode.model.market.orden.OrdenDeCompra;
@@ -10,10 +11,8 @@ import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
-import com.overcode.service.exception.OrderNotFoundException;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.interfaces.TokenMarketService;
-import com.overcode.service.interfaces.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,21 +26,16 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     private final OrdenDeCompraRepository ordenDeCompraRepository;
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
-    private final TokenRepository tokenRepository;
     private final TransactionRepository transactionRepository;
-    private final UserService userService;
 
     public TokenMarketServiceImpl(OrdenDeCompraRepository ordenDeCompraRepository,
                                   UserRepository userRepository,
                                   PlayerRepository playerRepository,
-                                  TokenRepository tokenRepository,
-                                  TransactionRepository transactionRepository, UserService userService) {
+                                  TransactionRepository transactionRepository) {
         this.ordenDeCompraRepository = ordenDeCompraRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
-        this.tokenRepository = tokenRepository;
         this.transactionRepository = transactionRepository;
-        this.userService = userService;
     }
 
     @Override
@@ -102,17 +96,24 @@ public class TokenMarketServiceImpl implements TokenMarketService {
 
     @Override
     @Transactional
-    public void cancel(Long orderId, Long userId) {
-        OrdenDeVenta order = ordenDeCompraRepository.recuperarPorId(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Órden no encontrada: " + orderId));
+    public void cancel(PeticionCancelacion peticionCancelacion) {
+        Long userId = peticionCancelacion.user().getId();
+        Long playerId = peticionCancelacion.player().getId();
+        int quantity = peticionCancelacion.quantity();
 
-        User owner = userService.recuperar(userId);
+        if (!playerRepository.existsById(playerId)){throw new EntidadNoEncontradaException("El jugador no existe: " + playerId);}
 
-        order.cancel(owner);
-        ordenDeCompraRepository.save(order);
+        User seller = userRepository.recuperar(userId)
+                .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado: " + userId));
 
-        // Devolver el token al vendedor
-        tokenRepository.setTokenOwner(order.getToken().getId(), userId);
+        //recupera todas las ordenes abiertas de un jugador del user
+        List<OrdenDeVenta> openOrders = ordenDeCompraRepository.recuperarOrdenesDeVentaAbiertasDelUser(playerId,userId);
+
+        MotorDeMercado motorDeMercado = new MotorDeMercado();
+        motorDeMercado.cancelarOrdenes(openOrders,seller,quantity);
+
+        userRepository.guardar(seller);
+        ordenDeCompraRepository.saveAll(openOrders);
     }
 
     @Override

@@ -6,9 +6,9 @@ import TokenInventorySection from "@/components/inventory/TokenInventorySection"
 import { TransactionHistorySection } from "@/components/inventory/TransactionHistorySection";
 import { ServerErrorComponent } from "@/components/ServerErrorComponent";
 import type { HttpError } from "@/lib/http-error";
-import { listTokensForSale } from "@/services/ordersService";
+import { cancelTokenListing, listTokensForSale } from "@/services/ordersService";
 import { getAviableTokens, getOrdersSell, getTransactionHistory, getUserPortfolio } from "@/services/userService";
-import type { OrderSell, OrderTokensRequest, PageResponse, PositionToken, TokenSummary, Transaction } from "@/types/inventory";
+import type { InventoryToken, OrderSell, OrderTokensRequest, PageResponse, PositionToken, TokenActionType, TokenSummary, Transaction } from "@/types/inventory";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 export default function InventoryPage() {
   const { userId } = useParams()
   const [selectedToken, setSelectedToken] = useState<TokenSummary | null>(null);
+  const [selectedAction, setSelectedAction] = useState<TokenActionType | null>(null);
 
   const [transactionsError, setTransactionsError] = useState<HttpError | null>(null);
   const [transactionsPage,setTransactionsPage] = useState<PageResponse<Transaction>|null>(null);
@@ -36,32 +37,54 @@ export default function InventoryPage() {
   const [serverError, setServerError] = useState<HttpError | null>(null);
   const [loadingPage, setLoadingPage] = useState(true);
 
-  const handleActionClick = (token: TokenSummary) => {
+  const handleActionClick = (token: InventoryToken,actionType: TokenActionType) => {
     setSelectedToken(token);
+    setSelectedAction(actionType);
     setModalError(null);
     setActionModalOpen(true);
   }
 
-  const sellTokens = async  (playerId:number,quantity:number): Promise<void> => {
+  const handleCloseModal = () => {
+    setActionModalOpen(false);
+    setSelectedToken(null);
+    setSelectedAction(null);
     setModalError(null);
-    if (!userId) return
-    const request: OrderTokensRequest = {
-      playerId,
-      quantity,
-    }
+};
 
-    await listTokensForSale(request).then(()=>{
-      setActionModalOpen(false);
-      setSelectedToken(null);
-      toast.success(`¡Orden creada! Pusiste a la venta ${quantity} token(s).`);
-      
-      return refreshInventory();
-    })
-    .catch((error: HttpError) => {
-      setModalError(error);
-      toast.error(error.message || 'Ocurrió un error al poner en venta los tokens.');
-    });
-  }
+const handleTokenAction = (playerId: number, quantity: number): Promise<void> => {
+    if (!userId || !selectedAction) return Promise.resolve();
+
+    setModalError(null);
+
+    const request: OrderTokensRequest = {
+        playerId,
+        quantity,
+    };
+
+    const actionPromise = selectedAction === "Vender"
+            ? listTokensForSale(request)
+            : cancelTokenListing(request);
+
+    return actionPromise.then(() => {
+            if (selectedAction === "Vender") {
+                toast.success(
+                    `¡Orden creada! Pusiste a la venta ${quantity} token(s).`
+                );
+            } else {
+                toast.success(
+                    `¡Venta cancelada! Recuperaste ${quantity} token(s).`
+                );
+            }
+
+            handleCloseModal();
+
+            return refreshInventory();
+        })
+        .catch((error: HttpError) => {
+            setModalError(error);
+            toast.error( error.message || "Ocurrió un error al realizar la operación.");
+        });
+};
 
   //refresh de listas al vender
   const refreshInventory = (): Promise<void> => {
@@ -181,9 +204,9 @@ export default function InventoryPage() {
         </div>
         <TransactionHistorySection transactionsPage={transactionsPage} onPageChange={handleTransactionPageChange} transactionError={transactionsError}/>
       </div>
-      {actionModalOpen && selectedToken && (
-        <TokenActionModal token={selectedToken} actionType={'Vender'} title={'Vender token'} error={modalError?.message} onConfirm={sellTokens} 
-        onClose={() => {setActionModalOpen(false);setSelectedToken(null)}} />
+      {actionModalOpen && selectedToken && selectedAction && (
+        <TokenActionModal token={selectedToken} actionType={selectedAction} error={modalError?.message} onConfirm={handleTokenAction} onClose={handleCloseModal} 
+        title={selectedAction === "Vender" ? "Vender token" : selectedAction === "Cancelar venta" ? "Retirar token" : "Comprar token"}/>
       )}
     </div>
   );

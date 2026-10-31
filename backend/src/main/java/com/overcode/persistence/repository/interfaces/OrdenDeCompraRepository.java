@@ -24,5 +24,7 @@ public interface OrdenDeCompraRepository {
 
     Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaDeUser(Long userId, String nombre, Pageable pageable);
 
+    List<OrdenDeVenta> recuperarOrdenesDeVentaAbiertasDelUser(Long playerId,Long userId);
+
     void actualizarPreciosOrdenesAbiertas();
 }

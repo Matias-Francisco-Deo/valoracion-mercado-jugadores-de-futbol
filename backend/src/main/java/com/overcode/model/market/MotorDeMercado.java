@@ -1,5 +1,6 @@
 package com.overcode.model.market;
 
+import com.overcode.model.exception.OrdenesInsuficientesParaCancelarException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.transaction.TransaccionFinanciera;
@@ -44,6 +45,18 @@ public class MotorDeMercado {
         List<TransaccionFinanciera> transaccionFinancieras = crearTransacciones(buyer, ordersToFill);
 
         return new TransaccionCompra(transaccionFinancieras, ordersToFill);
+    }
+
+    public void cancelarOrdenes(List<OrdenDeVenta> openOrders,User user,Integer quantity){
+        if(openOrders.size()<quantity){
+            throw new OrdenesInsuficientesParaCancelarException("No hay suficientes órdenes para cancelar " + quantity + " tokens del jugador");
+        }
+
+        for (int i = 0; i < quantity; i++) {
+            OrdenDeVenta order = openOrders.get(i);
+            order.cancel(user);
+            user.addToken(order.getToken());
+        }
     }
 
     private List<TransaccionFinanciera> crearTransacciones(User buyer, List<OrdenDeVenta> ordersToFill) {
