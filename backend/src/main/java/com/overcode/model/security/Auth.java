@@ -1,5 +1,5 @@
 package com.overcode.model.security;
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 
 import java.time.Instant;
 

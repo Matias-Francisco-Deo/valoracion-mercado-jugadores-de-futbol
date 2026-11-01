@@ -1,0 +1,95 @@
+import { formatPrice } from "@/lib/playerQuoteUtils";
+import { cn } from "@/lib/utils";
+import type { PositionToken } from "@/types/inventory";
+
+type  PositionCardProps =  {
+    position:PositionToken;
+    isSelected?: boolean;
+    onSelect:(position: PositionToken) => void;
+    className?:string;
+}
+
+export const PositionCard= ({ position , isSelected, onSelect, className, ...props }: PositionCardProps) =>{
+    const isProfit = position.profitLoss >= 0;
+
+    return(
+        <button type="button" aria-pressed={isSelected} onClick={() => onSelect(position)}
+        className={cn(
+            'flex min-w-0 flex-col max-w-67 gap-2 p-2.5 rounded-xl border-2 bg-gray-400 shadow-md transition-all text-black',
+            isSelected
+                ? "border-hover-orange"
+                : "border-gray-300 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg",
+            className
+        )} {...props}>
+
+            <header className="flex items-start gap-2">
+                <div className="min-w-0 flex-1">
+                    <h3 className="truncate font-titles text-start font-semibold text-wrap leading-tight">
+                        {position.playerName}
+                    </h3>
+                </div>
+
+                <div className="flex flex-col gap-1 text-[11px]">
+                    <span className={`shrink-0 rounded-lg px-2 py-0.5 font-semibold ${
+                            isProfit
+                            ? "bg-green-900/15 text-green-800"
+                            : "bg-red-900/15 text-red-800"
+                        }`}
+                        >
+                        {isProfit ? "+" : ""}
+                        {position.profitLossPercentage?.toFixed(2)}%
+                    </span>
+                    <span className={`shrink-0 rounded-lg px-2 py-0.5 text-[12px] font-semibold ${
+                            isProfit
+                            ? "bg-green-900/15 text-green-800"
+                            : "bg-red-900/15 text-red-800"
+                        }`}
+                        >
+                        {isProfit ? "+" : ""}
+                        {formatPrice(position.profitLoss)}
+                    </span>
+                </div>
+            </header>
+
+            <div className="flex items-center justify-between gap-2">
+                <p className="text-sm text-start text-gray-700">
+                    Valor actual: 
+                </p>
+
+                <p className="text-md sm:text-xl  font-semibold tracking-tight">
+                    {formatPrice(position.currentValue)}
+                </p>
+            </div>
+
+            <div className=" border-t border-gray-500/60" />
+
+            {/* Position details */}
+            <section className="grid grid-cols-2 gap-3">
+                <div className="text-[12px] sm:text-sm rounded-xl flex flex-col justify-center items-center bg-gray-500/20 p-2">
+                    <p className=" text-gray-700">Cantidad</p>
+                    <p className="font-semibold">
+                        {position.quantity}
+                    </p>
+                </div>
+
+                <div className="rounded-xl text-[12px] sm:text-sm flex flex-col justify-center items-center bg-gray-500/20 p-2">
+                    <p className="text-gray-700">
+                        Precio promedio
+                    </p>
+                    <p className="wrap-break-words font-semibold">
+                        {formatPrice(position.averagePurchasePrice)}
+                    </p>
+                </div>
+            </section>
+            <div className="col-span-2 flex items-center justify-between wrap-break-words gap-3 pt-1">
+                <p className="text-[11px] sm:text-sm text-start font-medium text-gray-700">
+                    Precio actual por unidad
+                </p>
+                <p className="text-sm font-semibold">
+                    ${position.currentPrice}
+                </p>
+            </div>
+
+        </button>
+    )
+}

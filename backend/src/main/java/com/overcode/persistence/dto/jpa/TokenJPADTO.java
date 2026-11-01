@@ -1,8 +1,8 @@
 package com.overcode.persistence.dto.jpa;
 
-import com.overcode.model.Player;
-import com.overcode.model.Token;
-import com.overcode.model.User;
+import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
+import com.overcode.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -36,13 +36,21 @@ public class TokenJPADTO {
         setPlayer(playerJPADTO);
     }
 
+    public static TokenJPADTO desdeModelo(Token token){
+        return new TokenJPADTO(
+                token.getId(),
+                UserJPADTO.desdeModelo(token.getOwner()),
+                PlayerJPADTO.desdeModelo(token.getPlayer())
+                );
+    }
+
     public static TokenJPADTO desdeModelo(Token token, PlayerJPADTO player) {
         if (token == null) {
             return null;
         }
         return new TokenJPADTO(
                 token.getId(),
-                UserJPADTO.desdeModelo(token.getOwner()),
+                UserJPADTO.desdeModeloSinTokens(token.getOwner()),
                 player
         );
     }
@@ -54,7 +62,7 @@ public class TokenJPADTO {
         return new TokenJPADTO(
                 token.getId(),
                 user,
-                PlayerJPADTO.desdeModelo(token.getPlayer())
+                PlayerJPADTO.desdeModeloSinTokens(token.getPlayer())
         );
     }
 
@@ -74,17 +82,23 @@ public class TokenJPADTO {
         Token token = new Token();
         token.setId(getId());
         token.setOwner(user);
-        token.setPlayer(getPlayer().aModelo());
+        token.setPlayer(getPlayer() == null ? null : getPlayer().aModeloSinTokens());
         return token;
     }
 
     public Token aModelo(Player player) {
         Token token = new Token();
         token.setId(getId());
-        token.setOwner(getOwner() == null ? null : getOwner().aModelo());
+        token.setOwner(getOwner() == null ? null : getOwner().aModeloSinTokens());
         token.setPlayer(player);
         return token;
     }
 
-
+    public Token aModelo() {
+        Token token = new Token();
+        token.setId(getId());
+        token.setOwner(getOwner() == null ? null : getOwner().aModeloSinTokens());
+        token.setPlayer(getPlayer() == null ? null : getPlayer().aModeloSinTokens());
+        return token;
+    }
 }

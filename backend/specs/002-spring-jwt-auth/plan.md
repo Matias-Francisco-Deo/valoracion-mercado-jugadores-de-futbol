@@ -112,7 +112,7 @@ backend/
 
 ### 2. Existing model review and validation constraints
 
-- Review `com.overcode.model.User` before auth implementation to confirm that `username`, `email`, `password`, and the existing token balance fields are used correctly.
+- Review `com.overcode.model.user.User` before auth implementation to confirm that `username`, `email`, `password`, and the existing token balance fields are used correctly.
 - Explicitly preserve the difference between `User.tokens` and JWT bearer tokens.
 - Ensure hash-based password storage is used and that plain-text password exposure is avoided in responses.
 

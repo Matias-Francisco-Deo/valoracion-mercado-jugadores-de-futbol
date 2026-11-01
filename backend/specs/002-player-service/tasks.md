@@ -9,7 +9,7 @@
 **Purpose**: Confirm the service boundary and repository contract before implementation begins.
 
 - [X] T001 Review the existing player model and persistence boundary in `backend/src/main/java/com/overcode/model/Player.java`, `backend/src/main/java/com/overcode/persistence/repository/interfaces/PlayerRepository.java`, and `backend/src/main/java/com/overcode/persistence/repository/impl/PlayerRepositoryImpl.java`
-- [X] T002 Confirm project conventions for service exceptions and transaction boundaries in `backend/src/main/java/com/overcode/service/exception/` and `backend/src/main/java/com/overcode/service/impl/UserServiceImpl.java`
+- [X] T002 Confirm project conventions for service exceptions and transaccionFinanciera boundaries in `backend/src/main/java/com/overcode/service/exception/` and `backend/src/main/java/com/overcode/service/impl/UserServiceImpl.java`
 - [X] T003 [P] Create the player service test scaffold in `backend/src/test/java/com/overcode/service/` for create, get-by-id, and list flows
 
 ---

@@ -4,13 +4,8 @@ import com.overcode.persistence.dto.jpa.PlayerJPADTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
@@ -20,10 +15,14 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     String FIND_BY_LEAGUE = "(:league IS NULL OR unaccent(LOWER(t.league)) LIKE unaccent(CONCAT(LOWER(CAST(:league AS text)), '%')))";
 
+    String FIND_BY_POSITION = "(:position IS NULL OR pgd.position = :position)";
+
     String FIND_BY_FILTRO_QUERY =
             "FROM players p LEFT JOIN teams t ON p.team_id = t.id " +
+                    "LEFT JOIN players_game_data pgd ON pgd.player_id = p.id " +
                     "WHERE " + FIND_BY_CLUBNAME + " " +
-                    "AND " + FIND_BY_LEAGUE ;
+                    "AND " + FIND_BY_LEAGUE + " " +
+                    "AND " + FIND_BY_POSITION;
 
     @Query(
             value = "SELECT p.* " + FIND_BY_FILTRO_QUERY,
@@ -32,20 +31,16 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
     Page<PlayerJPADTO> listarJugadores(
             @Param("teamName") String teamName,
             @Param("league") String league,
+            @Param("position") String position,
             Pageable pageable
     );
 
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    @Query("update player p set p.position = :position where p.externalId = :externalId")
-    void updatePosition(@Param("externalId") Long externalId, @Param("position") String position);
+
 
     boolean existsByExternalId(Long externalId);
 
-    Optional<PlayerJPADTO> findByExternalId(Long externalId);
-
     @Query(
-            "from player p order by p.playerGameData.rating desc limit 5"
+            "from player p order by p.currentPrice desc, p.id asc"
     )
-    List<PlayerJPADTO> listarTop5JugadoresPorRating();
+    Page<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable);
 }

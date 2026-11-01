@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useAuth } from '../../hooks/useAuth';
 import { loginSchema, type LoginFormValues } from '../../schemas/loginSchema';
@@ -55,6 +56,8 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
     setIsSubmitting(true);
 
     return login(formData).then(() => {
+      sessionStorage.removeItem('daily_bonus_auto_shown');
+      toast.success('¡Bienvenido! Has iniciado sesión correctamente.');
       navigate('/');
     }).catch((err: unknown) => {
       setServerError(err instanceof Error ? err.message : 'No se pudo iniciar sesión.');
@@ -114,7 +117,7 @@ export const LoginForm = (props: React.ComponentProps<'form'>) => {
 
       <div className="mt-3 text-center text-sm font-medium">
         ¿No tienes cuenta? Regístrate{' '}
-        <Link to="/register" className="font-bold text-[#9EE2EE] transition-colors hover:text-[#e08500]">
+        <Link to="/register" className="font-bold text-[#9EE2EE] transition-colors hover:text-hover-orange">
           aquí.
         </Link>
       </div>

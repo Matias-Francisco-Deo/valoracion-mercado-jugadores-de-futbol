@@ -1,6 +1,13 @@
 package com.overcode.service.impl;
 
-import com.overcode.model.User;
+import com.overcode.model.exception.ParametroNoValidoException;
+import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.token.SummaryTokenPlayer;
+import com.overcode.model.user.Portfolio;
+import com.overcode.model.user.User;
+import com.overcode.persistence.repository.interfaces.TokenRepository;
+import com.overcode.persistence.repository.interfaces.TransactionRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.security.PasswordHasher;
 import com.overcode.service.exception.EmailRepetidoException;
@@ -8,9 +15,12 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.NombreRepetidoException;
 import com.overcode.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,9 +33,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
+    private final TokenRepository tokenRepository;
+    private final TransactionRepository transactionRepository;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordHasher passwordHasher,
+                           TokenRepository tokenRepository,
+                           TransactionRepository transactionRepository,
                            @Value("${superuser.name}") String superuserName,
                            @Value("${superuser.password}") String superuserPassword,
                            @Value("${superuser.email}") String superuserEmail
@@ -35,6 +49,8 @@ public class UserServiceImpl implements UserService {
         this.superuserPassword = superuserPassword;
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
+        this.tokenRepository = tokenRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -47,6 +63,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User recuperar(Long id) {
+        return recuperarPorId(id);
+    }
+
+    private User recuperarPorId(Long id) {
         return userRepository.recuperar(id)
                 .orElseThrow(() -> new EntidadNoEncontradaException("Usuario no encontrado"));
     }
@@ -59,12 +79,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @Transactional(readOnly = true)
-    public boolean existePorEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
     public User crearSuperusuario() {
 
         Optional<User> optionalSuperuser = userRepository.findByUsername(superuserName);
@@ -75,6 +89,45 @@ public class UserServiceImpl implements UserService {
 
         User superuser = new User(superuserName, superuserEmail, passwordHasher.hash(superuserPassword));
         return userRepository.guardar(superuser);
+    }
+
+    @Override
+    public Page<SummaryTokenPlayer> buscarSummaryTokensPorUsuario(Long userId, String playerName, Pageable pageable){
+        if (!userRepository.existsById(userId)) {
+            throw new EntidadNoEncontradaException("El usuario no existe");
+        }
+
+        return tokenRepository.buscarSummaryTokensPorUsuario(userId,playerName,pageable);
+    }
+
+    @Override
+    public Page<TransaccionFinanciera> recuperarTransaccionesDeUnUser(Long userId, Pageable pageable){
+        if (!userRepository.existsById(userId)) {throw new EntidadNoEncontradaException("El usuario no existe");}
+
+        return transactionRepository.recuperarPorUserId(userId,pageable);
+    }
+
+    @Override
+    public Portfolio recuperarPortfolioDeUser(User user){
+        if(!userRepository.existsById(user.getId())){
+            throw new EntidadNoEncontradaException("El usuario no existe");
+        }
+        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUser(user.getId());
+
+        return Portfolio.desdeTransacciones(transaccionFinancieras);
+    }
+
+    @Override
+    public User depositarCreditos(PeticionDeposito peticionDeposito) {
+        Long userId = peticionDeposito.user().getId();
+        Double cantidad = peticionDeposito.cantidad();
+
+        if (cantidad <= 0 || cantidad > 10000) throw new ParametroNoValidoException("El monto a depositar debe ser mayor a cero y no superar los 10000");
+
+        User user = recuperarPorId(userId);
+        user.addCredits(cantidad);
+
+        return userRepository.guardar(user);
     }
 
     private void validarUsuarioNuevo(User userACrear) {

@@ -1,0 +1,213 @@
+import { Loading } from "@/components/common/Loading";
+import { PortfolioAnalyticsSection } from "@/components/inventory/PortfolioAnalyticsSection";
+import PortfolioPositionsSection from "@/components/inventory/PortfolioPositionsSection";
+import { TokenActionModal } from "@/components/inventory/TokenActionModal";
+import TokenInventorySection from "@/components/inventory/TokenInventorySection";
+import { TransactionHistorySection } from "@/components/inventory/TransactionHistorySection";
+import { ServerErrorComponent } from "@/components/ServerErrorComponent";
+import type { HttpError } from "@/lib/http-error";
+import { cancelTokenListing, listTokensForSale } from "@/services/ordersService";
+import { getAviableTokens, getOrdersSell, getTransactionHistory, getUserPortfolio } from "@/services/userService";
+import type { InventoryToken, OrderSell, OrderTokensRequest, PageResponse, PositionToken, TokenActionType, TokenSummary, Transaction } from "@/types/inventory";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
+export default function InventoryPage() {
+  const { userId } = useParams()
+  const [selectedToken, setSelectedToken] = useState<TokenSummary | null>(null);
+  const [selectedAction, setSelectedAction] = useState<TokenActionType | null>(null);
+
+  const [transactionsError, setTransactionsError] = useState<HttpError | null>(null);
+  const [transactionsPage,setTransactionsPage] = useState<PageResponse<Transaction>|null>(null);
+
+  //paginacion de los tokens
+  const [positions,setPositions] = useState<PositionToken[]>([]);
+  const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
+  const [aviableTokens, setAviableTokens] = useState<PageResponse<TokenSummary>|null>(null);
+  const [ordersSell, setOrdersSell] = useState<PageResponse<OrderSell>|null>(null);
+
+  const handleSelectPlayerId = (playerId: number) => {
+    setSelectedPlayerId((prev) => (prev === playerId ? null : playerId));
+  };
+
+  const [actionModalOpen, setActionModalOpen] = useState(false);
+  const [modalError,setModalError] = useState<HttpError | null>(null);
+
+  const [serverError, setServerError] = useState<HttpError | null>(null);
+  const [loadingPage, setLoadingPage] = useState(true);
+
+  const handleActionClick = (token: InventoryToken,actionType: TokenActionType) => {
+    setSelectedToken(token);
+    setSelectedAction(actionType);
+    setModalError(null);
+    setActionModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setActionModalOpen(false);
+    setSelectedToken(null);
+    setSelectedAction(null);
+    setModalError(null);
+};
+
+const handleTokenAction = (playerId: number, quantity: number): Promise<void> => {
+    if (!userId || !selectedAction) return Promise.resolve();
+
+    setModalError(null);
+
+    const request: OrderTokensRequest = {
+        playerId,
+        quantity,
+    };
+
+    const actionPromise = selectedAction === "Vender"
+            ? listTokensForSale(request)
+            : cancelTokenListing(request);
+
+    return actionPromise.then(() => {
+            if (selectedAction === "Vender") {
+                toast.success(
+                    `¡Orden creada! Pusiste a la venta ${quantity} token(s).`
+                );
+            } else {
+                toast.success(
+                    `¡Venta cancelada! Recuperaste ${quantity} token(s).`
+                );
+            }
+
+            handleCloseModal();
+
+            return refreshInventory();
+        })
+        .catch((error: HttpError) => {
+            setModalError(error);
+            toast.error( error.message || "Ocurrió un error al realizar la operación.");
+        });
+};
+
+  //refresh de listas al vender
+  const refreshInventory = (): Promise<void> => {
+    if (!userId) return Promise.resolve();
+
+    return Promise.all([
+      getAviableTokens(userId, 0),
+      getOrdersSell(userId, 0),
+    ])
+      .then(([available, orders]) => {
+        setAviableTokens(available);
+        setOrdersSell(orders);
+      })
+      .catch((error: HttpError) => { setServerError(error);});
+  };
+
+//funciones de cambio de pagina
+  const handleAvailablePageChange = (page:number,search: string = "") => {
+    if (!userId) return;
+
+    getAviableTokens(userId, page, search)
+    .then((data) => setAviableTokens(data))
+    .catch((error: HttpError) => setServerError(error));
+  }
+
+  const handleOrderPageChange= (page:number,search: string = "") => {
+    if (!userId) return;
+
+    getOrdersSell(userId, page, search)
+    .then((data) => setOrdersSell(data))
+    .catch((error: HttpError) => setServerError(error));
+  }
+
+  const handleTransactionPageChange = (page: number) => {
+    if (!userId) return;
+
+    getTransactionHistory(userId, page)
+    .then((data) => setTransactionsPage(data))
+    .catch((error: HttpError) => setTransactionsError(error));
+  };
+
+  //busqueda de la seccion de tokens
+  const handleInventorySearch = (tab: "available" | "for_sale",search: string) => {
+    if (!userId) return;
+
+    if (tab === "available") {
+      getAviableTokens(userId, 0, search)
+        .then((data) => setAviableTokens(data))
+        .catch((error: HttpError) => setServerError(error));
+
+      return;
+    }
+
+    getOrdersSell(userId, 0, search)
+      .then((data) => setOrdersSell(data))
+      .catch((error: HttpError) => setServerError(error));
+  };
+
+  useEffect(() => {
+    if (!userId) return
+
+    getAviableTokens(userId).then((data)=>setAviableTokens(data))
+    .catch((error)=>setServerError(error))
+
+    getOrdersSell(userId).then((data)=>setOrdersSell(data))
+    .catch((error)=>setServerError(error))
+
+    getUserPortfolio(userId).then((data)=>setPositions(data))
+    .catch((error)=>setServerError(error))
+
+    getTransactionHistory(userId)
+    .then((data) => setTransactionsPage(data))
+    .catch((error)=> setServerError(error))
+    .finally(()=>setLoadingPage(false))
+    
+  }, [userId]);
+
+      if (loadingPage) return <Loading text="Cargando catálogo..." />
+      if (serverError) return <ServerErrorComponent />
+
+  return (
+    <div className="flex w-full justify-center px-4 py-8">
+      <div className="flex w-full max-w-[77vw] flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            Inventario
+          </h2>
+
+          <span className="text-sm sm:text-base">
+            Revisa y gestiona tus tokens
+          </span>
+        </div>
+        <PortfolioAnalyticsSection positions={positions} selectedPlayerId={selectedPlayerId} />
+        <PortfolioPositionsSection
+          positions={positions}
+          selectedPlayerId={selectedPlayerId}
+          onSelectPlayerId={handleSelectPlayerId}
+        />
+        <div className="flex w-full flex-col gap-4 rounded-2xl bg-[#f3f1f1] min-h-117.5 p-4 shadow-sm sm:p-6">
+          <div className="flex justify-between px-2 text-black">
+            <h3 className="text-xl font-medium">Inventario de Tokens</h3>
+            <div className="flex items-baseline gap-1 ">
+              <span className="text-xl text-hover-orange">
+                {positions.reduce((total, position) => total + position.quantity, 0)}
+              </span>
+              <span className="text-xs text-gray-500">tokens</span>
+            </div>
+          </div>
+          <TokenInventorySection
+              aviableTokens={aviableTokens}
+              ordersSell={ordersSell}
+              onActionClick={handleActionClick}
+              onAvailablePageChange={handleAvailablePageChange}
+              onSellingPageChange={handleOrderPageChange}
+              onSearch={handleInventorySearch}
+            />
+        </div>
+        <TransactionHistorySection transactionsPage={transactionsPage} onPageChange={handleTransactionPageChange} transactionError={transactionsError}/>
+      </div>
+      {actionModalOpen && selectedToken && selectedAction && (
+        <TokenActionModal token={selectedToken} actionType={selectedAction} error={modalError?.message} onConfirm={handleTokenAction} onClose={handleCloseModal} 
+        title={selectedAction === "Vender" ? "Vender token" : selectedAction === "Cancelar venta" ? "Retirar token" : "Comprar token"}/>
+      )}
+    </div>
+  );
+};

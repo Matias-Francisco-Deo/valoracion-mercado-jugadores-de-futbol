@@ -51,7 +51,7 @@
 5. Check portfolio and ledger:
    ```bash
    curl http://localhost:8080/users/2/portfolio
-   curl http://localhost:8080/users/2/transactions
+   curl http://localhost:8080/users/2/transaccionFinancieras
    ```
 
 ## Test validation

@@ -10,7 +10,7 @@ interface PlayerCardProps extends Omit<LinkProps, 'to'> {
 export const PlayerCard = ({ player, className, ...props }: PlayerCardProps) => {
     const stats = [
         { label: 'Goles', value: player.playerGameData.goals, icon: Goal },
-        { label: 'Tackles', value: player.playerGameData.tackles, icon: ArrowRightLeft },//cambiar por otro atributo?
+        { label: 'Tackles', value: player.playerGameData.tackles, icon: ArrowRightLeft },
         { label: 'Rating', value: player.playerGameData.rating, icon: Star },
         { label: 'Precio', value: player.currentPrice, icon: DollarSign },
     ];

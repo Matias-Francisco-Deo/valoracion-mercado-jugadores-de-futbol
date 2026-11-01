@@ -14,6 +14,7 @@ export interface PlayerGameData{
     shotsOnTarget: number;
     tackles: number;
     rating: number;
+    position:string;
 }
 
 export interface Team{
@@ -21,8 +22,15 @@ export interface Team{
     name: string;
     league: string;
 }
+
 export interface Tokens{
     tokenId: number;
     owner: string|null;//quitar null porque por defecto estara el superUser
     playerId: number;
+}
+
+export interface RegistroCotizacion {
+    id: number;
+    cotizacion: number;
+    createdAt: string;
 }

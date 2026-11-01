@@ -16,6 +16,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Manrope";
+  src: url("assets/fonts/Manrope-VariableFont_wght.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-brand-orange: #FF9500;
   --color-hover-orange: #e08500;
@@ -24,6 +32,7 @@
 
   --font-logo: "MeaCulpa", sans-serif;
   --font-PlayerName: "Pochaev", sans-serif;
+  --font-titles: "Manrope",sans-serif;
 
   --color-destructive: #e7000b;
   --color-destructive-foreground: #ffffff;
@@ -31,7 +40,6 @@
 }
 *{
   margin: 0;
-  border-color:black
 }
 html,
 body,

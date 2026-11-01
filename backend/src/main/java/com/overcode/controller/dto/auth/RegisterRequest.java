@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.auth;
 
-import com.overcode.model.User;
+import com.overcode.model.user.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
