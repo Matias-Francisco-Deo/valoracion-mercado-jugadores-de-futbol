@@ -188,7 +188,7 @@ description: "Task list for diary-bonus-missions implementation"
 
 **Purpose**: System initialization, integration fixtures, and end-to-end validation.
 
-- [ ] T070 Update `DataInitializer` to seed system `DiaryBonus` with 3 random players and 1 market buy mission in `src/main/java/com/overcode/config/DataInitializer.java`
+- [ ] T070 Update `DataInitializer` to seed system `DiaryBonus` with 3 distinct random players (verifying at least 3 active players exist in repository, throwing configuration error otherwise) and 1 market buy mission in `src/main/java/com/overcode/config/DataInitializer.java`
 - [ ] T071 [P] Update test fixtures in `src/test/java/com/overcode/testUtils/TestService.java` to support `UserDiaryBonus` and `Mission` teardown
 - [ ] T072 Execute complete validation test suite per `quickstart.md` (`./mvnw test`)
 

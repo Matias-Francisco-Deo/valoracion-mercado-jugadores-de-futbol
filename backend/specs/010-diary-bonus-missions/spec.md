@@ -15,7 +15,7 @@
 - Q: Are daily missions generated globally once per day for all users, or independently generated per user? → A: System-wide generation. The daily schedule selects 3 random players and 1 market buy mission for the day; all users share the same daily mission targets.
 - Q: How should player profile visits be tracked? → A: Dedicated visit notification action. The client explicitly signals a visit action for the designated player profile for the authenticated user, isolating mission progress from passive read queries.
 - Q: How should the UserDiaryBonus entity be associated with a user and structured over time? → A: Single 1-to-1 persistent profile per user. Each user has one UserDiaryBonus record storing current streak count, last claim date, and active day's completed mission states (refreshed as calendar days roll over).
-- Q: How should the daily mission schedule for each calendar day be initialized in the system? → A: Strict scheduled background task only. Missions are generated strictly by a scheduled background task at midnight UTC (00:00:00 UTC); daily bonus operations rely on this scheduled batch to generate that day's mission set.
+- Q: How should the daily mission schedule for each calendar day be initialized in the system? → A: Scheduled background task for system targets with lazy per-user assignment. The system-wide `DiaryBonus` targets (3 random players + 1 market buy mission) are refreshed by the scheduled background task at midnight UTC; each user's `UserDiaryBonus` mission tree is cloned on-demand upon their first daily interaction via `inicializarConBonus` to avoid mapping all users into JVM memory at midnight.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -130,11 +130,13 @@ As the system, I want to prevent users from claiming daily rewards before satisf
 
 - **DiaryBonus**: Represents the daily bonus configuration and daily schedule, including weekly streak reward tiers and the set of missions scheduled for the day.
 - **UserDiaryBonus**: Represents a user's persistent daily bonus profile in a 1-to-1 relationship with `User`. Encapsulates the user's ongoing streak count, last claim date, and active calendar day mission completion records (cleared/refreshed when calendar days advance).
-- **Mission**: Represents an individual daily objective that can be completed by a user.
+- **Mission**: Represents an individual daily objective or composite branch (via `OrMission` and `AndMission`) that can be completed by a user.
   - Subtypes/Variations:
-    - *VisitPlayerMission*: Targets a specific player whose profile must be visited.
-    - *BuyTokenMission*: Requires purchasing any token from the marketplace.
-- **MissionCompletion**: Represents the record of a user completing a specific mission on a specific date.
+    - *VisitPlayerMission*: Targets a specific player whose profile must be visited (`complete(Player player)`).
+    - *Visit3PlayersMission*: Composite `AndMission<Player>` requiring 3 player visits.
+    - *BuyMission*: Requires purchasing any token from the marketplace (`complete(Void unused)`).
+    - *DailyBonusOrMission*: Root composite `OrMission<Void>` uniting the buy path and the 3-visit path.
+    - *Note*: Individual completion states are encapsulated directly within the user's active cloned mission tree on `UserDiaryBonus` rather than an isolated join table.
 - **DiaryBonusRewards**: Encapsulates the reward tiers mapped to streak levels.
 
 ## Success Criteria *(mandatory)*
