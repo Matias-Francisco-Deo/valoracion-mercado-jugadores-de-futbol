@@ -1,6 +1,7 @@
 package com.overcode.model.user;
 
 import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.DiaryBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.exception.FondosInsuficientesException;
@@ -146,10 +147,9 @@ public class User {
         newTokens.forEach(this::addToken);
     }
 
-
-    public BonusClaim reclamarBonusDiario(LoginBonus loginBonus) {
+    public BonusClaim reclamarBonusDiario(DiaryBonus diaryBonus) {
         actualizarRacha();
-        Double bonus = loginBonus.getBonusParaUser(this);
+        Double bonus = diaryBonus.getBonusParaUser(this);
         Integer racha = aumentarRacha();
         addCredits(bonus);
         return new BonusClaim(bonus, racha, getCreditBalance());
@@ -184,7 +184,7 @@ public class User {
         return rachaActual + 1;
     }
 
-    public EstadoBonus obtenerEstadoBonus(LoginBonus loginBonus) {
-        return loginBonus.obtenerEstadoBonus(this);
+    public EstadoBonus obtenerEstadoBonus(DiaryBonus diaryBonus) {
+        return diaryBonus.obtenerEstadoBonus(this);
     }
 }

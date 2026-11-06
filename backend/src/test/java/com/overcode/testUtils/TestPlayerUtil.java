@@ -56,6 +56,12 @@ public class TestPlayerUtil {
         return player;
     }
 
+    public static Player crearJugador(String name, double price) {
+        Player player = getJugadorConNombre(name);
+        player.setCurrentPrice(price);
+        return player;
+    }
+
     public static Player getJugadorConLigaYClub(String name, String liga, String clubName) {
         Player jugador = getJugadorConLiga(name, liga);
         jugador.getTeam().setName(clubName);

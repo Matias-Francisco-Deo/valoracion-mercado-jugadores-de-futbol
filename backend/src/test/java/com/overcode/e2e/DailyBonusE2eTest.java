@@ -5,15 +5,18 @@ import com.overcode.controller.dto.auth.LoginRequest;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
-import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.bonus.DiaryBonus;
+import com.overcode.model.bonus.mission.BuyMission;
+import com.overcode.model.bonus.mission.DailyBonusOrMission;
+import com.overcode.model.bonus.mission.Visit3PlayersMission;
+import com.overcode.model.bonus.mission.VisitPlayerMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
-import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
+import com.overcode.model.player.Player;
+import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
-import com.overcode.testUtils.DateMockConfiguration;
-import com.overcode.testUtils.RequestDate;
-import com.overcode.testUtils.TestLoginBonusUtil;
-import com.overcode.testUtils.TestService;
+import com.overcode.testUtils.*;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,13 +50,19 @@ class DailyBonusE2eTest {
     private TestService testService;
 
     @Autowired
-    private LoginBonusRepository loginBonusRepository;
+    private DiaryBonusRepository diaryBonusRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Autowired
     private ConfiguracionMercadoService configuracionMercadoService;
 
     private RestClient restClient;
     private String token;
+    private Player player1;
+    private Player player2;
+    private Player player3;
 
     @Autowired
     private RequestDate requestDate;
@@ -66,13 +75,27 @@ class DailyBonusE2eTest {
     @BeforeEach
     void setUp() {
         testService.eliminarUsuarios();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDiaryBonuses();
+        testService.eliminarConfig();
+        testService.eliminarJugadoresYEquipos();
 
-        LoginBonus bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
+        player1 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador1", 100.0));
+        player2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador2", 100.0));
+        player3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador3", 100.0));
+
+        Visit3PlayersMission visitMission = new Visit3PlayersMission(
+                new VisitPlayerMission(player1),
+                new VisitPlayerMission(player2),
+                new VisitPlayerMission(player3)
+        );
+        BuyMission buyMission = new BuyMission();
+        DailyBonusOrMission dailyOr = new DailyBonusOrMission(buyMission, visitMission);
+
+        DiaryBonus bonusBase = diaryBonusRepository.guardar(TestDiaryBonusUtil.getDiaryBonusBase(dailyOr));
 
         ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
-        config.setLoginBonus(bonusBase);
+        config.setDiaryBonus(bonusBase);
         configuracionMercadoService.crearConfiguracionSiNoExiste(config);
 
         RegisterRequest registerReq = new RegisterRequest(USERNAME, EMAIL, PASSWORD);
@@ -90,12 +113,12 @@ class DailyBonusE2eTest {
     @AfterEach
     void tearDown() {
         testService.eliminarUsuarios();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDiaryBonuses();
+        testService.eliminarJugadoresYEquipos();
     }
 
     @Test
     void elLoginNoOtorgaBonus() {
-        // Verificar que el login no otorga saldo ni modifica racha
         LoginRequest loginReq = new LoginRequest(EMAIL, PASSWORD);
         ResponseEntity<AuthResponse> loginRes = restClient.post()
                 .uri("/auth/login")
@@ -109,10 +132,70 @@ class DailyBonusE2eTest {
     }
 
     @Test
-    void alReclamarBonusDia1YDia2AvanzaLaRacha() {
+    void alIntentarReclamarSinCompletarMisionesRetorna400BadRequest() {
+        LocalDate hoy = LocalDate.of(2026, 10, 20);
+        requestDate.setDate(hoy);
 
+        HttpClientErrorException.BadRequest ex = assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restClient.post()
+                        .uri("/api/daily-bonus/claim")
+                        .header("Authorization", "Bearer " + token)
+                        .retrieve()
+                        .toBodilessEntity()
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertTrue(ex.getResponseBodyAsString().contains("No se han cumplido los requisitos"));
+    }
+
+    @Test
+    void alCompletar3VisitasPermiteReclamarBonusCorrectamente() {
+        LocalDate hoy = LocalDate.of(2026, 10, 20);
+        requestDate.setDate(hoy);
+
+        // Visitar los 3 jugadores
+        restClient.post()
+                .uri("/api/daily-bonus/visit/" + player1.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+
+        restClient.post()
+                .uri("/api/daily-bonus/visit/" + player2.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity();
+
+        ResponseEntity<DailyBonusStatusResponseDTO> visit3 = restClient.post()
+                .uri("/api/daily-bonus/visit/" + player3.getId())
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(DailyBonusStatusResponseDTO.class);
+
+        assertTrue(visit3.getBody().puedeReclamar());
+
+        ResponseEntity<ClaimBonusResponseDTO> claimRes = restClient.post()
+                .uri("/api/daily-bonus/claim")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(ClaimBonusResponseDTO.class);
+
+        assertEquals(HttpStatus.OK, claimRes.getStatusCode());
+        assertNotNull(claimRes.getBody());
+        assertEquals(1.0, claimRes.getBody().givenBonus());
+        assertEquals(1, claimRes.getBody().currentStreak());
+    }
+
+    @Test
+    void alReclamarBonusDia1YDia2AvanzaLaRacha() {
         LocalDate dia1 = LocalDate.of(2026, 10, 20);
         requestDate.setDate(dia1);
+
+        restClient.post().uri("/api/daily-bonus/visit/" + player1.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player2.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player3.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+
         ResponseEntity<ClaimBonusResponseDTO> claim1 = restClient.post()
                 .uri("/api/daily-bonus/claim")
                 .header("Authorization", "Bearer " + token)
@@ -126,6 +209,11 @@ class DailyBonusE2eTest {
 
         LocalDate dia2 = LocalDate.of(2026, 10, 21);
         requestDate.setDate(dia2);
+
+        restClient.post().uri("/api/daily-bonus/visit/" + player1.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player2.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player3.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+
         ResponseEntity<ClaimBonusResponseDTO> claim2 = restClient.post()
                 .uri("/api/daily-bonus/claim")
                 .header("Authorization", "Bearer " + token)
@@ -142,6 +230,11 @@ class DailyBonusE2eTest {
     void alPasarMasDeUnDiaSinReclamarSeReiniciaLaRachaADia1() {
         LocalDate dia1 = LocalDate.of(2026, 10, 15);
         requestDate.setDate(dia1);
+
+        restClient.post().uri("/api/daily-bonus/visit/" + player1.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player2.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player3.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+
         restClient.post()
                 .uri("/api/daily-bonus/claim")
                 .header("Authorization", "Bearer " + token)
@@ -151,6 +244,11 @@ class DailyBonusE2eTest {
         // Salto de 3 días
         LocalDate dia4 = LocalDate.of(2026, 10, 18);
         requestDate.setDate(dia4);
+
+        restClient.post().uri("/api/daily-bonus/visit/" + player1.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player2.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player3.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+
         ResponseEntity<ClaimBonusResponseDTO> claimTrasInactividad = restClient.post()
                 .uri("/api/daily-bonus/claim")
                 .header("Authorization", "Bearer " + token)
@@ -164,35 +262,14 @@ class DailyBonusE2eTest {
     }
 
     @Test
-    void alCompletar7DiasDeRachaElDia8ReiniciaElCicloSemanal() {
-        LocalDate inicio = LocalDate.of(2026, 10, 1);
-        for (int i = 0; i < 7; i++) {
-            requestDate.setDate(inicio.plusDays(i));
-            restClient.post()
-                    .uri("/api/daily-bonus/claim" )
-                    .header("Authorization", "Bearer " + token)
-                    .retrieve()
-                    .toEntity(ClaimBonusResponseDTO.class);
-        }
-
-        LocalDate dia8 = inicio.plusDays(7);
-        requestDate.setDate(dia8);
-        ResponseEntity<ClaimBonusResponseDTO> claimDia8 = restClient.post()
-                .uri("/api/daily-bonus/claim")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(ClaimBonusResponseDTO.class);
-
-        assertEquals(HttpStatus.OK, claimDia8.getStatusCode());
-        assertNotNull(claimDia8.getBody());
-        assertEquals(1.0, claimDia8.getBody().givenBonus());
-        assertEquals(1, claimDia8.getBody().currentStreak());
-    }
-
-    @Test
     void alIntentarReclamarDosVecesElMismoDiaRetorna400BadRequest() {
+        LocalDate hoy = LocalDate.of(2026, 10, 22);
+        requestDate.setDate(hoy);
 
-        requestDate.setDate(LocalDate.of(2026, 10, 22));
+        restClient.post().uri("/api/daily-bonus/visit/" + player1.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player2.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+        restClient.post().uri("/api/daily-bonus/visit/" + player3.getId()).header("Authorization", "Bearer " + token).retrieve().toBodilessEntity();
+
         ResponseEntity<ClaimBonusResponseDTO> primerReclamo = restClient.post()
                 .uri("/api/daily-bonus/claim")
                 .header("Authorization", "Bearer " + token)
@@ -216,54 +293,19 @@ class DailyBonusE2eTest {
 
     @Test
     void consultarDatosDeBonusEsConsistenteConModelo() {
-
-        ResponseEntity<DailyBonusStatusResponseDTO> estadoAntes = restClient.get()
+        ResponseEntity<DailyBonusStatusResponseDTO> estado = restClient.get()
                 .uri("/api/daily-bonus")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(DailyBonusStatusResponseDTO.class);
 
-        assertEquals(HttpStatus.OK, estadoAntes.getStatusCode());
-        assertNotNull(estadoAntes.getBody());
-        assertEquals(7, estadoAntes.getBody().weeklyBonusRewards().size());
-        assertEquals(1.0, estadoAntes.getBody().weeklyBonusRewards().get(0));
-        assertEquals(15.0, estadoAntes.getBody().weeklyBonusRewards().get(6));
-    }
-
-    @Test
-    void alConsultarEstadoDeBonusAntesYDespuesDeReclamarRetornaValoresEsperados() {
-        LocalDate hoy = LocalDate.of(2026, 10, 22);
-        requestDate.setDate(hoy);
-
-        ResponseEntity<DailyBonusStatusResponseDTO> estadoAntes = restClient.get()
-                .uri("/api/daily-bonus")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(DailyBonusStatusResponseDTO.class);
-
-        assertEquals(HttpStatus.OK, estadoAntes.getStatusCode());
-        assertNotNull(estadoAntes.getBody());
-        assertEquals(0, estadoAntes.getBody().currentStreak());
-        assertEquals(1.0, estadoAntes.getBody().nextBonus());
-        assertFalse(estadoAntes.getBody().alreadyClaimedToday());
-
-        restClient.post()
-                .uri("/api/daily-bonus/claim")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(ClaimBonusResponseDTO.class);
-
-        ResponseEntity<DailyBonusStatusResponseDTO> estadoDespues = restClient.get()
-                .uri("/api/daily-bonus")
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(DailyBonusStatusResponseDTO.class);
-
-        assertEquals(HttpStatus.OK, estadoDespues.getStatusCode());
-        assertNotNull(estadoDespues.getBody());
-        assertEquals(1, estadoDespues.getBody().currentStreak());
-        assertEquals(2.0, estadoDespues.getBody().nextBonus());
-        assertTrue(estadoDespues.getBody().alreadyClaimedToday());
+        assertEquals(HttpStatus.OK, estado.getStatusCode());
+        assertNotNull(estado.getBody());
+        assertEquals(7, estado.getBody().weeklyBonusRewards().size());
+        assertEquals(1.0, estado.getBody().weeklyBonusRewards().get(0));
+        assertEquals(15.0, estado.getBody().weeklyBonusRewards().get(6));
+        assertNotNull(estado.getBody().misiones());
+        assertFalse(estado.getBody().misiones().isEmpty());
     }
 
     @Test

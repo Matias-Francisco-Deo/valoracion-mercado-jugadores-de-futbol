@@ -1,18 +1,28 @@
 package com.overcode.service.bonus;
 
 import com.overcode.model.bonus.BonusClaim;
+import com.overcode.model.bonus.DiaryBonus;
 import com.overcode.model.bonus.EstadoBonus;
-import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.bonus.PeticionVisitaJugador;
+import com.overcode.model.bonus.mission.BuyMission;
+import com.overcode.model.bonus.mission.DailyBonusOrMission;
+import com.overcode.model.bonus.mission.Visit3PlayersMission;
+import com.overcode.model.bonus.mission.VisitPlayerMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.LoginBonusRepository;
+import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.BonusService;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
+import com.overcode.service.interfaces.UserDiaryBonusService;
 import com.overcode.service.interfaces.UserService;
-import com.overcode.testUtils.TestLoginBonusUtil;
+import com.overcode.testUtils.TestDiaryBonusUtil;
+import com.overcode.testUtils.TestPlayerUtil;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,26 +50,49 @@ class BonusServiceImplTest {
     private UserService userService;
 
     @Autowired
-    private LoginBonusRepository loginBonusRepository;
+    private DiaryBonusRepository diaryBonusRepository;
+
+    @Autowired
+    private UserDiaryBonusService userDiaryBonusService;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Autowired
     private TestService testService;
 
-    private User USER_1;
     @Autowired
     private ConfiguracionMercadoService configuracionMercadoService;
+
+    private User USER_1;
+    private Player PLAYER_1;
+    private Player PLAYER_2;
+    private Player PLAYER_3;
 
     @BeforeEach
     void setUp() {
         testService.eliminarUsuarios();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDiaryBonuses();
         testService.eliminarConfig();
+        testService.eliminarJugadoresYEquipos();
 
-        LoginBonus bonusBase = loginBonusRepository.guardar(TestLoginBonusUtil.getLoginBonusBase());
+        PLAYER_1 = playerRepository.guardar(TestPlayerUtil.crearJugador("Messi", 100.0));
+        PLAYER_2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Ronaldo", 90.0));
+        PLAYER_3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Neymar", 80.0));
+
+        Visit3PlayersMission visitMission = new Visit3PlayersMission(
+                new VisitPlayerMission(PLAYER_1),
+                new VisitPlayerMission(PLAYER_2),
+                new VisitPlayerMission(PLAYER_3)
+        );
+        BuyMission buyMission = new BuyMission();
+        DailyBonusOrMission dailyOr = new DailyBonusOrMission(buyMission, visitMission);
+
+        DiaryBonus bonusBase = diaryBonusRepository.guardar(TestDiaryBonusUtil.getDiaryBonusBase(dailyOr));
 
         ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
-        config.setLoginBonus(bonusBase);
+        config.setDiaryBonus(bonusBase);
         configuracionMercadoService.crearConfiguracionSiNoExiste(config);
 
         USER_1 = userService.guardar(getUsuarioConRacha("pepito", 0, null));
@@ -68,28 +101,34 @@ class BonusServiceImplTest {
     @AfterEach
     void tearDown() {
         testService.eliminarUsuarios();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDiaryBonuses();
+        testService.eliminarJugadoresYEquipos();
     }
 
     void mockedDateContext(LocalDate date, Runnable accion) {
         try (MockedStatic<LocalDate> dates = mockStatic(LocalDate.class, CALLS_REAL_METHODS)) {
             dates.when(() -> LocalDate.now(ZoneOffset.UTC)).thenReturn(date);
             accion.run();
-
         }
     }
 
     @Test
-    void alReclamarBonusPorPrimeraVezSeOtorgaPrimerBonusYPersisteRacha1() {
+    void alCompletar3VisitasPermiteReclamarBonusCorrectamente() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         mockedDateContext(hoy, () -> {
-            USER_1.setLastBonusClaimDate(null);
-            BonusClaim respuesta = bonusService.reclamarBonus(USER_1);
+            EstadoBonus e1 = bonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_1));
+            assertFalse(e1.puedeReclamar());
 
+            EstadoBonus e2 = bonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_2));
+            assertFalse(e2.puedeReclamar());
+
+            EstadoBonus e3 = bonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_3));
+            assertTrue(e3.puedeReclamar());
+
+            BonusClaim respuesta = bonusService.reclamarBonus(USER_1);
             assertEquals(1.0, respuesta.givenBonus());
             assertEquals(1, respuesta.currentStreak());
-
 
             User usuarioActualizado = userService.recuperar(USER_1.getId());
             assertEquals(1.0, usuarioActualizado.getCreditBalance());
@@ -99,18 +138,44 @@ class BonusServiceImplTest {
     }
 
     @Test
+    void alComprarTokenEnMercadoPermiteReclamarBonusSinVisitarJugadores() {
+        LocalDate hoy = LocalDate.of(2026, 10, 22);
+
+        mockedDateContext(hoy, () -> {
+            userDiaryBonusService.registrarCompra(USER_1);
+
+            EstadoBonus estado = bonusService.obtenerEstadoBonus(USER_1);
+            assertTrue(estado.puedeReclamar());
+
+            BonusClaim claim = bonusService.reclamarBonus(USER_1);
+            assertEquals(1.0, claim.givenBonus());
+            assertEquals(1, claim.currentStreak());
+        });
+    }
+
+    @Test
+    void alIntentarReclamarSinCumplirMisionesLanzaRequisitosMisionesNoCumplidosException() {
+        LocalDate hoy = LocalDate.of(2026, 10, 22);
+
+        mockedDateContext(hoy, () -> {
+            assertThrows(RequisitosMisionesNoCumplidosException.class, () ->
+                    bonusService.reclamarBonus(USER_1)
+            );
+        });
+    }
+
+    @Test
     void alReclamarBonusEnDiasConsecutivosSeIncrementaLaRachaYElSaldo() {
         LocalDate dia1 = LocalDate.of(2026, 10, 21);
         LocalDate dia2 = LocalDate.of(2026, 10, 22);
 
         mockedDateContext(dia1, () -> {
-            USER_1.setLastBonusClaimDate(dia1);
+            userDiaryBonusService.registrarCompra(USER_1);
             bonusService.reclamarBonus(USER_1);
-
         });
 
         mockedDateContext(dia2, () -> {
-            USER_1.setLastBonusClaimDate(dia2);
+            userDiaryBonusService.registrarCompra(USER_1);
             BonusClaim respuestaDia2 = bonusService.reclamarBonus(USER_1);
 
             assertEquals(2.0, respuestaDia2.givenBonus());
@@ -129,19 +194,17 @@ class BonusServiceImplTest {
         LocalDate dia3 = dia1.plusDays(2);
 
         mockedDateContext(dia1, () -> {
-            USER_1.setLastBonusClaimDate(dia1);
+            userDiaryBonusService.registrarCompra(USER_1);
             bonusService.reclamarBonus(USER_1);
-
         });
 
         mockedDateContext(dia3, () -> {
-            USER_1.setLastBonusClaimDate(dia3);
+            userDiaryBonusService.registrarCompra(USER_1);
             BonusClaim respuesta = bonusService.reclamarBonus(USER_1);
             assertEquals(1.0, respuesta.givenBonus());
             assertEquals(1, respuesta.currentStreak());
             assertEquals(2.0, respuesta.currentCreditBalance());
         });
-
     }
 
     @Test
@@ -151,34 +214,35 @@ class BonusServiceImplTest {
         for (int i = 0; i < 6; i++) {
             changingDate = inicio.plusDays(i);
             mockedDateContext(changingDate, () -> {
+                userDiaryBonusService.registrarCompra(USER_1);
                 bonusService.reclamarBonus(USER_1);
             });
-
         }
 
-        User usuarioTras7Dias = userService.recuperar(USER_1.getId());
+        User usuarioTras6Reclamos = userService.recuperar(USER_1.getId());
+        assertEquals(6, usuarioTras6Reclamos.getStreakCount());
 
-        assertEquals(6, usuarioTras7Dias.getStreakCount());
+        LocalDate dia7 = changingDate.plusDays(1);
+        mockedDateContext(dia7, () -> {
+            userDiaryBonusService.registrarCompra(USER_1);
+            BonusClaim respuestaDia7 = bonusService.reclamarBonus(USER_1);
 
-        LocalDate dia8 = changingDate.plusDays(1);
-        mockedDateContext(dia8, () -> {
-            BonusClaim respuestaDia8 = bonusService.reclamarBonus(USER_1);
-
-            assertEquals(15.0, respuestaDia8.givenBonus());
-            assertEquals(0, respuestaDia8.currentStreak());
+            assertEquals(15.0, respuestaDia7.givenBonus());
+            assertEquals(0, respuestaDia7.currentStreak());
         });
-
     }
 
     @Test
     void alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException() {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
-        USER_1.setLastBonusClaimDate(hoy);
-        bonusService.reclamarBonus(USER_1);
+        mockedDateContext(hoy, () -> {
+            userDiaryBonusService.registrarCompra(USER_1);
+            bonusService.reclamarBonus(USER_1);
 
-        assertThrows(BonusYaReclamadoHoyException.class, () ->
-                bonusService.reclamarBonus(USER_1)
-        );
+            assertThrows(BonusYaReclamadoHoyException.class, () ->
+                    bonusService.reclamarBonus(USER_1)
+            );
+        });
     }
 
     @Test
@@ -190,6 +254,13 @@ class BonusServiceImplTest {
             assertEquals(0, estadoAntes.currentStreak());
             assertEquals(1.0, estadoAntes.nextBonus());
             assertFalse(estadoAntes.alreadyClaimedToday());
+            assertFalse(estadoAntes.puedeReclamar());
+            assertNotNull(estadoAntes.misiones());
+            assertFalse(estadoAntes.misiones().isEmpty());
+
+            userDiaryBonusService.registrarCompra(USER_1);
+            EstadoBonus estadoConMisionCumplida = bonusService.obtenerEstadoBonus(USER_1);
+            assertTrue(estadoConMisionCumplida.puedeReclamar());
 
             bonusService.reclamarBonus(USER_1);
 
@@ -197,9 +268,8 @@ class BonusServiceImplTest {
             assertEquals(1, estadoDespues.currentStreak());
             assertEquals(2.0, estadoDespues.nextBonus());
             assertTrue(estadoDespues.alreadyClaimedToday());
+            assertFalse(estadoDespues.puedeReclamar());
         });
-
-
     }
 
     @Test

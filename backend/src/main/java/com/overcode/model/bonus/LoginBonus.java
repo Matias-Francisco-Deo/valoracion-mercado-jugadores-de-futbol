@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginBonus extends DiaryBonus {
 
-    public LoginBonus(Long id, String nombre, LoginBonusRewards bonusRewards) {
+    public LoginBonus(Long id, String nombre, DiaryBonusRewards bonusRewards) {
         super(id, nombre, bonusRewards);
     }
 
-    public LoginBonus(String nombre, LoginBonusRewards bonusRewards) {
+    public LoginBonus(String nombre, DiaryBonusRewards bonusRewards) {
         super(nombre, bonusRewards);
     }
 }

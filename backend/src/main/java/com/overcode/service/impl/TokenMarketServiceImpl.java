@@ -13,6 +13,7 @@ import com.overcode.persistence.repository.interfaces.*;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserDiaryBonusService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,15 +28,18 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final TransactionRepository transactionRepository;
+    private final UserDiaryBonusService userDiaryBonusService;
 
     public TokenMarketServiceImpl(OrdenDeCompraRepository ordenDeCompraRepository,
                                   UserRepository userRepository,
                                   PlayerRepository playerRepository,
-                                  TransactionRepository transactionRepository) {
+                                  TransactionRepository transactionRepository,
+                                  UserDiaryBonusService userDiaryBonusService) {
         this.ordenDeCompraRepository = ordenDeCompraRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.transactionRepository = transactionRepository;
+        this.userDiaryBonusService = userDiaryBonusService;
     }
 
     @Override
@@ -92,6 +96,8 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         ordenesDeCompra.stream().map(OrdenDeVenta::getOwner).distinct().forEach(userRepository::guardar);
         ordenDeCompraRepository.saveAll(ordenesDeCompra);
         transactionRepository.guardarTodos(transaccionCompra.transaccionesFinancieras());
+
+        userDiaryBonusService.registrarCompra(buyer);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class LoginBonusJPADTO {
     private LoginBonusRewardsJPADTO rewards;
 
     public LoginBonus aModelo() {
-        return new LoginBonus(this.id, this.nombre, this.rewards.aModelo());
+        return new LoginBonus(this.id, this.nombre, this.rewards != null ? this.rewards.aModelo() : null);
     }
 
     public static LoginBonusJPADTO desdeModelo(LoginBonus modelo) {
@@ -34,7 +34,11 @@ public class LoginBonusJPADTO {
         LoginBonusJPADTO dto = new LoginBonusJPADTO();
         dto.setId(modelo.getId());
         dto.setNombre(modelo.getNombre());
-        dto.setRewards(LoginBonusRewardsJPADTO.desdeModelo(modelo.getBonusRewards()));
+        if (modelo.getBonusRewards() != null) {
+            LoginBonusRewardsJPADTO r = new LoginBonusRewardsJPADTO();
+            r.setRewards(modelo.getBonusRewards().getRewards());
+            dto.setRewards(r);
+        }
         return dto;
     }
 }

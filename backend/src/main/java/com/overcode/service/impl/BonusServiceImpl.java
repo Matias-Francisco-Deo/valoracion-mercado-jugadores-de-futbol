@@ -5,9 +5,6 @@ import com.overcode.model.bonus.DiaryBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.bonus.UserDiaryBonus;
-import com.overcode.model.bonus.mission.DailyBonusOrMission;
-import com.overcode.model.bonus.mission.Visit3PlayersMission;
-import com.overcode.model.bonus.mission.VisitPlayerMission;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -47,8 +44,6 @@ public class BonusServiceImpl implements BonusService {
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
-        userDiaryBonus.inicializarConBonus(diaryBonus);
-
         BonusClaim reclamoBonus = userDiaryBonus.reclamarBonus(diaryBonus);
 
         userDiaryBonusService.guardar(userDiaryBonus);
@@ -58,14 +53,11 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public EstadoBonus obtenerEstadoBonus(User user) {
         User userRecuperado = userService.recuperar(user.getId());
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
-        userDiaryBonus.inicializarConBonus(diaryBonus);
-        userDiaryBonusService.guardar(userDiaryBonus);
 
         return diaryBonus.obtenerEstadoBonus(userDiaryBonus);
     }
@@ -81,17 +73,7 @@ public class BonusServiceImpl implements BonusService {
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
-        userDiaryBonus.inicializarConBonus(diaryBonus);
-
-        if (userDiaryBonus.getActiveMission() instanceof DailyBonusOrMission dailyOr) {
-            if (dailyOr.getVisit3PlayersMission() != null) {
-                dailyOr.getVisit3PlayersMission().complete(peticion.player());
-            }
-        } else if (userDiaryBonus.getActiveMission() instanceof Visit3PlayersMission v3) {
-            v3.complete(peticion.player());
-        } else if (userDiaryBonus.getActiveMission() instanceof VisitPlayerMission vp) {
-            vp.complete(peticion.player());
-        }
+        userDiaryBonus.registrarVisitaJugador(peticion.player());
 
         userDiaryBonusService.guardar(userDiaryBonus);
         return diaryBonus.obtenerEstadoBonus(userDiaryBonus);
