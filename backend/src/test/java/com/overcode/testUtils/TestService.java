@@ -32,6 +32,8 @@ public class TestService {
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
     @Autowired
+    private com.overcode.persistence.repository.dao.jpa.DiaryBonusDAOJPA diaryBonusDAO;
+    @Autowired(required = false)
     private LoginBonusDAOJPA loginBonusDAO;
 
     @PersistenceContext
@@ -89,17 +91,25 @@ public class TestService {
 
     public void eliminarConfig() {
         entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM user_diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_rewards_list").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_bonus_rewards_data").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM missions").executeUpdate();
         configuracionCotizacionesDAO.deleteAll();
     }
 
     public void eliminarLoginBonuses() {
         eliminarConfig();
+        eliminarDiaryBonuses();
+    }
 
-        entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM rewards_list").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM login_bonus_rewards_data").executeUpdate();
-
+    public void eliminarDiaryBonuses() {
+        entityManager.createNativeQuery("DELETE FROM user_diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_rewards_list").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM diary_bonus_rewards_data").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM missions").executeUpdate();
     }
 
     public void eliminarRegistros() {

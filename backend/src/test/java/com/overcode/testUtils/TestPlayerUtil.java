@@ -50,6 +50,12 @@ public class TestPlayerUtil {
         return new Team("Club1", league);
     }
 
+    public static Player crearJugadorConId(Long id, String name) {
+        Player player = new Player(id);
+        player.setName(name);
+        return player;
+    }
+
     public static Player getJugadorConLigaYClub(String name, String liga, String clubName) {
         Player jugador = getJugadorConLiga(name, liga);
         jugador.getTeam().setName(clubName);

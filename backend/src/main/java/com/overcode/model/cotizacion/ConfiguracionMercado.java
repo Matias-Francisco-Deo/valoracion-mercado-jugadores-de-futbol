@@ -1,6 +1,6 @@
 package com.overcode.model.cotizacion;
 
-import com.overcode.model.bonus.LoginBonus;
+import com.overcode.model.bonus.DiaryBonus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ConfiguracionMercado {
     private Long id;
     private EstrategiaCotizacion estrategiaCotizacion;
-    private LoginBonus loginBonus;
+    private DiaryBonus diaryBonus;
 
     public ConfiguracionMercado(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);
@@ -22,14 +22,21 @@ public class ConfiguracionMercado {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
-    public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion, LoginBonus loginBonus) {
+    public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion, DiaryBonus diaryBonus) {
         setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);
-        setLoginBonus(loginBonus);
+        setDiaryBonus(diaryBonus);
     }
 
     public void cambiarEstrategiaDeCotizacionPor(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
+    public DiaryBonus getLoginBonus() {
+        return this.diaryBonus;
+    }
+
+    public void setLoginBonus(DiaryBonus diaryBonus) {
+        this.diaryBonus = diaryBonus;
+    }
 }

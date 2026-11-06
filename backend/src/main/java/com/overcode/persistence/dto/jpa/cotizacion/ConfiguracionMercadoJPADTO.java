@@ -1,14 +1,14 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.persistence.dto.jpa.bonus.LoginBonusJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.DiaryBonusJPADTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name= "configuracion_mercado")
+@Entity(name = "configuracion_mercado")
 @Table(name = "configuraciones_mercado")
 @Setter
 @Getter
@@ -23,8 +23,8 @@ public class ConfiguracionMercadoJPADTO {
     private EstrategiaCotizacionJPADTO estrategiaCotizacion;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "login_bonus_id")
-    private LoginBonusJPADTO loginBonus;
+    @JoinColumn(name = "diary_bonus_id")
+    private DiaryBonusJPADTO diaryBonus;
 
     public ConfiguracionMercado aModelo() {
         ConfiguracionMercado configuracion = new ConfiguracionMercado();
@@ -32,8 +32,8 @@ public class ConfiguracionMercadoJPADTO {
         if (getEstrategiaCotizacion() != null) {
             configuracion.setEstrategiaCotizacion(getEstrategiaCotizacion().aModelo());
         }
-        if (getLoginBonus() != null) {
-            configuracion.setLoginBonus(getLoginBonus().aModelo());
+        if (getDiaryBonus() != null) {
+            configuracion.setDiaryBonus(getDiaryBonus().aModelo());
         }
         return configuracion;
     }
@@ -47,10 +47,9 @@ public class ConfiguracionMercadoJPADTO {
         if (configuracion.getEstrategiaCotizacion() != null) {
             dto.setEstrategiaCotizacion(EstrategiaCotizacionJPADTO.desdeModelo(configuracion.getEstrategiaCotizacion()));
         }
-        if (configuracion.getLoginBonus() != null) {
-            dto.setLoginBonus(LoginBonusJPADTO.desdeModelo(configuracion.getLoginBonus()));
+        if (configuracion.getDiaryBonus() != null) {
+            dto.setDiaryBonus(DiaryBonusJPADTO.desdeModelo(configuracion.getDiaryBonus()));
         }
         return dto;
     }
-
 }

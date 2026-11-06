@@ -11,5 +11,4 @@ public class TestLoginBonusUtil {
         LoginBonusRewards rewardsBase = new LoginBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
         return new LoginBonus("Bonus Base Semanal", rewardsBase);
     }
-
 }
