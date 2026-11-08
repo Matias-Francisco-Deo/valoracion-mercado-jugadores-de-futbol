@@ -20,8 +20,8 @@ public class UserDiaryBonusJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER) // TODO ???????????????????????????????????? cómo que many to one
+    @JoinColumn(name = "user_id", nullable = false) // TODO y ese join pt2
     private UserJPADTO user;
 
     @Column(name = "streak_count", nullable = false)
@@ -34,7 +34,7 @@ public class UserDiaryBonusJPADTO {
     private LocalDate activeMissionDate;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "root_mission_id")
+    @JoinColumn(name = "root_mission_id") // TODO y ese join
     private MissionJPADTO activeMission;
 
     public UserDiaryBonus aModelo() {

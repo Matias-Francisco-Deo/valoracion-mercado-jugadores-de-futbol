@@ -2,8 +2,6 @@ package com.overcode.model.user;
 
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.model.bonus.EstadoBonus;
-import com.overcode.model.bonus.LoginBonus;
 import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
@@ -28,8 +26,8 @@ public class User {
     private String password;
     private Double creditBalance;
     private List<Token> tokens;
-    private Integer streakCount = 0;
-    private LocalDate lastBonusClaimDate;
+    private Integer streakCount = 0; // TODO delegar en subobjeto
+    private LocalDate lastBonusClaimDate; // TODO delegar en subobjeto
 
     public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
         setId(id);
@@ -184,7 +182,4 @@ public class User {
         return rachaActual + 1;
     }
 
-    public EstadoBonus obtenerEstadoBonus(DiaryBonus diaryBonus) {
-        return diaryBonus.obtenerEstadoBonus(this);
-    }
 }

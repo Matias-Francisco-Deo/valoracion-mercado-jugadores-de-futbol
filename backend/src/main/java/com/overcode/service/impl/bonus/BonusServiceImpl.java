@@ -1,10 +1,6 @@
-package com.overcode.service.impl;
+package com.overcode.service.impl.bonus;
 
-import com.overcode.model.bonus.BonusClaim;
-import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.model.bonus.EstadoBonus;
-import com.overcode.model.bonus.PeticionVisitaJugador;
-import com.overcode.model.bonus.UserDiaryBonus;
+import com.overcode.model.bonus.*;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -43,7 +39,7 @@ public class BonusServiceImpl implements BonusService {
         User userRecuperado = userService.recuperar(user.getId());
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
-        UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
+        UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado); // TODO NO es parte del user y NUNCA por fuera
         userDiaryBonus.setUser(userRecuperado);
         BonusClaim reclamoBonus = userDiaryBonus.reclamarBonus(diaryBonus);
 
@@ -65,7 +61,7 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    public EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion) {
+    public EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion) { // TODO mover a UserDiaryBonusService
         Long playerId = peticion.player().getId();
         if (!playerRepository.existsById(playerId)) {
             throw new EntidadNoEncontradaException("El jugador no existe: " + playerId);
@@ -74,8 +70,8 @@ public class BonusServiceImpl implements BonusService {
         User userRecuperado = userService.recuperar(peticion.user().getId());
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
-        UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
-        userDiaryBonus.setUser(userRecuperado);
+        UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado); // TODO NO es parte del user y NUNCA por fuera
+        userDiaryBonus.setUser(userRecuperado); // TODO NO es parte del user y NUNCA por fuera
         userDiaryBonus.registrarVisitaJugador(peticion.player());
 
         userDiaryBonusService.guardar(userDiaryBonus);

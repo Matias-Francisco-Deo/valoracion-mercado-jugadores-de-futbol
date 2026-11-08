@@ -10,21 +10,20 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class AndMission<T> extends Mission<T> {
+public abstract class AndMission<T> extends Mission<T> { // TODO clase abstracta común?
     protected List<Mission<?>> submissions = new ArrayList<>();
 
-    public AndMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
+    protected AndMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
         super(id, nombre, completed);
-        if (submissions != null) {
-            this.submissions = new ArrayList<>(submissions);
-        }
+        this.submissions = new ArrayList<>(submissions);
+
     }
 
-    public AndMission(String nombre, List<Mission<?>> submissions) {
+    protected AndMission(String nombre, List<Mission<?>> submissions) {
         this(null, nombre, false, submissions);
     }
 
-    public AndMission(String nombre) {
+    protected AndMission(String nombre) {
         this(null, nombre, false, new ArrayList<>());
     }
 
@@ -34,12 +33,10 @@ public abstract class AndMission<T> extends Mission<T> {
 
     @Override
     public boolean isCompleted() {
-        if (super.isCompleted()) {
-            return true;
-        }
-        if (submissions.isEmpty()) {
-            return false;
-        }
+//        if (super.isCompleted()) {
+//            return true;
+//        }
+        // si está vacío igual es verdadero TODO testear
         return submissions.stream().allMatch(Mission::isCompleted);
     }
 

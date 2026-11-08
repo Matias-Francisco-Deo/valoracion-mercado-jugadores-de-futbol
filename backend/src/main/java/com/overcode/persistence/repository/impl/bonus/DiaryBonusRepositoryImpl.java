@@ -1,4 +1,4 @@
-package com.overcode.persistence.repository.impl;
+package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.DiaryBonus;
 import com.overcode.persistence.dto.jpa.bonus.DiaryBonusJPADTO;

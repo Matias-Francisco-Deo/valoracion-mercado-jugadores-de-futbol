@@ -13,18 +13,17 @@ import java.util.List;
 public abstract class OrMission<T> extends Mission<T> {
     protected List<Mission<?>> submissions = new ArrayList<>();
 
-    public OrMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
+    protected OrMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
         super(id, nombre, completed);
-        if (submissions != null) {
-            this.submissions = new ArrayList<>(submissions);
-        }
+        this.submissions = new ArrayList<>(submissions);
+
     }
 
-    public OrMission(String nombre, List<Mission<?>> submissions) {
+    protected OrMission(String nombre, List<Mission<?>> submissions) {
         this(null, nombre, false, submissions);
     }
 
-    public OrMission(String nombre) {
+    protected OrMission(String nombre) {
         this(null, nombre, false, new ArrayList<>());
     }
 
@@ -34,7 +33,7 @@ public abstract class OrMission<T> extends Mission<T> {
 
     @Override
     public boolean isCompleted() {
-        return super.isCompleted() || (!submissions.isEmpty() && submissions.stream().anyMatch(Mission::isCompleted));
+        return submissions.stream().anyMatch(Mission::isCompleted);
     }
 
     @Override

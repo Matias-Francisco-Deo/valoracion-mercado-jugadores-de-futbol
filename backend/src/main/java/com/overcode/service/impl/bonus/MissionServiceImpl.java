@@ -1,4 +1,4 @@
-package com.overcode.service.impl;
+package com.overcode.service.impl.bonus;
 
 import com.overcode.model.bonus.mission.Mission;
 import com.overcode.persistence.repository.interfaces.MissionRepository;

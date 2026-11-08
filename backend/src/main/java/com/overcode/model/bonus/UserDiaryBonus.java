@@ -2,7 +2,6 @@ package com.overcode.model.bonus;
 
 import com.overcode.config.Reloj;
 import com.overcode.model.bonus.mission.*;
-import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
@@ -23,7 +22,7 @@ public class UserDiaryBonus {
     private User user;
     private Integer streakCount = 0;
     private LocalDate lastBonusClaimDate;
-    private LocalDate activeMissionDate;
+    private LocalDate activeMissionDate; // TODO para qué? Por ahí lo saco
     private Mission<?> activeMission;
 
     public UserDiaryBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, Mission<?> activeMission) {
@@ -44,16 +43,12 @@ public class UserDiaryBonus {
         return Reloj.getLocalDate();
     }
 
-    public boolean yaReclamoHoy(LocalDate hoy) {
+    public boolean yaReclamoBonusHoy(LocalDate hoy) {
         return lastBonusClaimDate != null && lastBonusClaimDate.isEqual(hoy);
     }
 
-    public boolean yaReclamoHoy() {
-        return yaReclamoHoy(getFechaActual());
-    }
-
-    public boolean puedeReclamarHoy() {
-        return activeMission != null && activeMission.isCompleted() && !yaReclamoHoy(getFechaActual());
+    public boolean puedeReclamarBonusHoy() {
+        return activeMission != null && activeMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
     }
 
     public void actualizarRacha() {
@@ -75,21 +70,28 @@ public class UserDiaryBonus {
         if (this.streakCount == null || this.streakCount >= 6) {
             return 0;
         }
-        return this.streakCount + 1;
+        int newStreak = this.streakCount + 1;
+
+        user.setStreakCount(newStreak); // TODO esto no va en user
+        user.setLastBonusClaimDate(this.lastBonusClaimDate);
+
+        return newStreak;
     }
 
     public void inicializarConBonus(DiaryBonus diaryBonus) {
         LocalDate hoy = getFechaActual();
+
+        // TODO si la misión es de hoy, no la cambio, si es de ayer u otro día pasado, sí la reemplazo
         if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeMission == null) {
             actualizarRacha();
             this.activeMissionDate = hoy;
             if (diaryBonus != null && diaryBonus.getRootMission() != null) {
-                this.activeMission = diaryBonus.getRootMission().clonar();
+                this.activeMission = diaryBonus.getRootMission().clonar(); // TODO más que nada debería hacer esto
             }
         }
     }
 
-    public void registrarVisitaJugador(Player player) {
+    public void registrarVisitaJugador(Player player) { // TODO embellecer, ta feo
         if (player == null || this.activeMission == null) {
             return;
         }
@@ -120,12 +122,12 @@ public class UserDiaryBonus {
         if (this.activeMission == null) {
             return;
         }
-        if (this.activeMission instanceof DailyBonusOrMission dom) {
+        if (this.activeMission instanceof DailyBonusOrMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
             dom.complete((Void) null);
-        } else if (this.activeMission instanceof BuyMission bm) {
+        } else if (this.activeMission instanceof BuyMission bm) { // esta sí
             bm.complete();
         } else {
-            dispatchBuyRecursively(this.activeMission);
+            dispatchBuyRecursively(this.activeMission); // TODO generalizar esto? por ahí pasando el mismo switch...
         }
     }
 
@@ -140,20 +142,19 @@ public class UserDiaryBonus {
     }
 
     public BonusClaim reclamarBonus(DiaryBonus diaryBonus) {
-        if (diaryBonus == null) {
-            throw new DiaryBonusInvalidoException("El DiaryBonus no puede ser nulo.");
-        }
         diaryBonus.verificarPuedeReclamarBonus(this);
+
         actualizarRacha();
+
         Double bonusAmount = diaryBonus.getBonusConRacha(this.streakCount);
-        Integer nuevaRacha = aumentarRacha();
+
+        Integer nuevaRacha = aumentarRacha(); // TODO esto tiene que actualizar ESTE objeto no USER
+
         this.streakCount = nuevaRacha;
         this.lastBonusClaimDate = getFechaActual();
-        if (this.user != null) {
-            this.user.setCreditBalance(this.user.getCreditBalance() + bonusAmount);
-            this.user.setStreakCount(nuevaRacha);
-            this.user.setLastBonusClaimDate(this.lastBonusClaimDate);
-        }
-        return new BonusClaim(bonusAmount, nuevaRacha, this.user != null ? this.user.getCreditBalance() : 0.0);
+
+        user.addCredits(bonusAmount); // esto sí igual
+
+        return new BonusClaim(bonusAmount, nuevaRacha, user.getCreditBalance());
     }
 }

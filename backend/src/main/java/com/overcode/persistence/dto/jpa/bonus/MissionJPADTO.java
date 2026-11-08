@@ -21,24 +21,24 @@ public class MissionJPADTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tipo_mision", nullable = false)
+    @Column(name = "tipo_mision", nullable = false) // TODO NO, buscar alternativa polimórfica, abstract class y todo eso
     private String tipoMision;
 
     @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    private boolean completed = false;
+    private boolean completed = false; // TODO esto se va
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "target_player_id")
+    @JoinColumn(name = "target_player_id") // TODO y ese join
     private PlayerJPADTO targetPlayer;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_mission_id")
+    @JoinColumn(name = "parent_mission_id") // TODO y ese join
     private List<MissionJPADTO> submissions = new ArrayList<>();
 
-    public Mission<?> aModelo() {
+    public Mission<?> aModelo() { // TODO esto es básicamente un mapping, no está bien que se haga acá. Hay que manejar algo similar a las estrategias de cotización
         if ("VISIT_PLAYER".equalsIgnoreCase(this.tipoMision)) {
             return new VisitPlayerMission(
                     this.id,
@@ -94,7 +94,7 @@ public class MissionJPADTO {
         dto.setNombre(modelo.getNombre());
         dto.setCompleted(modelo.isCompleted());
 
-        if (modelo instanceof VisitPlayerMission vpm) {
+        if (modelo instanceof VisitPlayerMission vpm) { // TODO esto se va
             dto.setTipoMision("VISIT_PLAYER");
             if (vpm.getTargetPlayer() != null && vpm.getTargetPlayer().getId() != null) {
                 PlayerJPADTO playerDTO = new PlayerJPADTO();

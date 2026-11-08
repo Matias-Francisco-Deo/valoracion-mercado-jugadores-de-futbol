@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GenericAndMission<T> extends AndMission<T> {
+public class GenericAndMission<T> extends AndMission<T> { // y esta falopeada?? TODO
 
     public GenericAndMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
         super(id, nombre, completed, submissions);

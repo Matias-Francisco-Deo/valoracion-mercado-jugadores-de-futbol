@@ -1,4 +1,4 @@
-package com.overcode.persistence.repository.impl;
+package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.LoginBonus;
 import com.overcode.persistence.dto.jpa.bonus.LoginBonusJPADTO;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class LoginBonusRepositoryImpl implements LoginBonusRepository {
+public class LoginBonusRepositoryImpl implements LoginBonusRepository { // TODO borrar? No se usa
 
     private final LoginBonusDAOJPA loginBonusDAOJPA;
 

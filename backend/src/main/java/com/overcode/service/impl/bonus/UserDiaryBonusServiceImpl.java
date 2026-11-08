@@ -1,4 +1,4 @@
-package com.overcode.service.impl;
+package com.overcode.service.impl.bonus;
 
 import com.overcode.model.bonus.DiaryBonus;
 import com.overcode.model.bonus.UserDiaryBonus;
@@ -22,7 +22,7 @@ public class UserDiaryBonusServiceImpl implements UserDiaryBonusService {
     }
 
     @Override
-    public UserDiaryBonus recuperarOPermitirCrear(User user) {
+    public UserDiaryBonus recuperarOPermitirCrear(User user) { // TODO NO es parte del user y NUNCA por fuera
         UserDiaryBonus userDiaryBonus = userDiaryBonusRepository.recuperarPorUsuario(user)
                 .orElseGet(() -> new UserDiaryBonus(user));
 

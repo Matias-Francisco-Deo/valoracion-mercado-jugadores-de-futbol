@@ -22,19 +22,19 @@ public class VisitPlayerMission extends Mission<Player> {
     }
 
     public VisitPlayerMission(Player targetPlayer) {
-        super(targetPlayer != null ? "Visitar perfil de " + targetPlayer.getName() : "Visitar perfil de jugador");
+        super("Visitar perfil de " + targetPlayer.getName());
         this.targetPlayer = targetPlayer;
     }
 
     @Override
-    public void complete(Player player) {
-        if (player != null && this.targetPlayer != null) {
-            if (this.targetPlayer.getId() != null && this.targetPlayer.getId().equals(player.getId())) {
-                setCompleted(true);
-            } else if (this.targetPlayer.getName() != null && this.targetPlayer.getName().equals(player.getName())) {
-                setCompleted(true);
-            }
+    public void complete(Player player) { // el jugador debe estar persistido para que ande correctamente (requiere id)
+        if (isTargetPlayer(player)) {
+            setCompleted(true);
         }
+    }
+
+    private boolean isTargetPlayer(Player player) {
+        return this.targetPlayer.getId().equals(player.getId());
     }
 
     @Override

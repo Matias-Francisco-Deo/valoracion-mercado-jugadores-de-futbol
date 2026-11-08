@@ -1,9 +1,8 @@
-package com.overcode.service.impl;
+package com.overcode.service.impl.bonus;
 
 import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
 import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.DiaryBonusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,19 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DiaryBonusServiceImpl implements DiaryBonusService {
 
-    private final ConfiguracionMercadoRepository configuracionMercadoRepository;
+    private final ConfiguracionMercadoService configuracionMercadoService;
     private final DiaryBonusRepository diaryBonusRepository;
 
-    public DiaryBonusServiceImpl(ConfiguracionMercadoRepository configuracionMercadoRepository, DiaryBonusRepository diaryBonusRepository) {
-        this.configuracionMercadoRepository = configuracionMercadoRepository;
+    public DiaryBonusServiceImpl(ConfiguracionMercadoService configuracionMercadoService, DiaryBonusRepository diaryBonusRepository) {
+        this.configuracionMercadoService = configuracionMercadoService;
         this.diaryBonusRepository = diaryBonusRepository;
     }
 
     @Override
     public DiaryBonus recuperarSeleccionado() {
-        return configuracionMercadoRepository.recuperarPorId(1L)
-                .map(ConfiguracionMercado::getDiaryBonus)
-                .orElse(null);
+        return configuracionMercadoService.recuperar().getDiaryBonus();
     }
 
     @Override

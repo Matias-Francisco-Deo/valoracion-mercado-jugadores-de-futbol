@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TestMission<T> extends Mission<T> {
+    // TODO dejarle el boolean a esta
 
     public TestMission(Long id, String nombre, boolean completed) {
         super(id, nombre, completed);

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "login_bonus_rewards")
 @Table(name = "login_bonus_rewards_data")
-public class LoginBonusRewardsJPADTO {
+public class LoginBonusRewardsJPADTO { // TODO borrar
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

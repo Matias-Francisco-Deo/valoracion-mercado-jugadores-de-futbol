@@ -12,8 +12,6 @@ import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 import static com.overcode.config.Reloj.getLocalDate;
 
@@ -60,12 +58,6 @@ public class DiaryBonus {
         return this.bonusRewards.get(racha);
     }
 
-    public Double getBonusParaUsuario(UserDiaryBonus userBonus) {
-        Double bonus = getBonusConRacha(userBonus.getStreakCount());
-        verificarPuedeReclamarBonus(userBonus);
-        return bonus;
-    }
-
     public Double getBonusParaUser(User user) {
         Double bonus = getBonusConRacha(user.getStreakCount());
         verificarPuedeReclamarBonus(user);
@@ -76,29 +68,13 @@ public class DiaryBonus {
         LocalDate fechaActual = getFechaActual();
         Integer rachaActual = userBonus.getStreakCount();
         Double nextBonus = getBonusConRacha(rachaActual);
-        boolean yaReclamo = userBonus.yaReclamoHoy(fechaActual);
-        boolean puedeReclamar = userBonus.puedeReclamarHoy();
-        List<Mission<?>> misiones = userBonus.getActiveMission() != null
-                ? (userBonus.getActiveMission().getSubmissions().isEmpty()
-                    ? List.of(userBonus.getActiveMission())
-                    : userBonus.getActiveMission().getSubmissions())
-                : Collections.emptyList();
-
-        return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, misiones);
-    }
-
-    public EstadoBonus obtenerEstadoBonus(User user) {
-        LocalDate fechaActual = getFechaActual();
-        Integer rachaActual = user.getStreakCount();
-        Double nextBonus = getBonusConRacha(rachaActual);
-
-        return new EstadoBonus(rachaActual, nextBonus, user.yaReclamoBonus(fechaActual), this.bonusRewards);
+        boolean yaReclamo = userBonus.yaReclamoBonusHoy(fechaActual);
+        boolean puedeReclamar = userBonus.puedeReclamarBonusHoy();
+        Mission<?> mision = userBonus.getActiveMission();
+        return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, mision);
     }
 
     public void verificarPuedeReclamarBonus(UserDiaryBonus userBonus) {
-        if (userBonus == null) {
-            throw new DiaryBonusInvalidoException("El UserDiaryBonus no puede ser nulo.");
-        }
         LocalDate fechaActual = getFechaActual();
         LocalDate ultimoReclamo = userBonus.getLastBonusClaimDate();
 
@@ -108,7 +84,7 @@ public class DiaryBonus {
         if (ultimoReclamo != null && fechaActual.isBefore(ultimoReclamo)) {
             throw new FechaReclamoBonusLoginInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
         }
-        if (!userBonus.puedeReclamarHoy()) {
+        if (!userBonus.puedeReclamarBonusHoy()) { // TODO testear esto
             throw new RequisitosMisionesNoCumplidosException("No se han cumplido los requisitos de las misiones para reclamar el bonus.");
         }
     }

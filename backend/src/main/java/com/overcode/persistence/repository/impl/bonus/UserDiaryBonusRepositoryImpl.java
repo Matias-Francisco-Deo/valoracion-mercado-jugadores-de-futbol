@@ -1,4 +1,4 @@
-package com.overcode.persistence.repository.impl;
+package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.UserDiaryBonus;
 import com.overcode.model.user.User;
@@ -30,10 +30,7 @@ public class UserDiaryBonusRepositoryImpl implements UserDiaryBonusRepository {
     }
 
     @Override
-    public Optional<UserDiaryBonus> recuperarPorUsuario(User user) {
-        if (user == null) {
-            return Optional.empty();
-        }
+    public Optional<UserDiaryBonus> recuperarPorUsuario(User user) { // TODO esto se va
         if (user.getId() != null) {
             return recuperarPorUserId(user.getId());
         }
