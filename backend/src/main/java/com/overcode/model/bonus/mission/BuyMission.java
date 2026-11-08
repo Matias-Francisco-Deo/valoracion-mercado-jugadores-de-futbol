@@ -34,6 +34,6 @@ public class BuyMission extends Mission<Void> {
 
     @Override
     public BuyMission clonar() {
-        return new BuyMission(getId(), getNombre(), isCompleted());
+        return new BuyMission(null, getNombre(), isCompleted());
     }
 }

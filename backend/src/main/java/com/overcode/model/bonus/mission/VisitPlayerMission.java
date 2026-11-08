@@ -39,6 +39,6 @@ public class VisitPlayerMission extends Mission<Player> {
 
     @Override
     public VisitPlayerMission clonar() {
-        return new VisitPlayerMission(getId(), getNombre(), isCompleted(), this.targetPlayer);
+        return new VisitPlayerMission(null, getNombre(), isCompleted(), this.targetPlayer);
     }
 }

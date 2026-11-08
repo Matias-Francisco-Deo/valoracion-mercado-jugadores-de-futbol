@@ -46,6 +46,6 @@ public class Visit3PlayersMission extends AndMission<Player> {
         for (Mission<?> m : submissions) {
             clonedSubs.add(m.clonar());
         }
-        return new Visit3PlayersMission(getId(), getNombre(), isCompleted(), clonedSubs);
+        return new Visit3PlayersMission(null, getNombre(), isCompleted(), clonedSubs);
     }
 }

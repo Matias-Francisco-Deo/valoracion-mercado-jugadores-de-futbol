@@ -28,6 +28,6 @@ public class TestMission<T> extends Mission<T> {
 
     @Override
     public TestMission<T> clonar() {
-        return new TestMission<>(getId(), getNombre(), isCompleted());
+        return new TestMission<>(null, getNombre(), isCompleted());
     }
 }

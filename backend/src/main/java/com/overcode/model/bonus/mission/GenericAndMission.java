@@ -41,6 +41,6 @@ public class GenericAndMission<T> extends AndMission<T> {
         for (Mission<?> m : submissions) {
             clonedSubs.add(m.clonar());
         }
-        return new GenericAndMission<>(getId(), getNombre(), isCompleted(), clonedSubs);
+        return new GenericAndMission<>(null, getNombre(), isCompleted(), clonedSubs);
     }
 }

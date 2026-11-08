@@ -61,7 +61,7 @@ public class DailyBonusOrMission extends OrMission<Void> {
         Visit3PlayersMission clonedVisits = this.visit3PlayersMission != null ? this.visit3PlayersMission.clonar() : null;
         if (clonedBuy != null && clonedVisits != null) {
             DailyBonusOrMission cloned = new DailyBonusOrMission(clonedBuy, clonedVisits);
-            cloned.setId(getId());
+            cloned.setId(null);
             cloned.setNombre(getNombre());
             cloned.setCompleted(isCompleted());
             return cloned;
@@ -70,7 +70,7 @@ public class DailyBonusOrMission extends OrMission<Void> {
             for (Mission<?> m : submissions) {
                 clonedSubs.add(m.clonar());
             }
-            return new DailyBonusOrMission(getId(), getNombre(), isCompleted(), clonedSubs);
+            return new DailyBonusOrMission(null, getNombre(), isCompleted(), clonedSubs);
         }
     }
 }

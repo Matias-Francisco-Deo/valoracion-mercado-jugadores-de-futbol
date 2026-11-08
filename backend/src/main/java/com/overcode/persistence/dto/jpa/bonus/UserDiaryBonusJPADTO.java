@@ -40,7 +40,7 @@ public class UserDiaryBonusJPADTO {
     public UserDiaryBonus aModelo() {
         return new UserDiaryBonus(
                 this.id,
-                this.user != null ? this.user.aModelo() : null,
+                this.user != null ? this.user.aModeloSinTokens() : null,
                 this.streakCount,
                 this.lastBonusClaimDate,
                 this.activeMissionDate,

@@ -1,5 +1,6 @@
 package com.overcode.model.bonus;
 
+import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,12 @@ public class LoginBonusRewardsTest {
 
     @Test
     void alAgregarUnaRecompensaIgualACeroLanzaExcepcion() {
-        assertThrows(LoginBonusInvalidoException.class, () -> recompensas.add(0.0));
+        assertThrows(DiaryBonusInvalidoException.class, () -> recompensas.add(0.0));
     }
 
     @Test
     void alAgregarUnaRecompensaNegativaLanzaExcepcion() {
-        assertThrows(LoginBonusInvalidoException.class, () -> recompensas.add(-0.01));
+        assertThrows(DiaryBonusInvalidoException.class, () -> recompensas.add(-0.01));
     }
 
     @Test
@@ -50,7 +51,7 @@ public class LoginBonusRewardsTest {
             recompensas.add((double) dia + 1);
         }
 
-        assertThrows(LoginBonusInvalidoException.class, () -> recompensas.add(8.0));
+        assertThrows(DiaryBonusInvalidoException.class, () -> recompensas.add(8.0));
 
         for (int dia = 0; dia < 7; dia++) {
             assertEquals((double) dia + 1, recompensas.get(dia));
@@ -69,12 +70,12 @@ public class LoginBonusRewardsTest {
 
     @Test
     void alConsultarUnIndiceMenorACeroLanzaExcepcion() {
-        assertThrows(LoginBonusInvalidoException.class, () -> recompensas.get(-1));
+        assertThrows(DiaryBonusInvalidoException.class, () -> recompensas.get(-1));
     }
 
     @Test
     void alConsultarUnIndiceIgualASieteLanzaExcepcion() {
-        assertThrows(LoginBonusInvalidoException.class, () -> recompensas.get(7));
+        assertThrows(DiaryBonusInvalidoException.class, () -> recompensas.get(7));
     }
 
     @Test

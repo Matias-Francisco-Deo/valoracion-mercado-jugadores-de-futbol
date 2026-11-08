@@ -41,6 +41,6 @@ public class GenericOrMission<T> extends OrMission<T> {
         for (Mission<?> m : submissions) {
             clonedSubs.add(m.clonar());
         }
-        return new GenericOrMission<>(getId(), getNombre(), isCompleted(), clonedSubs);
+        return new GenericOrMission<>(null, getNombre(), isCompleted(), clonedSubs);
     }
 }

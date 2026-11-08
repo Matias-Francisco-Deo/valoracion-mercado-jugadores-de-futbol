@@ -44,6 +44,7 @@ public class BonusServiceImpl implements BonusService {
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
+        userDiaryBonus.setUser(userRecuperado);
         BonusClaim reclamoBonus = userDiaryBonus.reclamarBonus(diaryBonus);
 
         userDiaryBonusService.guardar(userDiaryBonus);
@@ -58,6 +59,7 @@ public class BonusServiceImpl implements BonusService {
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
+        userDiaryBonus.setUser(userRecuperado);
 
         return diaryBonus.obtenerEstadoBonus(userDiaryBonus);
     }
@@ -73,6 +75,7 @@ public class BonusServiceImpl implements BonusService {
         DiaryBonus diaryBonus = diaryBonusService.recuperarSeleccionado();
 
         UserDiaryBonus userDiaryBonus = userDiaryBonusService.recuperarOPermitirCrear(userRecuperado);
+        userDiaryBonus.setUser(userRecuperado);
         userDiaryBonus.registrarVisitaJugador(peticion.player());
 
         userDiaryBonusService.guardar(userDiaryBonus);

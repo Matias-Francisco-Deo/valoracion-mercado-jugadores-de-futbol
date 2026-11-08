@@ -14,6 +14,7 @@ import com.overcode.model.player.Player;
 import com.overcode.model.player.Team;
 import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TeamRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.UserService;
@@ -32,19 +33,22 @@ public class DataInitializer {
     private final ConfiguracionMercadoService configuracionMercadoService;
     private final ConfiguracionMercadoRepository configuracionMercadoRepository;
     private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
 
     public DataInitializer(
             UserService userService,
             EstrategiaCotizacionService estrategiaCotizacionService,
             ConfiguracionMercadoService configuracionMercadoService,
             ConfiguracionMercadoRepository configuracionMercadoRepository,
-            PlayerRepository playerRepository
+            PlayerRepository playerRepository,
+            TeamRepository teamRepository
     ) {
         this.userService = userService;
         this.estrategiaCotizacionService = estrategiaCotizacionService;
         this.configuracionMercadoService = configuracionMercadoService;
         this.configuracionMercadoRepository = configuracionMercadoRepository;
         this.playerRepository = playerRepository;
+        this.teamRepository = teamRepository;
     }
 
     @PostConstruct
@@ -61,7 +65,11 @@ public class DataInitializer {
         List<Player> players = new ArrayList<>(playerRepository.listarTodos());
         if (players.size() < 3) {
             for (int i = players.size() + 1; i <= 3; i++) {
-                Player p = new Player("Jugador Inicial " + i, new Team("Club Inicial " + i, "Liga Inicial"), null);
+                String clubName = "Club Inicial " + i;
+                String leagueName = "Liga Inicial";
+                Team team = teamRepository.recuperarPorNombreYLiga(clubName, leagueName)
+                        .orElseGet(() -> teamRepository.guardar(new Team(clubName, leagueName)));
+                Player p = new Player("Jugador Inicial " + i, team, null);
                 p.setCurrentPrice(100.0);
                 p = playerRepository.guardar(p);
                 players.add(p);

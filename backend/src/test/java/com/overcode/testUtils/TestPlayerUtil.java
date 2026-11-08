@@ -57,7 +57,8 @@ public class TestPlayerUtil {
     }
 
     public static Player crearJugador(String name, double price) {
-        Player player = getJugadorConNombre(name);
+        Player player = new Player();
+        player.setName(name);
         player.setCurrentPrice(price);
         return player;
     }
