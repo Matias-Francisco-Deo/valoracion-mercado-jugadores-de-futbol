@@ -60,8 +60,8 @@ public class UserDiaryBonusJPADTO {
         dto.setStreakCount(modelo.getStreakCount() != null ? modelo.getStreakCount() : 0);
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
-        if (modelo.getActiveMission() != null) {
-            dto.setActiveMission(MissionJPADTO.desdeModelo(modelo.getActiveMission()));
+        if (modelo.getActiveDailyBonusMission() != null) {
+            dto.setActiveMission(MissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
         }
         return dto;
     }

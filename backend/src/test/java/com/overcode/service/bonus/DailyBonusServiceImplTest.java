@@ -4,10 +4,10 @@ import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
-import com.overcode.model.bonus.mission.BuyMission;
-import com.overcode.model.bonus.mission.DailyBonusOrMission;
-import com.overcode.model.bonus.mission.Visit3PlayersMission;
-import com.overcode.model.bonus.mission.VisitPlayerMission;
+import com.overcode.model.bonus.mission.BuyDailyBonusMission;
+import com.overcode.model.bonus.mission.DailyBonusOrDailyBonusMission;
+import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
+import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
@@ -80,13 +80,13 @@ class DailyBonusServiceImplTest {
         PLAYER_2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Ronaldo", 90.0));
         PLAYER_3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Neymar", 80.0));
 
-        Visit3PlayersMission visitMission = new Visit3PlayersMission(
-                new VisitPlayerMission(PLAYER_1),
-                new VisitPlayerMission(PLAYER_2),
-                new VisitPlayerMission(PLAYER_3)
+        Visit3PlayersDailyBonusMission visitMission = new Visit3PlayersDailyBonusMission(
+                new VisitPlayerDailyBonusMission(PLAYER_1),
+                new VisitPlayerDailyBonusMission(PLAYER_2),
+                new VisitPlayerDailyBonusMission(PLAYER_3)
         );
-        BuyMission buyMission = new BuyMission();
-        DailyBonusOrMission dailyOr = new DailyBonusOrMission(buyMission, visitMission);
+        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
+        DailyBonusOrDailyBonusMission dailyOr = new DailyBonusOrDailyBonusMission(buyMission, visitMission);
 
         DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDiaryBonusBase(dailyOr));
 

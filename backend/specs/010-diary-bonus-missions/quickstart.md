@@ -1,4 +1,4 @@
-# Quickstart & Verification Guide: diary-bonus-missions
+# Quickstart & Verification Guide: diary-bonus-dailyBonusMissions
 
 ## Prerequisites
 
@@ -27,7 +27,7 @@ Build and compile the backend without running tests:
 ## Validation Scenarios
 
 ### Scenario 1: Model Composite Mission Unit Tests
-Validates the composite structure (`OrMission<T>`, `AndMission<T>`, `Visit3PlayersMission`, `VisitPlayerMission`, `BuyMission`) with strongly-typed `.complete(T)` arguments, no boolean optional flags, and Lombok `@Getter`/`@Setter` usage.
+Validates the composite structure (`OrMission<T>`, `AndMission<T>`, `Visit3PlayersDailyBonusMission`, `VisitPlayerDailyBonusMission`, `BuyDailyBonusMission`) with strongly-typed `.complete(T)` arguments, no boolean optional flags, and Lombok `@Getter`/`@Setter` usage.
 
 **Test Command**:
 ```powershell
@@ -36,10 +36,10 @@ Validates the composite structure (`OrMission<T>`, `AndMission<T>`, `Visit3Playe
 
 **Expected Result**:
 - Unit tests pass with 0 failures and 0 errors.
-- `TestMission<String>` verifies `AndMission` and `OrMission` completion logic in isolation.
-- `VisitPlayerMission` verifies that `complete(Player player)` requires an exact player ID match and rejects wrong players.
-- `BuyMission` verifies parameterless completion `complete()` sets completed.
-- `UserDailyBonus` verifies that `inicializarConBonus(dailyBonus)` encapsulates the date checks and sets up today's cloned mission tree cleanly.
+- `TestMission<String>` verifies `AndDailyBonusMission` and `OrDailyBonusMission` completion logic in isolation.
+- `VisitPlayerDailyBonusMission` verifies that `complete(Player player)` requires an exact player ID match and rejects wrong players.
+- `BuyDailyBonusMission` verifies parameterless completion `complete()` sets completed.
+- `UserDailyBonus` verifies that `inicializarConBonus(dailyBonus)` encapsulates the date checks and sets up today's cloned dailyBonusMission tree cleanly.
 
 ---
 
@@ -53,7 +53,7 @@ Validates that `UserDiaryBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapp
 
 **Expected Result**:
 - Testcontainers spins up PostgreSQL 16.
-- Saves composite mission trees and retrieves them matching domain structures.
+- Saves composite dailyBonusMission trees and retrieves them matching domain structures.
 - Persists user-specific progress linking `UserDailyBonus` to `User`.
 
 ---
@@ -67,10 +67,10 @@ Validates that users querying bonus status get initialized lazily on-demand with
 ```
 
 **Expected Result**:
-- Querying status on day T initializes missions matching day T's template.
+- Querying status on day T initializes dailyBonusMissions matching day T's template.
 - Consecutive day claim increases streak count.
 - Skipped day claim resets streak count to 0 with base reward.
-- Attempting to claim before mission completion throws `RequisitosMisionesNoCumplidosException`.
+- Attempting to claim before dailyBonusMission completion throws `RequisitosMisionesNoCumplidosException`.
 
 ---
 
@@ -83,7 +83,7 @@ Validates the complete HTTP workflow using Spring Boot Test.
 ```
 
 **Expected Flow**:
-1. `GET /api/daily-bonus` with bearer token: returns status with 4 missions (3 visits + 1 buy), `puedeReclamar: false`.
+1. `GET /api/daily-bonus` with bearer token: returns status with 4 dailyBonusMissions (3 visits + 1 buy), `puedeReclamar: false`.
 2. `POST /api/daily-bonus/claim`: fails with `400 Bad Request` ("Requisitos de misiones no cumplidos").
 3. `POST /api/daily-bonus/visit/{p1.id}`, `POST /api/daily-bonus/visit/{p2.id}`, `POST /api/daily-bonus/visit/{p3.id}`: all 3 visits succeed, updating `puedeReclamar: true`.
 4. `POST /api/daily-bonus/claim`: succeeds with `200 OK`, credits awarded, `streakCount` incremented.

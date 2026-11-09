@@ -2,7 +2,7 @@ package com.overcode.persistence.repository;
 
 import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.UserDiaryBonusRepository;
+import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.TestUserUtil;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserDailyBonusRepositoryTest {
 
     @Autowired
-    private UserDiaryBonusRepository userDiaryBonusRepository;
+    private UserDailyBonusRepository userDailyBonusRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -50,10 +50,10 @@ class UserDailyBonusRepositoryTest {
         bonus.setStreakCount(3);
         bonus.setLastBonusClaimDate(LocalDate.of(2026, 11, 5));
 
-        UserDailyBonus guardado = userDiaryBonusRepository.guardar(bonus);
+        UserDailyBonus guardado = userDailyBonusRepository.guardar(bonus);
         assertNotNull(guardado.getId());
 
-        Optional<UserDailyBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUsuario(user);
         assertTrue(recuperado.isPresent());
         assertEquals(3, recuperado.get().getStreakCount());
         assertEquals(LocalDate.of(2026, 11, 5), recuperado.get().getLastBonusClaimDate());
@@ -66,7 +66,7 @@ class UserDailyBonusRepositoryTest {
         User user = TestUserUtil.getUsuarioBase("fantasma");
         user.setId(999999L);
 
-        Optional<UserDailyBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUsuario(user);
         assertTrue(recuperado.isEmpty());
     }
 }

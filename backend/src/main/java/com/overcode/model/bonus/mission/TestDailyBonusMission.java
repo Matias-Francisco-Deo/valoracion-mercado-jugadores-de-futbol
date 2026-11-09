@@ -7,20 +7,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TestMission<T> extends Mission<T> {
+public class TestDailyBonusMission<T> extends DailyBonusMission<T> {
     private Boolean completed = false;
 
-    public TestMission(Long id, String nombre, boolean completed) {
+    public TestDailyBonusMission(Long id, String nombre, boolean completed) {
         super(id, nombre);
         this.completed = completed;
     }
 
-    public TestMission(String nombre, boolean completed) {
+    public TestDailyBonusMission(String nombre, boolean completed) {
         super(null, nombre);
         this.completed = completed;
     }
 
-    public TestMission(String nombre) {
+    public TestDailyBonusMission(String nombre) {
         super(nombre);
     }
 
@@ -30,12 +30,12 @@ public class TestMission<T> extends Mission<T> {
     }
 
     @Override
-    public void complete(T context) {
+    public void complete(T checkerObject) {
         setCompleted(true);
     }
 
     @Override
-    public TestMission<T> clonar() {
-        return new TestMission<>(null, getNombre(), isCompleted());
+    public TestDailyBonusMission<T> clonar() {
+        return new TestDailyBonusMission<>(null, getNombre(), isCompleted());
     }
 }

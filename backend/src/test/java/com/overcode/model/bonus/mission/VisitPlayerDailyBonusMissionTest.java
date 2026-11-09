@@ -5,16 +5,17 @@ import com.overcode.testUtils.TestMissionUtil;
 import com.overcode.testUtils.TestPlayerUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class VisitPlayerMissionTest {
+class VisitPlayerDailyBonusMissionTest {
 
     @Test
     void alVisitarJugadorObjetivoSeMarcaComoCompletada() {
         Player messi = TestPlayerUtil.crearJugador("Messi", 100.0);
         messi.setId(10L);
 
-        VisitPlayerMission mision = TestMissionUtil.crearVisitPlayerMission(messi);
+        VisitPlayerDailyBonusMission mision = TestMissionUtil.crearVisitPlayerMission(messi);
         assertFalse(mision.isCompleted());
 
         mision.complete(messi);
@@ -28,7 +29,7 @@ class VisitPlayerMissionTest {
         Player ronaldo = TestPlayerUtil.crearJugador("Ronaldo", 90.0);
         ronaldo.setId(7L);
 
-        VisitPlayerMission mision = TestMissionUtil.crearVisitPlayerMission(messi);
+        VisitPlayerDailyBonusMission mision = TestMissionUtil.crearVisitPlayerMission(messi);
         mision.complete(ronaldo);
 
         assertFalse(mision.isCompleted());
@@ -43,7 +44,7 @@ class VisitPlayerMissionTest {
         Player p3 = TestPlayerUtil.crearJugador("P3", 30.0);
         p3.setId(3L);
 
-        Visit3PlayersMission mision3 = TestMissionUtil.crearVisit3PlayersMission(p1, p2, p3);
+        Visit3PlayersDailyBonusMission mision3 = TestMissionUtil.crearVisit3PlayersMission(p1, p2, p3);
         assertFalse(mision3.isCompleted());
 
         mision3.complete(p1);

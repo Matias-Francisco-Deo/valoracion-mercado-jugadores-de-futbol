@@ -1,6 +1,6 @@
 package com.overcode.model.bonus;
 
-import com.overcode.model.bonus.mission.Mission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
@@ -22,17 +22,17 @@ public class DailyBonus {
     private Long id;
     private String nombre;
     private DailyBonusRewards bonusRewards;
-    private Mission<?> rootMission;
+    private DailyBonusMission<?> rootDailyBonusMission;
 
-    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, Mission<?> rootMission) {
+    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> rootDailyBonusMission) {
         this.id = id;
         setNombre(nombre);
         setBonusRewards(bonusRewards);
-        this.rootMission = rootMission;
+        this.rootDailyBonusMission = rootDailyBonusMission;
     }
 
-    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, Mission<?> rootMission) {
-        this(null, nombre, bonusRewards, rootMission);
+    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> rootDailyBonusMission) {
+        this(null, nombre, bonusRewards, rootDailyBonusMission);
     }
 
     public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards) {
@@ -69,7 +69,7 @@ public class DailyBonus {
         Double nextBonus = getBonusConRacha(rachaActual);
         boolean yaReclamo = userBonus.yaReclamoBonusHoy(fechaActual);
         boolean puedeReclamar = userBonus.puedeReclamarBonusHoy();
-        Mission<?> mision = userBonus.getActiveMission();
+        DailyBonusMission<?> mision = userBonus.getActiveDailyBonusMission();
         return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, mision);
     }
 

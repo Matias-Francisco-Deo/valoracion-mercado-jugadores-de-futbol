@@ -2,11 +2,7 @@ package com.overcode.config;
 
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.DailyBonusRewards;
-import com.overcode.model.bonus.mission.BuyMission;
-import com.overcode.model.bonus.mission.DailyBonusOrMission;
-import com.overcode.model.bonus.mission.Mission;
-import com.overcode.model.bonus.mission.Visit3PlayersMission;
-import com.overcode.model.bonus.mission.VisitPlayerMission;
+import com.overcode.model.bonus.mission.*;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
@@ -77,15 +73,15 @@ public class DataInitializer {
         }
 
         Collections.shuffle(players);
-        Visit3PlayersMission visitMission = new Visit3PlayersMission(
-                new VisitPlayerMission(players.get(0)),
-                new VisitPlayerMission(players.get(1)),
-                new VisitPlayerMission(players.get(2))
+        Visit3PlayersDailyBonusMission visitMission = new Visit3PlayersDailyBonusMission(
+                new VisitPlayerDailyBonusMission(players.get(0)),
+                new VisitPlayerDailyBonusMission(players.get(1)),
+                new VisitPlayerDailyBonusMission(players.get(2))
         );
-        BuyMission buyMission = new BuyMission();
-        Mission<?> rootMission = new DailyBonusOrMission(buyMission, visitMission);
+        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
+        DailyBonusMission<?> rootDailyBonusMission = new DailyBonusOrDailyBonusMission(buyMission, visitMission);
 
-        DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, rootMission);
+        DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, rootDailyBonusMission);
 
         ConfiguracionMercado configInicial = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         ConfiguracionMercado config = configuracionMercadoService.crearConfiguracionSiNoExiste(configInicial);

@@ -1,8 +1,8 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.model.bonus.mission.Mission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 
 public interface MissionService {
-    Mission<?> guardar(Mission<?> mission);
-    Mission<?> recuperarPorId(Long id);
+    DailyBonusMission<?> guardar(DailyBonusMission<?> dailyBonusMission);
+    DailyBonusMission<?> recuperarPorId(Long id);
 }

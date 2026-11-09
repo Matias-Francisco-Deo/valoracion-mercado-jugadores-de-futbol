@@ -1,6 +1,6 @@
 package com.overcode.model.bonus;
 
-import com.overcode.model.bonus.mission.BuyMission;
+import com.overcode.model.bonus.mission.BuyDailyBonusMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;
 import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
@@ -67,8 +67,8 @@ class UserDailyBonusTest {
 
     @Test
     void alIntentarReclamarSinCumplirMisionesLanzaRequisitosMisionesNoCumplidosException() {
-        BuyMission buyMission = new BuyMission();
-        userDailyBonus.setActiveMission(buyMission);
+        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
+        userDailyBonus.setActiveDailyBonusMission(buyMission);
 
         assertThrows(RequisitosMisionesNoCumplidosException.class, () ->
                 userDailyBonus.reclamarBonus(dailyBonus)
@@ -77,9 +77,9 @@ class UserDailyBonusTest {
 
     @Test
     void alReclamarBonusDiarioConMisionCompletadaSeIncrementaCreditoYSeAumentaRacha() {
-        BuyMission buyMission = new BuyMission();
+        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveMission(buyMission);
+        userDailyBonus.setActiveDailyBonusMission(buyMission);
         userDailyBonus.setStreakCount(0);
 
         BonusClaim claim = userDailyBonus.reclamarBonus(dailyBonus);
@@ -93,9 +93,9 @@ class UserDailyBonusTest {
 
     @Test
     void alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException() {
-        BuyMission buyMission = new BuyMission();
+        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveMission(buyMission);
+        userDailyBonus.setActiveDailyBonusMission(buyMission);
 
         userDailyBonus.reclamarBonus(dailyBonus);
 

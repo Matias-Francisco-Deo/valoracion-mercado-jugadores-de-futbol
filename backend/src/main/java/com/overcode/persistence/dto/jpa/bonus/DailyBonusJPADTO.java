@@ -47,8 +47,8 @@ public class DailyBonusJPADTO {
         if (modelo.getBonusRewards() != null) {
             dto.setRewards(DailyBonusRewardsJPADTO.desdeModelo(modelo.getBonusRewards()));
         }
-        if (modelo.getRootMission() != null) {
-            dto.setRootMission(MissionJPADTO.desdeModelo(modelo.getRootMission()));
+        if (modelo.getRootDailyBonusMission() != null) {
+            dto.setRootMission(MissionJPADTO.desdeModelo(modelo.getRootDailyBonusMission()));
         }
         return dto;
     }

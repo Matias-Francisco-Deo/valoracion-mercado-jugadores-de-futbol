@@ -1,14 +1,14 @@
-# Implementation Plan: diary-bonus-missions
+# Implementation Plan: diary-bonus-dailyBonusMissions
 
-**Branch**: `010-diary-bonus-missions` | **Date**: 2026-11-06 | **Spec**: [specs/010-diary-bonus-missions/spec.md](spec.md)
+**Branch**: `010-diary-bonus-dailyBonusMissions` | **Date**: 2026-11-06 | **Spec**: [specs/010-diary-bonus-dailyBonusMissions/spec.md](spec.md)
 
-**Input**: Feature specification from `specs/010-diary-bonus-missions/spec.md` and user architectural directives.
+**Input**: Feature specification from `specs/010-diary-bonus-dailyBonusMissions/spec.md` and user architectural directives.
 
 ## Summary
 
 This feature adapts and renames the daily login bonus system from `LoginBonus` to `DailyBonus`, introducing a flexible composite `Mission<T>` architecture featuring abstract classes `OrMission<T>` and `AndMission<T>`, strongly-typed generic completion (no raw `Object`, no boolean optional flags), and a persistent per-user daily bonus tracking profile (`UserDailyBonus`) that encapsulates the actual `User` domain entity.
 
-Users can claim their daily bonus by either completing 3 distinct daily player profile visits OR purchasing a token from the marketplace (modeled naturally as an `OrMission`). To maintain system performance and prevent O(N) memory pressure during daily rollovers, daily missions are assigned to users on-demand via `userDailyBonus.inicializarConBonus(dailyBonus)` upon their first daily bonus interaction. Zero domain logic resides in Services or Controllers. All service methods adhere to a strict single-parameter contract accepting only domain models or domain records (never a kind of `RequestDTO`). Lombok `@Getter` and `@Setter` are used throughout the codebase for clean property encapsulation.
+Users can claim their daily bonus by either completing 3 distinct daily player profile visits OR purchasing a token from the marketplace (modeled naturally as an `OrDailyBonusMission`). To maintain system performance and prevent O(N) memory pressure during daily rollovers, daily dailyBonusMissions are assigned to users on-demand via `userDailyBonus.inicializarConBonus(dailyBonus)` upon their first daily bonus interaction. Zero domain logic resides in Services or Controllers. All service methods adhere to a strict single-parameter contract accepting only domain models or domain records (never a kind of `RequestDTO`). Lombok `@Getter` and `@Setter` are used throughout the codebase for clean property encapsulation.
 
 ---
 
@@ -20,7 +20,7 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 **Testing**: JUnit 5, Mockito, Testcontainers 1.20.4 (`org.testcontainers:postgresql`), `RestClient`, `@SpringBootTest`  
 **Target Platform**: JVM (Linux / Windows server)  
 **Project Type**: REST Web Service (Spring Boot backend)  
-**Performance Goals**: On-demand lazy assignment of daily missions (O(1) per active user request) to avoid O(N) bulk memory mapping across thousands of users at 00:00:00 UTC.  
+**Performance Goals**: On-demand lazy assignment of daily dailyBonusMissions (O(1) per active user request) to avoid O(N) bulk memory mapping across thousands of users at 00:00:00 UTC.  
 **Constraints**:
 - Strict Layered Architecture (Controller -> Service -> Repository -> DAOJPA -> JPADTO).
 - Lombok `@Getter` and `@Setter` used across models, DTOs, and entities (no simple hand-written getters/setters).
@@ -28,7 +28,7 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 - Single-parameter service methods: every service method receives exactly ONE object, which must be a domain model entity or domain record (never a `RequestDTO`).
 - Generic `Mission<T>` where subclasses define parameter type `T` in `complete(T context)` (no raw `Object`).
 - Abstract classes `OrMission<T>` and `AndMission<T>` representing composite behaviors.
-- No boolean flags for optionality in `Mission`.
+- No boolean flags for optionality in `DailyBonusMission`.
 - `UserDailyBonus` references the actual `User` domain object (not a foreign key `userId`).
 - Custom domain, service, and persistence exceptions (no raw runtime exceptions).
 - Latin American Spanish test method names.
@@ -43,9 +43,9 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 | Principle | Gate Criterion | Compliance Status | Details |
 |---|---|---|---|
 | **I. Layered Architecture** | Controller -> Service -> Repository -> DAOJPA / JPADTO. DTOs in dedicated `dto/` packages. Persistency isolated in `persistence/repository/`. | **PASS** | `DailyBonusController` maps request/response DTOs only. `UserDailyBonusService` and `MissionService` mediate between persistence and models. Repositories abstract JPA entities. Service methods take only domain models or records. |
-| **II. Rich Model** | All business logic resides in Model objects (`DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`). New model classes approved by project owner. | **PASS** | User explicitly approved `DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `VisitPlayerMission`, `BuyMission`, `PeticionVisitaJugador`. Initialization and streak logic strictly live in `userDailyBonus.inicializarConBonus(dailyBonus)`. |
+| **II. Rich Model** | All business logic resides in Model objects (`DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`). New model classes approved by project owner. | **PASS** | User explicitly approved `DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `VisitPlayerDailyBonusMission`, `BuyDailyBonusMission`, `PeticionVisitaJugador`. Initialization and streak logic strictly live in `userDailyBonus.inicializarConBonus(dailyBonus)`. |
 | **III. Validation at Every Layer** | DTO format validation, Service entity existence checks, Model domain invariant validation with custom exceptions. | **PASS** | Validates entity existence in Service (`EntidadNoEncontradaException`); domain invariants enforced in Model (`BonusYaReclamadoHoyException`, `RequisitosMisionesNoCumplidosException`, `MisionInvalidaException`). |
-| **IV. Testing as a Delivery Gate** | Pure unit tests for Model; Testcontainers integration tests for Service/Repository; isolated `@SpringBootTest` E2E tests using `RestClient`. Spanish naming. | **PASS** | Unit tests cover `Mission`, `UserDailyBonus`, and `DailyBonus`. Integration tests verify PostgreSQL persistence via Testcontainers. E2E tests verify full HTTP flows. |
+| **IV. Testing as a Delivery Gate** | Pure unit tests for Model; Testcontainers integration tests for Service/Repository; isolated `@SpringBootTest` E2E tests using `RestClient`. Spanish naming. | **PASS** | Unit tests cover `DailyBonusMission`, `UserDailyBonus`, and `DailyBonus`. Integration tests verify PostgreSQL persistence via Testcontainers. E2E tests verify full HTTP flows. |
 | **V. Definition of Done** | All unit and integration tests passing; local application compiles without error. | **PASS** | Defined in verification scenarios in `quickstart.md`. |
 
 ---
@@ -55,7 +55,7 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 ### Documentation (this feature)
 
 ```text
-specs/010-diary-bonus-missions/
+specs/010-diary-bonus-dailyBonusMissions/
 ├── spec.md              # Feature specification
 ├── plan.md              # Implementation plan (this file)
 ├── research.md          # Phase 0 architectural decisions and research
@@ -81,18 +81,18 @@ src/
 │               │           ├── ClaimBonusRequestDTO.java
 │               │           ├── ClaimBonusResponseDTO.java
 │               │           ├── DailyBonusRequestDTO.java
-│               │           ├── DailyBonusStatusResponseDTO.java         # [UPDATE] Include mission list DTOs
+│               │           ├── DailyBonusStatusResponseDTO.java         # [UPDATE] Include dailyBonusMission list DTOs
 │               │           ├── RegistrarVisitaRequestDTO.java           # [NEW] DTO for visit request
-│               │           └── MissionStatusResponseDTO.java            # [NEW] DTO for mission display (no optionality boolean)
+│               │           └── MissionStatusResponseDTO.java            # [NEW] DTO for dailyBonusMission display (no optionality boolean)
 │               ├── model/
 │               │   ├── bonus/
 │               │   │   ├── DiaryBonus.java                              # [RENAME/ADAPT] @Getter @Setter
 │               │   │   ├── DiaryBonusRewards.java                       # [RENAME/ADAPT] @Getter
 │               │   │   ├── UserDiaryBonus.java                          # [NEW] Holds User user, @Getter @Setter
 │               │   │   ├── BonusClaim.java
-│               │   │   ├── EstadoBonus.java                             # [UPDATE] Include missions status
+│               │   │   ├── EstadoBonus.java                             # [UPDATE] Include dailyBonusMissions status
 │               │   │   ├── PeticionVisitaJugador.java                   # [NEW] Domain record (User user, Player player)
-│               │   │   └── mission/
+│               │   │   └── dailyBonusMission/
 │               │   │       ├── Mission.java                             # [NEW] Abstract base Mission<T> @Getter @Setter
 │               │   │       ├── OrMission.java                           # [NEW] Abstract class OrMission<T>
 │               │   │       ├── AndMission.java                          # [NEW] Abstract class AndMission<T>
@@ -142,9 +142,9 @@ src/
 │               │       ├── DiaryBonusServiceImpl.java                   # [RENAME]
 │               │       ├── UserDiaryBonusServiceImpl.java               # [NEW]
 │               │       ├── MissionServiceImpl.java                      # [NEW]
-│               │       └── TokenMarketServiceImpl.java                  # [UPDATE] Notify purchase for mission
+│               │       └── TokenMarketServiceImpl.java                  # [UPDATE] Notify purchase for dailyBonusMission
 │               └── config/
-│                   └── DataInitializer.java                             # [UPDATE] Seed DiaryBonus with missions
+│                   └── DataInitializer.java                             # [UPDATE] Seed DiaryBonus with dailyBonusMissions
 └── test/
     └── java/
         └── com/
@@ -154,7 +154,7 @@ src/
                 │       ├── DiaryBonusTest.java                          # [RENAME/UPDATE]
                 │       ├── DiaryBonusRewardsTest.java                   # [RENAME]
                 │       ├── UserDiaryBonusTest.java                      # [NEW]
-                │       └── mission/
+                │       └── dailyBonusMission/
                 │           ├── MissionTest.java                         # [NEW] Unit tests on TestMission, AndMission, OrMission
                 │           ├── VisitPlayerMissionTest.java              # [NEW]
                 │           └── BuyMissionTest.java                      # [NEW]

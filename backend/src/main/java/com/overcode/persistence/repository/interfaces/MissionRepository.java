@@ -1,11 +1,11 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.bonus.mission.Mission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 
 import java.util.Optional;
 
 public interface MissionRepository {
-    Mission<?> guardar(Mission<?> mission);
-    Optional<Mission<?>> recuperarPorId(Long id);
+    DailyBonusMission<?> guardar(DailyBonusMission<?> dailyBonusMission);
+    Optional<DailyBonusMission<?>> recuperarPorId(Long id);
     void eliminarPorId(Long id);
 }

@@ -1,10 +1,10 @@
 ---
-description: "Task list for diary-bonus-missions implementation"
+description: "Task list for diary-bonus-dailyBonusMissions implementation"
 ---
 
-# Tasks: diary-bonus-missions
+# Tasks: diary-bonus-dailyBonusMissions
 
-**Input**: Design documents from `specs/010-diary-bonus-missions/` (`plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/daily-bonus-api.yaml`, `quickstart.md`).  
+**Input**: Design documents from `specs/010-diary-bonus-dailyBonusMissions/` (`plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/daily-bonus-api.yaml`, `quickstart.md`).  
 **Prerequisites**: `plan.md` (required), `spec.md` (required), `data-model.md`, `contracts/daily-bonus-api.yaml`, `research.md`.  
 **Tests**: Explicitly requested by user and constitution (Unit tests in Spanish for Model, Integration tests with Testcontainers, E2E tests with SpringBootTest).  
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
@@ -43,16 +43,16 @@ description: "Task list for diary-bonus-missions implementation"
 
 ## Phase 2: Foundational (Generic Composite `Mission<T>` & `UserDailyBonus` Persistence)
 
-**Purpose**: Core mission composite tree hierarchy and persistent `UserDailyBonus` profile infrastructure that MUST be complete before user stories can be implemented.
+**Purpose**: Core dailyBonusMission composite tree hierarchy and persistent `UserDailyBonus` profile infrastructure that MUST be complete before user stories can be implemented.
 
 - [X] T016 [P] Create domain exception `MisionInvalidaException` in `src/main/java/com/overcode/model/exception/bonus/MisionInvalidaException.java`
 - [X] T017 [P] Create domain exception `RequisitosMisionesNoCumplidosException` in `src/main/java/com/overcode/model/exception/bonus/RequisitosMisionesNoCumplidosException.java`
-- [X] T018 Create abstract generic base class `Mission<T>` with Lombok `@Getter` and `@Setter`, abstract methods `isCompleted()`, `complete(T context)`, `clonar()`, and `getSubmissions()` (no boolean optional flag) in `src/main/java/com/overcode/model/bonus/mission/Mission.java`
-- [X] T019 Create abstract composite class `OrMission<T> extends Mission<T>` with Lombok `@Getter` and `@Setter`, encapsulating OR behavior in `src/main/java/com/overcode/model/bonus/mission/OrMission.java`
-- [X] T020 Create abstract composite class `AndMission<T> extends Mission<T>` with Lombok `@Getter` and `@Setter`, encapsulating AND behavior in `src/main/java/com/overcode/model/bonus/mission/AndMission.java`
-- [X] T021 [P] Create `TestMission<T> extends Mission<T>` for unit test assertions in `src/main/java/com/overcode/model/bonus/mission/TestMission.java`
-- [X] T022 [P] Create static factory utility `TestMissionUtil` with methods for instantiating model test missions in `src/test/java/com/overcode/testUtils/TestMissionUtil.java`
-- [X] T023 Implement unit tests in Spanish for `AndMission`, `OrMission`, and `TestMission` composite mechanics in `src/test/java/com/overcode/model/bonus/mission/MissionTest.java`
+- [X] T018 Create abstract generic base class `Mission<T>` with Lombok `@Getter` and `@Setter`, abstract methods `isCompleted()`, `complete(T context)`, `clonar()`, and `getSubmissions()` (no boolean optional flag) in `src/main/java/com/overcode/model/bonus/dailyBonusMission/Mission.java`
+- [X] T019 Create abstract composite class `OrMission<T> extends Mission<T>` with Lombok `@Getter` and `@Setter`, encapsulating OR behavior in `src/main/java/com/overcode/model/bonus/dailyBonusMission/OrMission.java`
+- [X] T020 Create abstract composite class `AndMission<T> extends Mission<T>` with Lombok `@Getter` and `@Setter`, encapsulating AND behavior in `src/main/java/com/overcode/model/bonus/dailyBonusMission/AndMission.java`
+- [X] T021 [P] Create `TestMission<T> extends Mission<T>` for unit test assertions in `src/main/java/com/overcode/model/bonus/dailyBonusMission/TestMission.java`
+- [X] T022 [P] Create static factory utility `TestMissionUtil` with methods for instantiating model test dailyBonusMissions in `src/test/java/com/overcode/testUtils/TestMissionUtil.java`
+- [X] T023 Implement unit tests in Spanish for `AndDailyBonusMission`, `OrDailyBonusMission`, and `TestDailyBonusMission` composite mechanics in `src/test/java/com/overcode/model/bonus/dailyBonusMission/MissionTest.java`
 - [X] T024 Create persistence DTO `MissionJPADTO` for recursive tree mapping without optionality column in `src/main/java/com/overcode/persistence/dto/jpa/bonus/MissionJPADTO.java`
 - [X] T025 [P] Create DAO interface `MissionDAOJPA` extending `JpaRepository` in `src/main/java/com/overcode/persistence/repository/dao/jpa/MissionDAOJPA.java`
 - [X] T026 [P] Create repository interface `MissionRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/MissionRepository.java`
@@ -60,35 +60,35 @@ description: "Task list for diary-bonus-missions implementation"
 - [X] T028 [P] Create service interface `MissionService` in `src/main/java/com/overcode/service/interfaces/MissionService.java`
 - [X] T029 Implement `MissionServiceImpl` with single-parameter methods in `src/main/java/com/overcode/service/impl/MissionServiceImpl.java`
 - [X] T030 Create domain record `PeticionVisitaJugador(User user, Player player)` in `src/main/java/com/overcode/model/bonus/PeticionVisitaJugador.java`
-- [X] T031 Create domain entity `UserDailyBonus` holding `User user`, streak fields, active missions, Lombok `@Getter`/`@Setter`, and `inicializarConBonus(DiaryBonus dailyBonus)` encapsulating lazy initialization in `src/main/java/com/overcode/model/bonus/UserDiaryBonus.java`
+- [X] T031 Create domain entity `UserDailyBonus` holding `User user`, streak fields, active dailyBonusMissions, Lombok `@Getter`/`@Setter`, and `inicializarConBonus(DiaryBonus dailyBonus)` encapsulating lazy initialization in `src/main/java/com/overcode/model/bonus/UserDiaryBonus.java`
 - [X] T032 Create persistence DTO `UserDiaryBonusJPADTO` linking `@OneToOne` or `@ManyToOne` to `UserJPADTO` in `src/main/java/com/overcode/persistence/dto/jpa/bonus/UserDiaryBonusJPADTO.java`
 - [X] T033 [P] Create DAO interface `UserDiaryBonusDAOJPA` in `src/main/java/com/overcode/persistence/repository/dao/jpa/UserDiaryBonusDAOJPA.java`
-- [X] T034 [P] Create repository interface `UserDiaryBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/UserDiaryBonusRepository.java`
-- [X] T035 Implement `UserDiaryBonusRepositoryImpl` in `src/main/java/com/overcode/persistence/repository/impl/UserDiaryBonusRepositoryImpl.java`
+- [X] T034 [P] Create repository interface `UserDailyBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/UserDiaryBonusRepository.java`
+- [X] T035 Implement `UserDailyBonusRepositoryImpl` in `src/main/java/com/overcode/persistence/repository/impl/UserDiaryBonusRepositoryImpl.java`
 - [X] T036 [P] Create service interface `UserDailyBonusService` with single-parameter methods in `src/main/java/com/overcode/service/interfaces/UserDiaryBonusService.java`
 - [X] T037 Implement `UserDailyBonusServiceImpl` delegating lazy assignment to `userDailyBonus.inicializarConBonus(dailyBonus)` in `src/main/java/com/overcode/service/impl/UserDiaryBonusServiceImpl.java`
 - [X] T038 Create repository integration test `UserDailyBonusRepositoryTest` using Testcontainers PostgreSQL in `src/test/java/com/overcode/persistence/repository/UserDiaryBonusRepositoryTest.java`
 
-**Checkpoint**: Core composite mission infrastructure and `UserDailyBonus` persistence foundation verified. User stories can now proceed.
+**Checkpoint**: Core composite dailyBonusMission infrastructure and `UserDailyBonus` persistence foundation verified. User stories can now proceed.
 
 ---
 
 ## Phase 3: User Story 1 - Completing Daily Missions via Player Visits to Unlock and Claim Bonus (Priority: P1) 🎯 MVP
 
-**Goal**: Users complete 3 distinct daily player visit missions, qualify for today's bonus without market purchases, and claim their reward.
+**Goal**: Users complete 3 distinct daily player visit dailyBonusMissions, qualify for today's bonus without market purchases, and claim their reward.
 
 **Independent Test**: Register visits for 3 designated players, assert claim eligibility turns true, submit claim, verify credit award and streak progression.
 
 ### Tests for User Story 1 ⚠️
 
-- [X] T039 [P] [US1] Unit test in Spanish for `VisitPlayerMission` verifying player matching and completion in `src/test/java/com/overcode/model/bonus/mission/VisitPlayerMissionTest.java`
+- [X] T039 [P] [US1] Unit test in Spanish for `VisitPlayerDailyBonusMission` verifying player matching and completion in `src/test/java/com/overcode/model/bonus/dailyBonusMission/VisitPlayerMissionTest.java`
 - [X] T040 [P] [US1] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying 3 player visits qualify user to claim bonus via `BonusService.reclamarBonus(User user)`
 - [X] T041 [US1] E2E test in Spanish verifying 3 player visits via HTTP POST endpoints unlock bonus claim in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 1
 
-- [X] T042 [P] [US1] Create concrete model `VisitPlayerMission extends Mission<Player>` with target `Player` check in `src/main/java/com/overcode/model/bonus/mission/VisitPlayerMission.java`
-- [X] T043 [US1] Create concrete composite model `Visit3PlayersMission extends AndMission<Player>` composed of 3 `VisitPlayerMission` instances in `src/main/java/com/overcode/model/bonus/mission/Visit3PlayersMission.java`
+- [X] T042 [P] [US1] Create concrete model `VisitPlayerMission extends Mission<Player>` with target `Player` check in `src/main/java/com/overcode/model/bonus/dailyBonusMission/VisitPlayerMission.java`
+- [X] T043 [US1] Create concrete composite model `Visit3PlayersMission extends AndMission<Player>` composed of 3 `VisitPlayerDailyBonusMission` instances in `src/main/java/com/overcode/model/bonus/dailyBonusMission/Visit3PlayersMission.java`
 - [X] T044 [P] [US1] Add static factory methods `crearVisitPlayerMission` and `crearVisit3PlayersMission` to `src/test/java/com/overcode/testUtils/TestMissionUtil.java`
 - [X] T045 [US1] Implement `registrarVisitaJugador(PeticionVisitaJugador peticion)` in `DailyBonusService` and `DailyBonusServiceImpl` in `src/main/java/com/overcode/service/interfaces/BonusService.java` and `src/main/java/com/overcode/service/impl/BonusServiceImpl.java`
 - [X] T046 [US1] Add `POST /api/daily-bonus/visit/{playerId}` endpoint in `DailyBonusController` delegating `PeticionVisitaJugador` to `DailyBonusService` in `src/main/java/com/overcode/controller/DailyBonusController.java`
@@ -105,18 +105,18 @@ description: "Task list for diary-bonus-missions implementation"
 
 ### Tests for User Story 2 ⚠️
 
-- [X] T047 [P] [US2] Unit test in Spanish for `BuyMission` and `DailyBonusOrMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/mission/BuyMissionTest.java`
-- [X] T048 [P] [US2] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying market purchase triggers mission completion and unlocks claim
+- [X] T047 [P] [US2] Unit test in Spanish for `BuyDailyBonusMission` and `DailyBonusOrDailyBonusMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/dailyBonusMission/BuyMissionTest.java`
+- [X] T048 [P] [US2] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying market purchase triggers dailyBonusMission completion and unlocks claim
 - [X] T049 [US2] E2E test in Spanish in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java` verifying market token purchase unlocks immediate daily bonus claim
 
 ### Implementation for User Story 2
 
-- [X] T050 [P] [US2] Create concrete model `BuyMission extends Mission<Void>` with `complete(Void unused)` and convenience `complete()` in `src/main/java/com/overcode/model/bonus/mission/BuyMission.java`
-- [X] T051 [US2] Create root composite model `DailyBonusOrMission extends OrMission<Void>` uniting `BuyMission` and `Visit3PlayersMission` in `src/main/java/com/overcode/model/bonus/mission/DailyBonusOrMission.java`
+- [X] T050 [P] [US2] Create concrete model `BuyMission extends Mission<Void>` with `complete(Void unused)` and convenience `complete()` in `src/main/java/com/overcode/model/bonus/dailyBonusMission/BuyMission.java`
+- [X] T051 [US2] Create root composite model `DailyBonusOrMission extends OrMission<Void>` uniting `BuyDailyBonusMission` and `Visit3PlayersDailyBonusMission` in `src/main/java/com/overcode/model/bonus/dailyBonusMission/DailyBonusOrMission.java`
 - [X] T052 [US2] Add method `registrarCompra(User user)` to `UserDailyBonusService` and `UserDailyBonusServiceImpl` in `src/main/java/com/overcode/service/interfaces/UserDiaryBonusService.java` and `src/main/java/com/overcode/service/impl/UserDiaryBonusServiceImpl.java`
 - [X] T053 [US2] Update `TokenMarketServiceImpl.buy(...)` to notify `userDailyBonusService.registrarCompra(buyer)` upon successful purchase in `src/main/java/com/overcode/service/impl/TokenMarketServiceImpl.java`
 
-**Checkpoint**: User Story 2 functional. Market purchase completes `BuyMission` and satisfies `DailyBonusOrMission` to enable claiming.
+**Checkpoint**: User Story 2 functional. Market purchase completes `BuyDailyBonusMission` and satisfies `DailyBonusOrDailyBonusMission` to enable claiming.
 
 ---
 
@@ -143,19 +143,19 @@ description: "Task list for diary-bonus-missions implementation"
 
 ## Phase 6: User Story 4 - Tracking Daily Mission Progress and Reward Schedule (Priority: P2)
 
-**Goal**: Users can inspect their current daily missions, individual completion progress, claim eligibility, current streak, and weekly reward schedule.
+**Goal**: Users can inspect their current daily dailyBonusMissions, individual completion progress, claim eligibility, current streak, and weekly reward schedule.
 
 **Independent Test**: Query GET `/api/daily-bonus` across unstarted, partially completed, and claimed states; verify returned DTO matches user progress.
 
 ### Tests for User Story 4 ⚠️
 
-- [X] T059 [P] [US4] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying `obtenerEstadoBonus(User user)` returns accurate mission completion tree
-- [X] T060 [US4] E2E test in Spanish in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java` verifying GET `/api/daily-bonus` returns structured mission statuses and upcoming rewards
+- [X] T059 [P] [US4] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying `obtenerEstadoBonus(User user)` returns accurate dailyBonusMission completion tree
+- [X] T060 [US4] E2E test in Spanish in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java` verifying GET `/api/daily-bonus` returns structured dailyBonusMission statuses and upcoming rewards
 
 ### Implementation for User Story 4
 
 - [X] T061 [P] [US4] Create response DTO `MissionStatusResponseDTO` (without boolean optional field) in `src/main/java/com/overcode/controller/dto/bonus/MissionStatusResponseDTO.java`
-- [X] T062 [US4] Update `EstadoBonus` to hold active mission list and claim readiness in `src/main/java/com/overcode/model/bonus/EstadoBonus.java`
+- [X] T062 [US4] Update `EstadoBonus` to hold active dailyBonusMission list and claim readiness in `src/main/java/com/overcode/model/bonus/EstadoBonus.java`
 - [X] T063 [US4] Update `DailyBonusStatusResponseDTO` to include `List<MissionStatusResponseDTO>` and `puedeReclamar` flag in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
 - [X] T064 [US4] Implement `obtenerEstadoBonus(User user)` in `DailyBonusServiceImpl` calling `userDailyBonus.inicializarConBonus(dailyBonus)` and returning `EstadoBonus` in `src/main/java/com/overcode/service/impl/BonusServiceImpl.java`
 
@@ -165,7 +165,7 @@ description: "Task list for diary-bonus-missions implementation"
 
 ## Phase 7: User Story 5 - Rejection of Premature Claims and Duplicate Claim Prevention (Priority: P2)
 
-**Goal**: Prevent claims before fulfilling mission conditions and block duplicate claims within the same calendar day.
+**Goal**: Prevent claims before fulfilling dailyBonusMission conditions and block duplicate claims within the same calendar day.
 
 **Independent Test**: Attempt premature claim expecting 400 Bad Request; attempt duplicate claim on same day expecting 400 Bad Request.
 
@@ -188,8 +188,8 @@ description: "Task list for diary-bonus-missions implementation"
 
 **Purpose**: System initialization, integration fixtures, and end-to-end validation.
 
-- [X] T070 Update `DataInitializer` to seed system `DailyBonus` with 3 distinct random players (verifying at least 3 active players exist in repository, throwing configuration error otherwise) and 1 market buy mission in `src/main/java/com/overcode/config/DataInitializer.java`
-- [X] T071 [P] Update test fixtures in `src/test/java/com/overcode/testUtils/TestService.java` to support `UserDailyBonus` and `Mission` teardown
+- [X] T070 Update `DataInitializer` to seed system `DailyBonus` with 3 distinct random players (verifying at least 3 active players exist in repository, throwing configuration error otherwise) and 1 market buy dailyBonusMission in `src/main/java/com/overcode/config/DataInitializer.java`
+- [X] T071 [P] Update test fixtures in `src/test/java/com/overcode/testUtils/TestService.java` to support `UserDailyBonus` and `DailyBonusMission` teardown
 - [X] T072 Execute complete validation test suite per `quickstart.md` (`./mvnw test`)
 
 ---
@@ -215,7 +215,7 @@ flowchart TD
 - **User Story 1 (P1 - MVP)**: Starts immediately after Phase 2 (Foundational). Delivers the primary free-to-play engagement path.
 - **User Story 2 (P1)**: Starts after Phase 2. Integrates with `TokenMarketServiceImpl`.
 - **User Story 3 (P1)**: Extends claim mechanics from US1/US2 with streak arithmetic.
-- **User Story 4 (P2)**: Surfaces mission tree progress assembled across US1/US2/US3.
+- **User Story 4 (P2)**: Surfaces dailyBonusMission tree progress assembled across US1/US2/US3.
 - **User Story 5 (P2)**: Enforces validation gates on claim paths established in US1/US2.
 
 ---
@@ -237,7 +237,7 @@ flowchart TD
 ### MVP First (User Story 1 Only)
 
 1. Complete Phase 1: Setup & Renaming (`LoginBonus` -> `DailyBonus`).
-2. Complete Phase 2: Foundational (Generic `Mission<T>`, `AndMission`, `OrMission`, `UserDailyBonus` persistence).
+2. Complete Phase 2: Foundational (Generic `Mission<T>`, `AndDailyBonusMission`, `OrDailyBonusMission`, `UserDailyBonus` persistence).
 3. Complete Phase 3: User Story 1 (3 Player profile visits to unlock daily bonus).
 4. **VALIDATE MVP**: Execute `mvn test -Dtest=VisitPlayerMissionTest,UserDiaryBonusRepositoryTest,BonusServiceImplTest,DailyBonusE2eTest`.
 

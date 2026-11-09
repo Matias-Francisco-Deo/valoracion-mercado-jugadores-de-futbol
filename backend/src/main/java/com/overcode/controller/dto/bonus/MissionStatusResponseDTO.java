@@ -1,6 +1,6 @@
 package com.overcode.controller.dto.bonus;
 
-import com.overcode.model.bonus.mission.Mission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,16 +26,16 @@ public class MissionStatusResponseDTO {
         }
     }
 
-    public static MissionStatusResponseDTO desdeModelo(Mission<?> mission) {
-        if (mission == null) {
+    public static MissionStatusResponseDTO desdeModelo(DailyBonusMission<?> dailyBonusMission) {
+        if (dailyBonusMission == null) {
             return null;
         }
         List<MissionStatusResponseDTO> subs = new ArrayList<>();
-        if (mission.getSubmissions() != null) {
-            for (Mission<?> child : mission.getSubmissions()) {
+        if (dailyBonusMission.getSubmissions() != null) {
+            for (DailyBonusMission<?> child : dailyBonusMission.getSubmissions()) {
                 subs.add(desdeModelo(child));
             }
         }
-        return new MissionStatusResponseDTO(mission.getId(), mission.getNombre(), mission.isCompleted(), subs);
+        return new MissionStatusResponseDTO(dailyBonusMission.getId(), dailyBonusMission.getNombre(), dailyBonusMission.isCompleted(), subs);
     }
 }

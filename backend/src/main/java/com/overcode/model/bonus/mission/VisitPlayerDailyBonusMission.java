@@ -8,27 +8,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class VisitPlayerMission extends Mission<Player> {
+public class VisitPlayerDailyBonusMission extends DailyBonusMission<Player> {
     private Player targetPlayer;
 
-    public VisitPlayerMission(Long id, String nombre, boolean completed, Player targetPlayer) {
+    public VisitPlayerDailyBonusMission(Long id, String nombre, boolean completed, Player targetPlayer) {
         super(id, nombre);
         this.targetPlayer = targetPlayer;
     }
 
-    public VisitPlayerMission(String nombre, Player targetPlayer) {
+    public VisitPlayerDailyBonusMission(String nombre, Player targetPlayer) {
         super(nombre);
         this.targetPlayer = targetPlayer;
     }
 
-    public VisitPlayerMission(Player targetPlayer) {
+    public VisitPlayerDailyBonusMission(Player targetPlayer) {
         super("Visitar perfil de " + targetPlayer.getName());
         this.targetPlayer = targetPlayer;
     }
 
     @Override
-    public void complete(Player player) { // el jugador debe estar persistido para que ande correctamente (requiere id)
-        if (isTargetPlayer(player)) {
+    public void complete(Player checkerObject) { // el jugador debe estar persistido para que ande correctamente (requiere id)
+        if (isTargetPlayer(checkerObject)) {
             setCompleted(true);
         }
     }
@@ -38,7 +38,7 @@ public class VisitPlayerMission extends Mission<Player> {
     }
 
     @Override
-    public VisitPlayerMission clonar() {
-        return new VisitPlayerMission(null, getNombre(), isCompleted(), this.targetPlayer);
+    public VisitPlayerDailyBonusMission clonar() {
+        return new VisitPlayerDailyBonusMission(null, getNombre(), isCompleted(), this.targetPlayer);
     }
 }

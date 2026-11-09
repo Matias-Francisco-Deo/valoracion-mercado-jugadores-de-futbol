@@ -1,4 +1,4 @@
-# Research & Architectural Decisions: diary-bonus-missions
+# Research & Architectural Decisions: diary-bonus-dailyBonusMissions
 
 ## Executive Summary
 
@@ -29,13 +29,13 @@ This document captures the research, architectural evaluations, and technical de
   - Service: `DiaryBonusService`, `DiaryBonusServiceImpl`
   - Integration: Update `ConfiguracionMercado` to reference `DailyBonus` instead of `LoginBonus`.
   - Test Utils: `TestDailyBonusUtil` replacing `TestLoginBonusUtil`.
-- **Rationale**: Clean, consistent naming throughout the entire repository avoids cognitive confusion between legacy login logic and the new mission-driven diary bonus system. Preserves the underlying rewards scaling logic while adding the mission root composite.
+- **Rationale**: Clean, consistent naming throughout the entire repository avoids cognitive confusion between legacy login logic and the new dailyBonusMission-driven diary bonus system. Preserves the underlying rewards scaling logic while adding the dailyBonusMission root composite.
 - **Alternatives Considered**: Keeping a deprecated `LoginBonus` wrapper class. Rejected because the instruction explicitly directed to change every name for `DailyBonus`.
 
 ### 2. Composite Pattern for Daily Missions: Generic `Mission<T>`, Abstract `OrMission<T>` & `AndMission<T>`, and Elimination of Optionality Booleans
 
 - **Context**:
-  > *"Mission will have OrMission and AndMission abstract class that represents the Or and And behavior of the composite pattern. IT CANT have booleans representing the optional behavior of it. The mission CANNOT receive Object in complete, it MUST receive a parametrized type defined in the subclass."*
+  > *"Mission will have OrMission and AndMission abstract class that represents the Or and And behavior of the composite pattern. IT CANT have booleans representing the optional behavior of it. The dailyBonusMission CANNOT receive Object in complete, it MUST receive a parametrized type defined in the subclass."*
 - **Decision**:
   1. **Generic Base Component `Mission<T>`**:
      - `public abstract class Mission<T>`
@@ -43,7 +43,7 @@ This document captures the research, architectural evaluations, and technical de
      - Status verification: `public abstract boolean isCompleted();`
      - Clones/instantiation: `public abstract Mission<T> clonar();`
      - **NO `Object` parameter**: The parameter `T` must be strongly typed and bound in each concrete subclass.
-     - **NO `boolean optional` flag**: Optionality is NOT a boolean flag. It is an emergent property of the composite pattern represented by `OrMission` (where completing any alternative branch satisfies the composite requirement).
+     - **NO `boolean optional` flag**: Optionality is NOT a boolean flag. It is an emergent property of the composite pattern represented by `OrDailyBonusMission` (where completing any alternative branch satisfies the composite requirement).
   2. **Abstract Composite Nodes `OrMission<T>` and `AndMission<T>`**:
      - `public abstract class OrMission<T> extends Mission<T>`:
        - Encapsulates the logical OR behavior of the composite pattern.
@@ -58,14 +58,14 @@ This document captures the research, architectural evaluations, and technical de
        - Holds a `Player targetPlayer`.
        - Binds `T = Player`: `@Override public void complete(Player player)` checks equality against `this.targetPlayer` and marks completion.
      - `Visit3PlayersMission extends AndMission<Player>`:
-       - Composed of 3 distinct `VisitPlayerMission` instances.
+       - Composed of 3 distinct `VisitPlayerDailyBonusMission` instances.
        - `@Override public void complete(Player player)` delegates to child `Mission<Player>` instances.
        - `isCompleted()` returns true only when all 3 player visits are completed.
      - `BuyMission extends Mission<Void>`:
        - Binds `T = Void`: `@Override public void complete(Void unused)` sets `completed = true`.
        - Provides parameterless helper `public void complete() { complete(null); }`.
      - `DailyBonusOrMission extends OrMission<Void>`:
-       - Concrete `OrMission` root uniting `BuyMission` and `Visit3PlayersMission`.
+       - Concrete `OrDailyBonusMission` root uniting `BuyDailyBonusMission` and `Visit3PlayersDailyBonusMission`.
        - Satisfied when either `buyMission.isCompleted()` OR `visit3PlayersMission.isCompleted()`.
      - `TestMission<T> extends Mission<T>`:
        - Isolated subclass for unit-testing the composite mechanics.
@@ -90,20 +90,20 @@ This document captures the research, architectural evaluations, and technical de
   - The Service method simply retrieves `userDailyBonus` and `dailyBonus`, and delegates directly:
     ```java
     userDailyBonus.inicializarConBonus(dailyBonus);
-    userDiaryBonusRepository.guardar(userDailyBonus);
+    userDailyBonusRepository.guardar(userDailyBonus);
     ```
   - Inside the domain entity `UserDailyBonus`:
     ```java
     public void inicializarConBonus(DiaryBonus dailyBonus) {
         LocalDate hoy = getFechaActual();
-        if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeMission == null) {
+        if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeDailyBonusMission == null) {
             actualizarRacha();
             this.activeMissionDate = hoy;
-            this.activeMission = dailyBonus.getMission().clonar();
+            this.activeDailyBonusMission = dailyBonus.getMission().clonar();
         }
     }
     ```
-  - The scheduled midnight background job ONLY configures the system-wide `DailyBonus` with that day's 3 random players and 1 market buy mission inside `ConfiguracionMercado` / `DailyBonus`. No user records are loaded or iterated.
+  - The scheduled midnight background job ONLY configures the system-wide `DailyBonus` with that day's 3 random players and 1 market buy dailyBonusMission inside `ConfiguracionMercado` / `DailyBonus`. No user records are loaded or iterated.
 - **Rationale**: 100% adherence to Constitution Principle II (Rich Model) and user prompt. Business logic remains solely inside domain entities.
 
 ### 5. Service Method Signature Contract: Exactly ONE Model Object Parameter

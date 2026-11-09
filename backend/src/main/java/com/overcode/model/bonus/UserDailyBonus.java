@@ -23,15 +23,15 @@ public class UserDailyBonus {
     private Integer streakCount = 0;
     private LocalDate lastBonusClaimDate;
     private LocalDate activeMissionDate;
-    private Mission<?> activeMission;
+    private DailyBonusMission<?> activeDailyBonusMission;
 
-    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, Mission<?> activeMission) {
+    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, DailyBonusMission<?> activeDailyBonusMission) {
         this.id = id;
         this.user = user;
         this.streakCount = streakCount;
         this.lastBonusClaimDate = lastBonusClaimDate;
         this.activeMissionDate = activeMissionDate;
-        this.activeMission = activeMission;
+        this.activeDailyBonusMission = activeDailyBonusMission;
     }
 
     public UserDailyBonus(User user) {
@@ -48,7 +48,7 @@ public class UserDailyBonus {
     }
 
     public boolean puedeReclamarBonusHoy() {
-        return activeMission != null && activeMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
+        return activeDailyBonusMission != null && activeDailyBonusMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
     }
 
     public void actualizarRacha() {
@@ -82,60 +82,60 @@ public class UserDailyBonus {
         LocalDate hoy = getFechaActual();
 
         // TODO si la misión es de hoy, no la cambio, si es de ayer u otro día pasado, sí la reemplazo
-        if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeMission == null) {
+        if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeDailyBonusMission == null) {
             actualizarRacha();
             this.activeMissionDate = hoy;
-            if (dailyBonus != null && dailyBonus.getRootMission() != null) {
-                this.activeMission = dailyBonus.getRootMission().clonar(); // TODO más que nada debería hacer esto
+            if (dailyBonus != null && dailyBonus.getRootDailyBonusMission() != null) {
+                this.activeDailyBonusMission = dailyBonus.getRootDailyBonusMission().clonar(); // TODO más que nada debería hacer esto
             }
         }
     }
 
     public void registrarVisitaJugador(Player player) { // TODO embellecer, ta feo
-        if (player == null || this.activeMission == null) {
+        if (player == null || this.activeDailyBonusMission == null) {
             return;
         }
-        if (this.activeMission instanceof DailyBonusOrMission dom) {
+        if (this.activeDailyBonusMission instanceof DailyBonusOrDailyBonusMission dom) {
             dom.completeVisit(player);
-        } else if (this.activeMission instanceof Visit3PlayersMission v3pm) {
+        } else if (this.activeDailyBonusMission instanceof Visit3PlayersDailyBonusMission v3pm) {
             v3pm.complete(player);
-        } else if (this.activeMission instanceof VisitPlayerMission vpm) {
+        } else if (this.activeDailyBonusMission instanceof VisitPlayerDailyBonusMission vpm) {
             vpm.complete(player);
         } else {
-            dispatchVisitRecursively(this.activeMission, player);
+            dispatchVisitRecursively(this.activeDailyBonusMission, player);
         }
     }
 
-    private void dispatchVisitRecursively(Mission<?> mission, Player player) {
-        if (mission instanceof VisitPlayerMission vpm) {
+    private void dispatchVisitRecursively(DailyBonusMission<?> dailyBonusMission, Player player) {
+        if (dailyBonusMission instanceof VisitPlayerDailyBonusMission vpm) {
             vpm.complete(player);
-        } else if (mission instanceof Visit3PlayersMission v3pm) {
+        } else if (dailyBonusMission instanceof Visit3PlayersDailyBonusMission v3pm) {
             v3pm.complete(player);
         } else {
-            for (Mission<?> sub : mission.getSubmissions()) {
+            for (DailyBonusMission<?> sub : dailyBonusMission.getSubmissions()) {
                 dispatchVisitRecursively(sub, player);
             }
         }
     }
 
     public void registrarCompra() {
-        if (this.activeMission == null) {
+        if (this.activeDailyBonusMission == null) {
             return;
         }
-        if (this.activeMission instanceof DailyBonusOrMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
+        if (this.activeDailyBonusMission instanceof DailyBonusOrDailyBonusMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
             dom.complete((Void) null);
-        } else if (this.activeMission instanceof BuyMission bm) { // esta sí
+        } else if (this.activeDailyBonusMission instanceof BuyDailyBonusMission bm) { // esta sí
             bm.complete();
         } else {
-            dispatchBuyRecursively(this.activeMission); // TODO generalizar esto? por ahí pasando el mismo switch...
+            dispatchBuyRecursively(this.activeDailyBonusMission); // TODO generalizar esto? por ahí pasando el mismo switch...
         }
     }
 
-    private void dispatchBuyRecursively(Mission<?> mission) {
-        if (mission instanceof BuyMission bm) {
+    private void dispatchBuyRecursively(DailyBonusMission<?> dailyBonusMission) {
+        if (dailyBonusMission instanceof BuyDailyBonusMission bm) {
             bm.complete();
         } else {
-            for (Mission<?> sub : mission.getSubmissions()) {
+            for (DailyBonusMission<?> sub : dailyBonusMission.getSubmissions()) {
                 dispatchBuyRecursively(sub);
             }
         }

@@ -1,6 +1,6 @@
 package com.overcode.service.impl.bonus;
 
-import com.overcode.model.bonus.mission.Mission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.persistence.repository.interfaces.MissionRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.MissionService;
@@ -18,12 +18,12 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public Mission<?> guardar(Mission<?> mission) {
-        return missionRepository.guardar(mission);
+    public DailyBonusMission<?> guardar(DailyBonusMission<?> dailyBonusMission) {
+        return missionRepository.guardar(dailyBonusMission);
     }
 
     @Override
-    public Mission<?> recuperarPorId(Long id) {
+    public DailyBonusMission<?> recuperarPorId(Long id) {
         return missionRepository.recuperarPorId(id)
                 .orElseThrow(() -> new EntidadNoEncontradaException("Misión no encontrada con id: " + id));
     }

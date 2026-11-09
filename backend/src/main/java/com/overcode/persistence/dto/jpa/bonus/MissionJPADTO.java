@@ -38,54 +38,54 @@ public class MissionJPADTO {
     @JoinColumn(name = "parent_mission_id") // TODO y ese join
     private List<MissionJPADTO> submissions = new ArrayList<>();
 
-    public Mission<?> aModelo() { // TODO esto es básicamente un mapping, no está bien que se haga acá. Hay que manejar algo similar a las estrategias de cotización
+    public DailyBonusMission<?> aModelo() { // TODO esto es básicamente un mapping, no está bien que se haga acá. Hay que manejar algo similar a las estrategias de cotización
         if ("VISIT_PLAYER".equalsIgnoreCase(this.tipoMision)) {
-            return new VisitPlayerMission(
+            return new VisitPlayerDailyBonusMission(
                     this.id,
                     this.nombre,
                     this.completed,
                     this.targetPlayer != null ? this.targetPlayer.aModeloSinTokens() : null
             );
         } else if ("BUY".equalsIgnoreCase(this.tipoMision)) {
-            return new BuyMission(this.id, this.nombre, this.completed);
+            return new BuyDailyBonusMission(this.id, this.nombre, this.completed);
         } else if ("VISIT_3_PLAYERS".equalsIgnoreCase(this.tipoMision)) {
-            List<Mission<?>> subs = new ArrayList<>();
+            List<DailyBonusMission<?>> subs = new ArrayList<>();
             if (this.submissions != null) {
                 for (MissionJPADTO sub : this.submissions) {
                     subs.add(sub.aModelo());
                 }
             }
-            return new Visit3PlayersMission(this.id, this.nombre, this.completed, subs);
+            return new Visit3PlayersDailyBonusMission(this.id, this.nombre, this.completed, subs);
         } else if ("DAILY_BONUS_OR".equalsIgnoreCase(this.tipoMision)) {
-            List<Mission<?>> subs = new ArrayList<>();
+            List<DailyBonusMission<?>> subs = new ArrayList<>();
             if (this.submissions != null) {
                 for (MissionJPADTO sub : this.submissions) {
                     subs.add(sub.aModelo());
                 }
             }
-            return new DailyBonusOrMission(this.id, this.nombre, this.completed, subs);
+            return new DailyBonusOrDailyBonusMission(this.id, this.nombre, this.completed, subs);
         } else if ("OR".equalsIgnoreCase(this.tipoMision)) {
-            List<Mission<?>> subs = new ArrayList<>();
+            List<DailyBonusMission<?>> subs = new ArrayList<>();
             if (this.submissions != null) {
                 for (MissionJPADTO sub : this.submissions) {
                     subs.add(sub.aModelo());
                 }
             }
-            return new GenericOrMission<>(this.id, this.nombre, this.completed, subs);
+            return new GenericOrDailyBonusMission<>(this.id, this.nombre, this.completed, subs);
         } else if ("AND".equalsIgnoreCase(this.tipoMision)) {
-            List<Mission<?>> subs = new ArrayList<>();
+            List<DailyBonusMission<?>> subs = new ArrayList<>();
             if (this.submissions != null) {
                 for (MissionJPADTO sub : this.submissions) {
                     subs.add(sub.aModelo());
                 }
             }
-            return new GenericAndMission<>(this.id, this.nombre, this.completed, subs);
+            return new GenericAndDailyBonusMission<>(this.id, this.nombre, this.completed, subs);
         } else {
-            return new TestMission<>(this.id, this.nombre, this.completed);
+            return new TestDailyBonusMission<>(this.id, this.nombre, this.completed);
         }
     }
 
-    public static MissionJPADTO desdeModelo(Mission<?> modelo) {
+    public static MissionJPADTO desdeModelo(DailyBonusMission<?> modelo) {
         if (modelo == null) {
             return null;
         }
@@ -94,7 +94,7 @@ public class MissionJPADTO {
         dto.setNombre(modelo.getNombre());
         dto.setCompleted(modelo.isCompleted());
 
-        if (modelo instanceof VisitPlayerMission vpm) { // TODO esto se va
+        if (modelo instanceof VisitPlayerDailyBonusMission vpm) { // TODO esto se va
             dto.setTipoMision("VISIT_PLAYER");
             if (vpm.getTargetPlayer() != null && vpm.getTargetPlayer().getId() != null) {
                 PlayerJPADTO playerDTO = new PlayerJPADTO();
@@ -103,15 +103,15 @@ public class MissionJPADTO {
                 playerDTO.setCurrentPrice(vpm.getTargetPlayer().getCurrentPrice());
                 dto.setTargetPlayer(playerDTO);
             }
-        } else if (modelo instanceof BuyMission) {
+        } else if (modelo instanceof BuyDailyBonusMission) {
             dto.setTipoMision("BUY");
-        } else if (modelo instanceof Visit3PlayersMission) {
+        } else if (modelo instanceof Visit3PlayersDailyBonusMission) {
             dto.setTipoMision("VISIT_3_PLAYERS");
-        } else if (modelo instanceof DailyBonusOrMission) {
+        } else if (modelo instanceof DailyBonusOrDailyBonusMission) {
             dto.setTipoMision("DAILY_BONUS_OR");
-        } else if (modelo instanceof OrMission) {
+        } else if (modelo instanceof OrDailyBonusMission) {
             dto.setTipoMision("OR");
-        } else if (modelo instanceof AndMission) {
+        } else if (modelo instanceof AndDailyBonusMission) {
             dto.setTipoMision("AND");
         } else {
             dto.setTipoMision("TEST");
@@ -119,7 +119,7 @@ public class MissionJPADTO {
 
         if (modelo.getSubmissions() != null && !modelo.getSubmissions().isEmpty()) {
             List<MissionJPADTO> subs = new ArrayList<>();
-            for (Mission<?> child : modelo.getSubmissions()) {
+            for (DailyBonusMission<?> child : modelo.getSubmissions()) {
                 subs.add(desdeModelo(child));
             }
             dto.setSubmissions(subs);

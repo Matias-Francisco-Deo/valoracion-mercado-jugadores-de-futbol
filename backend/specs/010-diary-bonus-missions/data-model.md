@@ -1,8 +1,8 @@
-# Data Model: diary-bonus-missions
+# Data Model: diary-bonus-dailyBonusMissions
 
 ## Overview
 
-This document specifies the domain model, persistence entities, state transitions, and validation invariants for the mission-based `DailyBonus` system.
+This document specifies the domain model, persistence entities, state transitions, and validation invariants for the dailyBonusMission-based `DailyBonus` system.
 
 ---
 
@@ -19,7 +19,7 @@ classDiagram
         -Long id
         -String nombre
         -DiaryBonusRewards bonusRewards
-        -Mission~?~ rootMission
+        -Mission~?~ rootDailyBonusMission
         +Double getBonusConRacha(Integer racha)
         +Double getBonusParaUsuario(UserDiaryBonus userBonus)
         +EstadoBonus obtenerEstadoBonus(UserDiaryBonus userBonus)
@@ -45,21 +45,21 @@ classDiagram
     }
 
     DiaryBonus "1" *-- "1" DiaryBonusRewards
-    DiaryBonus "1" *-- "1" Mission : rootMission
+    DiaryBonus "1" *-- "1" Mission : rootDailyBonusMission
 ```
 
 #### Fields:
 - `id`: `Long` - Unique identifier.
 - `nombre`: `String` - Name of the diary bonus configuration (non-null, non-empty).
 - `bonusRewards`: `DailyBonusRewards` - Holds the 7 reward tiers (one per streak day 0..6).
-- `rootMission`: `Mission<?>` - Composite root mission defining today's requirements (e.g. `DailyBonusOrMission`).
+- `rootDailyBonusMission`: `Mission<?>` - Composite root dailyBonusMission defining today's requirements (e.g. `DailyBonusOrDailyBonusMission`).
 
 #### Business Methods & Rules:
 - `getBonusConRacha(Integer racha)`: Returns reward for given streak index.
 - `verificarPuedeReclamarBonus(UserDiaryBonus userBonus)`:
   - Verifies user has not already claimed today (`BonusYaReclamadoHoyException`).
   - Verifies current date is not prior to last claim date (`FechaReclamoBonusDiarioInvalidaException`).
-  - Verifies that `userBonus.puedeReclamarHoy()` is true; throws `RequisitosMisionesNoCumplidosException` if root mission is incomplete.
+  - Verifies that `userBonus.puedeReclamarHoy()` is true; throws `RequisitosMisionesNoCumplidosException` if root dailyBonusMission is incomplete.
 
 ---
 
@@ -76,7 +76,7 @@ classDiagram
         -Integer streakCount
         -LocalDate lastBonusClaimDate
         -LocalDate activeMissionDate
-        -Mission~?~ activeMission
+        -Mission~?~ activeDailyBonusMission
         +void inicializarConBonus(DiaryBonus dailyBonus)
         +boolean puedeReclamarHoy()
         +boolean yaReclamoHoy(LocalDate hoy)
@@ -93,23 +93,23 @@ classDiagram
 - `user`: `User` - Reference to owner `User` entity (direct domain object reference, non-null).
 - `streakCount`: `Integer` - Current consecutive streak count (default: 0, range 0..6).
 - `lastBonusClaimDate`: `LocalDate` - Date of last successful claim (nullable).
-- `activeMissionDate`: `LocalDate` - Date of the currently assigned daily mission tree.
-- `activeMission`: `Mission<?>` - Root composite mission tree assigned to this user for `activeMissionDate`.
+- `activeMissionDate`: `LocalDate` - Date of the currently assigned daily dailyBonusMission tree.
+- `activeDailyBonusMission`: `Mission<?>` - Root composite dailyBonusMission tree assigned to this user for `activeMissionDate`.
 
 #### Business Methods & Lifecycle:
 - `inicializarConBonus(DiaryBonus dailyBonus)`:
   - Encapsulates all lazy assignment logic within the domain model.
-  - Checks if `activeMissionDate == null || !activeMissionDate.isEqual(getFechaActual()) || activeMission == null`.
+  - Checks if `activeMissionDate == null || !activeMissionDate.isEqual(getFechaActual()) || activeDailyBonusMission == null`.
   - If initialization is needed:
     - Calls `actualizarRacha()` (resets streak if more than 1 day elapsed).
     - Sets `activeMissionDate = getFechaActual()`.
-    - Sets `activeMission = dailyBonus.getMission().clonar()`.
+    - Sets `activeDailyBonusMission = dailyBonus.getMission().clonar()`.
 - `registrarVisitaJugador(Player player)`:
-  - Dispatches completion with typed `Player` argument to visit mission branches.
+  - Dispatches completion with typed `Player` argument to visit dailyBonusMission branches.
 - `registrarCompra()`:
-  - Dispatches completion with `null` or market trigger to buy mission branch.
+  - Dispatches completion with `null` or market trigger to buy dailyBonusMission branch.
 - `puedeReclamarHoy()`:
-  - Evaluates `activeMission != null && activeMission.isCompleted() && !yaReclamoHoy(getFechaActual())`.
+  - Evaluates `activeDailyBonusMission != null && activeDailyBonusMission.isCompleted() && !yaReclamoHoy(getFechaActual())`.
 - `reclamarBonus(DiaryBonus dailyBonus)`:
   - Validates eligibility via `dailyBonus.verificarPuedeReclamarBonus(this)`.
   - Determines bonus amount: `dailyBonus.getBonusConRacha(streakCount)`.
@@ -134,9 +134,9 @@ public record PeticionVisitaJugador(User user, Player player) {}
 
 ---
 
-## 2. Mission Composite Hierarchy (`com.overcode.model.bonus.mission`)
+## 2. Mission Composite Hierarchy (`com.overcode.model.bonus.dailyBonusMission`)
 
-The mission system strictly implements the composite pattern via generic `Mission<T>` and abstract composite classes `OrMission<T>` and `AndMission<T>`. All classes use Lombok `@Getter` and `@Setter`. It does **not** rely on artificial boolean optional flags; alternative branches are expressed through `OrMission`. Completion arguments are strictly parameterized per subclass.
+The dailyBonusMission system strictly implements the composite pattern via generic `Mission<T>` and abstract composite classes `OrMission<T>` and `AndMission<T>`. All classes use Lombok `@Getter` and `@Setter`. It does **not** rely on artificial boolean optional flags; alternative branches are expressed through `OrDailyBonusMission`. Completion arguments are strictly parameterized per subclass.
 
 ```mermaid
 classDiagram
@@ -211,7 +211,7 @@ classDiagram
 
 1. **`Mission<T>` (Abstract Base Class)**:
    - Holds `id`, `nombre`, and `completed` (boolean). Annotated with `@Getter` and `@Setter`.
-   - **No boolean optional field**: Optional branches are modeled naturally by `OrMission`.
+   - **No boolean optional field**: Optional branches are modeled naturally by `OrDailyBonusMission`.
    - Methods:
      - `public abstract boolean isCompleted();`
      - `public abstract void complete(T context);` — **Parameter is strictly typed with `T`**, not raw `Object`.
@@ -220,19 +220,19 @@ classDiagram
 2. **`OrMission<T>` (Abstract Composite Class)**:
    - Represents the OR behavior of the composite pattern. Annotated with `@Getter` and `@Setter`.
    - Holds `List<Mission<?>> submissions`.
-   - `isCompleted()`: Returns `true` if **any** child mission has `isCompleted() == true` (`submissions.stream().anyMatch(Mission::isCompleted)`).
+   - `isCompleted()`: Returns `true` if **any** child dailyBonusMission has `isCompleted() == true` (`submissions.stream().anyMatch(Mission::isCompleted)`).
 3. **`AndMission<T>` (Abstract Composite Class)**:
    - Represents the AND behavior of the composite pattern. Annotated with `@Getter` and `@Setter`.
    - Holds `List<Mission<?>> submissions`.
-   - `isCompleted()`: Returns `true` if **all** child missions have `isCompleted() == true` (`submissions.stream().allMatch(Mission::isCompleted)`).
+   - `isCompleted()`: Returns `true` if **all** child dailyBonusMissions have `isCompleted() == true` (`submissions.stream().allMatch(Mission::isCompleted)`).
 4. **`DailyBonusOrMission extends OrMission<Void>`**:
-   - Concrete `OrMission` root holding `BuyMission` and `Visit3PlayersMission`.
-   - `isCompleted()`: returns true if either the buy mission is completed OR all 3 player visits are completed.
+   - Concrete `OrDailyBonusMission` root holding `BuyDailyBonusMission` and `Visit3PlayersDailyBonusMission`.
+   - `isCompleted()`: returns true if either the buy dailyBonusMission is completed OR all 3 player visits are completed.
    - `complete(Void unused)`: no-op default for top-level void trigger.
 5. **`Visit3PlayersMission extends AndMission<Player>`**:
-   - Concrete `AndMission` composed of 3 distinct `VisitPlayerMission` instances.
-   - `@Override public void complete(Player player)`: forwards the player to all child `VisitPlayerMission` instances.
-   - `isCompleted()`: returns true only when all 3 player visit missions are completed.
+   - Concrete `AndDailyBonusMission` composed of 3 distinct `VisitPlayerDailyBonusMission` instances.
+   - `@Override public void complete(Player player)`: forwards the player to all child `VisitPlayerDailyBonusMission` instances.
+   - `isCompleted()`: returns true only when all 3 player visit dailyBonusMissions are completed.
 6. **`VisitPlayerMission extends Mission<Player>`**:
    - Parameterized by `Player`.
    - Holds `Player targetPlayer`.
@@ -242,7 +242,7 @@ classDiagram
    - `@Override public void complete(Void unused)`: sets `this.completed = true`.
    - Convenience overload: `public void complete() { complete(null); }`.
 8. **`TestMission<T> extends Mission<T>`**:
-   - Reusable parameterized test mission class used in unit tests to verify composite mechanics (`AndMission` and `OrMission`) in isolation before complex missions.
+   - Reusable parameterized test dailyBonusMission class used in unit tests to verify composite mechanics (`AndDailyBonusMission` and `OrDailyBonusMission`) in isolation before complex dailyBonusMissions.
 
 ---
 
@@ -318,17 +318,17 @@ erDiagram
 |---|---|---|
 | Model | `DailyBonus`, `DailyBonusRewards` | Domain models for bonus schedule & rewards. |
 | Model | `UserDailyBonus` | User's daily bonus profile referencing `User`. |
-| Model | `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `DailyBonusOrMission`, `Visit3PlayersMission`, `VisitPlayerMission`, `BuyMission` | Generic composite mission hierarchy. |
+| Model | `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `DailyBonusOrDailyBonusMission`, `Visit3PlayersDailyBonusMission`, `VisitPlayerDailyBonusMission`, `BuyDailyBonusMission` | Generic composite dailyBonusMission hierarchy. |
 | Model Record | `PeticionVisitaJugador` | Domain record for single-parameter service calls. |
 | JPA DTO | `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO` | JPA mapping for `diary_bonuses`. |
 | JPA DTO | `UserDiaryBonusJPADTO` | JPA mapping for `user_diary_bonuses` (links to `UserJPADTO`). |
-| JPA DTO | `MissionJPADTO` | Single-table JPA mapping for recursive mission trees (NO optionality column). |
+| JPA DTO | `MissionJPADTO` | Single-table JPA mapping for recursive dailyBonusMission trees (NO optionality column). |
 | DAO JPA | `DailyBonusDAOJPA` | Spring Data JPA repository for `DailyBonusJPADTO`. |
 | DAO JPA | `UserDiaryBonusDAOJPA` | Spring Data JPA repository for `UserDiaryBonusJPADTO`. |
 | DAO JPA | `MissionDAOJPA` | Spring Data JPA repository for `MissionJPADTO`. |
 | Repo Interface | `DailyBonusRepository` | Boundary for diary bonus persistence. |
-| Repo Interface | `UserDiaryBonusRepository` | Boundary for user daily bonus persistence. |
-| Repo Interface | `MissionRepository` | Boundary for mission persistence. |
+| Repo Interface | `UserDailyBonusRepository` | Boundary for user daily bonus persistence. |
+| Repo Interface | `MissionRepository` | Boundary for dailyBonusMission persistence. |
 | Repo Impl | `DailyBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
-| Repo Impl | `UserDiaryBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
+| Repo Impl | `UserDailyBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
 | Repo Impl | `MissionRepositoryImpl` | Implementation converting DTO <-> Model. |
