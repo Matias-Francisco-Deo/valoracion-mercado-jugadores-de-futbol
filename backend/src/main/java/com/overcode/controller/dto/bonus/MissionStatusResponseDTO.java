@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MissionStatusResponseDTO {
+public class MissionStatusResponseDTO { // TODO revisar este DTO
     private Long id;
     private String nombre;
     private boolean completed;

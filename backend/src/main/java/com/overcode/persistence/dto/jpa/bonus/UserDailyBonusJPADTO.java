@@ -12,29 +12,28 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "user_diary_bonus")
-@Table(name = "user_diary_bonuses")
-public class UserDiaryBonusJPADTO {
+@Entity(name = "user_daily_bonus")
+@Table(name = "user_daily_bonuses")
+public class UserDailyBonusJPADTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER) // TODO ???????????????????????????????????? cómo que many to one
-    @JoinColumn(name = "user_id", nullable = false) // TODO y ese join pt2
+    @OneToOne(fetch = FetchType.EAGER)
     private UserJPADTO user;
 
-    @Column(name = "streak_count", nullable = false)
+    @Column(nullable = false)
     private Integer streakCount = 0;
 
-    @Column(name = "last_bonus_claim_date")
+    @Column()
     private LocalDate lastBonusClaimDate;
 
-    @Column(name = "active_mission_date")
+    @Column()
     private LocalDate activeMissionDate;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "root_mission_id") // TODO y ese join
+    @JoinColumn(name = "root_mission_id")
     private MissionJPADTO activeMission;
 
     public UserDailyBonus aModelo() {
@@ -48,16 +47,16 @@ public class UserDiaryBonusJPADTO {
         );
     }
 
-    public static UserDiaryBonusJPADTO desdeModelo(UserDailyBonus modelo) {
+    public static UserDailyBonusJPADTO desdeModelo(UserDailyBonus modelo) {
         if (modelo == null) {
             return null;
         }
-        UserDiaryBonusJPADTO dto = new UserDiaryBonusJPADTO();
+        UserDailyBonusJPADTO dto = new UserDailyBonusJPADTO();
         dto.setId(modelo.getId());
         if (modelo.getUser() != null) {
             dto.setUser(UserJPADTO.desdeModelo(modelo.getUser()));
         }
-        dto.setStreakCount(modelo.getStreakCount() != null ? modelo.getStreakCount() : 0);
+        dto.setStreakCount(modelo.getStreakCount());
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
         if (modelo.getActiveDailyBonusMission() != null) {

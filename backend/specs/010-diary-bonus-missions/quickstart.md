@@ -44,7 +44,7 @@ Validates the composite structure (`OrMission<T>`, `AndMission<T>`, `Visit3Playe
 ---
 
 ### Scenario 2: UserDiaryBonus and Mission Persistence Integration Tests
-Validates that `UserDiaryBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapping to `UserJPADTO`), `MissionJPADTO`, and `DailyBonusJPADTO` correctly persist recursive composite trees in PostgreSQL via Testcontainers.
+Validates that `UserDailyBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapping to `UserJPADTO`), `MissionJPADTO`, and `DailyBonusJPADTO` correctly persist recursive composite trees in PostgreSQL via Testcontainers.
 
 **Test Command**:
 ```powershell

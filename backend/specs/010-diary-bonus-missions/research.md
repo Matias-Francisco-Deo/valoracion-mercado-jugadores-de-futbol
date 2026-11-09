@@ -78,7 +78,7 @@ This document captures the research, architectural evaluations, and technical de
 - **Decision**:
   - `UserDailyBonus` directly holds `private User user;`
   - Uses Lombok `@Getter` and `@Setter` annotations (no handwritten trivial getters/setters).
-  - In persistence: `UserDiaryBonusJPADTO` maintains `@OneToOne` / `@ManyToOne` association with `UserJPADTO user;` mapping bidirectionally via `aModelo()` and `desdeModelo()`.
+  - In persistence: `UserDailyBonusJPADTO` maintains `@OneToOne` / `@ManyToOne` association with `UserJPADTO user;` mapping bidirectionally via `aModelo()` and `desdeModelo()`.
 - **Rationale**: Respects Domain-Driven Design and Constitution Principle II (Rich Model). Domain entities hold direct object references to collaborators rather than disconnected foreign keys.
 
 ### 4. Lazy Per-User Mission Initialization & Zero Model Logic in Service

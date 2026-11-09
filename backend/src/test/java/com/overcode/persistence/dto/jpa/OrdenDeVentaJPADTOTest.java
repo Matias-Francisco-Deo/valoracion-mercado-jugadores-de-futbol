@@ -16,7 +16,9 @@ class OrdenDeVentaJPADTOTest {
 
     @Test
     void desdeModeloMapeaTodosLosCamposCorrectamente() {
-        User user = new User(10L,"user","email@gmail","pass",0d,new ArrayList<>());
+//        User user = new User(10L,"user","email@gmail","pass",0d,new ArrayList<>());
+        User user = new User();
+        user.setId(10L);
         Player player = new Player(20L);
         Token token = new Token(100L,user,player);
 
@@ -36,7 +38,8 @@ class OrdenDeVentaJPADTOTest {
 
     @Test
     void aModeloMapeaTodosLosCamposCorrectamente() {
-        UserJPADTO user = new UserJPADTO(11L,"user2","email2@gmail","pass",0d,new ArrayList<>());
+        UserJPADTO user = new UserJPADTO();
+        user.setId(11L);
         PlayerJPADTO player = new PlayerJPADTO(21L,"player",30d,new ArrayList<>());
         TokenJPADTO token = new TokenJPADTO(101L,user,player);
 

@@ -1,8 +1,7 @@
 package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.UserDailyBonus;
-import com.overcode.model.user.User;
-import com.overcode.persistence.dto.jpa.bonus.UserDiaryBonusJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.UserDailyBonusJPADTO;
 import com.overcode.persistence.repository.dao.jpa.UserDiaryBonusDAOJPA;
 import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
 import org.springframework.stereotype.Repository;
@@ -20,29 +19,18 @@ public class UserDailyBonusRepositoryImpl implements UserDailyBonusRepository {
 
     @Override
     public UserDailyBonus guardar(UserDailyBonus userDailyBonus) {
-        UserDiaryBonusJPADTO dto = UserDiaryBonusJPADTO.desdeModelo(userDailyBonus);
+        UserDailyBonusJPADTO dto = UserDailyBonusJPADTO.desdeModelo(userDailyBonus);
         return userDiaryBonusDAOJPA.save(dto).aModelo();
     }
 
     @Override
     public Optional<UserDailyBonus> recuperarPorId(Long id) {
-        return userDiaryBonusDAOJPA.findById(id).map(UserDiaryBonusJPADTO::aModelo);
-    }
-
-    @Override
-    public Optional<UserDailyBonus> recuperarPorUsuario(User user) { // TODO esto se va
-        if (user.getId() != null) {
-            return recuperarPorUserId(user.getId());
-        }
-        if (user.getUsername() != null) {
-            return userDiaryBonusDAOJPA.findByUserUsername(user.getUsername()).map(UserDiaryBonusJPADTO::aModelo);
-        }
-        return Optional.empty();
+        return userDiaryBonusDAOJPA.findById(id).map(UserDailyBonusJPADTO::aModelo);
     }
 
     @Override
     public Optional<UserDailyBonus> recuperarPorUserId(Long userId) {
-        return userDiaryBonusDAOJPA.findByUserId(userId).map(UserDiaryBonusJPADTO::aModelo);
+        return userDiaryBonusDAOJPA.findByUserId(userId).map(UserDailyBonusJPADTO::aModelo);
     }
 
     @Override

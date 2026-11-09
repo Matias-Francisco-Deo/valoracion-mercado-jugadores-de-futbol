@@ -13,9 +13,7 @@ public record DailyBonusStatusResponseDTO(
         List<MissionStatusResponseDTO> misiones
 ) {
     public static DailyBonusStatusResponseDTO desdeModelo(EstadoBonus estadoBonus) {
-        List<MissionStatusResponseDTO> missionDTOs = estadoBonus.misiones() != null
-                ? estadoBonus.misiones().stream().map(MissionStatusResponseDTO::desdeModelo).toList()
-                : List.of();
+        List<MissionStatusResponseDTO> missionDTOs = estadoBonus.mision().getSubmissions().stream().map(MissionStatusResponseDTO::desdeModelo).toList();
 
         return new DailyBonusStatusResponseDTO(
                 estadoBonus.currentStreak(),

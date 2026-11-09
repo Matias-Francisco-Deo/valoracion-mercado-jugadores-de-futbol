@@ -10,6 +10,7 @@ import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.service.interfaces.DailyBonusService;
+import com.overcode.service.interfaces.UserDailyBonusService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,11 @@ import java.security.Principal;
 public class DailyBonusController {
 
     private final DailyBonusService dailyBonusService;
+    private final UserDailyBonusService userDailyBonusService;
 
-    public DailyBonusController(DailyBonusService dailyBonusService) {
+    public DailyBonusController(DailyBonusService dailyBonusService, UserDailyBonusService userDailyBonusService) {
         this.dailyBonusService = dailyBonusService;
+        this.userDailyBonusService = userDailyBonusService;
     }
 
     @GetMapping
@@ -52,7 +55,7 @@ public class DailyBonusController {
     ) {
         long id = Long.parseLong(principal.getName());
         PeticionVisitaJugador peticion = new PeticionVisitaJugador(new User(id), new Player(playerId));
-        EstadoBonus status = dailyBonusService.registrarVisitaJugador(peticion);
+        EstadoBonus status = userDailyBonusService.registrarVisitaJugador(peticion);
         return ResponseEntity.ok(DailyBonusStatusResponseDTO.desdeModelo(status));
     }
 }

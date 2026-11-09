@@ -61,7 +61,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 - [X] T029 Implement `MissionServiceImpl` with single-parameter methods in `src/main/java/com/overcode/service/impl/MissionServiceImpl.java`
 - [X] T030 Create domain record `PeticionVisitaJugador(User user, Player player)` in `src/main/java/com/overcode/model/bonus/PeticionVisitaJugador.java`
 - [X] T031 Create domain entity `UserDailyBonus` holding `User user`, streak fields, active dailyBonusMissions, Lombok `@Getter`/`@Setter`, and `inicializarConBonus(DiaryBonus dailyBonus)` encapsulating lazy initialization in `src/main/java/com/overcode/model/bonus/UserDiaryBonus.java`
-- [X] T032 Create persistence DTO `UserDiaryBonusJPADTO` linking `@OneToOne` or `@ManyToOne` to `UserJPADTO` in `src/main/java/com/overcode/persistence/dto/jpa/bonus/UserDiaryBonusJPADTO.java`
+- [X] T032 Create persistence DTO `UserDailyBonusJPADTO` linking `@OneToOne` or `@ManyToOne` to `UserJPADTO` in `src/main/java/com/overcode/persistence/dto/jpa/bonus/UserDiaryBonusJPADTO.java`
 - [X] T033 [P] Create DAO interface `UserDiaryBonusDAOJPA` in `src/main/java/com/overcode/persistence/repository/dao/jpa/UserDiaryBonusDAOJPA.java`
 - [X] T034 [P] Create repository interface `UserDailyBonusRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/UserDiaryBonusRepository.java`
 - [X] T035 Implement `UserDailyBonusRepositoryImpl` in `src/main/java/com/overcode/persistence/repository/impl/UserDiaryBonusRepositoryImpl.java`
