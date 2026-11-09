@@ -1,8 +1,8 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
-import com.overcode.testUtils.TestDiaryBonusUtil;
+import com.overcode.model.bonus.DailyBonus;
+import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
+import com.overcode.testUtils.TestDailyBonusUtil;
 import com.overcode.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +17,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class DiaryBonusRepositoryTest {
+class DailyBonusRepositoryTest {
 
     @Autowired
-    private DiaryBonusRepository diaryBonusRepository;
+    private DailyBonusRepository dailyBonusRepository;
 
     @Autowired
     private TestService testService;
@@ -38,15 +38,15 @@ class DiaryBonusRepositoryTest {
     @Test
     @Transactional
     void alGuardarUnDiaryBonusSePersisteCorrectamenteYSeRecuperaPorId() {
-        DiaryBonus base = TestDiaryBonusUtil.getDiaryBonusBase();
-        DiaryBonus guardado = diaryBonusRepository.guardar(base);
+        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        DailyBonus guardado = dailyBonusRepository.guardar(base);
 
         assertNotNull(guardado.getId());
         assertEquals("Bonus Base Semanal", guardado.getNombre());
         assertEquals(1.0, guardado.getBonusConRacha(0));
         assertEquals(15.0, guardado.getBonusConRacha(6));
 
-        Optional<DiaryBonus> recuperado = diaryBonusRepository.recuperarPorId(guardado.getId());
+        Optional<DailyBonus> recuperado = dailyBonusRepository.recuperarPorId(guardado.getId());
         assertTrue(recuperado.isPresent());
         assertEquals(guardado.getId(), recuperado.get().getId());
         assertEquals("Bonus Base Semanal", recuperado.get().getNombre());
@@ -56,10 +56,10 @@ class DiaryBonusRepositoryTest {
     @Test
     @Transactional
     void alRecuperarPorNombreRetornaElDiaryBonusEsperado() {
-        DiaryBonus base = TestDiaryBonusUtil.getDiaryBonusBase();
-        diaryBonusRepository.guardar(base);
+        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        dailyBonusRepository.guardar(base);
 
-        Optional<DiaryBonus> recuperado = diaryBonusRepository.recuperarPorNombre("Bonus Base Semanal");
+        Optional<DailyBonus> recuperado = dailyBonusRepository.recuperarPorNombre("Bonus Base Semanal");
         assertTrue(recuperado.isPresent());
         assertEquals("Bonus Base Semanal", recuperado.get().getNombre());
     }
@@ -67,21 +67,21 @@ class DiaryBonusRepositoryTest {
     @Test
     @Transactional
     void existePorNombreRetornaTrueSiExisteYFalseSiNoExiste() {
-        assertFalse(diaryBonusRepository.existePorNombre("Bonus Inexistente"));
+        assertFalse(dailyBonusRepository.existePorNombre("Bonus Inexistente"));
 
-        DiaryBonus base = TestDiaryBonusUtil.getDiaryBonusBase();
-        diaryBonusRepository.guardar(base);
+        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        dailyBonusRepository.guardar(base);
 
-        assertTrue(diaryBonusRepository.existePorNombre("Bonus Base Semanal"));
+        assertTrue(dailyBonusRepository.existePorNombre("Bonus Base Semanal"));
     }
 
     @Test
     @Transactional
     void alRecuperarTodosRetornaLaListaCompleta() {
-        DiaryBonus base = TestDiaryBonusUtil.getDiaryBonusBase();
-        diaryBonusRepository.guardar(base);
+        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        dailyBonusRepository.guardar(base);
 
-        List<DiaryBonus> todos = diaryBonusRepository.recuperarTodos();
+        List<DailyBonus> todos = dailyBonusRepository.recuperarTodos();
         assertFalse(todos.isEmpty());
         assertEquals(1, todos.size());
     }

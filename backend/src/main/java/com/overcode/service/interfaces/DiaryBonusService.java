@@ -1,8 +1,8 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.model.bonus.DiaryBonus;
+import com.overcode.model.bonus.DailyBonus;
 
-public interface DiaryBonusService {
-    DiaryBonus recuperarSeleccionado();
-    DiaryBonus guardar(DiaryBonus diaryBonus);
+public interface DailyBonusService {
+    DailyBonus recuperarSeleccionado();
+    DailyBonus guardar(DailyBonus dailyBonus);
 }

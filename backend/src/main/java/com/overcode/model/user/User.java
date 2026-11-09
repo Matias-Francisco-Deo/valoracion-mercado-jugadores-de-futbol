@@ -1,7 +1,6 @@
 package com.overcode.model.user;
 
-import com.overcode.model.bonus.BonusClaim;
-import com.overcode.model.bonus.DiaryBonus;
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
@@ -13,7 +12,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,26 +24,25 @@ public class User {
     private String password;
     private Double creditBalance;
     private List<Token> tokens;
-    private Integer streakCount = 0; // TODO delegar en subobjeto
-    private LocalDate lastBonusClaimDate; // TODO delegar en subobjeto
+    private UserDailyBonus userDailyBonus;
 
-    public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens) {
+
+    public User(Long id, String username, String email, String password, Double creditBalance, List<Token> tokens, UserDailyBonus userDailyBonus) {
+        this(username, email, password, creditBalance, tokens, userDailyBonus);
         setId(id);
-        setUsername(username);
-        setEmail(email);
-        setPassword(password);
-        setCreditBalance(creditBalance);
-        setTokens(tokens);
-        setStreakCount(0);
     }
 
     public User(String username, String email, String password, Double creditBalance, List<Token> tokens) {
+        this(username, email, password, creditBalance, tokens, null);
+    }
+
+    public User(String username, String email, String password, Double creditBalance, List<Token> tokens, UserDailyBonus userDailyBonus) {
         setUsername(username);
         setEmail(email);
         setPassword(password);
         setCreditBalance(creditBalance);
         setTokens(tokens);
-        setStreakCount(0);
+        setUserDailyBonus(userDailyBonus);
     }
 
     public User(String username, String email, String password) {
@@ -54,19 +51,11 @@ public class User {
         setPassword(password);
         setCreditBalance(0d);
         setTokens(new ArrayList<>());
-        setStreakCount(0);
+        setUserDailyBonus(new UserDailyBonus());
     }
 
     public User(Long userId) {
         setId(userId);
-    }
-
-    public Integer getStreakCount() {
-        return this.streakCount != null ? this.streakCount : 0;
-    }
-
-    public void setStreakCount(Integer streakCount) {
-        this.streakCount = streakCount != null ? streakCount : 0;
     }
 
     public User(Long id, String username, String email, String password) {
@@ -144,42 +133,42 @@ public class User {
     public void addTokens(List<Token> newTokens) {
         newTokens.forEach(this::addToken);
     }
-
-    public BonusClaim reclamarBonusDiario(DiaryBonus diaryBonus) {
-        actualizarRacha();
-        Double bonus = diaryBonus.getBonusParaUser(this);
-        Integer racha = aumentarRacha();
-        addCredits(bonus);
-        return new BonusClaim(bonus, racha, getCreditBalance());
-    }
+//
+//    public BonusClaim reclamarBonusDiario(DiaryBonus diaryBonus) {
+//        actualizarRacha();
+//        Double bonus = diaryBonus.getBonusParaUser(this);
+//        Integer racha = aumentarRacha();
+//        addCredits(bonus);
+//        return new BonusClaim(bonus, racha, getCreditBalance());
+//    }
 
     public LocalDate getFechaActual() {
         return LocalDate.now(ZoneOffset.UTC);
     }
 
-    public Boolean yaReclamoBonus(LocalDate hoy) {
-        return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
-    }
+//    public Boolean yaReclamoBonus(LocalDate hoy) {
+//        return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
+//    }
 
-    public void actualizarRacha() {
-        if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
-        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), getFechaActual());
-        if (diasEntreReclamos > 1) {
-            setStreakCount(0);
-        }
-    }
-
-    public Integer aumentarRacha() {
-        Integer nuevaRacha = calcularSiguienteRacha();
-        setStreakCount(nuevaRacha);
-        setLastBonusClaimDate(getFechaActual());
-        return nuevaRacha;
-    }
-
-    public Integer calcularSiguienteRacha() {
-        Integer rachaActual = getStreakCount();
-        if (rachaActual == 6) return 0;
-        return rachaActual + 1;
-    }
+//    public void actualizarRacha() {
+//        if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
+//        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), getFechaActual());
+//        if (diasEntreReclamos > 1) {
+//            setStreakCount(0);
+//        }
+//    }
+//
+//    public Integer aumentarRacha() {
+//        Integer nuevaRacha = calcularSiguienteRacha();
+//        setStreakCount(nuevaRacha);
+//        setLastBonusClaimDate(getFechaActual());
+//        return nuevaRacha;
+//    }
+//
+//    public Integer calcularSiguienteRacha() {
+//        Integer rachaActual = getStreakCount();
+//        if (rachaActual == 6) return 0;
+//        return rachaActual + 1;
+//    }
 
 }

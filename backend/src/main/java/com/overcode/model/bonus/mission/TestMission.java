@@ -8,18 +8,25 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TestMission<T> extends Mission<T> {
-    // TODO dejarle el boolean a esta
+    private Boolean completed = false;
 
     public TestMission(Long id, String nombre, boolean completed) {
-        super(id, nombre, completed);
+        super(id, nombre);
+        this.completed = completed;
     }
 
     public TestMission(String nombre, boolean completed) {
-        super(null, nombre, completed);
+        super(null, nombre);
+        this.completed = completed;
     }
 
     public TestMission(String nombre) {
         super(nombre);
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return completed;
     }
 
     @Override

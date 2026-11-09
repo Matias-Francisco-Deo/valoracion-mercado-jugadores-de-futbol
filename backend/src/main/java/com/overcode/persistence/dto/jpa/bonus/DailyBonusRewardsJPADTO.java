@@ -1,6 +1,6 @@
 package com.overcode.persistence.dto.jpa.bonus;
 
-import com.overcode.model.bonus.DiaryBonusRewards;
+import com.overcode.model.bonus.DailyBonusRewards;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "diary_bonus_rewards")
 @Table(name = "diary_bonus_rewards_data")
-public class DiaryBonusRewardsJPADTO {
+public class DailyBonusRewardsJPADTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,12 @@ public class DiaryBonusRewardsJPADTO {
     @Column(name = "rewards", nullable = false)
     private List<Double> rewards;
 
-    public DiaryBonusRewards aModelo() {
-        return new DiaryBonusRewards(this.rewards);
+    public DailyBonusRewards aModelo() {
+        return new DailyBonusRewards(this.rewards);
     }
 
-    public static DiaryBonusRewardsJPADTO desdeModelo(DiaryBonusRewards rewards) {
-        DiaryBonusRewardsJPADTO dto = new DiaryBonusRewardsJPADTO();
+    public static DailyBonusRewardsJPADTO desdeModelo(DailyBonusRewards rewards) {
+        DailyBonusRewardsJPADTO dto = new DailyBonusRewardsJPADTO();
         dto.setRewards(rewards.getRewards());
         return dto;
     }

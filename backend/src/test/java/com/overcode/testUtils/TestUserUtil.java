@@ -1,5 +1,6 @@
 package com.overcode.testUtils;
 
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.user.User;
 
 import java.time.LocalDate;
@@ -13,22 +14,22 @@ public class TestUserUtil {
 
     public static User getUsuarioDeNombre(String nombre) {
         User user = new User(nombre, nombre.toLowerCase() + "@example.com", "Password123!", 0.0, new ArrayList<>());
-        user.setStreakCount(0);
-        user.setLastBonusClaimDate(null);
+        UserDailyBonus userDailyBonus = new UserDailyBonus(user);
+        user.setUserDailyBonus(userDailyBonus);
         return user;
     }
 
     public static User getUsuarioConCreditosIniciales(String nombre, Double creditos) {
         User user = new User(nombre, nombre.toLowerCase() + "@example.com", "Password123!", creditos, new ArrayList<>());
-        user.setStreakCount(0);
-        user.setLastBonusClaimDate(null);
+        UserDailyBonus userDailyBonus = new UserDailyBonus(user);
+        user.setUserDailyBonus(userDailyBonus);
         return user;
     }
 
     public static User getUsuarioConRacha(String nombre, int racha, LocalDate ultimoReclamo) {
         User user = getUsuarioDeNombre(nombre);
-        user.setStreakCount(racha);
-        user.setLastBonusClaimDate(ultimoReclamo);
+        user.getUserDailyBonus().setStreakCount(racha);
+        user.getUserDailyBonus().setLastBonusClaimDate(ultimoReclamo);
         return user;
     }
 }

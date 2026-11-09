@@ -2,13 +2,13 @@
 
 ## Overview
 
-This document specifies the domain model, persistence entities, state transitions, and validation invariants for the mission-based `DiaryBonus` system.
+This document specifies the domain model, persistence entities, state transitions, and validation invariants for the mission-based `DailyBonus` system.
 
 ---
 
 ## 1. Domain Entities (`com.overcode.model.bonus`)
 
-### 1.1 `DiaryBonus`
+### 1.1 `DailyBonus`
 
 Represents the daily bonus definition and system schedule. Replaces and adapts `LoginBonus`. Uses Lombok `@Getter` and `@Setter`.
 
@@ -51,7 +51,7 @@ classDiagram
 #### Fields:
 - `id`: `Long` - Unique identifier.
 - `nombre`: `String` - Name of the diary bonus configuration (non-null, non-empty).
-- `bonusRewards`: `DiaryBonusRewards` - Holds the 7 reward tiers (one per streak day 0..6).
+- `bonusRewards`: `DailyBonusRewards` - Holds the 7 reward tiers (one per streak day 0..6).
 - `rootMission`: `Mission<?>` - Composite root mission defining today's requirements (e.g. `DailyBonusOrMission`).
 
 #### Business Methods & Rules:
@@ -63,7 +63,7 @@ classDiagram
 
 ---
 
-### 1.2 `UserDiaryBonus`
+### 1.2 `UserDailyBonus`
 
 Represents the persistent 1-to-1 daily bonus profile for a `User`. Directly encapsulates the `User` domain model. Uses Lombok `@Getter` and `@Setter`.
 
@@ -77,12 +77,12 @@ classDiagram
         -LocalDate lastBonusClaimDate
         -LocalDate activeMissionDate
         -Mission~?~ activeMission
-        +void inicializarConBonus(DiaryBonus diaryBonus)
+        +void inicializarConBonus(DiaryBonus dailyBonus)
         +boolean puedeReclamarHoy()
         +boolean yaReclamoHoy(LocalDate hoy)
         +void registrarVisitaJugador(Player player)
         +void registrarCompra()
-        +BonusClaim reclamarBonus(DiaryBonus diaryBonus)
+        +BonusClaim reclamarBonus(DiaryBonus dailyBonus)
         +void actualizarRacha()
         +Integer aumentarRacha()
     }
@@ -97,22 +97,22 @@ classDiagram
 - `activeMission`: `Mission<?>` - Root composite mission tree assigned to this user for `activeMissionDate`.
 
 #### Business Methods & Lifecycle:
-- `inicializarConBonus(DiaryBonus diaryBonus)`:
+- `inicializarConBonus(DiaryBonus dailyBonus)`:
   - Encapsulates all lazy assignment logic within the domain model.
   - Checks if `activeMissionDate == null || !activeMissionDate.isEqual(getFechaActual()) || activeMission == null`.
   - If initialization is needed:
     - Calls `actualizarRacha()` (resets streak if more than 1 day elapsed).
     - Sets `activeMissionDate = getFechaActual()`.
-    - Sets `activeMission = diaryBonus.getMission().clonar()`.
+    - Sets `activeMission = dailyBonus.getMission().clonar()`.
 - `registrarVisitaJugador(Player player)`:
   - Dispatches completion with typed `Player` argument to visit mission branches.
 - `registrarCompra()`:
   - Dispatches completion with `null` or market trigger to buy mission branch.
 - `puedeReclamarHoy()`:
   - Evaluates `activeMission != null && activeMission.isCompleted() && !yaReclamoHoy(getFechaActual())`.
-- `reclamarBonus(DiaryBonus diaryBonus)`:
-  - Validates eligibility via `diaryBonus.verificarPuedeReclamarBonus(this)`.
-  - Determines bonus amount: `diaryBonus.getBonusConRacha(streakCount)`.
+- `reclamarBonus(DiaryBonus dailyBonus)`:
+  - Validates eligibility via `dailyBonus.verificarPuedeReclamarBonus(this)`.
+  - Determines bonus amount: `dailyBonus.getBonusConRacha(streakCount)`.
   - Advances streak via `aumentarRacha()`.
   - Updates `lastBonusClaimDate = getFechaActual()`.
   - Returns `BonusClaim(bonus, nuevaRacha, user.getCreditBalance())`.
@@ -250,19 +250,19 @@ classDiagram
 
 Services MUST receive exactly one parameter per method, and the parameter MUST be a domain model entity or domain record (never a `RequestDTO`):
 
-### 3.1 `BonusService`
+### 3.1 `DailyBonusService`
 - `BonusClaim reclamarBonus(User user);`
 - `EstadoBonus obtenerEstadoBonus(User user);`
 - `EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion);`
 
-### 3.2 `UserDiaryBonusService`
+### 3.2 `UserDailyBonusService`
 - `UserDiaryBonus recuperarOPermitirCrear(User user);`
-- `UserDiaryBonus guardar(UserDiaryBonus userDiaryBonus);`
+- `UserDiaryBonus guardar(UserDiaryBonus userDailyBonus);`
 - `void registrarCompra(User user);`
 
 ### 3.3 `DiaryBonusService`
 - `DiaryBonus recuperarSeleccionado();`
-- `DiaryBonus guardar(DiaryBonus diaryBonus);`
+- `DiaryBonus guardar(DiaryBonus dailyBonus);`
 
 ---
 
@@ -316,19 +316,19 @@ erDiagram
 
 | Layer | Component Name | Description |
 |---|---|---|
-| Model | `DiaryBonus`, `DiaryBonusRewards` | Domain models for bonus schedule & rewards. |
-| Model | `UserDiaryBonus` | User's daily bonus profile referencing `User`. |
+| Model | `DailyBonus`, `DailyBonusRewards` | Domain models for bonus schedule & rewards. |
+| Model | `UserDailyBonus` | User's daily bonus profile referencing `User`. |
 | Model | `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `DailyBonusOrMission`, `Visit3PlayersMission`, `VisitPlayerMission`, `BuyMission` | Generic composite mission hierarchy. |
 | Model Record | `PeticionVisitaJugador` | Domain record for single-parameter service calls. |
-| JPA DTO | `DiaryBonusJPADTO`, `DiaryBonusRewardsJPADTO` | JPA mapping for `diary_bonuses`. |
+| JPA DTO | `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO` | JPA mapping for `diary_bonuses`. |
 | JPA DTO | `UserDiaryBonusJPADTO` | JPA mapping for `user_diary_bonuses` (links to `UserJPADTO`). |
 | JPA DTO | `MissionJPADTO` | Single-table JPA mapping for recursive mission trees (NO optionality column). |
-| DAO JPA | `DiaryBonusDAOJPA` | Spring Data JPA repository for `DiaryBonusJPADTO`. |
+| DAO JPA | `DailyBonusDAOJPA` | Spring Data JPA repository for `DailyBonusJPADTO`. |
 | DAO JPA | `UserDiaryBonusDAOJPA` | Spring Data JPA repository for `UserDiaryBonusJPADTO`. |
 | DAO JPA | `MissionDAOJPA` | Spring Data JPA repository for `MissionJPADTO`. |
-| Repo Interface | `DiaryBonusRepository` | Boundary for diary bonus persistence. |
+| Repo Interface | `DailyBonusRepository` | Boundary for diary bonus persistence. |
 | Repo Interface | `UserDiaryBonusRepository` | Boundary for user daily bonus persistence. |
 | Repo Interface | `MissionRepository` | Boundary for mission persistence. |
-| Repo Impl | `DiaryBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
+| Repo Impl | `DailyBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
 | Repo Impl | `UserDiaryBonusRepositoryImpl` | Implementation converting DTO <-> Model. |
 | Repo Impl | `MissionRepositoryImpl` | Implementation converting DTO <-> Model. |

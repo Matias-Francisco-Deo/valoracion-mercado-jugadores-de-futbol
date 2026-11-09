@@ -6,9 +6,9 @@
 
 ## Summary
 
-This feature adapts and renames the daily login bonus system from `LoginBonus` to `DiaryBonus`, introducing a flexible composite `Mission<T>` architecture featuring abstract classes `OrMission<T>` and `AndMission<T>`, strongly-typed generic completion (no raw `Object`, no boolean optional flags), and a persistent per-user daily bonus tracking profile (`UserDiaryBonus`) that encapsulates the actual `User` domain entity.
+This feature adapts and renames the daily login bonus system from `LoginBonus` to `DailyBonus`, introducing a flexible composite `Mission<T>` architecture featuring abstract classes `OrMission<T>` and `AndMission<T>`, strongly-typed generic completion (no raw `Object`, no boolean optional flags), and a persistent per-user daily bonus tracking profile (`UserDailyBonus`) that encapsulates the actual `User` domain entity.
 
-Users can claim their daily bonus by either completing 3 distinct daily player profile visits OR purchasing a token from the marketplace (modeled naturally as an `OrMission`). To maintain system performance and prevent O(N) memory pressure during daily rollovers, daily missions are assigned to users on-demand via `userDiaryBonus.inicializarConBonus(diaryBonus)` upon their first daily bonus interaction. Zero domain logic resides in Services or Controllers. All service methods adhere to a strict single-parameter contract accepting only domain models or domain records (never a kind of `RequestDTO`). Lombok `@Getter` and `@Setter` are used throughout the codebase for clean property encapsulation.
+Users can claim their daily bonus by either completing 3 distinct daily player profile visits OR purchasing a token from the marketplace (modeled naturally as an `OrMission`). To maintain system performance and prevent O(N) memory pressure during daily rollovers, daily missions are assigned to users on-demand via `userDailyBonus.inicializarConBonus(dailyBonus)` upon their first daily bonus interaction. Zero domain logic resides in Services or Controllers. All service methods adhere to a strict single-parameter contract accepting only domain models or domain records (never a kind of `RequestDTO`). Lombok `@Getter` and `@Setter` are used throughout the codebase for clean property encapsulation.
 
 ---
 
@@ -24,15 +24,15 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 **Constraints**:
 - Strict Layered Architecture (Controller -> Service -> Repository -> DAOJPA -> JPADTO).
 - Lombok `@Getter` and `@Setter` used across models, DTOs, and entities (no simple hand-written getters/setters).
-- Model-only domain logic (zero business rules in Controller or Service; Service calls `userDiaryBonus.inicializarConBonus(diaryBonus)`).
+- Model-only domain logic (zero business rules in Controller or Service; Service calls `userDailyBonus.inicializarConBonus(dailyBonus)`).
 - Single-parameter service methods: every service method receives exactly ONE object, which must be a domain model entity or domain record (never a `RequestDTO`).
 - Generic `Mission<T>` where subclasses define parameter type `T` in `complete(T context)` (no raw `Object`).
 - Abstract classes `OrMission<T>` and `AndMission<T>` representing composite behaviors.
 - No boolean flags for optionality in `Mission`.
-- `UserDiaryBonus` references the actual `User` domain object (not a foreign key `userId`).
+- `UserDailyBonus` references the actual `User` domain object (not a foreign key `userId`).
 - Custom domain, service, and persistence exceptions (no raw runtime exceptions).
 - Latin American Spanish test method names.
-- Static factory test utility methods in `TestDiaryBonusUtil` and `TestMissionUtil`.
+- Static factory test utility methods in `TestDailyBonusUtil` and `TestMissionUtil`.
 
 ---
 
@@ -42,10 +42,10 @@ Users can claim their daily bonus by either completing 3 distinct daily player p
 
 | Principle | Gate Criterion | Compliance Status | Details |
 |---|---|---|---|
-| **I. Layered Architecture** | Controller -> Service -> Repository -> DAOJPA / JPADTO. DTOs in dedicated `dto/` packages. Persistency isolated in `persistence/repository/`. | **PASS** | `DailyBonusController` maps request/response DTOs only. `UserDiaryBonusService` and `MissionService` mediate between persistence and models. Repositories abstract JPA entities. Service methods take only domain models or records. |
-| **II. Rich Model** | All business logic resides in Model objects (`DiaryBonus`, `UserDiaryBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`). New model classes approved by project owner. | **PASS** | User explicitly approved `DiaryBonus`, `UserDiaryBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `VisitPlayerMission`, `BuyMission`, `PeticionVisitaJugador`. Initialization and streak logic strictly live in `userDiaryBonus.inicializarConBonus(diaryBonus)`. |
+| **I. Layered Architecture** | Controller -> Service -> Repository -> DAOJPA / JPADTO. DTOs in dedicated `dto/` packages. Persistency isolated in `persistence/repository/`. | **PASS** | `DailyBonusController` maps request/response DTOs only. `UserDailyBonusService` and `MissionService` mediate between persistence and models. Repositories abstract JPA entities. Service methods take only domain models or records. |
+| **II. Rich Model** | All business logic resides in Model objects (`DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`). New model classes approved by project owner. | **PASS** | User explicitly approved `DailyBonus`, `UserDailyBonus`, `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `VisitPlayerMission`, `BuyMission`, `PeticionVisitaJugador`. Initialization and streak logic strictly live in `userDailyBonus.inicializarConBonus(dailyBonus)`. |
 | **III. Validation at Every Layer** | DTO format validation, Service entity existence checks, Model domain invariant validation with custom exceptions. | **PASS** | Validates entity existence in Service (`EntidadNoEncontradaException`); domain invariants enforced in Model (`BonusYaReclamadoHoyException`, `RequisitosMisionesNoCumplidosException`, `MisionInvalidaException`). |
-| **IV. Testing as a Delivery Gate** | Pure unit tests for Model; Testcontainers integration tests for Service/Repository; isolated `@SpringBootTest` E2E tests using `RestClient`. Spanish naming. | **PASS** | Unit tests cover `Mission`, `UserDiaryBonus`, and `DiaryBonus`. Integration tests verify PostgreSQL persistence via Testcontainers. E2E tests verify full HTTP flows. |
+| **IV. Testing as a Delivery Gate** | Pure unit tests for Model; Testcontainers integration tests for Service/Repository; isolated `@SpringBootTest` E2E tests using `RestClient`. Spanish naming. | **PASS** | Unit tests cover `Mission`, `UserDailyBonus`, and `DailyBonus`. Integration tests verify PostgreSQL persistence via Testcontainers. E2E tests verify full HTTP flows. |
 | **V. Definition of Done** | All unit and integration tests passing; local application compiles without error. | **PASS** | Defined in verification scenarios in `quickstart.md`. |
 
 ---

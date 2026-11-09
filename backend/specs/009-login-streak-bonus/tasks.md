@@ -67,13 +67,13 @@
 ### Tests for User Story 1
 - [X] T019 [P] [US1] Unit test in Spanish `LoginBonusTest` testing consecutive streak calculations and bonus value retrieval in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
 - [X] T020 [P] [US1] Unit test in Spanish `UserBonusTest` verifying `reclamarBonusDiario` updates `streakCount`, credits balance with `Double`, and verifies login never alters balance in `src/test/java/com/overcode/model/UserBonusTest.java`
-- [X] T021 [P] [US1] Service integration test in Spanish `BonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T021 [P] [US1] Service integration test in Spanish `DailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
 - [X] T022 [P] [US1] End-to-End API test in Spanish `DailyBonusE2eTest` verifying `POST /api/daily-bonus/claim` for Day 1 and Day 2 progression and ensuring `POST /auth/login` does not award bonus in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 1
 - [X] T023 [P] [US1] Create DTO `ClaimBonusResponseDTO` (creditsAwarded Double, newStreak Integer, currentCreditBalance Double, claimDate LocalDate, message String) in `src/main/java/com/overcode/controller/dto/bonus/ClaimBonusResponseDTO.java`
-- [X] T024 [US1] Define service interface `BonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
-- [X] T025 [US1] Implement `BonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionMercado`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T024 [US1] Define service interface `DailyBonusService` with method `reclamarBonus(String username, LocalDate fechaActual)` in `src/main/java/com/overcode/service/interfaces/DailyBonusService.java`
+- [X] T025 [US1] Implement `DailyBonusServiceImpl` resolving active `LoginBonus` from `ConfiguracionMercado`, executing `user.reclamarBonusDiario()`, persisting updated user, and returning claim result in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
 - [X] T026 [US1] Create controller `DailyBonusController` with `POST /api/daily-bonus/claim` secured with `@AuthenticationPrincipal UserAuth` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: User Story 1 (MVP) is fully functional, independently tested, and proven to never grant bonuses on login.
@@ -147,7 +147,7 @@
 
 ### Implementation for User Story 5
 - [X] T042 [P] [US5] Create DTO `DailyBonusStatusResponseDTO` (`currentStreak Integer`, `todayBonus Double`, `alreadyClaimedToday Boolean`, `weeklyBonuses Map<DiaDeLaSemana, Double>`) in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
-- [X] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `BonusService` and `BonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
+- [X] T043 [US5] Add `obtenerEstadoBonus(String username, LocalDate fechaActual)` to `DailyBonusService` and `DailyBonusServiceImpl` in `src/main/java/com/overcode/service/impl/DailyBonusServiceImpl.java`
 - [X] T044 [US5] Add endpoint `GET /api/daily-bonus` in `DailyBonusController` in `src/main/java/com/overcode/controller/DailyBonusController.java`
 
 **Checkpoint**: Streak query endpoint fully functional and integrated with status response.
@@ -195,7 +195,7 @@ Phase 8: Polish & Build Verification
   - Enum T006, tests T007, and JPA DTO T011 can run in parallel.
   - DAO T014 and Interface T015 can be defined in parallel.
 - In **Phase 3**:
-  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`BonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
+  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`DailyBonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
 - In **Phase 7**: DTO T042 and test T040 can run in parallel.
 - In **Phase 8**: T045 and T046 can be executed concurrently.
 

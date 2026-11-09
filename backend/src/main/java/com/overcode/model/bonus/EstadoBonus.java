@@ -6,7 +6,7 @@ public record EstadoBonus(
         Integer currentStreak,
         Double nextBonus,
         Boolean alreadyClaimedToday,
-        DiaryBonusRewards weeklyBonuses,
+        DailyBonusRewards weeklyBonuses,
         Boolean puedeReclamar,
         Mission<?> mision
 ) {

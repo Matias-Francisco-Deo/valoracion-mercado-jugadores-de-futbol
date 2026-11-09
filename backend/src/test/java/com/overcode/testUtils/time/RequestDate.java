@@ -1,4 +1,4 @@
-package com.overcode.testUtils;
+package com.overcode.testUtils.time;
 
 import lombok.Getter;
 import lombok.Setter;

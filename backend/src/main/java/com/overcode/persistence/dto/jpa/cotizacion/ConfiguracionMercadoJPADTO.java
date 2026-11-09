@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa.cotizacion;
 
 import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.persistence.dto.jpa.bonus.DiaryBonusJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.DailyBonusJPADTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class ConfiguracionMercadoJPADTO {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "diary_bonus_id")
-    private DiaryBonusJPADTO diaryBonus;
+    private DailyBonusJPADTO diaryBonus;
 
     public ConfiguracionMercado aModelo() {
         ConfiguracionMercado configuracion = new ConfiguracionMercado();
@@ -33,7 +33,7 @@ public class ConfiguracionMercadoJPADTO {
             configuracion.setEstrategiaCotizacion(getEstrategiaCotizacion().aModelo());
         }
         if (getDiaryBonus() != null) {
-            configuracion.setDiaryBonus(getDiaryBonus().aModelo());
+            configuracion.setDailyBonus(getDiaryBonus().aModelo());
         }
         return configuracion;
     }
@@ -47,8 +47,8 @@ public class ConfiguracionMercadoJPADTO {
         if (configuracion.getEstrategiaCotizacion() != null) {
             dto.setEstrategiaCotizacion(EstrategiaCotizacionJPADTO.desdeModelo(configuracion.getEstrategiaCotizacion()));
         }
-        if (configuracion.getDiaryBonus() != null) {
-            dto.setDiaryBonus(DiaryBonusJPADTO.desdeModelo(configuracion.getDiaryBonus()));
+        if (configuracion.getDailyBonus() != null) {
+            dto.setDiaryBonus(DailyBonusJPADTO.desdeModelo(configuracion.getDailyBonus()));
         }
         return dto;
     }

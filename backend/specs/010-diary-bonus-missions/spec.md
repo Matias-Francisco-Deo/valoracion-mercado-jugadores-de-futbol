@@ -15,7 +15,7 @@
 - Q: Are daily missions generated globally once per day for all users, or independently generated per user? → A: System-wide generation. The daily schedule selects 3 random players and 1 market buy mission for the day; all users share the same daily mission targets.
 - Q: How should player profile visits be tracked? → A: Dedicated visit notification action. The client explicitly signals a visit action for the designated player profile for the authenticated user, isolating mission progress from passive read queries.
 - Q: How should the UserDiaryBonus entity be associated with a user and structured over time? → A: Single 1-to-1 persistent profile per user. Each user has one UserDiaryBonus record storing current streak count, last claim date, and active day's completed mission states (refreshed as calendar days roll over).
-- Q: How should the daily mission schedule for each calendar day be initialized in the system? → A: Scheduled background task for system targets with lazy per-user assignment. The system-wide `DiaryBonus` targets (3 random players + 1 market buy mission) are refreshed by the scheduled background task at midnight UTC; each user's `UserDiaryBonus` mission tree is cloned on-demand upon their first daily interaction via `inicializarConBonus` to avoid mapping all users into JVM memory at midnight.
+- Q: How should the daily mission schedule for each calendar day be initialized in the system? → A: Scheduled background task for system targets with lazy per-user assignment. The system-wide `DailyBonus` targets (3 random players + 1 market buy mission) are refreshed by the scheduled background task at midnight UTC; each user's `UserDailyBonus` mission tree is cloned on-demand upon their first daily interaction via `inicializarConBonus` to avoid mapping all users into JVM memory at midnight.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -112,12 +112,12 @@ As the system, I want to prevent users from claiming daily rewards before satisf
 ### Functional Requirements
 
 - **FR-001**: System MUST rename all domain concepts, persistence entities, services, and endpoints formerly known as "LoginBonus" to "DiaryBonus".
-- **FR-002**: System MUST store each user's daily bonus state in a dedicated 1-to-1 persisted `UserDiaryBonus` profile linked to the user, tracking streak count, last claim date, and current day mission completions.
+- **FR-002**: System MUST store each user's daily bonus state in a dedicated 1-to-1 persisted `UserDailyBonus` profile linked to the user, tracking streak count, last claim date, and current day mission completions.
 - **FR-003**: System MUST schedule and generate daily missions for each calendar day strictly via an automated background task executing at midnight UTC (00:00:00 UTC).
 - **FR-004**: System MUST generate daily missions system-wide once per day, where all users share the same set of 3 designated player visit targets and 1 market token purchase mission for that calendar date.
 - **FR-005**: For the initial version, the daily mission set MUST include exactly three distinct "Visit player profile" missions (each targeting a distinct random player) and one "Buy a token from the market" mission.
 - **FR-006**: System MUST mark a user as qualified to claim today's bonus if and only if the user has completed ALL three "Visit player profile" missions OR has completed the "Buy a token from the market" mission.
-- **FR-007**: System MUST track individual mission completion status per user in `UserDiaryBonus` for the active calendar day.
+- **FR-007**: System MUST track individual mission completion status per user in `UserDailyBonus` for the active calendar day.
 - **FR-008**: System MUST track player profile visit mission completions via an explicit visit notification action performed by the authenticated user for the designated player.
 - **FR-009**: System MUST allow an authenticated user to claim today's reward only when their qualification condition is met and they have not yet claimed today.
 - **FR-010**: System MUST reject claim requests with an explicit error when the user has not satisfied either qualifying condition (all 3 visits or 1 purchase).
@@ -136,7 +136,7 @@ As the system, I want to prevent users from claiming daily rewards before satisf
     - *Visit3PlayersMission*: Composite `AndMission<Player>` requiring 3 player visits.
     - *BuyMission*: Requires purchasing any token from the marketplace (`complete(Void unused)`).
     - *DailyBonusOrMission*: Root composite `OrMission<Void>` uniting the buy path and the 3-visit path.
-    - *Note*: Individual completion states are encapsulated directly within the user's active cloned mission tree on `UserDiaryBonus` rather than an isolated join table.
+    - *Note*: Individual completion states are encapsulated directly within the user's active cloned mission tree on `UserDailyBonus` rather than an isolated join table.
 - **DiaryBonusRewards**: Encapsulates the reward tiers mapped to streak levels.
 
 ## Success Criteria *(mandatory)*
@@ -147,7 +147,7 @@ As the system, I want to prevent users from claiming daily rewards before satisf
 - **SC-002**: 100% of premature claim attempts (without fulfilling either condition) and duplicate daily claims are reliably rejected with clear explanatory messages.
 - **SC-003**: Streak progression is 100% accurate across consecutive days, weekly rollover, and broken streaks (resetting to base level after missed days).
 - **SC-004**: Users can view their mission progress, claim readiness, and current streak status at any time with up-to-date completion indicators.
-- **SC-005**: All existing references and behaviors previously tied to login-triggered bonuses are cleanly transitioned to mission-governed `DiaryBonus` without regressing user balances.
+- **SC-005**: All existing references and behaviors previously tied to login-triggered bonuses are cleanly transitioned to mission-governed `DailyBonus` without regressing user balances.
 
 ## Assumptions
 
@@ -155,4 +155,4 @@ As the system, I want to prevent users from claiming daily rewards before satisf
 - In version 1, buying any player token in the marketplace satisfies the "Buy a token from the market" mission regardless of player, price, or quantity.
 - Visiting 1 or 2 player profiles provides partial progress but grants zero claim eligibility until all 3 are visited (unless the token purchase mission is completed).
 - A user can only claim one daily bonus reward per UTC calendar day, even if they fulfill both the visit missions and the buy token mission.
-- Existing streak reward tier values (e.g. Day 1 through Day 7 rewards) are preserved under the new `DiaryBonus` configuration.
+- Existing streak reward tier values (e.g. Day 1 through Day 7 rewards) are preserved under the new `DailyBonus` configuration.

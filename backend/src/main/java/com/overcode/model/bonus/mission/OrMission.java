@@ -14,7 +14,7 @@ public abstract class OrMission<T> extends Mission<T> {
     protected List<Mission<?>> submissions = new ArrayList<>();
 
     protected OrMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
-        super(id, nombre, completed);
+        super(id, nombre);
         this.submissions = new ArrayList<>(submissions);
 
     }

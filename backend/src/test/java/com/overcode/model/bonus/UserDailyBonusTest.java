@@ -5,29 +5,30 @@ import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;
 import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
 import com.overcode.model.user.User;
-import com.overcode.testUtils.TestDiaryBonusUtil;
+import com.overcode.testUtils.TestDailyBonusUtil;
 import com.overcode.testUtils.TestUserUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-class UserDiaryBonusTest {
+class UserDailyBonusTest {
 
-    private DiaryBonus diaryBonus;
+    private DailyBonus dailyBonus;
     private User user;
-    private UserDiaryBonus userDiaryBonus;
+    private UserDailyBonus userDailyBonus;
 
     @BeforeEach
     void setUp() {
-        diaryBonus = TestDiaryBonusUtil.getDiaryBonusBase();
+        dailyBonus = TestDailyBonusUtil.getDiaryBonusBase();
         user = TestUserUtil.getUsuarioBase("carlos");
         user.setCreditBalance(100.0);
-        userDiaryBonus = new UserDiaryBonus(user);
+        userDailyBonus = new UserDailyBonus(user);
     }
 
     @Test
@@ -35,18 +36,18 @@ class UserDiaryBonusTest {
         LocalDate ayer = LocalDate.of(2026, 11, 5);
         LocalDate hoy = LocalDate.of(2026, 11, 6);
 
-        userDiaryBonus = spy(userDiaryBonus);
-        doReturn(hoy).when(userDiaryBonus).getFechaActual();
+        userDailyBonus = spy(userDailyBonus);
+        doReturn(hoy).when(userDailyBonus).getFechaActual();
 
-        userDiaryBonus.setLastBonusClaimDate(ayer);
-        userDiaryBonus.setStreakCount(0);
-        assertEquals(1, userDiaryBonus.aumentarRacha());
+        userDailyBonus.setLastBonusClaimDate(ayer);
+        userDailyBonus.setStreakCount(0);
+        assertEquals(1, userDailyBonus.aumentarRacha());
 
-        userDiaryBonus.setStreakCount(5);
-        assertEquals(6, userDiaryBonus.aumentarRacha());
+        userDailyBonus.setStreakCount(5);
+        assertEquals(6, userDailyBonus.aumentarRacha());
 
-        userDiaryBonus.setStreakCount(6);
-        assertEquals(0, userDiaryBonus.aumentarRacha());
+        userDailyBonus.setStreakCount(6);
+        assertEquals(0, userDailyBonus.aumentarRacha());
     }
 
     @Test
@@ -54,23 +55,23 @@ class UserDiaryBonusTest {
         LocalDate haceTresDias = LocalDate.of(2026, 11, 3);
         LocalDate hoy = LocalDate.of(2026, 11, 6);
 
-        userDiaryBonus = spy(userDiaryBonus);
-        doReturn(hoy).when(userDiaryBonus).getFechaActual();
+        userDailyBonus = spy(userDailyBonus);
+        doReturn(hoy).when(userDailyBonus).getFechaActual();
 
-        userDiaryBonus.setLastBonusClaimDate(haceTresDias);
-        userDiaryBonus.setStreakCount(4);
+        userDailyBonus.setLastBonusClaimDate(haceTresDias);
+        userDailyBonus.setStreakCount(4);
 
-        userDiaryBonus.actualizarRacha();
-        assertEquals(0, userDiaryBonus.getStreakCount());
+        userDailyBonus.actualizarRacha();
+        assertEquals(0, userDailyBonus.getStreakCount());
     }
 
     @Test
     void alIntentarReclamarSinCumplirMisionesLanzaRequisitosMisionesNoCumplidosException() {
         BuyMission buyMission = new BuyMission();
-        userDiaryBonus.setActiveMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
 
         assertThrows(RequisitosMisionesNoCumplidosException.class, () ->
-                userDiaryBonus.reclamarBonus(diaryBonus)
+                userDailyBonus.reclamarBonus(dailyBonus)
         );
     }
 
@@ -78,28 +79,28 @@ class UserDiaryBonusTest {
     void alReclamarBonusDiarioConMisionCompletadaSeIncrementaCreditoYSeAumentaRacha() {
         BuyMission buyMission = new BuyMission();
         buyMission.complete();
-        userDiaryBonus.setActiveMission(buyMission);
-        userDiaryBonus.setStreakCount(0);
+        userDailyBonus.setActiveMission(buyMission);
+        userDailyBonus.setStreakCount(0);
 
-        BonusClaim claim = userDiaryBonus.reclamarBonus(diaryBonus);
+        BonusClaim claim = userDailyBonus.reclamarBonus(dailyBonus);
 
         assertEquals(1.0, claim.givenBonus());
         assertEquals(1, claim.currentStreak());
         assertEquals(101.0, claim.currentCreditBalance());
         assertEquals(101.0, user.getCreditBalance());
-        assertEquals(1, userDiaryBonus.getStreakCount());
+        assertEquals(1, userDailyBonus.getStreakCount());
     }
 
     @Test
     void alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException() {
         BuyMission buyMission = new BuyMission();
         buyMission.complete();
-        userDiaryBonus.setActiveMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
 
-        userDiaryBonus.reclamarBonus(diaryBonus);
+        userDailyBonus.reclamarBonus(dailyBonus);
 
         assertThrows(BonusYaReclamadoHoyException.class, () ->
-                userDiaryBonus.reclamarBonus(diaryBonus)
+                userDailyBonus.reclamarBonus(dailyBonus)
         );
     }
 
@@ -108,13 +109,13 @@ class UserDiaryBonusTest {
         LocalDate hoy = LocalDate.of(2026, 11, 6);
         LocalDate ayer = LocalDate.of(2026, 11, 5);
 
-        userDiaryBonus = spy(userDiaryBonus);
-        doReturn(ayer).when(userDiaryBonus).getFechaActual();
+        userDailyBonus = spy(userDailyBonus);
+        doReturn(ayer).when(userDailyBonus).getFechaActual();
 
-        userDiaryBonus.setLastBonusClaimDate(hoy);
+        userDailyBonus.setLastBonusClaimDate(hoy);
 
         assertThrows(FechaReclamoBonusDiarioInvalidaException.class, () ->
-                userDiaryBonus.actualizarRacha()
+                userDailyBonus.actualizarRacha()
         );
     }
 }

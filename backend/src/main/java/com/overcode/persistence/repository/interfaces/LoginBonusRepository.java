@@ -1,7 +1,5 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.model.bonus.LoginBonus;
-
 import java.util.List;
 import java.util.Optional;
 

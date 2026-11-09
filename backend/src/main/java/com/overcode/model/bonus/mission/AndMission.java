@@ -14,7 +14,7 @@ public abstract class AndMission<T> extends Mission<T> { // TODO clase abstracta
     protected List<Mission<?>> submissions = new ArrayList<>();
 
     protected AndMission(Long id, String nombre, boolean completed, List<Mission<?>> submissions) {
-        super(id, nombre, completed);
+        super(id, nombre);
         this.submissions = new ArrayList<>(submissions);
 
     }

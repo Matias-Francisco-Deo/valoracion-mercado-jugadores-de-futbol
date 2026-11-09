@@ -1,6 +1,6 @@
 package com.overcode.persistence.repository;
 
-import com.overcode.model.bonus.UserDiaryBonus;
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.UserDiaryBonusRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class UserDiaryBonusRepositoryTest {
+class UserDailyBonusRepositoryTest {
 
     @Autowired
     private UserDiaryBonusRepository userDiaryBonusRepository;
@@ -46,14 +46,14 @@ class UserDiaryBonusRepositoryTest {
     @Transactional
     void alGuardarUserDiaryBonusSePersisteYSeRecuperaPorUsuario() {
         User user = userRepository.guardar(TestUserUtil.getUsuarioBase("juan"));
-        UserDiaryBonus bonus = new UserDiaryBonus(user);
+        UserDailyBonus bonus = new UserDailyBonus(user);
         bonus.setStreakCount(3);
         bonus.setLastBonusClaimDate(LocalDate.of(2026, 11, 5));
 
-        UserDiaryBonus guardado = userDiaryBonusRepository.guardar(bonus);
+        UserDailyBonus guardado = userDiaryBonusRepository.guardar(bonus);
         assertNotNull(guardado.getId());
 
-        Optional<UserDiaryBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
         assertTrue(recuperado.isPresent());
         assertEquals(3, recuperado.get().getStreakCount());
         assertEquals(LocalDate.of(2026, 11, 5), recuperado.get().getLastBonusClaimDate());
@@ -66,7 +66,7 @@ class UserDiaryBonusRepositoryTest {
         User user = TestUserUtil.getUsuarioBase("fantasma");
         user.setId(999999L);
 
-        Optional<UserDiaryBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDiaryBonusRepository.recuperarPorUsuario(user);
         assertTrue(recuperado.isEmpty());
     }
 }

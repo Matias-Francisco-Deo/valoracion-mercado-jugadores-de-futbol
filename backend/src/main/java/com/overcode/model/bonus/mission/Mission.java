@@ -13,21 +13,17 @@ import java.util.List;
 public abstract class Mission<T> {
     private Long id;
     private String nombre;
-    private boolean completed = false; // TODO está raro esto
 
-    protected Mission(Long id, String nombre, boolean completed) {
+    protected Mission(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.completed = completed;
     }
 
     protected Mission(String nombre) {
-        this(null, nombre, false);
+        this(null, nombre);
     }
 
-    public boolean isCompleted() {
-        return this.completed;
-    }
+    public abstract boolean isCompleted();
 
     public abstract void complete(T context);
 

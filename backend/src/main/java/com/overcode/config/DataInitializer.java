@@ -1,7 +1,7 @@
 package com.overcode.config;
 
-import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.model.bonus.DiaryBonusRewards;
+import com.overcode.model.bonus.DailyBonus;
+import com.overcode.model.bonus.DailyBonusRewards;
 import com.overcode.model.bonus.mission.BuyMission;
 import com.overcode.model.bonus.mission.DailyBonusOrMission;
 import com.overcode.model.bonus.mission.Mission;
@@ -60,7 +60,7 @@ public class DataInitializer {
     }
 
     private void inicializarConfiguracion() {
-        DiaryBonusRewards rewardsBase = new DiaryBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
+        DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
 
         List<Player> players = new ArrayList<>(playerRepository.listarTodos());
         if (players.size() < 3) {
@@ -85,12 +85,12 @@ public class DataInitializer {
         BuyMission buyMission = new BuyMission();
         Mission<?> rootMission = new DailyBonusOrMission(buyMission, visitMission);
 
-        DiaryBonus bonusBase = new DiaryBonus("Bonus Base Semanal", rewardsBase, rootMission);
+        DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, rootMission);
 
         ConfiguracionMercado configInicial = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         ConfiguracionMercado config = configuracionMercadoService.crearConfiguracionSiNoExiste(configInicial);
-        if (config.getDiaryBonus() == null) {
-            config.setDiaryBonus(bonusBase);
+        if (config.getDailyBonus() == null) {
+            config.setDailyBonus(bonusBase);
             configuracionMercadoRepository.guardar(config);
         }
     }

@@ -3,47 +3,45 @@ package com.overcode.model.bonus;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.user.User;
-import com.overcode.testUtils.TestDiaryBonusUtil;
+import com.overcode.testUtils.TestDailyBonusUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConRacha;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-class DiaryBonusTest {
+class DailyBonusTest {
 
-    private DiaryBonus diaryBonus;
+    private DailyBonus dailyBonus;
 
     @BeforeEach
     void setUp() {
-        diaryBonus = TestDiaryBonusUtil.getDiaryBonusBase();
+        dailyBonus = TestDailyBonusUtil.getDiaryBonusBase();
     }
 
     @Test
     void alConsultarBonusParaCadaDiaRetornaElValorConfigurado() {
-        assertEquals(1.0, diaryBonus.getBonusConRacha(0));
-        assertEquals(2.0, diaryBonus.getBonusConRacha(1));
-        assertEquals(2.0, diaryBonus.getBonusConRacha(2));
-        assertEquals(5.0, diaryBonus.getBonusConRacha(3));
-        assertEquals(5.0, diaryBonus.getBonusConRacha(4));
-        assertEquals(10.0, diaryBonus.getBonusConRacha(5));
-        assertEquals(15.0, diaryBonus.getBonusConRacha(6));
+        assertEquals(1.0, dailyBonus.getBonusConRacha(0));
+        assertEquals(2.0, dailyBonus.getBonusConRacha(1));
+        assertEquals(2.0, dailyBonus.getBonusConRacha(2));
+        assertEquals(5.0, dailyBonus.getBonusConRacha(3));
+        assertEquals(5.0, dailyBonus.getBonusConRacha(4));
+        assertEquals(10.0, dailyBonus.getBonusConRacha(5));
+        assertEquals(15.0, dailyBonus.getBonusConRacha(6));
     }
 
     @Test
     void alConsultarBonusParaRachaRetornaElValorCorrespondiente() {
         User user = getUsuarioConRacha("pepito", 1, LocalDate.of(2026, 10, 22));
-        diaryBonus = spy(diaryBonus);
-        doReturn(LocalDate.of(2026, 10, 23)).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(LocalDate.of(2026, 10, 23)).when(dailyBonus).getFechaActual();
 
-        assertEquals(2.0, diaryBonus.getBonusParaUser(user));
+        assertEquals(2.0, dailyBonus.getBonusParaUser(user));
     }
 
     @Test
@@ -63,8 +61,8 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 1, ayer);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
 
         assertEquals(2, user1.aumentarRacha());
 
@@ -84,10 +82,10 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 4, haceTresDias);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
 
-        user1.reclamarBonusDiario(diaryBonus);
+        user1.reclamarBonusDiario(dailyBonus);
         assertEquals(1, user1.getStreakCount());
     }
 
@@ -98,10 +96,10 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 5, haceUnMes);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
 
-        user1.reclamarBonusDiario(diaryBonus);
+        user1.reclamarBonusDiario(dailyBonus);
         assertEquals(1, user1.getStreakCount());
     }
 
@@ -112,12 +110,12 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 6, ayer);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
         user1 = spy(user1);
         doReturn(hoy).when(user1).getFechaActual();
 
-        user1.reclamarBonusDiario(diaryBonus);
+        user1.reclamarBonusDiario(dailyBonus);
         assertEquals(0, user1.getStreakCount());
     }
 
@@ -127,11 +125,11 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 1, hoy);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
 
         assertThrows(BonusYaReclamadoHoyException.class, () ->
-                user1.reclamarBonusDiario(diaryBonus)
+                user1.reclamarBonusDiario(dailyBonus)
         );
     }
 
@@ -142,11 +140,11 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 1, hoy);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(ayer).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(ayer).when(dailyBonus).getFechaActual();
 
         assertThrows(FechaReclamoBonusLoginInvalidaException.class, () ->
-                diaryBonus.verificarPuedeReclamarBonus(user1)
+                dailyBonus.verificarPuedeReclamarBonus(user1)
         );
     }
 
@@ -165,8 +163,8 @@ class DiaryBonusTest {
 
         User user1 = getUsuarioConRacha("pepito", 1, hoy);
 
-        diaryBonus = spy(diaryBonus);
-        doReturn(hoy).when(diaryBonus).getFechaActual();
+        dailyBonus = spy(dailyBonus);
+        doReturn(hoy).when(dailyBonus).getFechaActual();
 
         assertTrue(user1.yaReclamoBonus(hoy));
     }

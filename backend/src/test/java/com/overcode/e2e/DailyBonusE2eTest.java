@@ -5,7 +5,7 @@ import com.overcode.controller.dto.auth.LoginRequest;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
-import com.overcode.model.bonus.DiaryBonus;
+import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.mission.BuyMission;
 import com.overcode.model.bonus.mission.DailyBonusOrMission;
 import com.overcode.model.bonus.mission.Visit3PlayersMission;
@@ -13,10 +13,14 @@ import com.overcode.model.bonus.mission.VisitPlayerMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
+import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
-import com.overcode.testUtils.*;
+import com.overcode.testUtils.TestDailyBonusUtil;
+import com.overcode.testUtils.TestPlayerUtil;
+import com.overcode.testUtils.TestService;
+import com.overcode.testUtils.time.DateMockConfiguration;
+import com.overcode.testUtils.time.RequestDate;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +54,7 @@ class DailyBonusE2eTest {
     private TestService testService;
 
     @Autowired
-    private DiaryBonusRepository diaryBonusRepository;
+    private DailyBonusRepository dailyBonusRepository;
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -91,11 +95,11 @@ class DailyBonusE2eTest {
         BuyMission buyMission = new BuyMission();
         DailyBonusOrMission dailyOr = new DailyBonusOrMission(buyMission, visitMission);
 
-        DiaryBonus bonusBase = diaryBonusRepository.guardar(TestDiaryBonusUtil.getDiaryBonusBase(dailyOr));
+        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDiaryBonusBase(dailyOr));
 
         ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
-        config.setDiaryBonus(bonusBase);
+        config.setDailyBonus(bonusBase);
         configuracionMercadoService.crearConfiguracionSiNoExiste(config);
 
         RegisterRequest registerReq = new RegisterRequest(USERNAME, EMAIL, PASSWORD);

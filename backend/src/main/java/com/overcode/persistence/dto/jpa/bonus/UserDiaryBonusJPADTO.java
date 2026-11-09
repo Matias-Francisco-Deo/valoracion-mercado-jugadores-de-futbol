@@ -1,6 +1,6 @@
 package com.overcode.persistence.dto.jpa.bonus;
 
-import com.overcode.model.bonus.UserDiaryBonus;
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.persistence.dto.jpa.UserJPADTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,8 +37,8 @@ public class UserDiaryBonusJPADTO {
     @JoinColumn(name = "root_mission_id") // TODO y ese join
     private MissionJPADTO activeMission;
 
-    public UserDiaryBonus aModelo() {
-        return new UserDiaryBonus(
+    public UserDailyBonus aModelo() {
+        return new UserDailyBonus(
                 this.id,
                 this.user != null ? this.user.aModeloSinTokens() : null,
                 this.streakCount,
@@ -48,7 +48,7 @@ public class UserDiaryBonusJPADTO {
         );
     }
 
-    public static UserDiaryBonusJPADTO desdeModelo(UserDiaryBonus modelo) {
+    public static UserDiaryBonusJPADTO desdeModelo(UserDailyBonus modelo) {
         if (modelo == null) {
             return null;
         }

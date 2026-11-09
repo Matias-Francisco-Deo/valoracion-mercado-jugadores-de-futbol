@@ -9,10 +9,10 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-public class DiaryBonusRewards {
+public class DailyBonusRewards {
     private final List<Double> rewards = new ArrayList<>();
 
-    public DiaryBonusRewards(List<Double> rewards) {
+    public DailyBonusRewards(List<Double> rewards) {
         if (rewards == null || rewards.size() != 7) {
             throw new DiaryBonusInvalidoException("Se deben agregar 7 recompensas, una por día de la semana.");
         }

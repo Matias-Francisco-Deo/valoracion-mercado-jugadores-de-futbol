@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document captures the research, architectural evaluations, and technical decisions for transitioning the daily reward mechanism from `LoginBonus` to `DiaryBonus`, introducing the composite `Mission<T>` hierarchy with abstract `OrMission<T>` and `AndMission<T>` base classes, strongly-typed generic parameter completion without raw `Object` or optionality boolean flags, and implementing `UserDiaryBonus` with direct reference to the `User` domain entity, zero domain logic in the Service layer, single-object service contracts (model or domain record only), and full adoption of Lombok `@Getter` and `@Setter`.
+This document captures the research, architectural evaluations, and technical decisions for transitioning the daily reward mechanism from `LoginBonus` to `DailyBonus`, introducing the composite `Mission<T>` hierarchy with abstract `OrMission<T>` and `AndMission<T>` base classes, strongly-typed generic parameter completion without raw `Object` or optionality boolean flags, and implementing `UserDailyBonus` with direct reference to the `User` domain entity, zero domain logic in the Service layer, single-object service contracts (model or domain record only), and full adoption of Lombok `@Getter` and `@Setter`.
 
 ---
 
@@ -19,18 +19,18 @@ This document captures the research, architectural evaluations, and technical de
 
 ## Research Tasks & Decision Records
 
-### 1. Renaming and Refactoring from `LoginBonus` to `DiaryBonus`
+### 1. Renaming and Refactoring from `LoginBonus` to `DailyBonus`
 
 - **Context**: The existing codebase has `LoginBonus`, `LoginBonusRewards`, `LoginBonusService`, `LoginBonusRepository`, `LoginBonusJPADTO`, `LoginBonusDAOJPA`, and references in `ConfiguracionMercado` and `DataInitializer`. The user specified:
   > *"Do not remove the LoginBonus object (and whatever dependencies it has) instead, adapt it to the new logic. Change every name for DiaryBonus (including Service, Persistency, all places where it shows up)."*
 - **Decision**: Fully rename and adapt all `LoginBonus*` classes, interfaces, JPA entities, repositories, exceptions, and tests to `DiaryBonus*`:
-  - Model: `DiaryBonus`, `DiaryBonusRewards`, `DiaryBonusInvalidoException`
-  - Persistence: `DiaryBonusJPADTO`, `DiaryBonusRewardsJPADTO`, `DiaryBonusDAOJPA`, `DiaryBonusRepository`, `DiaryBonusRepositoryImpl`, `DiaryBonusPersistenciaException`
+  - Model: `DailyBonus`, `DailyBonusRewards`, `DiaryBonusInvalidoException`
+  - Persistence: `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO`, `DailyBonusDAOJPA`, `DailyBonusRepository`, `DailyBonusRepositoryImpl`, `DiaryBonusPersistenciaException`
   - Service: `DiaryBonusService`, `DiaryBonusServiceImpl`
-  - Integration: Update `ConfiguracionMercado` to reference `DiaryBonus` instead of `LoginBonus`.
-  - Test Utils: `TestDiaryBonusUtil` replacing `TestLoginBonusUtil`.
+  - Integration: Update `ConfiguracionMercado` to reference `DailyBonus` instead of `LoginBonus`.
+  - Test Utils: `TestDailyBonusUtil` replacing `TestLoginBonusUtil`.
 - **Rationale**: Clean, consistent naming throughout the entire repository avoids cognitive confusion between legacy login logic and the new mission-driven diary bonus system. Preserves the underlying rewards scaling logic while adding the mission root composite.
-- **Alternatives Considered**: Keeping a deprecated `LoginBonus` wrapper class. Rejected because the instruction explicitly directed to change every name for `DiaryBonus`.
+- **Alternatives Considered**: Keeping a deprecated `LoginBonus` wrapper class. Rejected because the instruction explicitly directed to change every name for `DailyBonus`.
 
 ### 2. Composite Pattern for Daily Missions: Generic `Mission<T>`, Abstract `OrMission<T>` & `AndMission<T>`, and Elimination of Optionality Booleans
 
@@ -71,12 +71,12 @@ This document captures the research, architectural evaluations, and technical de
        - Isolated subclass for unit-testing the composite mechanics.
 - **Rationale**: Completely type-safe, eliminates runtime casts from raw `Object`, removes artificial boolean flags, and leverages true object-oriented composite semantics.
 
-### 3. Entity Reference in `UserDiaryBonus` (`User` entity instead of `userId`)
+### 3. Entity Reference in `UserDailyBonus` (`User` entity instead of `userId`)
 
 - **Context**:
   > *"UserDiaryBonus will have the actual User, not its id, in the object."*
 - **Decision**:
-  - `UserDiaryBonus` directly holds `private User user;`
+  - `UserDailyBonus` directly holds `private User user;`
   - Uses Lombok `@Getter` and `@Setter` annotations (no handwritten trivial getters/setters).
   - In persistence: `UserDiaryBonusJPADTO` maintains `@OneToOne` / `@ManyToOne` association with `UserJPADTO user;` mapping bidirectionally via `aModelo()` and `desdeModelo()`.
 - **Rationale**: Respects Domain-Driven Design and Constitution Principle II (Rich Model). Domain entities hold direct object references to collaborators rather than disconnected foreign keys.
@@ -84,26 +84,26 @@ This document captures the research, architectural evaluations, and technical de
 ### 4. Lazy Per-User Mission Initialization & Zero Model Logic in Service
 
 - **Context**:
-  > *"Also in Research 4, the service MUST call userDiaryBonus.inicializarConBonus(DiaryBonus) and inside you check if the userBonus requires initialization. DO NOT DO MODEL IN THE SERVICE EVER."*
+  > *"Also in Research 4, the service MUST call userDailyBonus.inicializarConBonus(DiaryBonus) and inside you check if the userBonus requires initialization. DO NOT DO MODEL IN THE SERVICE EVER."*
 - **Decision**:
-  - The Service layer MUST NEVER evaluate condition checks like `if (userDiaryBonus.requiereInicializacion(fechaActual))`.
-  - The Service method simply retrieves `userDiaryBonus` and `diaryBonus`, and delegates directly:
+  - The Service layer MUST NEVER evaluate condition checks like `if (userDailyBonus.requiereInicializacion(fechaActual))`.
+  - The Service method simply retrieves `userDailyBonus` and `dailyBonus`, and delegates directly:
     ```java
-    userDiaryBonus.inicializarConBonus(diaryBonus);
-    userDiaryBonusRepository.guardar(userDiaryBonus);
+    userDailyBonus.inicializarConBonus(dailyBonus);
+    userDiaryBonusRepository.guardar(userDailyBonus);
     ```
-  - Inside the domain entity `UserDiaryBonus`:
+  - Inside the domain entity `UserDailyBonus`:
     ```java
-    public void inicializarConBonus(DiaryBonus diaryBonus) {
+    public void inicializarConBonus(DiaryBonus dailyBonus) {
         LocalDate hoy = getFechaActual();
         if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeMission == null) {
             actualizarRacha();
             this.activeMissionDate = hoy;
-            this.activeMission = diaryBonus.getMission().clonar();
+            this.activeMission = dailyBonus.getMission().clonar();
         }
     }
     ```
-  - The scheduled midnight background job ONLY configures the system-wide `DiaryBonus` with that day's 3 random players and 1 market buy mission inside `ConfiguracionMercado` / `DiaryBonus`. No user records are loaded or iterated.
+  - The scheduled midnight background job ONLY configures the system-wide `DailyBonus` with that day's 3 random players and 1 market buy mission inside `ConfiguracionMercado` / `DailyBonus`. No user records are loaded or iterated.
 - **Rationale**: 100% adherence to Constitution Principle II (Rich Model) and user prompt. Business logic remains solely inside domain entities.
 
 ### 5. Service Method Signature Contract: Exactly ONE Model Object Parameter
@@ -111,7 +111,7 @@ This document captures the research, architectural evaluations, and technical de
 - **Context**:
   > *"Make sure the service also receives just ONE object in each method. The object CANNOT be a RequestDTO, it must be a model object. If needed, it can be a simple record."*
 - **Decision**:
-  - Every method in `BonusService`, `UserDiaryBonusService`, etc., MUST accept **exactly ONE** parameter.
+  - Every method in `DailyBonusService`, `UserDailyBonusService`, etc., MUST accept **exactly ONE** parameter.
   - The parameter MUST be a domain model entity or domain record (`com.overcode.model.*`). It MUST NOT be a RequestDTO (`RequestDTO` objects remain strictly in `com.overcode.controller.dto`).
   - Method Signatures:
     - `BonusClaim reclamarBonus(User user);` (Accepts 1 `User` domain model)

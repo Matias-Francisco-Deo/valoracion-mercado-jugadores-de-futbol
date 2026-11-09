@@ -1,6 +1,6 @@
 package com.overcode.persistence.dto.jpa.bonus;
 
-import com.overcode.model.bonus.DiaryBonus;
+import com.overcode.model.bonus.DailyBonus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "diary_bonus")
 @Table(name = "diary_bonuses")
-public class DiaryBonusJPADTO {
+public class DailyBonusJPADTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +22,14 @@ public class DiaryBonusJPADTO {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "rewards_id")
-    private DiaryBonusRewardsJPADTO rewards;
+    private DailyBonusRewardsJPADTO rewards;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "root_mission_id")
     private MissionJPADTO rootMission;
 
-    public DiaryBonus aModelo() {
-        return new DiaryBonus(
+    public DailyBonus aModelo() {
+        return new DailyBonus(
                 this.id,
                 this.nombre,
                 this.rewards != null ? this.rewards.aModelo() : null,
@@ -37,15 +37,15 @@ public class DiaryBonusJPADTO {
         );
     }
 
-    public static DiaryBonusJPADTO desdeModelo(DiaryBonus modelo) {
+    public static DailyBonusJPADTO desdeModelo(DailyBonus modelo) {
         if (modelo == null) {
             return null;
         }
-        DiaryBonusJPADTO dto = new DiaryBonusJPADTO();
+        DailyBonusJPADTO dto = new DailyBonusJPADTO();
         dto.setId(modelo.getId());
         dto.setNombre(modelo.getNombre());
         if (modelo.getBonusRewards() != null) {
-            dto.setRewards(DiaryBonusRewardsJPADTO.desdeModelo(modelo.getBonusRewards()));
+            dto.setRewards(DailyBonusRewardsJPADTO.desdeModelo(modelo.getBonusRewards()));
         }
         if (modelo.getRootMission() != null) {
             dto.setRootMission(MissionJPADTO.desdeModelo(modelo.getRootMission()));

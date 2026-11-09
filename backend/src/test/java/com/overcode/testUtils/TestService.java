@@ -32,7 +32,7 @@ public class TestService {
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
     @Autowired
-    private com.overcode.persistence.repository.dao.jpa.DiaryBonusDAOJPA diaryBonusDAO;
+    private DailyBonusDAOJPA diaryBonusDAO;
     @Autowired(required = false)
     private LoginBonusDAOJPA loginBonusDAO;
 

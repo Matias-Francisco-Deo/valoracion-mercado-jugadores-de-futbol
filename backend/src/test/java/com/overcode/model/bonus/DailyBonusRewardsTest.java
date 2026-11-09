@@ -1,20 +1,19 @@
 package com.overcode.model.bonus;
 
 import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
-import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LoginBonusRewardsTest {
+public class DailyBonusRewardsTest {
 
-    private LoginBonusRewards recompensas;
+    private DailyBonusRewards recompensas;
 
     @BeforeEach
     void setUp() {
-        recompensas = new LoginBonusRewards();
+        recompensas = new DailyBonusRewards();
     }
 
     @Test
@@ -98,9 +97,13 @@ public class LoginBonusRewardsTest {
     @Test
     void alEliminarUnaRecompensaInexistenteLasRecompensasNoCambian() {
         recompensas.add(1.0);
+        recompensas.add(2.0);
+        recompensas.add(3.0);
 
-        recompensas.remove(2.0);
+        recompensas.remove(4.0);
 
         assertEquals(1.0, recompensas.get(0));
+        assertEquals(2.0, recompensas.get(1));
+        assertEquals(3.0, recompensas.get(2));
     }
 }

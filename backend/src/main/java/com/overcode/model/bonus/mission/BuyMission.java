@@ -8,11 +8,11 @@ import lombok.Setter;
 public class BuyMission extends Mission<Void> {
 
     public BuyMission(Long id, String nombre, boolean completed) {
-        super(id, nombre, completed);
+        super(id, nombre);
     }
 
     public BuyMission(String nombre, boolean completed) {
-        super(null, nombre, completed);
+        super(null, nombre);
     }
 
     public BuyMission(String nombre) {

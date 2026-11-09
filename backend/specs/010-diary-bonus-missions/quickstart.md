@@ -39,12 +39,12 @@ Validates the composite structure (`OrMission<T>`, `AndMission<T>`, `Visit3Playe
 - `TestMission<String>` verifies `AndMission` and `OrMission` completion logic in isolation.
 - `VisitPlayerMission` verifies that `complete(Player player)` requires an exact player ID match and rejects wrong players.
 - `BuyMission` verifies parameterless completion `complete()` sets completed.
-- `UserDiaryBonus` verifies that `inicializarConBonus(diaryBonus)` encapsulates the date checks and sets up today's cloned mission tree cleanly.
+- `UserDailyBonus` verifies that `inicializarConBonus(dailyBonus)` encapsulates the date checks and sets up today's cloned mission tree cleanly.
 
 ---
 
 ### Scenario 2: UserDiaryBonus and Mission Persistence Integration Tests
-Validates that `UserDiaryBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapping to `UserJPADTO`), `MissionJPADTO`, and `DiaryBonusJPADTO` correctly persist recursive composite trees in PostgreSQL via Testcontainers.
+Validates that `UserDiaryBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapping to `UserJPADTO`), `MissionJPADTO`, and `DailyBonusJPADTO` correctly persist recursive composite trees in PostgreSQL via Testcontainers.
 
 **Test Command**:
 ```powershell
@@ -54,12 +54,12 @@ Validates that `UserDiaryBonusJPADTO` (with direct `@OneToOne`/`@ManyToOne` mapp
 **Expected Result**:
 - Testcontainers spins up PostgreSQL 16.
 - Saves composite mission trees and retrieves them matching domain structures.
-- Persists user-specific progress linking `UserDiaryBonus` to `User`.
+- Persists user-specific progress linking `UserDailyBonus` to `User`.
 
 ---
 
 ### Scenario 3: Lazy Mission Initialization & Service Logic Integration Tests
-Validates that users querying bonus status get initialized lazily on-demand without bulk database queries at midnight, verifying that service methods accept strictly one domain model or record parameter and delegate to `userDiaryBonus.inicializarConBonus(diaryBonus)`.
+Validates that users querying bonus status get initialized lazily on-demand without bulk database queries at midnight, verifying that service methods accept strictly one domain model or record parameter and delegate to `userDailyBonus.inicializarConBonus(dailyBonus)`.
 
 **Test Command**:
 ```powershell

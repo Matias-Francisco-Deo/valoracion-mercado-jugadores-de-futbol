@@ -1,7 +1,7 @@
 package com.overcode.service.impl.bonus;
 
-import com.overcode.model.bonus.DiaryBonus;
-import com.overcode.persistence.repository.interfaces.DiaryBonusRepository;
+import com.overcode.model.bonus.DailyBonus;
+import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.DiaryBonusService;
 import org.springframework.stereotype.Service;
@@ -12,20 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiaryBonusServiceImpl implements DiaryBonusService {
 
     private final ConfiguracionMercadoService configuracionMercadoService;
-    private final DiaryBonusRepository diaryBonusRepository;
+    private final DailyBonusRepository dailyBonusRepository;
 
-    public DiaryBonusServiceImpl(ConfiguracionMercadoService configuracionMercadoService, DiaryBonusRepository diaryBonusRepository) {
+    public DiaryBonusServiceImpl(ConfiguracionMercadoService configuracionMercadoService, DailyBonusRepository dailyBonusRepository) {
         this.configuracionMercadoService = configuracionMercadoService;
-        this.diaryBonusRepository = diaryBonusRepository;
+        this.dailyBonusRepository = dailyBonusRepository;
     }
 
     @Override
-    public DiaryBonus recuperarSeleccionado() {
-        return configuracionMercadoService.recuperar().getDiaryBonus();
+    public DailyBonus recuperarSeleccionado() {
+        return configuracionMercadoService.recuperar().getDailyBonus();
     }
 
     @Override
-    public DiaryBonus guardar(DiaryBonus diaryBonus) {
-        return diaryBonusRepository.guardar(diaryBonus);
+    public DailyBonus guardar(DailyBonus dailyBonus) {
+        return dailyBonusRepository.guardar(dailyBonus);
     }
 }

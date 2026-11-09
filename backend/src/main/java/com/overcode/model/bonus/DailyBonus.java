@@ -5,7 +5,6 @@ import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
-import com.overcode.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,29 +17,29 @@ import static com.overcode.config.Reloj.getLocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DiaryBonus {
+public class DailyBonus {
 
     private Long id;
     private String nombre;
-    private DiaryBonusRewards bonusRewards;
+    private DailyBonusRewards bonusRewards;
     private Mission<?> rootMission;
 
-    public DiaryBonus(Long id, String nombre, DiaryBonusRewards bonusRewards, Mission<?> rootMission) {
+    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, Mission<?> rootMission) {
         this.id = id;
         setNombre(nombre);
         setBonusRewards(bonusRewards);
         this.rootMission = rootMission;
     }
 
-    public DiaryBonus(String nombre, DiaryBonusRewards bonusRewards, Mission<?> rootMission) {
+    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, Mission<?> rootMission) {
         this(null, nombre, bonusRewards, rootMission);
     }
 
-    public DiaryBonus(Long id, String nombre, DiaryBonusRewards bonusRewards) {
+    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards) {
         this(id, nombre, bonusRewards, null);
     }
 
-    public DiaryBonus(String nombre, DiaryBonusRewards bonusRewards) {
+    public DailyBonus(String nombre, DailyBonusRewards bonusRewards) {
         this(null, nombre, bonusRewards, null);
     }
 
@@ -58,13 +57,13 @@ public class DiaryBonus {
         return this.bonusRewards.get(racha);
     }
 
-    public Double getBonusParaUser(User user) {
-        Double bonus = getBonusConRacha(user.getStreakCount());
-        verificarPuedeReclamarBonus(user);
+    public Double getBonusParaUser(UserDailyBonus userDailyBonus) {
+        Double bonus = getBonusConRacha(userDailyBonus.getStreakCount());
+        verificarPuedeReclamarBonus(userDailyBonus);
         return bonus;
     }
 
-    public EstadoBonus obtenerEstadoBonus(UserDiaryBonus userBonus) {
+    public EstadoBonus obtenerEstadoBonus(UserDailyBonus userBonus) {
         LocalDate fechaActual = getFechaActual();
         Integer rachaActual = userBonus.getStreakCount();
         Double nextBonus = getBonusConRacha(rachaActual);
@@ -74,7 +73,7 @@ public class DiaryBonus {
         return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, mision);
     }
 
-    public void verificarPuedeReclamarBonus(UserDiaryBonus userBonus) {
+    public void verificarPuedeReclamarBonus(UserDailyBonus userBonus) {
         LocalDate fechaActual = getFechaActual();
         LocalDate ultimoReclamo = userBonus.getLastBonusClaimDate();
 
@@ -89,24 +88,12 @@ public class DiaryBonus {
         }
     }
 
-    public void verificarPuedeReclamarBonus(User user) {
-        LocalDate fechaActual = getFechaActual();
-        LocalDate ultimoReclamo = user.getLastBonusClaimDate();
-
-        if (ultimoReclamo != null && fechaActual.isEqual(ultimoReclamo)) {
-            throw new BonusYaReclamadoHoyException("El bonus diario de hoy ya ha sido reclamado.");
-        }
-        if (ultimoReclamo != null && fechaActual.isBefore(ultimoReclamo)) {
-            throw new FechaReclamoBonusLoginInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
-        }
-    }
-
     @NonNull
     public LocalDate getFechaActual() {
         return getLocalDate();
     }
 
-    public DiaryBonusRewards getBonusesDeLaSemana() {
+    public DailyBonusRewards getBonusesDeLaSemana() {
         return this.bonusRewards;
     }
 }

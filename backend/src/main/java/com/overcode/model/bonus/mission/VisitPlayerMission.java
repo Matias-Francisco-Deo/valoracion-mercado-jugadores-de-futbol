@@ -12,7 +12,7 @@ public class VisitPlayerMission extends Mission<Player> {
     private Player targetPlayer;
 
     public VisitPlayerMission(Long id, String nombre, boolean completed, Player targetPlayer) {
-        super(id, nombre, completed);
+        super(id, nombre);
         this.targetPlayer = targetPlayer;
     }
 

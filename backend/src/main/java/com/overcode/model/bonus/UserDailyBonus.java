@@ -16,25 +16,25 @@ import java.time.temporal.ChronoUnit;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDiaryBonus {
+public class UserDailyBonus {
 
     private Long id;
     private User user;
     private Integer streakCount = 0;
     private LocalDate lastBonusClaimDate;
-    private LocalDate activeMissionDate; // TODO para qué? Por ahí lo saco
+    private LocalDate activeMissionDate;
     private Mission<?> activeMission;
 
-    public UserDiaryBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, Mission<?> activeMission) {
+    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, Mission<?> activeMission) {
         this.id = id;
         this.user = user;
-        this.streakCount = streakCount != null ? streakCount : 0;
+        this.streakCount = streakCount;
         this.lastBonusClaimDate = lastBonusClaimDate;
         this.activeMissionDate = activeMissionDate;
         this.activeMission = activeMission;
     }
 
-    public UserDiaryBonus(User user) {
+    public UserDailyBonus(User user) {
         this(null, user, 0, null, null, null);
     }
 
@@ -72,21 +72,21 @@ public class UserDiaryBonus {
         }
         int newStreak = this.streakCount + 1;
 
-        user.setStreakCount(newStreak); // TODO esto no va en user
-        user.setLastBonusClaimDate(this.lastBonusClaimDate);
+        setStreakCount(newStreak);
+        setLastBonusClaimDate(getFechaActual());
 
         return newStreak;
     }
 
-    public void inicializarConBonus(DiaryBonus diaryBonus) {
+    public void inicializarConBonus(DailyBonus dailyBonus) {
         LocalDate hoy = getFechaActual();
 
         // TODO si la misión es de hoy, no la cambio, si es de ayer u otro día pasado, sí la reemplazo
         if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeMission == null) {
             actualizarRacha();
             this.activeMissionDate = hoy;
-            if (diaryBonus != null && diaryBonus.getRootMission() != null) {
-                this.activeMission = diaryBonus.getRootMission().clonar(); // TODO más que nada debería hacer esto
+            if (dailyBonus != null && dailyBonus.getRootMission() != null) {
+                this.activeMission = dailyBonus.getRootMission().clonar(); // TODO más que nada debería hacer esto
             }
         }
     }
@@ -141,20 +141,17 @@ public class UserDiaryBonus {
         }
     }
 
-    public BonusClaim reclamarBonus(DiaryBonus diaryBonus) {
-        diaryBonus.verificarPuedeReclamarBonus(this);
+    public BonusClaim reclamarBonus(DailyBonus dailyBonus) {
+        dailyBonus.verificarPuedeReclamarBonus(this);
 
         actualizarRacha();
 
-        Double bonusAmount = diaryBonus.getBonusConRacha(this.streakCount);
+        Double bonusAmount = dailyBonus.getBonusConRacha(this.streakCount);
 
-        Integer nuevaRacha = aumentarRacha(); // TODO esto tiene que actualizar ESTE objeto no USER
+        aumentarRacha();
 
-        this.streakCount = nuevaRacha;
-        this.lastBonusClaimDate = getFechaActual();
+        user.addCredits(bonusAmount);
 
-        user.addCredits(bonusAmount); // esto sí igual
-
-        return new BonusClaim(bonusAmount, nuevaRacha, user.getCreditBalance());
+        return new BonusClaim(bonusAmount, getStreakCount(), user.getCreditBalance());
     }
 }
