@@ -21,6 +21,10 @@ public abstract class DailyBonusMission<T> {
         this.completed = completed;
     }
 
+    protected DailyBonusMission(String nombre) {
+        this.nombre = nombre;
+    }
+
     protected DailyBonusMission(String nombre, Boolean completed) {
         this(null, nombre, completed);
     }

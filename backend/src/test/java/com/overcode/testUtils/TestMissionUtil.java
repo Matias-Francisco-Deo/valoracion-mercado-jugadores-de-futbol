@@ -38,7 +38,7 @@ public class TestMissionUtil {
         return new BuyDailyBonusMission();
     }
 
-    public static DailyBonusOrDailyBonusMission crearDailyBonusOrMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
-        return new DailyBonusOrDailyBonusMission(buyMission, visit3PlayersMission);
+    public static BuyAndVisitMission crearDailyBonusOrMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
+        return new BuyAndVisitMission(buyMission, visit3PlayersMission);
     }
 }

@@ -11,23 +11,18 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DailyBonusOrDailyBonusMission extends OrDailyBonusMission<Void> {
+public class BuyAndVisitMission extends OrDailyBonusMission<Void> {
 
     private BuyDailyBonusMission buyMission;
     private Visit3PlayersDailyBonusMission visit3PlayersMission;
 
-    public DailyBonusOrDailyBonusMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
+    public BuyAndVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
         super(id, nombre, completed, submissions);
         resolveBranches();
     }
 
-    public DailyBonusOrDailyBonusMission(String nombre, List<DailyBonusMission<?>> submissions) {
-        super(nombre, submissions);
-        resolveBranches();
-    }
-
-    public DailyBonusOrDailyBonusMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
-        super("Misiones diarias del bonus", List.of(buyMission, visit3PlayersMission));
+    public BuyAndVisitMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
+        super("Visitar y comprar", List.of(buyMission, visit3PlayersMission));
         this.buyMission = buyMission;
         this.visit3PlayersMission = visit3PlayersMission;
     }
@@ -56,11 +51,11 @@ public class DailyBonusOrDailyBonusMission extends OrDailyBonusMission<Void> {
     }
 
     @Override
-    public DailyBonusOrDailyBonusMission clonar() {
+    public BuyAndVisitMission clonar() {
         BuyDailyBonusMission clonedBuy = this.buyMission != null ? this.buyMission.clonar() : null;
         Visit3PlayersDailyBonusMission clonedVisits = this.visit3PlayersMission != null ? this.visit3PlayersMission.clonar() : null;
         if (clonedBuy != null && clonedVisits != null) {
-            DailyBonusOrDailyBonusMission cloned = new DailyBonusOrDailyBonusMission(clonedBuy, clonedVisits);
+            BuyAndVisitMission cloned = new BuyAndVisitMission(clonedBuy, clonedVisits);
             cloned.setId(null);
             cloned.setNombre(getNombre());
             cloned.setCompleted(isCompleted());
@@ -70,7 +65,7 @@ public class DailyBonusOrDailyBonusMission extends OrDailyBonusMission<Void> {
             for (DailyBonusMission<?> m : submissions) {
                 clonedSubs.add(m.clonar());
             }
-            return new DailyBonusOrDailyBonusMission(null, getNombre(), isCompleted(), clonedSubs);
+            return new BuyAndVisitMission(null, getNombre(), isCompleted(), clonedSubs);
         }
     }
 }

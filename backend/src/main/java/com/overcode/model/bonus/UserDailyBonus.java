@@ -95,7 +95,7 @@ public class UserDailyBonus {
         if (player == null || this.activeDailyBonusMission == null) {
             return;
         }
-        if (this.activeDailyBonusMission instanceof DailyBonusOrDailyBonusMission dom) {
+        if (this.activeDailyBonusMission instanceof BuyAndVisitMission dom) {
             dom.completeVisit(player);
         } else if (this.activeDailyBonusMission instanceof Visit3PlayersDailyBonusMission v3pm) {
             v3pm.complete(player);
@@ -122,7 +122,7 @@ public class UserDailyBonus {
         if (this.activeDailyBonusMission == null) {
             return;
         }
-        if (this.activeDailyBonusMission instanceof DailyBonusOrDailyBonusMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
+        if (this.activeDailyBonusMission instanceof BuyAndVisitMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
             dom.complete((Void) null);
         } else if (this.activeDailyBonusMission instanceof BuyDailyBonusMission bm) { // esta sí
             bm.complete();

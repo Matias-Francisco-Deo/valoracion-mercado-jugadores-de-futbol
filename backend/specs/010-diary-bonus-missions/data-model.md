@@ -52,7 +52,7 @@ classDiagram
 - `id`: `Long` - Unique identifier.
 - `nombre`: `String` - Name of the diary bonus configuration (non-null, non-empty).
 - `bonusRewards`: `DailyBonusRewards` - Holds the 7 reward tiers (one per streak day 0..6).
-- `rootDailyBonusMission`: `Mission<?>` - Composite root dailyBonusMission defining today's requirements (e.g. `DailyBonusOrDailyBonusMission`).
+- `rootDailyBonusMission`: `Mission<?>` - Composite root dailyBonusMission defining today's requirements (e.g. `BuyAndVisitMission`).
 
 #### Business Methods & Rules:
 - `getBonusConRacha(Integer racha)`: Returns reward for given streak index.
@@ -318,7 +318,7 @@ erDiagram
 |---|---|---|
 | Model | `DailyBonus`, `DailyBonusRewards` | Domain models for bonus schedule & rewards. |
 | Model | `UserDailyBonus` | User's daily bonus profile referencing `User`. |
-| Model | `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `DailyBonusOrDailyBonusMission`, `Visit3PlayersDailyBonusMission`, `VisitPlayerDailyBonusMission`, `BuyDailyBonusMission` | Generic composite dailyBonusMission hierarchy. |
+| Model | `Mission<T>`, `OrMission<T>`, `AndMission<T>`, `BuyAndVisitMission`, `Visit3PlayersDailyBonusMission`, `VisitPlayerDailyBonusMission`, `BuyDailyBonusMission` | Generic composite dailyBonusMission hierarchy. |
 | Model Record | `PeticionVisitaJugador` | Domain record for single-parameter service calls. |
 | JPA DTO | `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO` | JPA mapping for `diary_bonuses`. |
 | JPA DTO | `UserDailyBonusJPADTO` | JPA mapping for `user_diary_bonuses` (links to `UserJPADTO`). |

@@ -30,7 +30,7 @@ class BuyDailyBonusMissionTest {
         p3.setId(3L);
         Visit3PlayersDailyBonusMission visitMission = TestMissionUtil.crearVisit3PlayersMission(p1, p2, p3);
 
-        DailyBonusOrDailyBonusMission dailyOr = TestMissionUtil.crearDailyBonusOrMission(buyMission, visitMission);
+        BuyAndVisitMission dailyOr = TestMissionUtil.crearDailyBonusOrMission(buyMission, visitMission);
         assertFalse(dailyOr.isCompleted());
 
         dailyOr.complete((Void) null);
@@ -50,7 +50,7 @@ class BuyDailyBonusMissionTest {
         p3.setId(3L);
         Visit3PlayersDailyBonusMission visitMission = TestMissionUtil.crearVisit3PlayersMission(p1, p2, p3);
 
-        DailyBonusOrDailyBonusMission dailyOr = TestMissionUtil.crearDailyBonusOrMission(buyMission, visitMission);
+        BuyAndVisitMission dailyOr = TestMissionUtil.crearDailyBonusOrMission(buyMission, visitMission);
         assertFalse(dailyOr.isCompleted());
 
         dailyOr.completeVisit(p1);

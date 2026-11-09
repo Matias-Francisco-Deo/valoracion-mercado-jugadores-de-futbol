@@ -12,12 +12,12 @@ public class VisitPlayerDailyBonusMission extends DailyBonusMission<Player> {
     private Player targetPlayer;
 
     public VisitPlayerDailyBonusMission(Long id, String nombre, boolean completed, Player targetPlayer) {
-        super(id, nombre);
+        super(id, nombre, completed);
         this.targetPlayer = targetPlayer;
     }
 
     public VisitPlayerDailyBonusMission(String nombre, Player targetPlayer) {
-        super(nombre);
+        super(nombre, false);
         this.targetPlayer = targetPlayer;
     }
 

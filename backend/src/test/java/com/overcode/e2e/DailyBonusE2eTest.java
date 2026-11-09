@@ -6,8 +6,8 @@ import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
 import com.overcode.model.bonus.DailyBonus;
+import com.overcode.model.bonus.mission.BuyAndVisitMission;
 import com.overcode.model.bonus.mission.BuyDailyBonusMission;
-import com.overcode.model.bonus.mission.DailyBonusOrDailyBonusMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
 import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
@@ -93,7 +93,7 @@ class DailyBonusE2eTest {
                 new VisitPlayerDailyBonusMission(player3)
         );
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        DailyBonusOrDailyBonusMission dailyOr = new DailyBonusOrDailyBonusMission(buyMission, visitMission);
+        BuyAndVisitMission dailyOr = new BuyAndVisitMission(buyMission, visitMission);
 
         DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDiaryBonusBase(dailyOr));
 

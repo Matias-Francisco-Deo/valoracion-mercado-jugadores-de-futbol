@@ -4,8 +4,8 @@ import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
+import com.overcode.model.bonus.mission.BuyAndVisitMission;
 import com.overcode.model.bonus.mission.BuyDailyBonusMission;
-import com.overcode.model.bonus.mission.DailyBonusOrDailyBonusMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
 import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
@@ -86,7 +86,7 @@ class DailyBonusServiceImplTest {
                 new VisitPlayerDailyBonusMission(PLAYER_3)
         );
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        DailyBonusOrDailyBonusMission dailyOr = new DailyBonusOrDailyBonusMission(buyMission, visitMission);
+        BuyAndVisitMission dailyOr = new BuyAndVisitMission(buyMission, visitMission);
 
         DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDiaryBonusBase(dailyOr));
 

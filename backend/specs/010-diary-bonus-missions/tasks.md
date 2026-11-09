@@ -105,7 +105,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 
 ### Tests for User Story 2 ⚠️
 
-- [X] T047 [P] [US2] Unit test in Spanish for `BuyDailyBonusMission` and `DailyBonusOrDailyBonusMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/dailyBonusMission/BuyMissionTest.java`
+- [X] T047 [P] [US2] Unit test in Spanish for `BuyDailyBonusMission` and `BuyAndVisitMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/dailyBonusMission/BuyMissionTest.java`
 - [X] T048 [P] [US2] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying market purchase triggers dailyBonusMission completion and unlocks claim
 - [X] T049 [US2] E2E test in Spanish in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java` verifying market token purchase unlocks immediate daily bonus claim
 
@@ -116,7 +116,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 - [X] T052 [US2] Add method `registrarCompra(User user)` to `UserDailyBonusService` and `UserDailyBonusServiceImpl` in `src/main/java/com/overcode/service/interfaces/UserDiaryBonusService.java` and `src/main/java/com/overcode/service/impl/UserDiaryBonusServiceImpl.java`
 - [X] T053 [US2] Update `TokenMarketServiceImpl.buy(...)` to notify `userDailyBonusService.registrarCompra(buyer)` upon successful purchase in `src/main/java/com/overcode/service/impl/TokenMarketServiceImpl.java`
 
-**Checkpoint**: User Story 2 functional. Market purchase completes `BuyDailyBonusMission` and satisfies `DailyBonusOrDailyBonusMission` to enable claiming.
+**Checkpoint**: User Story 2 functional. Market purchase completes `BuyDailyBonusMission` and satisfies `BuyAndVisitMission` to enable claiming.
 
 ---
 

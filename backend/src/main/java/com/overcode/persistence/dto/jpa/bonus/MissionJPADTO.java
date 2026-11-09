@@ -63,7 +63,7 @@ public class MissionJPADTO {
                     subs.add(sub.aModelo());
                 }
             }
-            return new DailyBonusOrDailyBonusMission(this.id, this.nombre, this.completed, subs);
+            return new BuyAndVisitMission(this.id, this.nombre, this.completed, subs);
         } else if ("OR".equalsIgnoreCase(this.tipoMision)) {
             List<DailyBonusMission<?>> subs = new ArrayList<>();
             if (this.submissions != null) {
@@ -107,7 +107,7 @@ public class MissionJPADTO {
             dto.setTipoMision("BUY");
         } else if (modelo instanceof Visit3PlayersDailyBonusMission) {
             dto.setTipoMision("VISIT_3_PLAYERS");
-        } else if (modelo instanceof DailyBonusOrDailyBonusMission) {
+        } else if (modelo instanceof BuyAndVisitMission) {
             dto.setTipoMision("DAILY_BONUS_OR");
         } else if (modelo instanceof OrDailyBonusMission) {
             dto.setTipoMision("OR");

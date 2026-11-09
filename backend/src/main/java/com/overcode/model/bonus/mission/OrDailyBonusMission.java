@@ -17,6 +17,14 @@ public abstract class OrDailyBonusMission<T> extends CompositeDailyBonusMission<
         super(id, nombre, completed, submissions);
     }
 
+    protected OrDailyBonusMission(String nombre, List<DailyBonusMission<?>> submissions) {
+        this(null, nombre, false, submissions);
+    }
+
+    protected OrDailyBonusMission(String nombre) {
+        this(nombre, new ArrayList<>());
+    }
+
     public void addSubmission(DailyBonusMission<?> dailyBonusMission) {
         this.submissions.add(dailyBonusMission);
     }
