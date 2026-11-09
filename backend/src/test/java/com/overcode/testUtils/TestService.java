@@ -32,15 +32,13 @@ public class TestService {
     @Autowired
     private RegistroCotizacionDAOJPA registroCotizacionDAO;
     @Autowired
-    private DailyBonusDAOJPA diaryBonusDAO;
-    @Autowired(required = false)
-    private LoginBonusDAOJPA loginBonusDAO;
+    private DailyBonusDAOJPA dailyBonusDAOJPA;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public void eliminarUsuarios() {
-        entityManager.createNativeQuery("DELETE FROM user_diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
@@ -92,24 +90,16 @@ public class TestService {
     }
 
     public void eliminarConfig() {
-        eliminarDiaryBonuses();
+        eliminarDailyBonuses();
         configuracionCotizacionesDAO.deleteAll();
     }
 
-    public void eliminarLoginBonuses() {
-        entityManager.createNativeQuery("DELETE FROM login_bonuses").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM rewards_list").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM login_bonus_rewards_data").executeUpdate();
-        eliminarDiaryBonuses();
-    }
-
-    public void eliminarDiaryBonuses() {
+    public void eliminarDailyBonuses() {
         entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM user_diary_bonuses").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM diary_bonuses").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM diary_rewards_list").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM diary_bonus_rewards_data").executeUpdate();
-        entityManager.createNativeQuery("UPDATE missions SET parent_mission_id = NULL").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM missions").executeUpdate();
     }
 

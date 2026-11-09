@@ -27,18 +27,18 @@ class DailyBonusRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
     }
 
     @Test
     @Transactional
     void alGuardarUnDiaryBonusSePersisteCorrectamenteYSeRecuperaPorId() {
-        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         DailyBonus guardado = dailyBonusRepository.guardar(base);
 
         assertNotNull(guardado.getId());
@@ -56,7 +56,7 @@ class DailyBonusRepositoryTest {
     @Test
     @Transactional
     void alRecuperarPorNombreRetornaElDiaryBonusEsperado() {
-        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         dailyBonusRepository.guardar(base);
 
         Optional<DailyBonus> recuperado = dailyBonusRepository.recuperarPorNombre("Bonus Base Semanal");
@@ -69,7 +69,7 @@ class DailyBonusRepositoryTest {
     void existePorNombreRetornaTrueSiExisteYFalseSiNoExiste() {
         assertFalse(dailyBonusRepository.existePorNombre("Bonus Inexistente"));
 
-        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         dailyBonusRepository.guardar(base);
 
         assertTrue(dailyBonusRepository.existePorNombre("Bonus Base Semanal"));
@@ -78,7 +78,7 @@ class DailyBonusRepositoryTest {
     @Test
     @Transactional
     void alRecuperarTodosRetornaLaListaCompleta() {
-        DailyBonus base = TestDailyBonusUtil.getDiaryBonusBase();
+        DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         dailyBonusRepository.guardar(base);
 
         List<DailyBonus> todos = dailyBonusRepository.recuperarTodos();

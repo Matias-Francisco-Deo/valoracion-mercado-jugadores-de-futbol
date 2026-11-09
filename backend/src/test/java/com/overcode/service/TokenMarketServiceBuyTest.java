@@ -26,12 +26,10 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
+import static com.overcode.testUtils.TestDailyBonusUtil.getDailyBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TokenMarketServiceBuyTest {
@@ -59,7 +57,7 @@ class TokenMarketServiceBuyTest {
         cleanDatabase();
         userService.crearSuperusuario();
         configuracionMercadoService.crearConfiguracionSiNoExiste(
-                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
+                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
 
         buyer = getUsuarioConCreditosIniciales("buyer", 100d);
         poorBuyer = getUsuarioConCreditosIniciales("poor-buyer", 1d);
@@ -92,7 +90,7 @@ class TokenMarketServiceBuyTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDailyBonuses();
     }
 
     private List<ResumenOrdenesDeVenta> openOrdersFor(Long userId) {

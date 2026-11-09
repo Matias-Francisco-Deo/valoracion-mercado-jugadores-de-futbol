@@ -79,7 +79,7 @@ class DailyBonusE2eTest {
     @BeforeEach
     void setUp() {
         testService.eliminarUsuarios();
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
         testService.eliminarConfig();
         testService.eliminarJugadoresYEquipos();
 
@@ -95,7 +95,7 @@ class DailyBonusE2eTest {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         BuyAndVisitMission dailyOr = new BuyAndVisitMission(buyMission, visitMission);
 
-        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDiaryBonusBase(dailyOr));
+        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDailyBonusBase(dailyOr));
 
         ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);
@@ -117,7 +117,7 @@ class DailyBonusE2eTest {
     @AfterEach
     void tearDown() {
         testService.eliminarUsuarios();
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
         testService.eliminarJugadoresYEquipos();
     }
 

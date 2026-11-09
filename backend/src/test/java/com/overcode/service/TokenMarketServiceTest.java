@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
+import static com.overcode.testUtils.TestDailyBonusUtil.getDailyBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static junit.framework.TestCase.*;
@@ -56,10 +56,9 @@ public class TokenMarketServiceTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
 
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
+        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
 
         user1 = getUsuarioConCreditosIniciales("pepito", 100.0);
         user2 = getUsuarioConCreditosIniciales("maria", 100.0);
@@ -79,7 +78,6 @@ public class TokenMarketServiceTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
 
 
     }

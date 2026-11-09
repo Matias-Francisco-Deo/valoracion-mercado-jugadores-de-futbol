@@ -7,8 +7,7 @@ import com.overcode.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
+import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrdenDeCompraTest {
@@ -17,7 +16,8 @@ class OrdenDeCompraTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(1L, "testuser", "test@email.com", "password", 1000d, new ArrayList<>());
+//        user = new User(1L, "testuser", "test@email.com", "password", 1000d, new ArrayList<>());
+        user = getUsuarioConCreditosIniciales("testuser", 1000d);
 
         player = new Player(10L, 100L, "Test Player", null, null);
     }

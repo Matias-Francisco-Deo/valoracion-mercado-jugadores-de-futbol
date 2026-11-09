@@ -32,13 +32,13 @@ class UserDailyBonusRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
         testService.eliminarUsuarios();
     }
 
     @AfterEach
     void tearDown() {
-        testService.eliminarDiaryBonuses();
+        testService.eliminarDailyBonuses();
         testService.eliminarUsuarios();
     }
 
@@ -53,7 +53,7 @@ class UserDailyBonusRepositoryTest {
         UserDailyBonus guardado = userDailyBonusRepository.guardar(bonus);
         assertNotNull(guardado.getId());
 
-        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUserId(user.getId());
         assertTrue(recuperado.isPresent());
         assertEquals(3, recuperado.get().getStreakCount());
         assertEquals(LocalDate.of(2026, 11, 5), recuperado.get().getLastBonusClaimDate());
@@ -64,9 +64,9 @@ class UserDailyBonusRepositoryTest {
     @Transactional
     void alBuscarPorUsuarioInexistenteRetornaVacio() {
         User user = TestUserUtil.getUsuarioBase("fantasma");
-        user.setId(999999L);
+        user.setId(-1L);
 
-        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUsuario(user);
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUserId(user.getId());
         assertTrue(recuperado.isEmpty());
     }
 }

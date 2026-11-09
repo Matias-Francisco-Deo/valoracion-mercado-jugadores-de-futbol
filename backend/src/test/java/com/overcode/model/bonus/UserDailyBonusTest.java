@@ -25,7 +25,7 @@ class UserDailyBonusTest {
 
     @BeforeEach
     void setUp() {
-        dailyBonus = TestDailyBonusUtil.getDiaryBonusBase();
+        dailyBonus = TestDailyBonusUtil.getDailyBonusBase();
         user = TestUserUtil.getUsuarioBase("carlos");
         user.setCreditBalance(100.0);
         userDailyBonus = new UserDailyBonus(user);
