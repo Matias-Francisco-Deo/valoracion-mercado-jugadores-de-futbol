@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public abstract class AndDailyBonusMission<T> extends CompositeDailyBonusMission<T> {
-    protected List<DailyBonusMission<?>> submissions = new ArrayList<>();
 
     protected AndDailyBonusMission(String nombre) {
         super(null, nombre, false, new ArrayList<>());
@@ -25,14 +24,13 @@ public abstract class AndDailyBonusMission<T> extends CompositeDailyBonusMission
         super(id, nombre, completed, submissions);
     }
 
-    public void addSubmission(DailyBonusMission<?> dailyBonusMission) {
-        this.submissions.add(dailyBonusMission);
+    @Override
+    public boolean isCompleted() {
+        return this.getCompleted() || getSubmissions().stream().allMatch(DailyBonusMission::isCompleted);
     }
 
     @Override
-    public void complete(T checkerObject) {
-        setCompleted(submissions.stream().allMatch(DailyBonusMission::isCompleted));
-    }
+    public abstract void complete(T checkerObject);
 
     @Override
     public List<DailyBonusMission<?>> getSubmissions() {

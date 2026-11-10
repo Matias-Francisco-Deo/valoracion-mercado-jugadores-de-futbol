@@ -49,10 +49,10 @@ public class MissionJPADTO {
         } else if ("BUY".equalsIgnoreCase(this.tipoMision)) {
             return new BuyDailyBonusMission(this.id, this.nombre, this.completed);
         } else if ("VISIT_3_PLAYERS".equalsIgnoreCase(this.tipoMision)) {
-            List<DailyBonusMission<?>> subs = new ArrayList<>();
+            List<VisitPlayerDailyBonusMission> subs = new ArrayList<>();
             if (this.submissions != null) {
                 for (MissionJPADTO sub : this.submissions) {
-                    subs.add(sub.aModelo());
+                    subs.add((VisitPlayerDailyBonusMission) sub.aModelo());
                 }
             }
             return new Visit3PlayersDailyBonusMission(this.id, this.nombre, this.completed, subs);

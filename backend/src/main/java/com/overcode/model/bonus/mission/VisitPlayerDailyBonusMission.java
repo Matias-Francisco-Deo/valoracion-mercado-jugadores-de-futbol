@@ -16,11 +16,6 @@ public class VisitPlayerDailyBonusMission extends DailyBonusMission<Player> {
         this.targetPlayer = targetPlayer;
     }
 
-    public VisitPlayerDailyBonusMission(String nombre, Player targetPlayer) {
-        super(nombre, false);
-        this.targetPlayer = targetPlayer;
-    }
-
     public VisitPlayerDailyBonusMission(Player targetPlayer) {
         super("Visitar perfil de " + targetPlayer.getName());
         this.targetPlayer = targetPlayer;

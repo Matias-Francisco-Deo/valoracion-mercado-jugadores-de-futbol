@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class DailyBonusMission<T> {
     private Long id;
     private String nombre;
-    private Boolean completed;
+    private Boolean completed = false;
 
     protected DailyBonusMission(Long id, String nombre, Boolean completed) {
         this.id = id;
