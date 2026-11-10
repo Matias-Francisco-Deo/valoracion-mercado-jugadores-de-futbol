@@ -76,8 +76,6 @@ class EstrategiaCotizacionServiceTest {
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarDatosJugadores();
-        // emitTokensForNewPlayer (disparado por playerServiceImpl.crear) necesita que exista el
-        // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
         userService.crearSuperusuario();
     }
 

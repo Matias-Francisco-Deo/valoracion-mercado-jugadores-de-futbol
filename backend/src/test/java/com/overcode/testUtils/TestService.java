@@ -41,9 +41,7 @@ public class TestService {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
-        entityManager.createNativeQuery("UPDATE user_daily_bonuses SET user_id = NULL").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM users").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE user_daily_bonuses, users RESTART IDENTITY CASCADE").executeUpdate();
         userDAO.deleteAll();
 
     }
@@ -97,11 +95,7 @@ public class TestService {
 
     public void eliminarDailyBonuses() {
         entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM diary_bonuses").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM diary_rewards_list").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM diary_bonus_rewards_data").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM missions").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE diary_bonus_rewards_data, diary_rewards_list, diary_bonuses, missions, user_daily_bonuses RESTART IDENTITY CASCADE").executeUpdate();
     }
 
     public void eliminarRegistros() {
