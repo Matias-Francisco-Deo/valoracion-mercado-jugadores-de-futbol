@@ -1,6 +1,7 @@
 package com.overcode.testUtils;
 
 import com.overcode.model.bonus.UserDailyBonus;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.user.User;
 
 import java.time.LocalDate;
@@ -30,6 +31,14 @@ public class TestUserUtil {
         User user = getUsuarioDeNombre(nombre);
         user.getUserDailyBonus().setStreakCount(racha);
         user.getUserDailyBonus().setLastBonusClaimDate(ultimoReclamo);
+        return user;
+    }
+
+    public static User getUsuarioConRachaYMision(String nombre, int racha, LocalDate ultimoReclamo, DailyBonusMission<?> dailyBonusMission) {
+        User user = getUsuarioDeNombre(nombre);
+        user.getUserDailyBonus().setStreakCount(racha);
+        user.getUserDailyBonus().setLastBonusClaimDate(ultimoReclamo);
+        user.getUserDailyBonus().setActiveDailyBonusMission(dailyBonusMission);
         return user;
     }
 }

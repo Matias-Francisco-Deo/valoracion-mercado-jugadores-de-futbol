@@ -23,7 +23,7 @@ public class TestDailyBonusMission<T> extends DailyBonusMission<T> {
 
     @Override
     public void complete(T checkerObject) {
-        setCompleted(true);
+        setComplete();
     }
 
     @Override

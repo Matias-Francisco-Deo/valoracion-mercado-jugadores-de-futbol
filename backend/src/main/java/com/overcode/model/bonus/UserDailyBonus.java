@@ -48,7 +48,7 @@ public class UserDailyBonus {
     }
 
     public boolean puedeReclamarBonusHoy() {
-        return activeDailyBonusMission != null && activeDailyBonusMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
+        return activeDailyBonusMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
     }
 
     public void actualizarRacha() {
@@ -66,10 +66,13 @@ public class UserDailyBonus {
     }
 
     public Integer aumentarRacha() {
-        actualizarRacha();
-        if (this.streakCount == null || this.streakCount >= 6) {
+
+        if (this.streakCount == 6) {
+            setStreakCount(0);
+            setLastBonusClaimDate(getFechaActual());
             return 0;
         }
+
         int newStreak = this.streakCount + 1;
 
         setStreakCount(newStreak);

@@ -95,7 +95,7 @@ class DailyBonusE2eTest {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         BuyOrVisitMission dailyOr = new BuyOrVisitMission(buyMission, visitMission);
 
-        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDailyBonusBase(dailyOr));
+        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDailyBonusBaseConMision(dailyOr));
 
         ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         config.setId(1L);

@@ -35,13 +35,9 @@ public class DailyBonus {
         this(null, nombre, bonusRewards, rootDailyBonusMission);
     }
 
-    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards) {
-        this(id, nombre, bonusRewards, null);
-    }
-
-    public DailyBonus(String nombre, DailyBonusRewards bonusRewards) {
-        this(null, nombre, bonusRewards, null);
-    }
+//    public DailyBonus(String nombre, DailyBonusRewards bonusRewards) {
+//        this(null, nombre, bonusRewards, null);
+//    }
 
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -83,7 +79,7 @@ public class DailyBonus {
         if (ultimoReclamo != null && fechaActual.isBefore(ultimoReclamo)) {
             throw new FechaReclamoBonusLoginInvalidaException("La fecha actual no puede ser anterior a la fecha del último reclamo.");
         }
-        if (!userBonus.puedeReclamarBonusHoy()) { // TODO testear esto
+        if (!userBonus.puedeReclamarBonusHoy()) {
             throw new RequisitosMisionesNoCumplidosException("No se han cumplido los requisitos de las misiones para reclamar el bonus.");
         }
     }
