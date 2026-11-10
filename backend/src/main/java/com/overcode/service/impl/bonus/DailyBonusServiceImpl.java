@@ -10,7 +10,6 @@ import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.DailyBonusService;
-import com.overcode.service.interfaces.UserDailyBonusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DailyBonusServiceImpl implements DailyBonusService {
 
-    private final UserDailyBonusService userDailyBonusService;
     private final ConfiguracionMercadoService configuracionMercadoService;
     private final DailyBonusRepository dailyBonusRepository;
     private final UserDailyBonusRepository userDailyBonusRepository;
 
     public DailyBonusServiceImpl(
-                                 UserDailyBonusService userDailyBonusService,
                                  ConfiguracionMercadoService configuracionMercadoService,
                                  DailyBonusRepository dailyBonusRepository, UserDailyBonusRepository userDailyBonusRepository) {
-        this.userDailyBonusService = userDailyBonusService;
         this.configuracionMercadoService = configuracionMercadoService;
         this.dailyBonusRepository = dailyBonusRepository;
         this.userDailyBonusRepository = userDailyBonusRepository;
@@ -42,7 +38,7 @@ public class DailyBonusServiceImpl implements DailyBonusService {
 
         BonusClaim reclamoBonus = userDailyBonus.reclamarBonus(dailyBonus);
 
-        userDailyBonusService.guardar(userDailyBonus);
+        userDailyBonusRepository.guardar(userDailyBonus);
 
         return reclamoBonus;
     }

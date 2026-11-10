@@ -37,4 +37,5 @@ public class ScheduledTasks {
 		estrategiaCotizacionService.cotizarJugadores();
 		log.info("Se cotizaron todos los jugadores");
 	}
+	// TODO acá actualizar la misión una vez por día
 }

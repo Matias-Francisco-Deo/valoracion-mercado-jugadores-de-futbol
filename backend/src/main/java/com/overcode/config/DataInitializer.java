@@ -72,7 +72,7 @@ public class DataInitializer {
             }
         }
 
-        Collections.shuffle(players);
+        Collections.shuffle(players); // TODO XD
         Visit3PlayersDailyBonusMission visitMission = new Visit3PlayersDailyBonusMission(
                 new VisitPlayerDailyBonusMission(players.get(0)),
                 new VisitPlayerDailyBonusMission(players.get(1)),

@@ -1,5 +1,6 @@
 package com.overcode.persistence.dto.jpa;
 
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.user.User;
 import com.overcode.persistence.dto.jpa.bonus.UserDailyBonusJPADTO;
 import jakarta.persistence.*;
@@ -45,7 +46,7 @@ public class UserJPADTO {
     private List<TokenJPADTO> tokens = new ArrayList<>();
 
     @JoinColumn(name = "daily_bonus", nullable = false)
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserDailyBonusJPADTO userDailyBonusJPADTO;
 
     public static UserJPADTO desdeModelo(User user) {
@@ -59,12 +60,30 @@ public class UserJPADTO {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
         dto.setCreditBalance(user.getCreditBalance());
-        dto.setUserDailyBonusJPADTO(UserDailyBonusJPADTO.desdeModelo(user.getUserDailyBonus()));
+        dto.setUserDailyBonusJPADTO(UserDailyBonusJPADTO.desdeModelo(user.getUserDailyBonus(), dto));
 //        dto.setStreakCount(user.getStreakCount() != null ? user.getStreakCount() : 0);
 //        dto.setLastBonusClaimDate(user.getLastBonusClaimDate());
         dto.setTokens(TokenJPADTO.desdeModelo(user.getTokens(), dto));
         return dto;
     }
+
+    public static UserJPADTO desdeModelo(User user, UserDailyBonusJPADTO dailyBonusJPADTO) {
+        if (user == null) {
+            return null;
+        }
+        UserJPADTO dto = new UserJPADTO();
+
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        dto.setCreditBalance(user.getCreditBalance());
+        dto.setUserDailyBonusJPADTO(dailyBonusJPADTO);
+        dto.setTokens(TokenJPADTO.desdeModelo(user.getTokens(), dto));
+        return dto;
+    }
+
+
 
     public static UserJPADTO desdeModeloSinTokens(User user) {
         if (user == null) {
@@ -76,9 +95,7 @@ public class UserJPADTO {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
         dto.setCreditBalance(user.getCreditBalance());
-        dto.setUserDailyBonusJPADTO(UserDailyBonusJPADTO.desdeModelo(user.getUserDailyBonus()));
-//        dto.setStreakCount(user.getStreakCount() != null ? user.getStreakCount() : 0);
-//        dto.setLastBonusClaimDate(user.getLastBonusClaimDate());
+        dto.setUserDailyBonusJPADTO(UserDailyBonusJPADTO.desdeModelo(user.getUserDailyBonus(), dto));
         return dto;
     }
 
@@ -90,9 +107,20 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
-        user.setUserDailyBonus(this.userDailyBonusJPADTO.aModelo());
-//        user.setStreakCount(this.streakCount != null ? this.streakCount : 0);
-//        user.setLastBonusClaimDate(this.lastBonusClaimDate);
+        user.setUserDailyBonus(this.userDailyBonusJPADTO.aModelo(user));
+        user.setTokens(new ArrayList<>(this.tokens.stream().map(token -> token.aModelo(user)).toList()));
+        return user;
+    }
+
+    public User aModelo(UserDailyBonus userDailyBonus) {
+
+        User user = new User();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        user.setEmail(this.email);
+        user.setPassword(this.password);
+        user.setCreditBalance(this.creditBalance);
+        user.setUserDailyBonus(userDailyBonus);
         user.setTokens(new ArrayList<>(this.tokens.stream().map(token -> token.aModelo(user)).toList()));
         return user;
     }
@@ -104,7 +132,7 @@ public class UserJPADTO {
         user.setEmail(this.email);
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
-        user.setUserDailyBonus(this.userDailyBonusJPADTO.aModelo());
+        user.setUserDailyBonus(this.userDailyBonusJPADTO.aModelo(user));
 //        user.setStreakCount(this.streakCount != null ? this.streakCount : 0);
 //        user.setLastBonusClaimDate(this.lastBonusClaimDate);
         user.setTokens(new ArrayList<>());

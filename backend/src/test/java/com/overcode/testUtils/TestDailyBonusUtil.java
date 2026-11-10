@@ -12,12 +12,14 @@ public class TestDailyBonusUtil {
     public static DailyBonus getDailyBonusBase() {
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
         DailyBonusMission<Void> mission = new TestDailyBonusMission<>();
+        mission.setNombre("Misión test");
         return new DailyBonus("Bonus Base Semanal", rewardsBase, mission);
     }
 
     public static DailyBonus getDailyBonusBaseYaCompletado() {
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
         DailyBonusMission<Void> mission = new TestDailyBonusMission<>();
+        mission.setNombre("Misión test");
         mission.complete(null);
 
         return new DailyBonus("Bonus Base Semanal", rewardsBase, mission);

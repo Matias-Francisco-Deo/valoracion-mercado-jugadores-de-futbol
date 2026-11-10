@@ -38,11 +38,12 @@ public class TestService {
     private EntityManager entityManager;
 
     public void eliminarUsuarios() {
-        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
+        entityManager.createNativeQuery("UPDATE user_daily_bonuses SET user_id = NULL").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM users").executeUpdate();
+        entityManager.createNativeQuery("DELETE FROM user_daily_bonuses").executeUpdate();
         userDAO.deleteAll();
 
     }
