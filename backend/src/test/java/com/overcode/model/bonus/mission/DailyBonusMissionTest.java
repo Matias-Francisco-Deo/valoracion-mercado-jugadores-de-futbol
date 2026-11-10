@@ -60,17 +60,18 @@ class DailyBonusMissionTest {
     }
 
     @Test
-    void andMissionRetornaFalseSiNoTieneSubmisiones() {
+    void andMissionRetornaTrueSiNoTieneSubmisiones() {
         GenericAndDailyBonusMission<Object> andMission = new GenericAndDailyBonusMission<>("AND vacia");
-        assertFalse(andMission.isCompleted());
+        assertTrue(andMission.isCompleted());
     }
 
     @Test
-    void clonarMisionGeneraCopiaIndependienteConMismoEstado() {
+    void clonarMisionGeneraCopiaIndependienteConMismoEstadoYSinId() {
         TestDailyBonusMission<String> original = TestMissionUtil.crearTestMission("Original", true);
         TestDailyBonusMission<String> clon = original.clonar();
 
         assertNotSame(original, clon);
+        assertNull(clon.getId());
         assertEquals(original.getNombre(), clon.getNombre());
         assertEquals(original.isCompleted(), clon.isCompleted());
     }

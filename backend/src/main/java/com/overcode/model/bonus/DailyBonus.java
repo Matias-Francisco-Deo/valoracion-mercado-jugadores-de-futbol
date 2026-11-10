@@ -2,7 +2,7 @@ package com.overcode.model.bonus;
 
 import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
-import com.overcode.model.exception.bonus.DiaryBonusInvalidoException;
+import com.overcode.model.exception.bonus.DailyBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
 import lombok.Getter;
@@ -45,14 +45,14 @@ public class DailyBonus {
 
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new DiaryBonusInvalidoException("El nombre del DiaryBonus no puede ser nulo ni vacío.");
+            throw new DailyBonusInvalidoException("El nombre del DiaryBonus no puede ser nulo ni vacío.");
         }
         this.nombre = nombre.trim();
     }
 
     public Double getBonusConRacha(Integer racha) {
         if (this.bonusRewards == null) {
-            throw new DiaryBonusInvalidoException("Las recompensas no están configuradas.");
+            throw new DailyBonusInvalidoException("Las recompensas no están configuradas.");
         }
         return this.bonusRewards.get(racha);
     }

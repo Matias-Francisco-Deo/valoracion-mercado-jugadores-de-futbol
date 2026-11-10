@@ -79,7 +79,7 @@ public class DataInitializer {
                 new VisitPlayerDailyBonusMission(players.get(2))
         );
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        DailyBonusMission<?> rootDailyBonusMission = new BuyAndVisitMission(buyMission, visitMission);
+        DailyBonusMission<?> rootDailyBonusMission = new BuyOrVisitMission(buyMission, visitMission);
 
         DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, rootDailyBonusMission);
 

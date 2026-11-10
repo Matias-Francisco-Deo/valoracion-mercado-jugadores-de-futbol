@@ -24,7 +24,7 @@ This document captures the research, architectural evaluations, and technical de
 - **Context**: The existing codebase has `LoginBonus`, `LoginBonusRewards`, `LoginBonusService`, `LoginBonusRepository`, `LoginBonusJPADTO`, `LoginBonusDAOJPA`, and references in `ConfiguracionMercado` and `DataInitializer`. The user specified:
   > *"Do not remove the LoginBonus object (and whatever dependencies it has) instead, adapt it to the new logic. Change every name for DiaryBonus (including Service, Persistency, all places where it shows up)."*
 - **Decision**: Fully rename and adapt all `LoginBonus*` classes, interfaces, JPA entities, repositories, exceptions, and tests to `DiaryBonus*`:
-  - Model: `DailyBonus`, `DailyBonusRewards`, `DiaryBonusInvalidoException`
+  - Model: `DailyBonus`, `DailyBonusRewards`, `DailyBonusInvalidoException`
   - Persistence: `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO`, `DailyBonusDAOJPA`, `DailyBonusRepository`, `DailyBonusRepositoryImpl`, `DiaryBonusPersistenciaException`
   - Service: `DiaryBonusService`, `DiaryBonusServiceImpl`
   - Integration: Update `ConfiguracionMercado` to reference `DailyBonus` instead of `LoginBonus`.

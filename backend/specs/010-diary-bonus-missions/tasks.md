@@ -21,7 +21,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 
 **Purpose**: Adapt and rename all legacy `LoginBonus` domain, persistence, service, and test components to `DailyBonus` without regressing existing market or user dependencies.
 
-- [X] T001 [P] Rename and adapt domain exception `LoginBonusInvalidoException` to `DiaryBonusInvalidoException` in `src/main/java/com/overcode/model/exception/bonus/DiaryBonusInvalidoException.java`
+- [X] T001 [P] Rename and adapt domain exception `LoginBonusInvalidoException` to `DailyBonusInvalidoException` in `src/main/java/com/overcode/model/exception/bonus/DiaryBonusInvalidoException.java`
 - [X] T002 [P] Rename and adapt domain rewards class `LoginBonusRewards` to `DailyBonusRewards` using Lombok `@Getter` in `src/main/java/com/overcode/model/bonus/DiaryBonusRewards.java`
 - [X] T003 Rename and adapt domain entity `LoginBonus` to `DailyBonus` using Lombok `@Getter` and `@Setter` in `src/main/java/com/overcode/model/bonus/DiaryBonus.java`
 - [X] T004 [P] Rename and adapt persistence DTO `LoginBonusRewardsJPADTO` to `DailyBonusRewardsJPADTO` in `src/main/java/com/overcode/persistence/dto/jpa/bonus/DiaryBonusRewardsJPADTO.java`
@@ -105,7 +105,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 
 ### Tests for User Story 2 ⚠️
 
-- [X] T047 [P] [US2] Unit test in Spanish for `BuyDailyBonusMission` and `BuyAndVisitMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/dailyBonusMission/BuyMissionTest.java`
+- [X] T047 [P] [US2] Unit test in Spanish for `BuyDailyBonusMission` and `BuyOrVisitMission` verifying buy completion satisfies OR composite in `src/test/java/com/overcode/model/bonus/dailyBonusMission/BuyMissionTest.java`
 - [X] T048 [P] [US2] Integration test in Spanish in `src/test/java/com/overcode/service/bonus/BonusServiceImplTest.java` verifying market purchase triggers dailyBonusMission completion and unlocks claim
 - [X] T049 [US2] E2E test in Spanish in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java` verifying market token purchase unlocks immediate daily bonus claim
 
@@ -116,7 +116,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 - [X] T052 [US2] Add method `registrarCompra(User user)` to `UserDailyBonusService` and `UserDailyBonusServiceImpl` in `src/main/java/com/overcode/service/interfaces/UserDiaryBonusService.java` and `src/main/java/com/overcode/service/impl/UserDiaryBonusServiceImpl.java`
 - [X] T053 [US2] Update `TokenMarketServiceImpl.buy(...)` to notify `userDailyBonusService.registrarCompra(buyer)` upon successful purchase in `src/main/java/com/overcode/service/impl/TokenMarketServiceImpl.java`
 
-**Checkpoint**: User Story 2 functional. Market purchase completes `BuyDailyBonusMission` and satisfies `BuyAndVisitMission` to enable claiming.
+**Checkpoint**: User Story 2 functional. Market purchase completes `BuyDailyBonusMission` and satisfies `BuyOrVisitMission` to enable claiming.
 
 ---
 

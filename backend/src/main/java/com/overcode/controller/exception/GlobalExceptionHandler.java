@@ -115,9 +115,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
-    @ExceptionHandler(DiaryBonusInvalidoException.class)
+    @ExceptionHandler(DailyBonusInvalidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponseDTO handleDiaryBonusInvalido(DiaryBonusInvalidoException ex) {
+    public ErrorResponseDTO handleDiaryBonusInvalido(DailyBonusInvalidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

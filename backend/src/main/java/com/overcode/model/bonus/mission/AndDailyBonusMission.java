@@ -28,12 +28,4 @@ public abstract class AndDailyBonusMission<T> extends CompositeDailyBonusMission
     public boolean isCompleted() {
         return this.getCompleted() || getSubmissions().stream().allMatch(DailyBonusMission::isCompleted);
     }
-
-    @Override
-    public abstract void complete(T checkerObject);
-
-    @Override
-    public List<DailyBonusMission<?>> getSubmissions() {
-        return this.submissions;
-    }
 }
