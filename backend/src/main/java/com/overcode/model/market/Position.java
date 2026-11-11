@@ -30,7 +30,7 @@ public class Position {
 
     public static Position desdePositionData(PlayerPositionData data) {
 
-        Integer quantity = Math.toIntExact(data.totalBought() - data.totalSold());
+        Integer quantity = data.totalBought() - data.totalSold();
 
         Double averagePurchasePrice = data.totalBought() > 0 ? data.totalPurchaseAmount() / data.totalBought() : 0.0;
 

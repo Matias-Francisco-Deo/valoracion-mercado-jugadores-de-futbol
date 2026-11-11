@@ -148,7 +148,6 @@ class UserControllerTest {
 
     @Test
     void getPortfolioDevuelveListaDePosicionesDelUsuario() throws Exception {
-        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120d);
         Position position = new Position(PLAYER_ID, "Lionel Messi", 5, 100.0, 120.0, 600.0, 100.0, 20.0);
 
         when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of(position)));
