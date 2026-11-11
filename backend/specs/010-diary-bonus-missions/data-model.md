@@ -322,10 +322,10 @@ erDiagram
 | Model Record | `PeticionVisitaJugador` | Domain record for single-parameter service calls. |
 | JPA DTO | `DailyBonusJPADTO`, `DailyBonusRewardsJPADTO` | JPA mapping for `diary_bonuses`. |
 | JPA DTO | `UserDailyBonusJPADTO` | JPA mapping for `user_diary_bonuses` (links to `UserJPADTO`). |
-| JPA DTO | `MissionJPADTO` | Single-table JPA mapping for recursive dailyBonusMission trees (NO optionality column). |
+| JPA DTO | `DailyBonusMissionJPADTO` | Single-table JPA mapping for recursive dailyBonusMission trees (NO optionality column). |
 | DAO JPA | `DailyBonusDAOJPA` | Spring Data JPA repository for `DailyBonusJPADTO`. |
 | DAO JPA | `UserDiaryBonusDAOJPA` | Spring Data JPA repository for `UserDailyBonusJPADTO`. |
-| DAO JPA | `MissionDAOJPA` | Spring Data JPA repository for `MissionJPADTO`. |
+| DAO JPA | `MissionDAOJPA` | Spring Data JPA repository for `DailyBonusMissionJPADTO`. |
 | Repo Interface | `DailyBonusRepository` | Boundary for diary bonus persistence. |
 | Repo Interface | `UserDailyBonusRepository` | Boundary for user daily bonus persistence. |
 | Repo Interface | `MissionRepository` | Boundary for dailyBonusMission persistence. |

@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.mission.DailyBonusMission;
-import com.overcode.persistence.dto.jpa.bonus.MissionJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.DailyBonusMissionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.MissionDAOJPA;
 import com.overcode.persistence.repository.interfaces.MissionRepository;
 import org.springframework.stereotype.Repository;
@@ -19,13 +19,13 @@ public class MissionRepositoryImpl implements MissionRepository {
 
     @Override
     public DailyBonusMission<?> guardar(DailyBonusMission<?> dailyBonusMission) {
-        MissionJPADTO dto = MissionJPADTO.desdeModelo(dailyBonusMission);
+        DailyBonusMissionJPADTO dto = DailyBonusMissionJPADTO.desdeModelo(dailyBonusMission);
         return missionDAOJPA.save(dto).aModelo();
     }
 
     @Override
     public Optional<DailyBonusMission<?>> recuperarPorId(Long id) {
-        return missionDAOJPA.findById(id).map(MissionJPADTO::aModelo);
+        return missionDAOJPA.findById(id).map(DailyBonusMissionJPADTO::aModelo);
     }
 
     @Override

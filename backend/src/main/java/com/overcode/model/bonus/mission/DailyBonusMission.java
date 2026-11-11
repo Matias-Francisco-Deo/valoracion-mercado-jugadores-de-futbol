@@ -11,9 +11,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public abstract class DailyBonusMission<T> {
+
     private Long id;
     private String nombre;
     private Boolean completed = false;
+    private List<DailyBonusMission<?>> submissions = Collections.emptyList();
+    // precondición: nunca debería haber una misión que se llame a sí misma en las submisiones
 
     protected DailyBonusMission(Long id, String nombre, Boolean completed) {
         this.id = id;
@@ -39,7 +42,4 @@ public abstract class DailyBonusMission<T> {
 
     public abstract DailyBonusMission<T> clonar();
 
-    public List<DailyBonusMission<?>> getSubmissions() {
-        return Collections.emptyList();
-    }
 }

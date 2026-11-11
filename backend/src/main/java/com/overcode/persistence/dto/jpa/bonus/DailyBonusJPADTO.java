@@ -26,7 +26,7 @@ public class DailyBonusJPADTO {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "root_mission_id")
-    private MissionJPADTO rootMission;
+    private DailyBonusMissionJPADTO rootMission;
 
     public DailyBonus aModelo() {
         return new DailyBonus(
@@ -48,7 +48,7 @@ public class DailyBonusJPADTO {
             dto.setRewards(DailyBonusRewardsJPADTO.desdeModelo(modelo.getBonusRewards()));
         }
         if (modelo.getRootDailyBonusMission() != null) {
-            dto.setRootMission(MissionJPADTO.desdeModelo(modelo.getRootDailyBonusMission()));
+            dto.setRootMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getRootDailyBonusMission()));
         }
         return dto;
     }

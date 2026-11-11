@@ -35,7 +35,7 @@ public class UserDailyBonusJPADTO {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "root_mission_id")
-    private MissionJPADTO activeMission;
+    private DailyBonusMissionJPADTO activeMission;
 
     public UserDailyBonus aModelo(User user) {
         return new UserDailyBonus(
@@ -79,7 +79,7 @@ public class UserDailyBonusJPADTO {
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
         if (modelo.getActiveDailyBonusMission() != null) {
-            dto.setActiveMission(MissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
+            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
         }
         return dto;
     }
@@ -95,7 +95,7 @@ public class UserDailyBonusJPADTO {
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
         if (modelo.getActiveDailyBonusMission() != null) {
-            dto.setActiveMission(MissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
+            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
         }
         return dto;
     }
