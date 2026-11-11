@@ -14,12 +14,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity(name = "mission")
-@Table(name = "missions")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@SequenceGenerator(
+//        name = "daily_bonus_mission_sequence",
+//        sequenceName = "daily_bonus_mission_sequence",
+//        allocationSize = 1
+//)
 public abstract class DailyBonusMissionJPADTO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(nullable = false)
@@ -29,7 +33,7 @@ public abstract class DailyBonusMissionJPADTO {
     private boolean completed;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_mission_id")
+    @JoinColumn()
     private List<DailyBonusMissionJPADTO> submissions = new ArrayList<>();
 
     public abstract DailyBonusMission<?> aModelo();

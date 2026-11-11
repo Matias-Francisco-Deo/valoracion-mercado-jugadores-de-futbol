@@ -1,7 +1,5 @@
 package com.overcode.service;
 
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.market.PeticionDeposito;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
@@ -20,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestDailyBonusUtil.getDailyBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static junit.framework.TestCase.*;
@@ -58,7 +55,8 @@ public class TokenMarketServiceTest {
         testService.eliminarEstrategiasCotizacion();
 
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
+        testService.crearConfiguracionSimple();
+
 
         user1 = getUsuarioConCreditosIniciales("pepito", 100.0);
         user2 = getUsuarioConCreditosIniciales("maria", 100.0);

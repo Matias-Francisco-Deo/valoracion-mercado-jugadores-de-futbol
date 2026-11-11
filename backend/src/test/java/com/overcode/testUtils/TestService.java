@@ -1,16 +1,24 @@
 package com.overcode.testUtils;
 
+import com.overcode.model.cotizacion.ConfiguracionMercado;
+import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
+import com.overcode.persistence.dto.jpa.bonus.mapper.TipoDailyBonusMission;
 import com.overcode.persistence.repository.dao.jpa.*;
+import com.overcode.service.interfaces.ConfiguracionMercadoService;
+import com.overcode.testUtils.bonus.mission.MapTestMissionADTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.overcode.testUtils.TestDailyBonusUtil.getDailyBonusBase;
+
 @Service
 @Transactional
 public class TestService {
 
+    public static final MapTestMissionADTO TEST_MISSION_ADTO = new MapTestMissionADTO();
     @Autowired
     private UserDAOJPA userDAO;
 
@@ -36,6 +44,8 @@ public class TestService {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private ConfiguracionMercadoService configuracionMercadoService;
 
     public void eliminarUsuarios() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
@@ -67,7 +77,7 @@ public class TestService {
     }
 
     private void eliminarJugadores() {
-        entityManager.createNativeQuery("UPDATE missions SET target_player_id = NULL").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE visit_player_mission, visit_3_players_mission, users RESTART IDENTITY CASCADE").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM transactions").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM tokens").executeUpdate();
@@ -91,11 +101,13 @@ public class TestService {
     public void eliminarConfig() {
         eliminarDailyBonuses();
         configuracionCotizacionesDAO.deleteAll();
+        TipoDailyBonusMission.eliminarMapMision(TEST_MISSION_ADTO);
     }
 
     public void eliminarDailyBonuses() {
         entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
-        entityManager.createNativeQuery("TRUNCATE TABLE diary_bonus_rewards_data, diary_rewards_list, diary_bonuses, missions, user_daily_bonuses RESTART IDENTITY CASCADE").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE diary_rewards_list, diary_bonus_rewards_data, diary_bonuses, user_daily_bonuses RESTART IDENTITY CASCADE;").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE buy_mission, buy_visit_mission, visit_player_mission, visit_3_players_mission RESTART IDENTITY CASCADE;").executeUpdate();
     }
 
     public void eliminarRegistros() {
@@ -104,4 +116,8 @@ public class TestService {
 
     }
 
+    public void crearConfiguracionSimple() {
+        TipoDailyBonusMission.agregarMapMision(TEST_MISSION_ADTO);
+        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
+    }
 }

@@ -1,7 +1,5 @@
 package com.overcode.service;
 
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.market.PeticionVenta;
@@ -26,7 +24,6 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestDailyBonusUtil.getDailyBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,8 +53,7 @@ class TokenMarketServiceBuyTest {
     void setUp() {
         cleanDatabase();
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(
-                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
+        testService.crearConfiguracionSimple();
 
         buyer = getUsuarioConCreditosIniciales("buyer", 100d);
         poorBuyer = getUsuarioConCreditosIniciales("poor-buyer", 1d);

@@ -5,7 +5,7 @@ import org.jspecify.annotations.NonNull;
 
 public class MapTestMissionADTO extends MapMisionAJPADTO<TestMissionJPADTO, TestDailyBonusMission> {
 
-    protected MapTestMissionADTO() {
+    public MapTestMissionADTO() {
         super(TestDailyBonusMission.class);
     }
 

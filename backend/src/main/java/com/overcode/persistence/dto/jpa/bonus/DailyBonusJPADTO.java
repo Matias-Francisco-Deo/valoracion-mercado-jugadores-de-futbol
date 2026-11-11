@@ -25,8 +25,7 @@ public class DailyBonusJPADTO {
     @JoinColumn(name = "rewards_id")
     private DailyBonusRewardsJPADTO rewards;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "root_mission_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DailyBonusMissionJPADTO rootMission;
 
     public DailyBonus aModelo() {
