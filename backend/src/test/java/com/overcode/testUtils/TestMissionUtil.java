@@ -2,17 +2,18 @@ package com.overcode.testUtils;
 
 import com.overcode.model.bonus.mission.*;
 import com.overcode.model.player.Player;
+import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
 
 import java.util.Arrays;
 
 public class TestMissionUtil {
 
-    public static TestDailyBonusMission<String> crearTestMission(String nombre) {
-        return new TestDailyBonusMission<>(nombre);
+    public static TestDailyBonusMission crearTestMission(String nombre) {
+        return new TestDailyBonusMission(nombre);
     }
 
-    public static TestDailyBonusMission<String> crearTestMission(String nombre, boolean completed) {
-        return new TestDailyBonusMission<>(nombre, completed);
+    public static TestDailyBonusMission crearTestMission(String nombre, boolean completed) {
+        return new TestDailyBonusMission(nombre, completed);
     }
 
     public static GenericOrDailyBonusMission<Object> crearOrMission(String nombre, DailyBonusMission<?>... dailyBonusMissions) {

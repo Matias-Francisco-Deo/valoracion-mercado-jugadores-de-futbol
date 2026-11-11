@@ -3,7 +3,7 @@ package com.overcode.testUtils;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.DailyBonusRewards;
 import com.overcode.model.bonus.mission.DailyBonusMission;
-import com.overcode.model.bonus.mission.TestDailyBonusMission;
+import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
 
 import java.util.List;
 
@@ -11,14 +11,14 @@ public class TestDailyBonusUtil {
 
     public static DailyBonus getDailyBonusBase() {
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
-        DailyBonusMission<Void> mission = new TestDailyBonusMission<>();
+        DailyBonusMission<?> mission = new TestDailyBonusMission();
         mission.setNombre("Misión test");
         return new DailyBonus("Bonus Base Semanal", rewardsBase, mission);
     }
 
     public static DailyBonus getDailyBonusBaseYaCompletado() {
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
-        DailyBonusMission<Void> mission = new TestDailyBonusMission<>();
+        DailyBonusMission<?> mission = new TestDailyBonusMission();
         mission.setNombre("Misión test");
         mission.complete(null);
 

@@ -1,6 +1,7 @@
 package com.overcode.model.bonus.mission;
 
 import com.overcode.testUtils.TestMissionUtil;
+import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ class DailyBonusMissionTest {
 
     @Test
     void alCompletarTestMissionCambiaSuEstadoACompletado() {
-        TestDailyBonusMission<String> mision = TestMissionUtil.crearTestMission("Mision de prueba");
+        TestDailyBonusMission mision = TestMissionUtil.crearTestMission("Mision de prueba");
         assertFalse(mision.isCompleted());
 
         mision.complete("contexto");
@@ -18,8 +19,8 @@ class DailyBonusMissionTest {
 
     @Test
     void orMissionRetornaFalseCuandoNingunaSubmisionEstaCompletada() {
-        TestDailyBonusMission<String> m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission<String> m2 = TestMissionUtil.crearTestMission("Submision 2");
+        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
+        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
 
         GenericOrDailyBonusMission<Object> orMission = TestMissionUtil.crearOrMission("OR Compuesta", m1, m2);
         assertFalse(orMission.isCompleted());
@@ -27,8 +28,8 @@ class DailyBonusMissionTest {
 
     @Test
     void orMissionRetornaTrueCuandoAlMenosUnaSubmisionEstaCompletada() {
-        TestDailyBonusMission<String> m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission<String> m2 = TestMissionUtil.crearTestMission("Submision 2");
+        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
+        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
 
         GenericOrDailyBonusMission<Object> orMission = TestMissionUtil.crearOrMission("OR Compuesta", m1, m2);
         m1.complete("ok");
@@ -38,8 +39,8 @@ class DailyBonusMissionTest {
 
     @Test
     void andMissionRetornaFalseCuandoAlgunaSubmisionNoEstaCompletada() {
-        TestDailyBonusMission<String> m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission<String> m2 = TestMissionUtil.crearTestMission("Submision 2");
+        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
+        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
 
         GenericAndDailyBonusMission<Object> andMission = TestMissionUtil.crearAndMission("AND Compuesta", m1, m2);
         m1.complete("ok");
@@ -49,8 +50,8 @@ class DailyBonusMissionTest {
 
     @Test
     void andMissionRetornaTrueCuandoTodasLasSubmisionesEstanCompletadas() {
-        TestDailyBonusMission<String> m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission<String> m2 = TestMissionUtil.crearTestMission("Submision 2");
+        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
+        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
 
         GenericAndDailyBonusMission<Object> andMission = TestMissionUtil.crearAndMission("AND Compuesta", m1, m2);
         m1.complete("ok");
@@ -67,8 +68,8 @@ class DailyBonusMissionTest {
 
     @Test
     void clonarMisionGeneraCopiaIndependienteConMismoEstadoYSinId() {
-        TestDailyBonusMission<String> original = TestMissionUtil.crearTestMission("Original", true);
-        TestDailyBonusMission<String> clon = original.clonar();
+        TestDailyBonusMission original = TestMissionUtil.crearTestMission("Original", true);
+        TestDailyBonusMission clon = original.clonar();
 
         assertNotSame(original, clon);
         assertNull(clon.getId());
