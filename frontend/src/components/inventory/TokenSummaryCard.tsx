@@ -1,6 +1,7 @@
 import { Shield } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/playerQuoteUtils';
 import type { ComponentProps } from 'react';
 import type {InventoryToken, OrderSell, TokenSummary } from '@/types/inventory';
 
@@ -32,7 +33,7 @@ export const TokenSummaryCard = ({ token, actionType, onActionClick, className, 
           <div className="flex min-w-0 flex-col text-start ">
             <span className="text-[10px] font-semibold uppercase text-gray-700">Precio</span>
             <span className="flex items-center text-md sm:text-lg font-bold text-gray-900">
-              ${token.unitPrice }
+              {formatPrice(token.unitPrice)}
             </span>
             <span className="text-[10px] font-medium text-gray-700">por token</span>
           </div>

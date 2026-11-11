@@ -1,7 +1,9 @@
 import { useState, type ComponentProps } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { formatPrice } from '@/lib/playerQuoteUtils';
 import type { InventoryToken, TokenActionType } from '@/types/inventory';
+import { NumericInput } from '../ui/NumericInput';
 
 type TokenActionModalProps = ComponentProps<"div"> &{
   token:InventoryToken;
@@ -39,7 +41,7 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error, 
             <Minus size={10}/>
           </Button>
 
-          <span className='text-4xl'>{quantity}</span>
+          <NumericInput value={quantity} onChange={setQuantity} min={1} max={token.quantity} fallbackValue={1} className="w-24 text-center text-4xl border-0"/>
 
           <Button className='rounded-full p-4 border border-hover-orange bg-[#ffc977]' disabled={quantity>=token.quantity} onClick={()=>setQuantity(quantity+1)}>
             <Plus size={10}/>
@@ -50,12 +52,12 @@ export const TokenActionModal= ({ token, onConfirm, onClose, actionType, error, 
 
         <div className='flex justify-between'>
           <span className="text-sm">Precio: </span>
-          <span> ${token.unitPrice .toFixed(2)}</span>
+          <span>{formatPrice(token.unitPrice)}</span>
         </div>
 
         <div className='flex justify-between border-b pb-1 border-gray-300'>
           <span >Precio total: </span>
-          <span className="text-lg text-[#d66f00] ">${(token.unitPrice  * quantity).toFixed(2)}</span>
+          <span className="text-lg text-[#d66f00] ">{formatPrice(token.unitPrice * quantity)}</span>
         </div>
 
         <div className="flex items-center gap-4 justify-around">
