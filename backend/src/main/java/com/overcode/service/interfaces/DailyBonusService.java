@@ -12,6 +12,4 @@ public interface DailyBonusService {
 
     DailyBonus recuperarSeleccionado();
 
-    DailyBonus guardar(DailyBonus dailyBonus);
-
 }

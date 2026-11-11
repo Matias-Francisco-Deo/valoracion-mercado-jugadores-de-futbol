@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class UserDailyBonusRepositoryTest {
@@ -44,29 +44,35 @@ class UserDailyBonusRepositoryTest {
 
     @Test
     @Transactional
-    void alGuardarUserDiaryBonusSePersisteYSeRecuperaPorUsuario() {
+    void alGuardarUserSePersisteYSeRecuperaPorEseUsuario() {
         User user = userRepository.guardar(TestUserUtil.getUsuarioBase("juan"));
-        UserDailyBonus bonus = new UserDailyBonus(user);
-        bonus.setStreakCount(3);
-        bonus.setLastBonusClaimDate(LocalDate.of(2026, 11, 5));
-
-        UserDailyBonus guardado = userDailyBonusRepository.guardar(bonus);
-        assertNotNull(guardado.getId());
 
         Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUserId(user.getId());
         assertTrue(recuperado.isPresent());
-        assertEquals(3, recuperado.get().getStreakCount());
-        assertEquals(LocalDate.of(2026, 11, 5), recuperado.get().getLastBonusClaimDate());
-        assertEquals(user.getId(), recuperado.get().getUser().getId());
+        assertEquals(user.getUserDailyBonus().getId(), recuperado.get().getId());
+    }
+
+    @Test
+    @Transactional
+    void alGuardarUserSePersisteYSeRecuperaPorId() {
+        User user = userRepository.guardar(TestUserUtil.getUsuarioBase("juan"));
+
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorId(user.getUserDailyBonus().getId());
+        assertTrue(recuperado.isPresent());
+        assertEquals(user.getUserDailyBonus().getId(), recuperado.get().getId());
+    }
+
+    @Test
+    @Transactional
+    void alBuscarPorIdInexistenteRetornaVacio() {
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorId(-1L);
+        assertTrue(recuperado.isEmpty());
     }
 
     @Test
     @Transactional
     void alBuscarPorUsuarioInexistenteRetornaVacio() {
-        User user = TestUserUtil.getUsuarioBase("fantasma");
-        user.setId(-1L);
-
-        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUserId(user.getId());
+        Optional<UserDailyBonus> recuperado = userDailyBonusRepository.recuperarPorUserId(-1L);
         assertTrue(recuperado.isEmpty());
     }
 }

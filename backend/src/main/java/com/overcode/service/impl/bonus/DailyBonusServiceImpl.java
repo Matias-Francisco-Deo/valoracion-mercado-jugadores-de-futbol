@@ -5,7 +5,6 @@ import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
 import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
@@ -18,14 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class DailyBonusServiceImpl implements DailyBonusService {
 
     private final ConfiguracionMercadoService configuracionMercadoService;
-    private final DailyBonusRepository dailyBonusRepository;
     private final UserDailyBonusRepository userDailyBonusRepository;
 
     public DailyBonusServiceImpl(
                                  ConfiguracionMercadoService configuracionMercadoService,
-                                 DailyBonusRepository dailyBonusRepository, UserDailyBonusRepository userDailyBonusRepository) {
+                                 UserDailyBonusRepository userDailyBonusRepository) {
         this.configuracionMercadoService = configuracionMercadoService;
-        this.dailyBonusRepository = dailyBonusRepository;
         this.userDailyBonusRepository = userDailyBonusRepository;
     }
 
@@ -46,11 +43,6 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     @Override
     public DailyBonus recuperarSeleccionado() {
         return configuracionMercadoService.recuperar().getDailyBonus();
-    }
-
-    @Override
-    public DailyBonus guardar(DailyBonus dailyBonus) {
-        return dailyBonusRepository.guardar(dailyBonus);
     }
 
     @Override

@@ -33,8 +33,4 @@ public class UserDailyBonusRepositoryImpl implements UserDailyBonusRepository {
         return userDiaryBonusDAOJPA.findByUserId(userId).map(UserDailyBonusJPADTO::aModelo);
     }
 
-    @Override
-    public void eliminarPorId(Long id) {
-        userDiaryBonusDAOJPA.deleteById(id);
-    }
 }
