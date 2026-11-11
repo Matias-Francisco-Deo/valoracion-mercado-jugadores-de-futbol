@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.impl;
 
 import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.position.PlayerPositionData;
 import com.overcode.persistence.dto.jpa.TransactionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.TransactionDAOJPA;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
@@ -45,6 +46,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     public List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras) {
         List<TransactionJPADTO> transactionDTOS = transactionDAOJPA.saveAll(transaccionFinancieras.stream().map(TransactionJPADTO::desdeModelo).toList());
         return transactionDTOS.stream().map(TransactionJPADTO::aModelo).toList();
+    }
+
+    @Override
+    public List<PlayerPositionData> findPlayerPositionsData(Long userId) {
+        return transactionDAOJPA.findPlayerPositions(userId);
     }
 
 }
