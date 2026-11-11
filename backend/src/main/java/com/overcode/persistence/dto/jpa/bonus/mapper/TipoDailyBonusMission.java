@@ -1,7 +1,7 @@
 package com.overcode.persistence.dto.jpa.bonus.mapper;
 
 import com.overcode.model.bonus.mission.DailyBonusMission;
-import com.overcode.persistence.dto.jpa.bonus.DailyBonusMissionJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.mission.DailyBonusMissionJPADTO;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 
 import java.util.ArrayList;
@@ -10,15 +10,17 @@ import java.util.Optional;
 
 public enum TipoDailyBonusMission {;
 
-    private static final List<MapMisionAJPADTO> maps = new ArrayList<>(List.of(
-            new MapBuyMissionAJPADTO()
+    private static final List<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission<?>>> maps = new ArrayList<>(List.of(
+            new MapBuyMissionAJPADTO(),
+            new MapVisitPlayerMissionAJPADTO(),
+            new MapVisit3PlayersMissionAJPADTO(),
+            new MapBuyOrVisitMissionAJPADTO()
     ));
 
     public static DailyBonusMissionJPADTO getValueOf(DailyBonusMission<?> mision) {
 
-//        Class<? extends DailyBonusMission<?>> misionClase = mision.getClass();
-
-        Optional<MapMisionAJPADTO> mapMision = maps.stream().filter(
+        Optional<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission<?>>>
+                mapMision = maps.stream().filter(
                 map -> map.esAplicable(mision)
         ).findFirst();
 
@@ -26,14 +28,14 @@ public enum TipoDailyBonusMission {;
             throw new EntidadNoEncontradaException("Unexpected value: " + mision.getClass().getSimpleName());
         }
 
-        return mapMision.get().getDTO(mision);
+        return mapMision.get().mappear(mision);
     }
 
-    public static void agregarMapMision(MapMisionAJPADTO misionADTO) {
+    public static void agregarMapMision(MapMisionAJPADTO<?, ?> misionADTO) {
         maps.add(misionADTO);
     }
 
-    public static void eliminarMapMision(MapMisionAJPADTO misionADTO) {
+    public static void eliminarMapMision(MapMisionAJPADTO<?, ?> misionADTO) {
         maps.remove(misionADTO);
     }
 }

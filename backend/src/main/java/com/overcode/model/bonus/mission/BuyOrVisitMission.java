@@ -18,7 +18,6 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
 
     public BuyOrVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
         super(id, nombre, completed, submissions);
-//        resolveBranches();
     }
 
     public BuyOrVisitMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
@@ -26,16 +25,6 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
         this.buyMission = buyMission;
         this.visit3PlayersMission = visit3PlayersMission;
     }
-
-//    private void resolveBranches() { // TODO esto no va
-//        for (DailyBonusMission<?> m : submissions) {
-//            if (m instanceof BuyDailyBonusMission bm) {
-//                this.buyMission = bm;
-//            } else if (m instanceof Visit3PlayersDailyBonusMission v3pm) {
-//                this.visit3PlayersMission = v3pm;
-//            }
-//        }
-//    }
 
     @Override
     public void complete(Void checkerObject) {
@@ -54,7 +43,7 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
     }
 
     @Override
-    public BuyOrVisitMission clonar() {
+    public BuyOrVisitMission clonar() { // TODO revisar
         BuyDailyBonusMission clonedBuy = this.buyMission != null ? this.buyMission.clonar() : null;
         Visit3PlayersDailyBonusMission clonedVisits = this.visit3PlayersMission != null ? this.visit3PlayersMission.clonar() : null;
         if (clonedBuy != null && clonedVisits != null) {

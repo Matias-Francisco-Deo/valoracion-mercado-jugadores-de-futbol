@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.impl.bonus;
 
 import com.overcode.model.bonus.mission.DailyBonusMission;
-import com.overcode.persistence.dto.jpa.bonus.DailyBonusMissionJPADTO;
+import com.overcode.persistence.dto.jpa.bonus.mission.DailyBonusMissionJPADTO;
 import com.overcode.persistence.repository.dao.jpa.MissionDAOJPA;
 import com.overcode.persistence.repository.interfaces.MissionRepository;
 import org.springframework.stereotype.Repository;

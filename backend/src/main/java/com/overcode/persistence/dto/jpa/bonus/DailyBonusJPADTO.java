@@ -1,6 +1,7 @@
 package com.overcode.persistence.dto.jpa.bonus;
 
 import com.overcode.model.bonus.DailyBonus;
+import com.overcode.persistence.dto.jpa.bonus.mission.DailyBonusMissionJPADTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
