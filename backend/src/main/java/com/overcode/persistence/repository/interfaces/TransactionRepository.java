@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
 import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.position.PlayerPositionData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,6 @@ public interface TransactionRepository {
     List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras);
 
     List<TransaccionFinanciera> recuperarTodasPorUser(Long userId);
+
+    List<PlayerPositionData> findPlayerPositionsData(Long userId);
 }
