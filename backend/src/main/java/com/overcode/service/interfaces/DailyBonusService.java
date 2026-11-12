@@ -1,13 +1,13 @@
 package com.overcode.service.interfaces;
 
 import com.overcode.model.bonus.DailyBonus;
-import com.overcode.model.bonus.mission.BuyOrVisitMission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 
 public interface DailyBonusService {
 
     DailyBonus recuperarSeleccionado();
 
-    BuyOrVisitMission seleccionarNuevaMisionBuyOrVisit();
+    DailyBonusMission<?> seleccionarNuevaMision();
 
-    BuyOrVisitMission crearNuevaMisionBuyOrVisit();
+    DailyBonusMission<?> crearNuevaMision();
 }

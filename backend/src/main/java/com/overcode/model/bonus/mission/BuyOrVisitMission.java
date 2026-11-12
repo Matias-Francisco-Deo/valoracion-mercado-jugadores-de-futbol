@@ -13,7 +13,7 @@ import java.util.List;
 public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
 
     private BuyDailyBonusMission buyMission;
-    private Visit3PlayersDailyBonusMission visit3PlayersMission; // TODO esto puede dar problemas, ojo
+    private Visit3PlayersDailyBonusMission visit3PlayersMission;
 
     public BuyOrVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
         super(id, nombre, completed, submissions);

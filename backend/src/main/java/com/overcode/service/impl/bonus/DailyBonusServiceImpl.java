@@ -3,6 +3,7 @@ package com.overcode.service.impl.bonus;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.mission.BuyDailyBonusMission;
 import com.overcode.model.bonus.mission.BuyOrVisitMission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
 import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.DailyBonusMissionRepository;
@@ -36,21 +37,24 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public BuyOrVisitMission seleccionarNuevaMisionBuyOrVisit() { // TODO testear
+    public DailyBonusMission<?> seleccionarNuevaMision() { // TODO testear
         DailyBonus dailyBonus = recuperarSeleccionado();
 
-        BuyOrVisitMission buyOrVisitMission = crearNuevaMisionBuyOrVisit();
+        DailyBonusMission<?> buyOrVisitMission = crearNuevaMision();
 
         dailyBonus.setRootDailyBonusMission(buyOrVisitMission);
         return buyOrVisitMission;
     }
 
     @Override
-    public BuyOrVisitMission crearNuevaMisionBuyOrVisit() {  // TODO testear
+    public DailyBonusMission<?> crearNuevaMision() {  // TODO testear
 
         List<Player> randomPlayers = playerRepository.recuperar3JugadoresAlAzar();
 
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
+
+        if (randomPlayers.size() < 3) return buyMission; // caso borde si no hay suficientes jugadores
+
         Visit3PlayersDailyBonusMission visit3PlayersDailyBonusMission = new Visit3PlayersDailyBonusMission(randomPlayers);
 
         BuyOrVisitMission buyOrVisitMission = new BuyOrVisitMission(buyMission, visit3PlayersDailyBonusMission);

@@ -2,11 +2,10 @@ package com.overcode.config;
 
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.DailyBonusRewards;
-import com.overcode.model.bonus.mission.BuyOrVisitMission;
+import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
-import com.overcode.persistence.repository.interfaces.ConfiguracionMercadoRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -22,19 +21,16 @@ public class DataInitializer {
     private final UserService userService;
     private final EstrategiaCotizacionService estrategiaCotizacionService;
     private final ConfiguracionMercadoService configuracionMercadoService;
-    private final ConfiguracionMercadoRepository configuracionMercadoRepository;
     private final DailyBonusService dailyBonusService;
 
     public DataInitializer(
             UserService userService,
             EstrategiaCotizacionService estrategiaCotizacionService,
             ConfiguracionMercadoService configuracionMercadoService,
-            ConfiguracionMercadoRepository configuracionMercadoRepository,
             DailyBonusService dailyBonusService) {
         this.userService = userService;
         this.estrategiaCotizacionService = estrategiaCotizacionService;
         this.configuracionMercadoService = configuracionMercadoService;
-        this.configuracionMercadoRepository = configuracionMercadoRepository;
         this.dailyBonusService = dailyBonusService;
     }
 
@@ -47,11 +43,12 @@ public class DataInitializer {
     }
 
     private void inicializarConfiguracion() {
+
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
 
-        BuyOrVisitMission buyOrVisitMission = dailyBonusService.crearNuevaMisionBuyOrVisit();
+        DailyBonusMission<?> baseMision = dailyBonusService.crearNuevaMision();
 
-        DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, buyOrVisitMission);
+        DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, baseMision);
 
         ConfiguracionMercado configInicial = new ConfiguracionMercado(new EstrategiaCotizacionRendimientoTotal(), bonusBase);
         configuracionMercadoService.crearConfiguracionSiNoExiste(configInicial);

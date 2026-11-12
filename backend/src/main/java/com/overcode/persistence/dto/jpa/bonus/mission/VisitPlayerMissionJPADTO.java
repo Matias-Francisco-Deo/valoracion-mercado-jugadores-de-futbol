@@ -19,7 +19,7 @@ public class VisitPlayerMissionJPADTO extends DailyBonusMissionJPADTO {
     private PlayerJPADTO targetPlayer;
 
     @Override
-    public DailyBonusMission<?> aModelo() {
+    public DailyBonusMission<?> instanciarMision() {
         return new VisitPlayerDailyBonusMission(targetPlayer.aModelo());
     }
 }

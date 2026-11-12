@@ -31,7 +31,24 @@ public abstract class DailyBonusMissionJPADTO {
     @JoinColumn()
     private List<DailyBonusMissionJPADTO> submissions = new ArrayList<>();
 
-    public abstract DailyBonusMission<?> aModelo();
+    public abstract DailyBonusMission<?> instanciarMision();
+
+    public DailyBonusMission<?> aModelo() {
+        DailyBonusMission<?> mission = instanciarMision();
+        mission.setId(this.id);
+        mission.setCompleted(completed);
+        mission.setNombre(nombre);
+        setSubmissionsOnMission(mission);
+        aModeloHook(mission);
+        return mission;
+    }
+
+    public void setSubmissionsOnMission(DailyBonusMission<?> mission) {
+        List<? extends DailyBonusMission<?>> list = submissions.stream().map(DailyBonusMissionJPADTO::aModelo).toList();
+        mission.setSubmissions(new ArrayList<>(list));
+    }
+
+    public void aModeloHook(DailyBonusMission<?> mission) {}
 
     public static DailyBonusMissionJPADTO desdeModelo(DailyBonusMission<?> mision) {
         DailyBonusMissionJPADTO dto = TipoDailyBonusMission.getValueOf(mision);

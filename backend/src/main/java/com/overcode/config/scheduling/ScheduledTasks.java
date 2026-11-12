@@ -17,10 +17,11 @@ public class ScheduledTasks {
 
 	private final ExternalPlayerService externalPlayerService;
 	private final EstrategiaCotizacionService estrategiaCotizacionService;
+	private final DailyBonusService dailyBonusService;
+
 	private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
 	private static final Integer MAX_PLAYERS_TO_UPDATE = null;
-	private final DailyBonusService dailyBonusService;
 
 	public ScheduledTasks(ExternalPlayerService externalPlayerService, EstrategiaCotizacionService estrategiaCotizacionService, DailyBonusService dailyBonusService) {
         this.externalPlayerService = externalPlayerService;
@@ -44,7 +45,7 @@ public class ScheduledTasks {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void actualizarMision() {
 		log.info("Actualizando misión diaria...");
-		dailyBonusService.seleccionarNuevaMisionBuyOrVisit(); // TODO testear
+		dailyBonusService.seleccionarNuevaMision(); // TODO testear
 	}
 
 

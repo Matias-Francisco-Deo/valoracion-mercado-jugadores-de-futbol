@@ -6,7 +6,10 @@ import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.service.interfaces.*;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
+import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
@@ -42,8 +45,6 @@ public class TokenMarketServiceTest {
     private TestService testService;
     @Autowired
     private EstrategiaCotizacionService estrategiaCotizacionService;
-    @Autowired
-    private ConfiguracionMercadoService configuracionMercadoService;
 
 
     @BeforeEach

@@ -7,6 +7,9 @@ import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.testUtils.TestService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +31,26 @@ class BuyTokensTest {
 
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private TestService testService;
+
+    @BeforeEach
+    void setUp() {
+        limpiarDB();
+        testService.crearConfiguracionSimple();
+    }
+
+    @AfterEach
+    void tearDown() {
+        limpiarDB();
+    }
+
+    private void limpiarDB() {
+        testService.eliminarUsuarios();
+        testService.eliminarCotizaciones();
+        testService.eliminarJugadoresYEquipos();
+        testService.eliminarRegistros();
+    }
 
     @Test
     void marketBuyFillsAgainstARestingSellOrder() {
