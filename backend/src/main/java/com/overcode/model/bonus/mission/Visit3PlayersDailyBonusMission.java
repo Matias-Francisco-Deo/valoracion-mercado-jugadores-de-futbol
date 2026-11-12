@@ -15,14 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player> {
 
-    public Visit3PlayersDailyBonusMission(Long id, String nombre, boolean completed, List<VisitPlayerDailyBonusMission> submissions) {
-        super(id, nombre, completed, updateSubmissions(submissions));
-    }
-
-    private static @NonNull ArrayList<DailyBonusMission<?>> updateSubmissions(List<VisitPlayerDailyBonusMission> submissions) {
-        return new ArrayList<>(submissions.stream().limit(3).toList());
-    }
-
     public Visit3PlayersDailyBonusMission(VisitPlayerDailyBonusMission m1, VisitPlayerDailyBonusMission m2, VisitPlayerDailyBonusMission m3) {
         super("Visitar 3 jugadores del día", List.of(m1, m2, m3));
     }
@@ -30,6 +22,10 @@ public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player>
     public Visit3PlayersDailyBonusMission(List<Player> players) {
         super("Visitar 3 jugadores del día", crearSubmisiones(players));
 
+    }
+
+    private static @NonNull ArrayList<DailyBonusMission<?>> updateSubmissions(List<VisitPlayerDailyBonusMission> submissions) {
+        return new ArrayList<>(submissions.stream().limit(3).toList());
     }
 
     private static @NonNull List<DailyBonusMission<?>> crearSubmisiones(List<Player> players) {
@@ -50,13 +46,7 @@ public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player>
     @Override
     public Visit3PlayersDailyBonusMission clonar() {
         List<VisitPlayerDailyBonusMission> clonedSubs = submissions.stream().map(m -> ((VisitPlayerDailyBonusMission) m).clonar()).toList();
-        return new Visit3PlayersDailyBonusMission(null, getNombre(), isCompleted(), clonedSubs);
+        return new Visit3PlayersDailyBonusMission(clonedSubs.getFirst(), clonedSubs.get(1), clonedSubs.get(2));
     }
 
-//    public void actualizarConJugadores(List<Player> players) { // TODO testear
-//        if (players.size() != 3) throw new MisionInvalidaException("La cantidad de jugadores debe ser 3");
-//        for (int i = 0; i < 3; i++) {
-//            ((VisitPlayerDailyBonusMission) getSubmissions().get(i)).actualizarConJugador(players.get(i));
-//        }
-//    }
 }

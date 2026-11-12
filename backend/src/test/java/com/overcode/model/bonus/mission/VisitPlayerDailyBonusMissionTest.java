@@ -1,14 +1,25 @@
 package com.overcode.model.bonus.mission;
 
 import com.overcode.model.player.Player;
-import com.overcode.testUtils.TestMissionUtil;
 import com.overcode.testUtils.TestPlayerUtil;
+import com.overcode.testUtils.bonus.mission.TestMissionUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class VisitPlayerDailyBonusMissionTest {
+
+    @Test
+    void clonarMisionDaNuevaSinId() {
+        Player messi = TestPlayerUtil.crearJugador("Messi", 100.0);
+        VisitPlayerDailyBonusMission mision = TestMissionUtil.crearVisitPlayerMission(messi);
+        mision.setId(1L);
+
+        VisitPlayerDailyBonusMission clonada = mision.clonar();
+
+        assertNull(clonada.getId());
+        assertNotEquals(clonada, mision);
+    }
 
     @Test
     void alVisitarJugadorObjetivoSeMarcaComoCompletada() {
@@ -33,6 +44,33 @@ class VisitPlayerDailyBonusMissionTest {
         mision.complete(ronaldo);
 
         assertFalse(mision.isCompleted());
+    }
+
+    @Test
+    void clonarMisionDaNuevaConTodasLasSubmisionesClonadas() {
+        Player p1 = TestPlayerUtil.crearJugador("P1", 10.0);
+        Player p2 = TestPlayerUtil.crearJugador("P2", 20.0);
+        Player p3 = TestPlayerUtil.crearJugador("P3", 30.0);
+
+        Visit3PlayersDailyBonusMission mision = TestMissionUtil.crearVisit3PlayersMission(p1, p2, p3);
+
+        Visit3PlayersDailyBonusMission clonada = mision.clonar();
+
+        assertNull(clonada.getId());
+        assertNotEquals(clonada, mision.getSubmissions().getFirst());
+
+        DailyBonusMission<?> firstVisit = clonada.getSubmissions().getFirst();
+        assertNull(firstVisit.getId());
+        assertNotEquals(firstVisit, mision.getSubmissions().get(1));
+
+        DailyBonusMission<?> secondVisit = clonada.getSubmissions().get(1);
+        assertNull(secondVisit.getId());
+        assertNotEquals(secondVisit, mision);
+
+        DailyBonusMission<?> thirdVisit = clonada.getSubmissions().get(2);
+        assertNull(thirdVisit.getId());
+        assertNotEquals(thirdVisit, mision.getSubmissions().get(2));
+
     }
 
     @Test

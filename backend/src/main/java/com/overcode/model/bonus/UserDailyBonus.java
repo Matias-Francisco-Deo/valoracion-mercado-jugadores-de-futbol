@@ -123,6 +123,8 @@ public class UserDailyBonus {
         // este method sirve para actualizar la misión apenas pase un día (o más), tomando la fecha de la última misión seteada
         // es importante que se use en cualquier method relacionado a interactuar con el bonus, para evitar problemas
 
+        if (getActiveMissionDate() == null) dailyBonus.actualizarMisionEnUser(this);
+        
         long dias = ChronoUnit.DAYS.between(getActiveMissionDate(), getFechaActual());
 
         boolean tieneMisionActualizada = this.getActiveMissionDate() != null && dias == 0;

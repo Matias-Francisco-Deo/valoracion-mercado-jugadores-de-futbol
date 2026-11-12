@@ -76,6 +76,14 @@ public class TestPlayerUtil {
         return player;
     }
 
+    public static Player getJugadorConNombreYId(Long id, String name) {
+        Player player = new Player(name, getTeam(), null);
+        PlayerGameData playerGameData = getPlayerData(player);
+        player.setId(id);
+        player.setPlayerGameData(playerGameData);
+        return player;
+    }
+
     public static Player getJugadorConGameData(String name, PlayerGameData data) {
         return new Player(name, getTeam(), data);
     }

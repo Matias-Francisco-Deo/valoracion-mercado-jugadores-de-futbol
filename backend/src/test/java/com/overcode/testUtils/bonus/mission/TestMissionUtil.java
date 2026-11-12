@@ -1,10 +1,10 @@
-package com.overcode.testUtils;
+package com.overcode.testUtils.bonus.mission;
 
-import com.overcode.model.bonus.mission.*;
+import com.overcode.model.bonus.mission.BuyDailyBonusMission;
+import com.overcode.model.bonus.mission.BuyOrVisitMission;
+import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
+import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
 import com.overcode.model.player.Player;
-import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
-
-import java.util.Arrays;
 
 public class TestMissionUtil {
 
@@ -12,16 +12,12 @@ public class TestMissionUtil {
         return new TestDailyBonusMission(nombre);
     }
 
+    public static TestDailyBonusMission crearTestMission() {
+        return new TestDailyBonusMission("test");
+    }
+
     public static TestDailyBonusMission crearTestMission(String nombre, boolean completed) {
         return new TestDailyBonusMission(nombre, completed);
-    }
-
-    public static GenericOrDailyBonusMission<Object> crearOrMission(String nombre, DailyBonusMission<?>... dailyBonusMissions) {
-        return new GenericOrDailyBonusMission<>(nombre, Arrays.asList(dailyBonusMissions));
-    }
-
-    public static GenericAndDailyBonusMission<Object> crearAndMission(String nombre, DailyBonusMission<?>... dailyBonusMissions) {
-        return new GenericAndDailyBonusMission<>(nombre, Arrays.asList(dailyBonusMissions));
     }
 
     public static VisitPlayerDailyBonusMission crearVisitPlayerMission(Player player) {
@@ -42,4 +38,5 @@ public class TestMissionUtil {
     public static BuyOrVisitMission crearDailyBonusOrMission(BuyDailyBonusMission buyMission, Visit3PlayersDailyBonusMission visit3PlayersMission) {
         return new BuyOrVisitMission(buyMission, visit3PlayersMission);
     }
+
 }

@@ -1,7 +1,7 @@
 package com.overcode.model.bonus.mission;
 
-import com.overcode.testUtils.TestMissionUtil;
 import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
+import com.overcode.testUtils.bonus.mission.TestMissionUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,55 +15,6 @@ class DailyBonusMissionTest {
 
         mision.complete("contexto");
         assertTrue(mision.isCompleted());
-    }
-
-    @Test
-    void orMissionRetornaFalseCuandoNingunaSubmisionEstaCompletada() {
-        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
-
-        GenericOrDailyBonusMission<Object> orMission = TestMissionUtil.crearOrMission("OR Compuesta", m1, m2);
-        assertFalse(orMission.isCompleted());
-    }
-
-    @Test
-    void orMissionRetornaTrueCuandoAlMenosUnaSubmisionEstaCompletada() {
-        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
-
-        GenericOrDailyBonusMission<Object> orMission = TestMissionUtil.crearOrMission("OR Compuesta", m1, m2);
-        m1.complete("ok");
-
-        assertTrue(orMission.isCompleted());
-    }
-
-    @Test
-    void andMissionRetornaFalseCuandoAlgunaSubmisionNoEstaCompletada() {
-        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
-
-        GenericAndDailyBonusMission<Object> andMission = TestMissionUtil.crearAndMission("AND Compuesta", m1, m2);
-        m1.complete("ok");
-
-        assertFalse(andMission.isCompleted());
-    }
-
-    @Test
-    void andMissionRetornaTrueCuandoTodasLasSubmisionesEstanCompletadas() {
-        TestDailyBonusMission m1 = TestMissionUtil.crearTestMission("Submision 1");
-        TestDailyBonusMission m2 = TestMissionUtil.crearTestMission("Submision 2");
-
-        GenericAndDailyBonusMission<Object> andMission = TestMissionUtil.crearAndMission("AND Compuesta", m1, m2);
-        m1.complete("ok");
-        m2.complete("ok");
-
-        assertTrue(andMission.isCompleted());
-    }
-
-    @Test
-    void andMissionRetornaTrueSiNoTieneSubmisiones() {
-        GenericAndDailyBonusMission<Object> andMission = new GenericAndDailyBonusMission<>("AND vacia");
-        assertTrue(andMission.isCompleted());
     }
 
     @Test

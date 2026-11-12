@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -43,26 +42,8 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
     }
 
     @Override
-    public BuyOrVisitMission clonar() { // TODO revisar
-        BuyDailyBonusMission clonedBuy = this.buyMission != null ? this.buyMission.clonar() : null;
-        Visit3PlayersDailyBonusMission clonedVisits = this.visit3PlayersMission != null ? this.visit3PlayersMission.clonar() : null;
-        if (clonedBuy != null && clonedVisits != null) {
-            BuyOrVisitMission cloned = new BuyOrVisitMission(clonedBuy, clonedVisits);
-            cloned.setId(null);
-            cloned.setNombre(getNombre());
-            cloned.setCompleted(isCompleted());
-            return cloned;
-        } else {
-            List<DailyBonusMission<?>> clonedSubs = new ArrayList<>();
-            for (DailyBonusMission<?> m : submissions) {
-                clonedSubs.add(m.clonar());
-            }
-            return new BuyOrVisitMission(null, getNombre(), isCompleted(), clonedSubs);
-        }
+    public BuyOrVisitMission clonar() {
+        return new BuyOrVisitMission(this.buyMission.clonar(), this.visit3PlayersMission.clonar());
     }
 
-//    public void actualizarConJugadores(List<Player> players) {
-//        if (players.size() != 3) throw new MisionInvalidaException("La cantidad de jugadores debe ser 3");
-//        visit3PlayersMission.actualizarConJugadores(players);
-//    }
 }

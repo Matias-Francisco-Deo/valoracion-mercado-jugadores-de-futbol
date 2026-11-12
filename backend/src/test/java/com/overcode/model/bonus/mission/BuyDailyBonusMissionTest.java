@@ -1,6 +1,6 @@
 package com.overcode.model.bonus.mission;
 
-import com.overcode.testUtils.TestMissionUtil;
+import com.overcode.testUtils.bonus.mission.TestMissionUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
