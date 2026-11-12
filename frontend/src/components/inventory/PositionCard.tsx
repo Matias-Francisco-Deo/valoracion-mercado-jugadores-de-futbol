@@ -86,7 +86,7 @@ export const PositionCard= ({ position , isSelected, onSelect, className, ...pro
                     Precio actual por unidad
                 </p>
                 <p className="text-sm font-semibold">
-                    ${position.currentPrice}
+                    {formatPrice(position.currentPrice)}
                 </p>
             </div>
 
