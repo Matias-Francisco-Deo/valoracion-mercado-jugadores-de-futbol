@@ -54,9 +54,9 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 - [X] T022 [P] Create static factory utility `TestMissionUtil` with methods for instantiating model test dailyBonusMissions in `src/test/java/com/overcode/testUtils/TestMissionUtil.java`
 - [X] T023 Implement unit tests in Spanish for `AndDailyBonusMission`, `OrDailyBonusMission`, and `TestDailyBonusMission` composite mechanics in `src/test/java/com/overcode/model/bonus/dailyBonusMission/MissionTest.java`
 - [X] T024 Create persistence DTO `DailyBonusMissionJPADTO` for recursive tree mapping without optionality column in `src/main/java/com/overcode/persistence/dto/jpa/bonus/MissionJPADTO.java`
-- [X] T025 [P] Create DAO interface `MissionDAOJPA` extending `JpaRepository` in `src/main/java/com/overcode/persistence/repository/dao/jpa/MissionDAOJPA.java`
-- [X] T026 [P] Create repository interface `MissionRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/MissionRepository.java`
-- [X] T027 Implement `MissionRepositoryImpl` in `src/main/java/com/overcode/persistence/repository/impl/MissionRepositoryImpl.java`
+- [X] T025 [P] Create DAO interface `DailyBonusMissionDAOJPA` extending `JpaRepository` in `src/main/java/com/overcode/persistence/repository/dao/jpa/MissionDAOJPA.java`
+- [X] T026 [P] Create repository interface `DailyBonusMissionRepository` in `src/main/java/com/overcode/persistence/repository/interfaces/MissionRepository.java`
+- [X] T027 Implement `DailyBonusMissionRepositoryImpl` in `src/main/java/com/overcode/persistence/repository/impl/MissionRepositoryImpl.java`
 - [X] T028 [P] Create service interface `MissionService` in `src/main/java/com/overcode/service/interfaces/MissionService.java`
 - [X] T029 Implement `MissionServiceImpl` with single-parameter methods in `src/main/java/com/overcode/service/impl/MissionServiceImpl.java`
 - [X] T030 Create domain record `PeticionVisitaJugador(User user, Player player)` in `src/main/java/com/overcode/model/bonus/PeticionVisitaJugador.java`

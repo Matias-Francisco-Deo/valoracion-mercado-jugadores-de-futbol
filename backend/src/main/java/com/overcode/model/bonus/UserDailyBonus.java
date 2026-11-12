@@ -1,7 +1,8 @@
 package com.overcode.model.bonus;
 
 import com.overcode.config.Reloj;
-import com.overcode.model.bonus.mission.*;
+import com.overcode.model.bonus.mission.DailyBonusMission;
+import com.overcode.model.bonus.mission.MissionEngine;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
@@ -81,70 +82,30 @@ public class UserDailyBonus {
         return newStreak;
     }
 
-    public void inicializarConBonus(DailyBonus dailyBonus) {
-        LocalDate hoy = getFechaActual();
+    public void registrarVisitaJugador(Player player, DailyBonus dailyBonus) {
 
-        // TODO si la misión es de hoy, no la cambio, si es de ayer u otro día pasado, sí la reemplazo
-        if (this.activeMissionDate == null || !this.activeMissionDate.isEqual(hoy) || this.activeDailyBonusMission == null) {
-            actualizarRacha();
-            this.activeMissionDate = hoy;
-            if (dailyBonus != null && dailyBonus.getRootDailyBonusMission() != null) {
-                this.activeDailyBonusMission = dailyBonus.getRootDailyBonusMission().clonar(); // TODO más que nada debería hacer esto
-            }
-        }
+        actualizarMision(dailyBonus);
+
+        if (this.activeDailyBonusMission == null) return;
+
+        MissionEngine.registrarVisitaJugadorRecursivamente(this.activeDailyBonusMission, player);
+
     }
 
-    public void registrarVisitaJugador(Player player) { // TODO embellecer, ta feo
-        if (player == null || this.activeDailyBonusMission == null) {
-            return;
-        }
-        if (this.activeDailyBonusMission instanceof BuyOrVisitMission dom) {
-            dom.completeVisit(player);
-        } else if (this.activeDailyBonusMission instanceof Visit3PlayersDailyBonusMission v3pm) {
-            v3pm.complete(player);
-        } else if (this.activeDailyBonusMission instanceof VisitPlayerDailyBonusMission vpm) {
-            vpm.complete(player);
-        } else {
-            dispatchVisitRecursively(this.activeDailyBonusMission, player);
-        }
+    public void registrarCompra(DailyBonus dailyBonus) { // TODO testear
+
+        actualizarMision(dailyBonus);
+
+        if (this.activeDailyBonusMission == null) return;
+
+        MissionEngine.registrarCompraRecursivamente(this.activeDailyBonusMission);
     }
 
-    private void dispatchVisitRecursively(DailyBonusMission<?> dailyBonusMission, Player player) {
-        if (dailyBonusMission instanceof VisitPlayerDailyBonusMission vpm) {
-            vpm.complete(player);
-        } else if (dailyBonusMission instanceof Visit3PlayersDailyBonusMission v3pm) {
-            v3pm.complete(player);
-        } else {
-            for (DailyBonusMission<?> sub : dailyBonusMission.getSubmissions()) {
-                dispatchVisitRecursively(sub, player);
-            }
-        }
-    }
-
-    public void registrarCompra() {
-        if (this.activeDailyBonusMission == null) {
-            return;
-        }
-        if (this.activeDailyBonusMission instanceof BuyOrVisitMission dom) { // TODO no seas así, esto está claramente mal hermano, ya de por sí es un OR XD
-            dom.complete((Void) null);
-        } else if (this.activeDailyBonusMission instanceof BuyDailyBonusMission bm) { // esta sí
-            bm.complete();
-        } else {
-            dispatchBuyRecursively(this.activeDailyBonusMission); // TODO generalizar esto? por ahí pasando el mismo switch...
-        }
-    }
-
-    private void dispatchBuyRecursively(DailyBonusMission<?> dailyBonusMission) {
-        if (dailyBonusMission instanceof BuyDailyBonusMission bm) {
-            bm.complete();
-        } else {
-            for (DailyBonusMission<?> sub : dailyBonusMission.getSubmissions()) {
-                dispatchBuyRecursively(sub);
-            }
-        }
-    }
 
     public BonusClaim reclamarBonus(DailyBonus dailyBonus) {
+
+        actualizarMision(dailyBonus); // TODO testear?
+
         dailyBonus.verificarPuedeReclamarBonus(this);
 
         actualizarRacha();
@@ -156,5 +117,17 @@ public class UserDailyBonus {
         user.addCredits(bonusAmount);
 
         return new BonusClaim(bonusAmount, getStreakCount(), user.getCreditBalance());
+    }
+
+    public void actualizarMision(DailyBonus dailyBonus) {
+        // este method sirve para actualizar la misión apenas pase un día (o más), tomando la fecha de la última misión seteada
+        // es importante que se use en cualquier method relacionado a interactuar con el bonus, para evitar problemas
+
+        long dias = ChronoUnit.DAYS.between(getActiveMissionDate(), getFechaActual());
+
+        boolean tieneMisionActualizada = this.getActiveMissionDate() != null && dias == 0;
+        if (tieneMisionActualizada) return;
+
+        dailyBonus.actualizarMisionEnUser(this);
     }
 }

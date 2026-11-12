@@ -34,11 +34,6 @@ public class DailyBonus {
     public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> rootDailyBonusMission) {
         this(null, nombre, bonusRewards, rootDailyBonusMission);
     }
-
-//    public DailyBonus(String nombre, DailyBonusRewards bonusRewards) {
-//        this(null, nombre, bonusRewards, null);
-//    }
-
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new DailyBonusInvalidoException("El nombre del DiaryBonus no puede ser nulo ni vacío.");
@@ -60,6 +55,9 @@ public class DailyBonus {
     }
 
     public EstadoBonus obtenerEstadoBonus(UserDailyBonus userBonus) {
+
+        userBonus.actualizarMision(this);
+
         LocalDate fechaActual = getFechaActual();
         Integer rachaActual = userBonus.getStreakCount();
         Double nextBonus = getBonusConRacha(rachaActual);
@@ -91,5 +89,10 @@ public class DailyBonus {
 
     public DailyBonusRewards getBonusesDeLaSemana() {
         return this.bonusRewards;
+    }
+
+    public void actualizarMisionEnUser(UserDailyBonus userDailyBonus) {
+        userDailyBonus.setActiveDailyBonusMission(rootDailyBonusMission.clonar());
+        userDailyBonus.setActiveMissionDate(getFechaActual());
     }
 }

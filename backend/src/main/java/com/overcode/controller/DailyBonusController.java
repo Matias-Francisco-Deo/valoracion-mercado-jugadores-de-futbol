@@ -9,7 +9,6 @@ import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
-import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.UserDailyBonusService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +20,9 @@ import java.security.Principal;
 @RequestMapping("/api/daily-bonus")
 @Tag(name = "Daily Bonus", description = "Endpoints for daily streak bonus status and claims")
 public class DailyBonusController {
-
-    private final DailyBonusService dailyBonusService;
     private final UserDailyBonusService userDailyBonusService;
 
-    public DailyBonusController(DailyBonusService dailyBonusService, UserDailyBonusService userDailyBonusService) {
-        this.dailyBonusService = dailyBonusService;
+    public DailyBonusController(UserDailyBonusService userDailyBonusService) {
         this.userDailyBonusService = userDailyBonusService;
     }
 
@@ -35,7 +31,7 @@ public class DailyBonusController {
         long id = Long.parseLong(principal.getName());
         DailyBonusRequestDTO dto = new DailyBonusRequestDTO(id);
 
-        EstadoBonus status = dailyBonusService.obtenerEstadoBonus(dto.aModelo());
+        EstadoBonus status = userDailyBonusService.obtenerEstadoBonus(dto.aModelo());
         return ResponseEntity.ok(DailyBonusStatusResponseDTO.desdeModelo(status));
     }
 
@@ -44,7 +40,7 @@ public class DailyBonusController {
         long id = Long.parseLong(principal.getName());
         ClaimBonusRequestDTO dto = new ClaimBonusRequestDTO(id);
 
-        BonusClaim claim = dailyBonusService.reclamarBonus(dto.aModelo());
+        BonusClaim claim = userDailyBonusService.reclamarBonus(dto.aModelo());
         return ResponseEntity.ok(ClaimBonusResponseDTO.desdeModelo(claim));
     }
 

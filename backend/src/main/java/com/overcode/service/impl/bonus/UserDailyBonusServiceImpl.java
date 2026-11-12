@@ -1,9 +1,6 @@
 package com.overcode.service.impl.bonus;
 
-import com.overcode.model.bonus.DailyBonus;
-import com.overcode.model.bonus.EstadoBonus;
-import com.overcode.model.bonus.PeticionVisitaJugador;
-import com.overcode.model.bonus.UserDailyBonus;
+import com.overcode.model.bonus.*;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.impl.PlayerRepositoryImpl;
 import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
@@ -12,8 +9,6 @@ import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.UserDailyBonusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -43,12 +38,14 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
 
     @Override
     public void registrarCompra(User user) {
-        Optional<UserDailyBonus> userDailyBonus = userDailyBonusRepository.recuperarPorUserId(user.getId());
-        // error not found?
-        userDailyBonus.ifPresent(bonus -> {
-            bonus.registrarCompra();
-            userDailyBonusRepository.guardar(bonus);
-        });
+        UserDailyBonus userDailyBonus = userDailyBonusRepository.recuperarPorUserId(user.getId()).orElseThrow(
+                () -> new EntidadNoEncontradaException("El bonus diario no existe para el usuario: " + user.getId())
+        );
+        DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
+
+        userDailyBonus.registrarCompra(dailyBonus);
+        userDailyBonusRepository.guardar(userDailyBonus);
+
     }
 
     @Override
@@ -65,9 +62,33 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
                 () -> new EntidadNoEncontradaException("El bonus diario no existe para el usuario: " + userId)
         );
 
-        userDailyBonus.registrarVisitaJugador(peticion.player());
+        userDailyBonus.registrarVisitaJugador(peticion.player(), dailyBonus);
 
         userDailyBonusRepository.guardar(userDailyBonus);
+        return dailyBonus.obtenerEstadoBonus(userDailyBonus);
+    }
+
+    @Override
+    public BonusClaim reclamarBonus(User user) {
+        UserDailyBonus userDailyBonus = userDailyBonusRepository.recuperarPorUserId(user.getId()).orElseThrow(
+                () -> new EntidadNoEncontradaException("Bonus diario no encontrado para usuario: " + user.getId())
+        );
+        DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
+
+        BonusClaim reclamoBonus = userDailyBonus.reclamarBonus(dailyBonus);
+
+        userDailyBonusRepository.guardar(userDailyBonus);
+
+        return reclamoBonus;
+    }
+
+    @Override
+    public EstadoBonus obtenerEstadoBonus(User user) {
+        UserDailyBonus userDailyBonus = userDailyBonusRepository.recuperarPorUserId(user.getId()).orElseThrow(
+                () -> new EntidadNoEncontradaException("Bonus diario no encontrado para usuario: " + user.getId())
+        );
+        DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
+
         return dailyBonus.obtenerEstadoBonus(userDailyBonus);
     }
 }

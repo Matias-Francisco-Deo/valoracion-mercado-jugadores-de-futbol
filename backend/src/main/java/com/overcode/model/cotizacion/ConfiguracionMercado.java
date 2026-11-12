@@ -22,6 +22,11 @@ public class ConfiguracionMercado {
         setEstrategiaCotizacion(estrategiaCotizacion);
     }
 
+    public ConfiguracionMercado(EstrategiaCotizacion estrategiaCotizacion, DailyBonus dailyBonus) {
+        setEstrategiaCotizacion(estrategiaCotizacion);
+        setDailyBonus(dailyBonus);
+    }
+
     public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion, DailyBonus dailyBonus) {
         setId(id);
         setEstrategiaCotizacion(estrategiaCotizacion);

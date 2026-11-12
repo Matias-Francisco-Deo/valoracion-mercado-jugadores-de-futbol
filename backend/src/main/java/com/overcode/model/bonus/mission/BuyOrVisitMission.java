@@ -14,7 +14,7 @@ import java.util.List;
 public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
 
     private BuyDailyBonusMission buyMission;
-    private Visit3PlayersDailyBonusMission visit3PlayersMission;
+    private Visit3PlayersDailyBonusMission visit3PlayersMission; // TODO esto puede dar problemas, ojo
 
     public BuyOrVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
         super(id, nombre, completed, submissions);
@@ -60,4 +60,9 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
             return new BuyOrVisitMission(null, getNombre(), isCompleted(), clonedSubs);
         }
     }
+
+//    public void actualizarConJugadores(List<Player> players) {
+//        if (players.size() != 3) throw new MisionInvalidaException("La cantidad de jugadores debe ser 3");
+//        visit3PlayersMission.actualizarConJugadores(players);
+//    }
 }

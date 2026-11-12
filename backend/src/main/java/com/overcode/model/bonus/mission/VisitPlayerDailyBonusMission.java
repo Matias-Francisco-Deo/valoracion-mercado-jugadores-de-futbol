@@ -36,4 +36,8 @@ public class VisitPlayerDailyBonusMission extends DailyBonusMission<Player> {
     public VisitPlayerDailyBonusMission clonar() {
         return new VisitPlayerDailyBonusMission(null, getNombre(), isCompleted(), this.targetPlayer);
     }
+
+//    public void actualizarConJugador(Player player) {
+//        setTargetPlayer(player);
+//    }
 }

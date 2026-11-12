@@ -2,6 +2,7 @@ package com.overcode.controller.exception;
 
 import com.overcode.model.exception.*;
 import com.overcode.model.exception.bonus.*;
+import com.overcode.model.exception.bonus.mission.MisionInvalidaException;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;

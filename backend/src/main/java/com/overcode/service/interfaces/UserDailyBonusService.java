@@ -1,5 +1,6 @@
 package com.overcode.service.interfaces;
 
+import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.bonus.UserDailyBonus;
@@ -10,4 +11,6 @@ public interface UserDailyBonusService {
     UserDailyBonus guardar(UserDailyBonus userDailyBonus);
     void registrarCompra(User user);
     EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion);
+    BonusClaim reclamarBonus(User user);
+    EstadoBonus obtenerEstadoBonus(User user);
 }

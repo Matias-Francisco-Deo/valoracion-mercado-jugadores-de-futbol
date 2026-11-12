@@ -25,4 +25,6 @@ public interface PlayerRepository {
     List<Player> listarTodos();
 
     List<Player> guardarTodos(List<Player> jugadores);
+
+    List<Player> recuperar3JugadoresAlAzar();
 }

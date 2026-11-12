@@ -61,6 +61,11 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return playerJPADTOS.stream().map(PlayerJPADTO::aModelo).toList();
     }
 
+    @Override
+    public List<Player> recuperar3JugadoresAlAzar() {
+        return playerDAOJPA.recuperar3jugadoresAlAzar().stream().map(PlayerJPADTO::aModelo).toList();
+    }
+
 
     @Override
     public Page<Player> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable) {
