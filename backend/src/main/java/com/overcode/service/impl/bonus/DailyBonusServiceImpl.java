@@ -36,7 +36,7 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public BuyOrVisitMission seleccionarNuevaMisionVisitOrBuy() { // TODO testear
+    public BuyOrVisitMission seleccionarNuevaMisionBuyOrVisit() { // TODO testear
         DailyBonus dailyBonus = recuperarSeleccionado();
 
         BuyOrVisitMission buyOrVisitMission = crearNuevaMisionBuyOrVisit();

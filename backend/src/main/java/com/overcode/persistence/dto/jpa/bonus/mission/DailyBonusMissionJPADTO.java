@@ -15,11 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "mission")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-//@SequenceGenerator(
-//        name = "daily_bonus_mission_sequence",
-//        sequenceName = "daily_bonus_mission_sequence",
-//        allocationSize = 1
-//)
 public abstract class DailyBonusMissionJPADTO {
 
     @Id

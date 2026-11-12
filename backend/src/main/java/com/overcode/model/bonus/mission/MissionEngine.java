@@ -3,6 +3,10 @@ package com.overcode.model.bonus.mission;
 import com.overcode.model.player.Player;
 
 public class MissionEngine {
+    private MissionEngine() {
+        /* This utility class should not be instantiated */
+    }
+
 
     public static void registrarVisitaJugadorRecursivamente(DailyBonusMission<?> dailyBonusMission, Player player) {
         switch (dailyBonusMission) {

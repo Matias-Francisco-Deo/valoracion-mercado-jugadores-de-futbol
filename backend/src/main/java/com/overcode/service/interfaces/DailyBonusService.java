@@ -7,7 +7,7 @@ public interface DailyBonusService {
 
     DailyBonus recuperarSeleccionado();
 
-    BuyOrVisitMission seleccionarNuevaMisionVisitOrBuy();
+    BuyOrVisitMission seleccionarNuevaMisionBuyOrVisit();
 
     BuyOrVisitMission crearNuevaMisionBuyOrVisit();
 }
