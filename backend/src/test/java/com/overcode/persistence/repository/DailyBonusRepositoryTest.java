@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.overcode.testUtils.TestService.agregarTestMissionMap;
+import static com.overcode.testUtils.TestService.quitarTestMissionMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -27,11 +29,13 @@ class DailyBonusRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        agregarTestMissionMap();
         testService.eliminarDailyBonuses();
     }
 
     @AfterEach
     void tearDown() {
+        quitarTestMissionMap();
         testService.eliminarDailyBonuses();
     }
 

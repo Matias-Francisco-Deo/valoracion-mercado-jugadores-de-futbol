@@ -100,12 +100,15 @@ public class TestService {
 
     public void eliminarConfig() {
         eliminarDailyBonuses();
-        configuracionCotizacionesDAO.deleteAll();
+        entityManager.createNativeQuery("TRUNCATE TABLE configuraciones_mercado RESTART IDENTITY CASCADE").executeUpdate();
+        quitarTestMissionMap();
+    }
+
+    public static void quitarTestMissionMap() {
         TipoDailyBonusMission.eliminarMapMision(TEST_MISSION_ADTO);
     }
 
     public void eliminarDailyBonuses() {
-        entityManager.createNativeQuery("DELETE FROM configuraciones_mercado").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE TABLE diary_rewards_list, diary_bonus_rewards_data, diary_bonuses, user_daily_bonuses RESTART IDENTITY CASCADE;").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE TABLE buy_mission, buy_visit_mission, visit_player_mission, visit_3_players_mission RESTART IDENTITY CASCADE;").executeUpdate();
     }
@@ -117,7 +120,11 @@ public class TestService {
     }
 
     public void crearConfiguracionSimple() {
+        agregarTestMissionMap();
+        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(new EstrategiaCotizacionRating(), getDailyBonusBase()));
+    }
+
+    public static void agregarTestMissionMap() {
         TipoDailyBonusMission.agregarMapMision(TEST_MISSION_ADTO);
-        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getDailyBonusBase()));
     }
 }
