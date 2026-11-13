@@ -20,7 +20,7 @@ public record DailyBonusStatusResponseDTO(
                 estadoBonus.nextBonus(),
                 estadoBonus.alreadyClaimedToday(),
                 estadoBonus.weeklyBonuses() != null ? estadoBonus.weeklyBonuses().getRewards() : List.of(),
-                estadoBonus.puedeReclamar(),
+                estadoBonus.canClaimBonus(),
                 missionDTOs
         );
     }

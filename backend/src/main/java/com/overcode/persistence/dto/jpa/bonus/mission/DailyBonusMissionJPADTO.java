@@ -50,13 +50,19 @@ public abstract class DailyBonusMissionJPADTO {
 
     public void aModeloHook(DailyBonusMission<?> mission) {}
 
+    public void setDtoSubmissions(DailyBonusMission<?> mision) {
+        // esta lógica la debe manejar cada uno
+
+        this.setSubmissions(mision.getSubmissions().stream().map(DailyBonusMissionJPADTO::desdeModelo).toList());
+        // ojo, nunca debería haber una misión que se llame a sí misma
+    }
+
     public static DailyBonusMissionJPADTO desdeModelo(DailyBonusMission<?> mision) {
         DailyBonusMissionJPADTO dto = TipoDailyBonusMission.getValueOf(mision);
         dto.setId(mision.getId());
         dto.setCompleted(mision.getCompleted());
         dto.setNombre(mision.getNombre());
-        dto.setSubmissions(mision.getSubmissions().stream().map(DailyBonusMissionJPADTO::desdeModelo).toList());
-        // ojo, nunca debería haber una misión que se llame a sí misma
+        dto.setDtoSubmissions(mision);
 
         return dto;
     }

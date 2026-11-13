@@ -2,11 +2,13 @@ package com.overcode.service.impl.bonus;
 
 import com.overcode.model.bonus.*;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.impl.PlayerRepositoryImpl;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.UserDailyBonusRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.UserDailyBonusService;
+import com.overcode.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +18,17 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
 
     private final UserDailyBonusRepository userDailyBonusRepository;
     private final DailyBonusService dailyBonusService;
-    private final PlayerRepositoryImpl playerRepositoryImpl;
+    private final PlayerRepository playerRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
 
-    public UserDailyBonusServiceImpl(UserDailyBonusRepository userDailyBonusRepository, DailyBonusService dailyBonusService, PlayerRepositoryImpl playerRepositoryImpl) {
+    public UserDailyBonusServiceImpl(UserDailyBonusRepository userDailyBonusRepository, DailyBonusService dailyBonusService, PlayerRepository playerRepository, UserService userService, UserRepository userRepository) {
         this.userDailyBonusRepository = userDailyBonusRepository;
         this.dailyBonusService = dailyBonusService;
-        this.playerRepositoryImpl = playerRepositoryImpl;
+        this.playerRepository = playerRepository;
+        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
         Long playerId = peticion.player().getId();
         Long userId = peticion.user().getId();
 
-        if (!playerRepositoryImpl.existsById(playerId)) {
+        if (!playerRepository.existsById(playerId)) {
             throw new EntidadNoEncontradaException("El jugador no existe: " + playerId);
         }
 
@@ -70,14 +76,13 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
 
     @Override
     public BonusClaim reclamarBonus(User user) {
-        UserDailyBonus userDailyBonus = userDailyBonusRepository.recuperarPorUserId(user.getId()).orElseThrow(
-                () -> new EntidadNoEncontradaException("Bonus diario no encontrado para usuario: " + user.getId())
-        );
+        User userRecuperado = userService.recuperar(user.getId());
+        UserDailyBonus userDailyBonus = userRecuperado.getUserDailyBonus();
         DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
 
         BonusClaim reclamoBonus = userDailyBonus.reclamarBonus(dailyBonus);
 
-        userDailyBonusRepository.guardar(userDailyBonus);
+        userRepository.guardar(userRecuperado);
 
         return reclamoBonus;
     }

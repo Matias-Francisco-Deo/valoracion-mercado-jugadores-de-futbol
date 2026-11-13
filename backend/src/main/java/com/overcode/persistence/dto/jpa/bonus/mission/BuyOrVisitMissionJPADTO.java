@@ -4,19 +4,25 @@ import com.overcode.model.bonus.mission.BuyDailyBonusMission;
 import com.overcode.model.bonus.mission.BuyOrVisitMission;
 import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Entity(name = "buy_visit_mission")
 public class BuyOrVisitMissionJPADTO extends DailyBonusMissionJPADTO {
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private BuyMissionJPADTO buyMission;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false)
     private Visit3PlayersMissionJPADTO visit3PlayersMission;
 
     @Override
@@ -32,9 +38,13 @@ public class BuyOrVisitMissionJPADTO extends DailyBonusMissionJPADTO {
         return buyOrVisitMission;
     }
 
+    @Override
     public void setSubmissionsOnMission(DailyBonusMission<?> mission) {
         // se setean manualmente en este caso
     }
 
-
+    @Override
+    public void setDtoSubmissions(DailyBonusMission<?> mision) {
+        // se setean manualmente en este caso
+    }
 }

@@ -64,8 +64,8 @@ public class TokenMarketServiceTest {
 
         player1 = getJugadorConRating("messi", 10.0);
 
-        user1 = userService.guardar(user1);
-        user2 = userService.guardar(user2);
+        user1 = userService.crear(user1);
+        user2 = userService.crear(user2);
 
         player1 = playerService.guardar(player1);
     }

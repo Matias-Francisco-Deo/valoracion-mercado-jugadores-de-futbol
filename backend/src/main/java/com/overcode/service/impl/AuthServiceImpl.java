@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("Attempting to register user with email: {}", user.getEmail());
         userAuth.register(user);
 
-        User saved = userService.guardar(user);
+        User saved = userService.crear(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
         return userAuth.login(saved);

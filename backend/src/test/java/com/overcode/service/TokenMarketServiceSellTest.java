@@ -58,8 +58,8 @@ class TokenMarketServiceSellTest {
         player = getJugadorConRating("Test Player", 10d);
         player.setCurrentPrice(10d);
 
-        seller = userService.guardar(seller);
-        buyer = userService.guardar(buyer);
+        seller = userService.crear(seller);
+        buyer = userService.crear(buyer);
         player = playerService.guardar(player);
         tokenMarketService.buy(new OrdenDeCompra(seller, player, 10));
     }

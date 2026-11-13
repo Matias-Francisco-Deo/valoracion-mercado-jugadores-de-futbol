@@ -156,7 +156,7 @@ description: "Task list for diary-bonus-dailyBonusMissions implementation"
 
 - [X] T061 [P] [US4] Create response DTO `MissionStatusResponseDTO` (without boolean optional field) in `src/main/java/com/overcode/controller/dto/bonus/MissionStatusResponseDTO.java`
 - [X] T062 [US4] Update `EstadoBonus` to hold active dailyBonusMission list and claim readiness in `src/main/java/com/overcode/model/bonus/EstadoBonus.java`
-- [X] T063 [US4] Update `DailyBonusStatusResponseDTO` to include `List<MissionStatusResponseDTO>` and `puedeReclamar` flag in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
+- [X] T063 [US4] Update `DailyBonusStatusResponseDTO` to include `List<MissionStatusResponseDTO>` and `canClaimBonus` flag in `src/main/java/com/overcode/controller/dto/bonus/DailyBonusStatusResponseDTO.java`
 - [X] T064 [US4] Implement `obtenerEstadoBonus(User user)` in `DailyBonusServiceImpl` calling `userDailyBonus.inicializarConBonus(dailyBonus)` and returning `EstadoBonus` in `src/main/java/com/overcode/service/impl/BonusServiceImpl.java`
 
 **Checkpoint**: User Story 4 functional. Mission progress and status transparently surfaced to the API caller.
