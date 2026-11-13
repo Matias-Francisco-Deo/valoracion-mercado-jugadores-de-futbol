@@ -80,15 +80,7 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
                             dto.getOwner().getId(),
                             id -> dto.getOwner().aModeloSinTokens()
                     );
-                    return new OrdenDeVenta(
-                            dto.getId(),
-                            seller,
-                            dto.getPlayer().aModelo(),
-                            dto.getToken().aModelo(),
-                            dto.getPrice(),
-                            dto.getStatus(),
-                            dto.getCreatedAt()
-                    );
+                    return dto.aModelo(seller);
                 })
                 .toList();
     }

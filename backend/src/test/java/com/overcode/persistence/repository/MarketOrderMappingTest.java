@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository;
 
 import com.overcode.model.market.orden.OrderStatus;
+import com.overcode.model.user.User;
 import com.overcode.persistence.dto.jpa.*;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.impl.OrdenDeCompraRepositoryImpl;
@@ -15,6 +16,29 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MarketOrderMappingTest {
+    @Test
+    void contextualMappingReusesSellerAndPreservesOrderFields() {
+        User seller = new User(2L);
+        UserJPADTO storedSeller = new UserJPADTO(2L, "seller", "seller@test.com", "pass", 10.0, List.of());
+        PlayerJPADTO player = new PlayerJPADTO(10L, "Player", 20.0, List.of());
+        Instant createdAt = Instant.parse("2026-11-13T10:00:00Z");
+        var dto = new OrdenDeVentaJPADTO(1L, storedSeller, player, new TokenJPADTO(101L, null, player),
+                15.0, OrderStatus.CANCELLED, createdAt);
+
+        var order = dto.aModelo(seller);
+
+        assertSame(seller, order.getOwner());
+        assertEquals(1L, order.getId());
+        assertEquals(10L, order.getPlayer().getId());
+        assertEquals(101L, order.getToken().getId());
+        assertEquals(15.0, order.getPrice());
+        assertEquals(OrderStatus.CANCELLED, order.getStatus());
+        assertEquals(createdAt, order.getCreatedAt());
+        var originalMapping = dto.aModelo();
+        assertEquals(seller.getId(), originalMapping.getOwner().getId());
+        assertNotSame(seller, originalMapping.getOwner());
+    }
+
     @Test
     void buyRequestsOnlyNeededOrdersAndSharesSellerInstance() {
         SellOrderDAOJPA dao = mock(SellOrderDAOJPA.class);
