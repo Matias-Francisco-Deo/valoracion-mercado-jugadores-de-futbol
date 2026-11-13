@@ -10,7 +10,6 @@ import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,16 +27,7 @@ public class MotorDeMercado {
         }
 
         List<OrdenDeVenta> ordersToFill = openOrders.subList(0, quantity);
-
-        Map<Long, User> sellersById = new HashMap<>();
-
         for (OrdenDeVenta order : ordersToFill) {
-            User seller = order.getOwner();
-
-            User existingSeller = sellersById.putIfAbsent(seller.getId(), seller);
-
-            if (existingSeller != null) {order.setOwner(existingSeller);}
-
             order.comprarPorUsuario(buyer);
         }
 

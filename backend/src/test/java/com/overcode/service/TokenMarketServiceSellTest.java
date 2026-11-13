@@ -12,7 +12,9 @@ import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenMarketService;
@@ -45,6 +47,8 @@ class TokenMarketServiceSellTest {
     private ConfiguracionMercadoService configuracionMercadoService;
     @Autowired
     private TestService testService;
+    @Autowired
+    private OrdenDeCompraRepository orderRepository;
 
     private User seller;
     private User buyer;
@@ -144,6 +148,20 @@ class TokenMarketServiceSellTest {
 
         assertEquals(10, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
         assertTrue(openOrdersFor(seller.getId()).isEmpty());
+    }
+
+    @Test
+    void createSellOrdersRejectsExistingOpenOrderWithoutChangingOwnership() {
+        var token = userService.recuperar(seller.getId()).getTokensForPlayer(player.getId()).getFirst();
+        orderRepository.save(new OrdenDeVenta(seller, player, token, player.getCurrentPrice()));
+        PeticionVenta request = new PeticionVenta(seller, player, 2);
+
+        var error = assertThrows(ExisteOrdenAbiertaParaTokenException.class,
+                () -> tokenMarketService.sell(request));
+
+        assertEquals("Ya existe una orden abierta para el token: " + token.getId(), error.getMessage());
+        assertEquals(10, userService.recuperar(seller.getId()).getTokenCountForPlayer(player.getId()));
+        assertEquals(1, openOrdersFor(seller.getId()).getFirst().quantity());
     }
 
     // ------------------------------ cancelOrder ------------------------------

@@ -3,15 +3,19 @@ package com.overcode.persistence.repository.impl;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
+import com.overcode.model.user.User;
 import com.overcode.persistence.dto.jpa.OrdenDeVentaJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -55,11 +59,37 @@ public class OrdenDeCompraRepositoryImpl implements OrdenDeCompraRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Long> findFirstTokenIdWithOpenOrder(List<Long> tokenIds) {
+        return tokenIds.isEmpty() ? Optional.empty()
+                : Optional.ofNullable(dao.findFirstTokenIdWithStatus(tokenIds, OrderStatus.OPEN));
+    }
+
+    @Override
     @Transactional(readOnly = true)//trae las ordenes abiertas de un jugador, excluyendo al comprador
-    public List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId) {
-        return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(playerId, OrderStatus.OPEN,buyerId)
+    public List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId, int quantity) {
+        if (quantity <= 0) {
+            return List.of();
+        }
+        Map<Long, User> sellersCache = new HashMap<>();
+        return dao.findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
+                playerId, OrderStatus.OPEN, buyerId, PageRequest.of(0, quantity))
                 .stream()
-                .map(OrdenDeVentaJPADTO::aModelo)
+                .map(dto -> {
+                    User seller = sellersCache.computeIfAbsent(
+                            dto.getOwner().getId(),
+                            id -> dto.getOwner().aModeloSinTokens()
+                    );
+                    return new OrdenDeVenta(
+                            dto.getId(),
+                            seller,
+                            dto.getPlayer().aModelo(),
+                            dto.getToken().aModelo(),
+                            dto.getPrice(),
+                            dto.getStatus(),
+                            dto.getCreatedAt()
+                    );
+                })
                 .toList();
     }
 

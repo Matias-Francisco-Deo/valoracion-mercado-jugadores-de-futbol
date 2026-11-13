@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class UserTest {
 
@@ -28,5 +29,21 @@ class UserTest {
         User user = USER_1;
         user.setCreditBalance(-3d);
         assertEquals(0, user.getCreditBalance());
+    }
+
+    @Test
+    void equalsAndHashCodeBasedOnId() {
+        User userA = new User(1L);
+        User userB = new User(1L);
+        User userC = new User(2L);
+        User userWithoutId = new User();
+
+        assertEquals(userA, userA);
+        assertEquals(userA, userB);
+        assertEquals(userA.hashCode(), userB.hashCode());
+        assertNotEquals(userA, userC);
+        assertNotEquals(userA, userWithoutId);
+        assertNotEquals(userA, null);
+        assertNotEquals(userA, "string");
     }
 }

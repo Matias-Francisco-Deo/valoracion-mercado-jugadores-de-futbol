@@ -18,6 +18,9 @@ public interface SellOrderDAOJPA extends JpaRepository<OrdenDeVentaJPADTO, Long>
 
     boolean existsByToken_IdAndStatus(Long tokenId, OrderStatus status);
 
+    @Query("SELECT MIN(o.token.id) FROM OrdenDeVentaJPADTO o WHERE o.token.id IN :tokenIds AND o.status = :status")
+    Long findFirstTokenIdWithStatus(@Param("tokenIds") List<Long> tokenIds, @Param("status") OrderStatus status);
+
     List<OrdenDeVentaJPADTO> findAllByPlayer_IdAndOwner_IdAndStatusOrderByCreatedAtAsc(
             Long playerId,
             Long userId,
@@ -26,7 +29,7 @@ public interface SellOrderDAOJPA extends JpaRepository<OrdenDeVentaJPADTO, Long>
 
     //trae las ordenes con estado recibido de un jugador, excluyendo al comprador
     List<OrdenDeVentaJPADTO> findByPlayer_IdAndStatusAndOwner_IdNotOrderByPriceAscCreatedAtAsc(
-            Long playerId, OrderStatus status, Long buyerId);
+            Long playerId, OrderStatus status, Long buyerId, Pageable pageable);
 
     String FILTRO_NOMBRE =
             "(:nombre IS NULL OR TRIM(:nombre) = '' " +
