@@ -67,7 +67,7 @@
 ### Tests for User Story 1
 - [X] T019 [P] [US1] Unit test in Spanish `LoginBonusTest` testing consecutive streak calculations and bonus value retrieval in `src/test/java/com/overcode/model/bonus/LoginBonusTest.java`
 - [X] T020 [P] [US1] Unit test in Spanish `UserBonusTest` verifying `reclamarBonusDiario` updates `streakCount`, credits balance with `Double`, and verifies login never alters balance in `src/test/java/com/overcode/model/UserBonusTest.java`
-- [X] T021 [P] [US1] Service integration test in Spanish `DailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
+- [X] T021 [P] [US1] Service integration test in Spanish `UserDailyBonusServiceImplTest` testing consecutive daily claims and credit awards in `src/test/java/com/overcode/service/DailyBonusServiceImplTest.java`
 - [X] T022 [P] [US1] End-to-End API test in Spanish `DailyBonusE2eTest` verifying `POST /api/daily-bonus/claim` for Day 1 and Day 2 progression and ensuring `POST /auth/login` does not award bonus in `src/test/java/com/overcode/e2e/DailyBonusE2eTest.java`
 
 ### Implementation for User Story 1
@@ -195,7 +195,7 @@ Phase 8: Polish & Build Verification
   - Enum T006, tests T007, and JPA DTO T011 can run in parallel.
   - DAO T014 and Interface T015 can be defined in parallel.
 - In **Phase 3**:
-  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`DailyBonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
+  - Tests T019 (`LoginBonusTest`), T020 (`UserBonusTest`), T021 (`UserDailyBonusServiceImplTest`), T022 (`DailyBonusE2eTest`), and DTO T023 can all be authored in parallel before implementation.
 - In **Phase 7**: DTO T042 and test T040 can run in parallel.
 - In **Phase 8**: T045 and T046 can be executed concurrently.
 

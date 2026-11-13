@@ -203,7 +203,7 @@ class DailyBonusTest {
 
         dailyBonus = getDailyBonusBase();
 
-        User user1 = getUsuarioConRachaYMision("pepito", 0, ayer, dailyBonus.getRootDailyBonusMission());
+        User user1 = getUsuarioConRachaYMision("pepito", 0, ayer, dailyBonus.getGetRootMission());
         UserDailyBonus user1UserDailyBonus = user1.getUserDailyBonus();
 
         try (MockedStatic<Reloj> reloj = mockStatic(Reloj.class)) {
@@ -216,6 +216,6 @@ class DailyBonusTest {
     }
 
     private @NonNull User getUsuarioTestConFechaYRacha(LocalDate ultimoReclamo, int racha) {
-        return getUsuarioConRachaYMision("pepito", racha, ultimoReclamo, dailyBonus.getRootDailyBonusMission());
+        return getUsuarioConRachaYMision("pepito", racha, ultimoReclamo, dailyBonus.getGetRootMission());
     }
 }

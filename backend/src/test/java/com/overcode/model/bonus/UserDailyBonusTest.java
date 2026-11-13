@@ -16,10 +16,7 @@ import java.time.LocalDate;
 
 import static com.overcode.testUtils.bonus.mission.TestMissionUtil.crearTestMission;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class UserDailyBonusTest {
 
@@ -137,7 +134,7 @@ class UserDailyBonusTest {
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
         assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getRootDailyBonusMission());
+        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
     }
 
     @Test
@@ -151,7 +148,7 @@ class UserDailyBonusTest {
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
         assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getRootDailyBonusMission());
+        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
         assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), misionVieja);
     }
 
@@ -167,7 +164,7 @@ class UserDailyBonusTest {
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
         assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getRootDailyBonusMission());
+        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
         assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), misionVieja);
     }
 

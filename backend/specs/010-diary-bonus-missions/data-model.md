@@ -52,7 +52,7 @@ classDiagram
 - `id`: `Long` - Unique identifier.
 - `nombre`: `String` - Name of the diary bonus configuration (non-null, non-empty).
 - `bonusRewards`: `DailyBonusRewards` - Holds the 7 reward tiers (one per streak day 0..6).
-- `rootDailyBonusMission`: `Mission<?>` - Composite root dailyBonusMission defining today's requirements (e.g. `BuyOrVisitMission`).
+- `getRootMission`: `Mission<?>` - Composite root dailyBonusMission defining today's requirements (e.g. `BuyOrVisitMission`).
 
 #### Business Methods & Rules:
 - `getBonusConRacha(Integer racha)`: Returns reward for given streak index.

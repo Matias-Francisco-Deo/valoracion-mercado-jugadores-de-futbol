@@ -67,7 +67,7 @@ public class TokenMarketServiceTest {
         user1 = userService.crear(user1);
         user2 = userService.crear(user2);
 
-        player1 = playerService.guardar(player1);
+        player1 = playerService.crear(player1);
     }
 
     @AfterEach

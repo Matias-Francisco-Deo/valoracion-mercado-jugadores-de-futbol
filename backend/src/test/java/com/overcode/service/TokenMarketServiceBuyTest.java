@@ -68,7 +68,7 @@ class TokenMarketServiceBuyTest {
         sellerA = userService.crear(sellerA);
         sellerB = userService.crear(sellerB);
         selfBuyer = userService.crear(selfBuyer);
-        player = playerService.guardar(player);
+        player = playerService.crear(player);
 
         tokenMarketService.buy(new OrdenDeCompra(sellerA, player, 98));
         tokenMarketService.buy(new OrdenDeCompra(sellerB, player, 1));

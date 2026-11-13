@@ -22,17 +22,17 @@ public class DailyBonus {
     private Long id;
     private String nombre;
     private DailyBonusRewards bonusRewards;
-    private DailyBonusMission<?> rootDailyBonusMission;
+    private DailyBonusMission<?> getRootMission;
 
-    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> rootDailyBonusMission) {
+    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> getRootMission) {
         this.id = id;
         setNombre(nombre);
         setBonusRewards(bonusRewards);
-        this.rootDailyBonusMission = rootDailyBonusMission;
+        this.getRootMission = getRootMission;
     }
 
-    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> rootDailyBonusMission) {
-        this(null, nombre, bonusRewards, rootDailyBonusMission);
+    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> getRootMission) {
+        this(null, nombre, bonusRewards, getRootMission);
     }
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -92,7 +92,7 @@ public class DailyBonus {
     }
 
     public void actualizarMisionEnUser(UserDailyBonus userDailyBonus) {
-        userDailyBonus.setActiveDailyBonusMission(rootDailyBonusMission.clonar());
+        userDailyBonus.setActiveDailyBonusMission(getRootMission.clonar());
         userDailyBonus.setActiveMissionDate(getFechaActual());
     }
 }

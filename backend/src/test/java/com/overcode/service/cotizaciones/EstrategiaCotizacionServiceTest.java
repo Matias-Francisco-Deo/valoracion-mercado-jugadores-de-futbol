@@ -281,7 +281,7 @@ class EstrategiaCotizacionServiceTest {
     void seActualizanCotizacionesDeJugadoresUsandoEstrategia() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.guardar(player);
+        Player playerPersistido = playerServiceImpl.crear(player);
 
         final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
@@ -307,7 +307,7 @@ class EstrategiaCotizacionServiceTest {
     void seCotizanJugadoresYQuedaUnRegistro() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.guardar(player);
+        Player playerPersistido = playerServiceImpl.crear(player);
 
         final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 

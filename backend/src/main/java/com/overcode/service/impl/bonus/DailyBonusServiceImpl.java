@@ -7,6 +7,7 @@ import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
 import com.overcode.model.player.Player;
 import com.overcode.persistence.repository.interfaces.DailyBonusMissionRepository;
+import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.DailyBonusService;
@@ -22,13 +23,15 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     private final ConfiguracionMercadoService configuracionMercadoService;
     private final PlayerRepository playerRepository;
     private final DailyBonusMissionRepository dailyBonusMissionRepository;
+    private final DailyBonusRepository dailyBonusRepository;
 
 
     public DailyBonusServiceImpl(
-            ConfiguracionMercadoService configuracionMercadoService, PlayerRepository playerRepository, DailyBonusMissionRepository dailyBonusMissionRepository) {
+            ConfiguracionMercadoService configuracionMercadoService, PlayerRepository playerRepository, DailyBonusMissionRepository dailyBonusMissionRepository, DailyBonusRepository dailyBonusRepository) {
         this.configuracionMercadoService = configuracionMercadoService;
         this.playerRepository = playerRepository;
         this.dailyBonusMissionRepository = dailyBonusMissionRepository;
+        this.dailyBonusRepository = dailyBonusRepository;
     }
 
     @Override
@@ -37,17 +40,20 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public DailyBonusMission<?> seleccionarNuevaMision() { // TODO testear
+    public DailyBonusMission<?> seleccionarNuevaMision() {
         DailyBonus dailyBonus = recuperarSeleccionado();
 
         DailyBonusMission<?> buyOrVisitMission = crearNuevaMision();
 
-        dailyBonus.setRootDailyBonusMission(buyOrVisitMission);
-        return buyOrVisitMission;
+        dailyBonus.setGetRootMission(buyOrVisitMission);
+
+        dailyBonus = dailyBonusRepository.guardar(dailyBonus);
+
+        return dailyBonus.getGetRootMission();
     }
 
     @Override
-    public DailyBonusMission<?> crearNuevaMision() {  // TODO testear
+    public DailyBonusMission<?> crearNuevaMision() {
 
         List<Player> randomPlayers = playerRepository.recuperar3JugadoresAlAzar();
 
