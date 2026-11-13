@@ -38,7 +38,7 @@ public class TestUserUtil {
         User user = getUsuarioDeNombre(nombre);
         user.getUserDailyBonus().setStreakCount(racha);
         user.getUserDailyBonus().setLastBonusClaimDate(ultimoReclamo);
-        user.getUserDailyBonus().setActiveDailyBonusMission(dailyBonusMission);
+        user.getUserDailyBonus().setActiveMission(dailyBonusMission);
         return user;
     }
 }

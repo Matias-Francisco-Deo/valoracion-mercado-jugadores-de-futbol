@@ -5,6 +5,7 @@ import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.persistence.dto.jpa.bonus.mapper.TipoDailyBonusMission;
 import com.overcode.persistence.repository.dao.jpa.*;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.bonus.mission.MapTestMissionADTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -46,6 +47,8 @@ public class TestService {
     private EntityManager entityManager;
     @Autowired
     private ConfiguracionMercadoService configuracionMercadoService;
+    @Autowired
+    private UserService userService;
 
     public void eliminarUsuarios() {
         entityManager.createNativeQuery("DELETE FROM sell_orders").executeUpdate();
@@ -122,6 +125,7 @@ public class TestService {
     public void crearConfiguracionSimple() {
         agregarTestMissionMap();
         configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(new EstrategiaCotizacionRating(), getDailyBonusBase()));
+        userService.crearSuperusuario();
     }
 
     public static void agregarTestMissionMap() {

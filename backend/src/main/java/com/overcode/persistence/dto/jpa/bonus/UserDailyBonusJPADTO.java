@@ -63,7 +63,7 @@ public class UserDailyBonusJPADTO {
         userDailyBonus.setStreakCount(streakCount);
         userDailyBonus.setLastBonusClaimDate(lastBonusClaimDate);
         userDailyBonus.setActiveMissionDate(activeMissionDate);
-        userDailyBonus.setActiveDailyBonusMission(activeMission != null ? activeMission.aModelo() : null);
+        userDailyBonus.setActiveMission(activeMission != null ? activeMission.aModelo() : null);
         return userDailyBonus;
     }
 
@@ -79,8 +79,8 @@ public class UserDailyBonusJPADTO {
         dto.setStreakCount(modelo.getStreakCount());
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
-        if (modelo.getActiveDailyBonusMission() != null) {
-            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
+        if (modelo.getActiveMission() != null) {
+            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveMission()));
         }
         return dto;
     }
@@ -95,8 +95,8 @@ public class UserDailyBonusJPADTO {
         dto.setStreakCount(modelo.getStreakCount());
         dto.setLastBonusClaimDate(modelo.getLastBonusClaimDate());
         dto.setActiveMissionDate(modelo.getActiveMissionDate());
-        if (modelo.getActiveDailyBonusMission() != null) {
-            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveDailyBonusMission()));
+        if (modelo.getActiveMission() != null) {
+            dto.setActiveMission(DailyBonusMissionJPADTO.desdeModelo(modelo.getActiveMission()));
         }
         return dto;
     }

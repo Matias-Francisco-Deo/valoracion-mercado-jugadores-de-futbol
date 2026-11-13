@@ -55,7 +55,10 @@ public class DataInitializer {
     }
 
     private void crearEstrategias() {
-        // TODO que lo haga una sola vez
+        boolean yaSeGeneroEstrategiaConEseTipo = estrategiaCotizacionService.recuperarTodos().stream()
+                .anyMatch((estrategiaCotizacion -> estrategiaCotizacion.getClass() == EstrategiaCotizacionRating.class));
+        if (yaSeGeneroEstrategiaConEseTipo) return;
+
         estrategiaCotizacionService.guardar(new EstrategiaCotizacionRating());
     }
 }

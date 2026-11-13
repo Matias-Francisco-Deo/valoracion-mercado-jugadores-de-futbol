@@ -4,7 +4,7 @@ import com.overcode.config.Reloj;
 import com.overcode.model.bonus.mission.BuyDailyBonusMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;
-import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
 import com.overcode.model.user.User;
 import com.overcode.testUtils.TestDailyBonusUtil;
 import com.overcode.testUtils.TestUserUtil;
@@ -69,7 +69,7 @@ class UserDailyBonusTest {
     @Test
     void alIntentarReclamarSinCumplirMisionesLanzaRequisitosMisionesNoCumplidosException() {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        userDailyBonus.setActiveDailyBonusMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
 
         assertThrows(RequisitosMisionesNoCumplidosException.class, () ->
                 userDailyBonus.reclamarBonus(dailyBonus)
@@ -81,7 +81,7 @@ class UserDailyBonusTest {
     void alReclamarBonusDiarioConMisionCompletadaSeIncrementaCreditoYSeAumentaRacha() {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveDailyBonusMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
         userDailyBonus.setActiveMissionDate(Reloj.getLocalDate());
         userDailyBonus.setStreakCount(0);
 
@@ -98,7 +98,7 @@ class UserDailyBonusTest {
     void alIntentarReclamarDosVecesElMismoDiaLanzaBonusYaReclamadoHoyException() {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveDailyBonusMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
         userDailyBonus.setActiveMissionDate(Reloj.getLocalDate());
 
         userDailyBonus.reclamarBonus(dailyBonus);
@@ -128,13 +128,13 @@ class UserDailyBonusTest {
     @Test
     void alActualizarMisionInsertaMisionClonadaSiNoTenia() {
         userDailyBonus.setActiveMissionDate(null);
-        userDailyBonus.setActiveDailyBonusMission(null);
+        userDailyBonus.setActiveMission(null);
 
         userDailyBonus.actualizarMision(dailyBonus);
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
-        assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
+        assertNotNull(userDailyBonus.getActiveMission());
+        assertNotEquals(userDailyBonus.getActiveMission(), dailyBonus.getGetRootMission());
     }
 
     @Test
@@ -142,14 +142,14 @@ class UserDailyBonusTest {
         LocalDate ayer = LocalDate.of(2026, 11, 5);
         userDailyBonus.setActiveMissionDate(ayer);
         TestDailyBonusMission misionVieja = crearTestMission("mision vieja");
-        userDailyBonus.setActiveDailyBonusMission(misionVieja);
+        userDailyBonus.setActiveMission(misionVieja);
 
         userDailyBonus.actualizarMision(dailyBonus);
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
-        assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), misionVieja);
+        assertNotNull(userDailyBonus.getActiveMission());
+        assertNotEquals(userDailyBonus.getActiveMission(), dailyBonus.getGetRootMission());
+        assertNotEquals(userDailyBonus.getActiveMission(), misionVieja);
     }
 
     @Test
@@ -158,21 +158,21 @@ class UserDailyBonusTest {
         TestDailyBonusMission misionVieja = crearTestMission("mision vieja");
 
         userDailyBonus.setActiveMissionDate(variosDiasAtras);
-        userDailyBonus.setActiveDailyBonusMission(misionVieja);
+        userDailyBonus.setActiveMission(misionVieja);
 
         userDailyBonus.actualizarMision(dailyBonus);
 
         assertEquals(userDailyBonus.getActiveMissionDate(), Reloj.getLocalDate());
-        assertNotNull(userDailyBonus.getActiveDailyBonusMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), dailyBonus.getGetRootMission());
-        assertNotEquals(userDailyBonus.getActiveDailyBonusMission(), misionVieja);
+        assertNotNull(userDailyBonus.getActiveMission());
+        assertNotEquals(userDailyBonus.getActiveMission(), dailyBonus.getGetRootMission());
+        assertNotEquals(userDailyBonus.getActiveMission(), misionVieja);
     }
 
     @Test
     void alReclamarBonusSeActualizaLaMision() {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveDailyBonusMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
         userDailyBonus.setActiveMissionDate(Reloj.getLocalDate());
         userDailyBonus = spy(userDailyBonus);
 
@@ -205,7 +205,7 @@ class UserDailyBonusTest {
     void alObtenerEstadoBonusSeActualizaLaMision() {
         BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
         buyMission.complete();
-        userDailyBonus.setActiveDailyBonusMission(buyMission);
+        userDailyBonus.setActiveMission(buyMission);
         userDailyBonus.setActiveMissionDate(Reloj.getLocalDate());
         userDailyBonus = spy(userDailyBonus);
 

@@ -24,15 +24,15 @@ public class UserDailyBonus {
     private Integer streakCount = 0;
     private LocalDate lastBonusClaimDate;
     private LocalDate activeMissionDate;
-    private DailyBonusMission<?> activeDailyBonusMission;
+    private DailyBonusMission<?> activeMission;
 
-    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, DailyBonusMission<?> activeDailyBonusMission) {
+    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, DailyBonusMission<?> activeMission) {
         this.id = id;
         this.user = user;
         this.streakCount = streakCount;
         this.lastBonusClaimDate = lastBonusClaimDate;
         this.activeMissionDate = activeMissionDate;
-        this.activeDailyBonusMission = activeDailyBonusMission;
+        this.activeMission = activeMission;
     }
 
     public UserDailyBonus(User user) {
@@ -49,7 +49,7 @@ public class UserDailyBonus {
     }
 
     public boolean puedeReclamarBonusHoy() {
-        return activeDailyBonusMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
+        return activeMission.isCompleted() && !yaReclamoBonusHoy(getFechaActual());
     }
 
     public void actualizarRacha() {
@@ -86,25 +86,25 @@ public class UserDailyBonus {
 
         actualizarMision(dailyBonus);
 
-        if (this.activeDailyBonusMission == null) return;
+        if (this.activeMission == null) return;
 
-        MissionEngine.registrarVisitaJugadorRecursivamente(this.activeDailyBonusMission, player);
+        MissionEngine.registrarVisitaJugadorRecursivamente(this.activeMission, player);
 
     }
 
-    public void registrarCompra(DailyBonus dailyBonus) { // TODO testear
+    public void registrarCompra(DailyBonus dailyBonus) {
 
         actualizarMision(dailyBonus);
 
-        if (this.activeDailyBonusMission == null) return;
+        if (this.activeMission == null) return;
 
-        MissionEngine.registrarCompraRecursivamente(this.activeDailyBonusMission);
+        MissionEngine.registrarCompraRecursivamente(this.activeMission);
     }
 
 
     public BonusClaim reclamarBonus(DailyBonus dailyBonus) {
 
-        actualizarMision(dailyBonus); // TODO testear?
+        actualizarMision(dailyBonus);
 
         dailyBonus.verificarPuedeReclamarBonus(this);
 

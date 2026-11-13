@@ -4,7 +4,7 @@ import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.DailyBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
-import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -63,7 +63,7 @@ public class DailyBonus {
         Double nextBonus = getBonusConRacha(rachaActual);
         boolean yaReclamo = userBonus.yaReclamoBonusHoy(fechaActual);
         boolean puedeReclamar = userBonus.puedeReclamarBonusHoy();
-        DailyBonusMission<?> mision = userBonus.getActiveDailyBonusMission();
+        DailyBonusMission<?> mision = userBonus.getActiveMission();
         return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, mision);
     }
 
@@ -92,7 +92,7 @@ public class DailyBonus {
     }
 
     public void actualizarMisionEnUser(UserDailyBonus userDailyBonus) {
-        userDailyBonus.setActiveDailyBonusMission(getRootMission.clonar());
+        userDailyBonus.setActiveMission(getRootMission.clonar());
         userDailyBonus.setActiveMissionDate(getFechaActual());
     }
 }

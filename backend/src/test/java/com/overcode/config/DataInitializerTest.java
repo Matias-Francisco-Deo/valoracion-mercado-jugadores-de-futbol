@@ -1,5 +1,6 @@
 package com.overcode.config;
 
+import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
@@ -10,9 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
 class DataInitializerTest {
@@ -59,6 +61,19 @@ class DataInitializerTest {
         dataInitializer.initialize();
 
         assertFalse(estrategiaCotizacionService.recuperarTodos().isEmpty());
+    }
+
+    @Test
+    void alInvocarInitializeMasDeUnaVezNoSeGeneranMasEstrategias() {
+        dataInitializer.initialize();
+
+        List<EstrategiaCotizacion> estrategiasPrincipio = estrategiaCotizacionService.recuperarTodos();
+
+        dataInitializer.initialize();
+
+        List<EstrategiaCotizacion> estrategiasFinal = estrategiaCotizacionService.recuperarTodos();
+
+        assertEquals(estrategiasPrincipio.size(), estrategiasFinal.size());
     }
 
     @AfterEach

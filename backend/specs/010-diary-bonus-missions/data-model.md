@@ -94,7 +94,7 @@ classDiagram
 - `streakCount`: `Integer` - Current consecutive streak count (default: 0, range 0..6).
 - `lastBonusClaimDate`: `LocalDate` - Date of last successful claim (nullable).
 - `activeMissionDate`: `LocalDate` - Date of the currently assigned daily dailyBonusMission tree.
-- `activeDailyBonusMission`: `Mission<?>` - Root composite dailyBonusMission tree assigned to this user for `activeMissionDate`.
+- `activeMission`: `Mission<?>` - Root composite dailyBonusMission tree assigned to this user for `activeMissionDate`.
 
 #### Business Methods & Lifecycle:
 - `inicializarConBonus(DiaryBonus dailyBonus)`:

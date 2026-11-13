@@ -94,6 +94,10 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
         );
         DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
 
-        return dailyBonus.obtenerEstadoBonus(userDailyBonus);
+        EstadoBonus estadoBonus = dailyBonus.obtenerEstadoBonus(userDailyBonus);
+
+        userDailyBonusRepository.guardar(userDailyBonus);
+
+        return estadoBonus;
     }
 }

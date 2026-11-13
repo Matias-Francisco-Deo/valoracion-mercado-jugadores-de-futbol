@@ -3,11 +3,14 @@ package com.overcode.service.bonus;
 import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.EstadoBonus;
+import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
-import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.DailyBonusService;
+import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.UserDailyBonusService;
 import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
@@ -21,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConRacha;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioDeNombre;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +47,8 @@ class UserDailyBonusServiceImplTest {
     private User USER_1;
     @Autowired
     private DailyBonusService dailyBonusService;
+    @Autowired
+    private PlayerService playerService;
 
     @BeforeEach
     void setUp() {
@@ -70,7 +76,7 @@ class UserDailyBonusServiceImplTest {
         User userRecuperado = userService.recuperar(user.getId());
         userRecuperado.getUserDailyBonus().actualizarMision(dailyBonus);
 
-        userRecuperado.getUserDailyBonus().getActiveDailyBonusMission().complete(null); // completa la misión
+        userRecuperado.getUserDailyBonus().getActiveMission().complete(null); // completa la misión
 
         userDailyBonusService.guardar(userRecuperado.getUserDailyBonus());
 
@@ -81,6 +87,60 @@ class UserDailyBonusServiceImplTest {
             dates.when(() -> LocalDate.now(ZoneOffset.UTC)).thenReturn(date);
             accion.run();
         }
+    }
+
+    @Test
+    void userNoTieneMisionAlCrearse() {
+        User user = userService.recuperar(USER_1.getId());
+        assertNull(user.getUserDailyBonus().getActiveMission());
+        assertNull(user.getUserDailyBonus().getActiveMissionDate());
+    }
+
+    void alInteracturarConMisionesSiElUserNoTieneMisionSeSeteaMisionDelBonus(Runnable accion) {
+        accion.run();
+
+        User user = userService.recuperar(USER_1.getId());
+
+        assertNotNull(user.getUserDailyBonus().getActiveMission());
+        assertNotNull(user.getUserDailyBonus().getActiveMissionDate());
+    }
+
+    @Test
+    void alVerBonusSiElUserNoTieneMisionSeSeteaMisionDelBonus() {
+        alInteracturarConMisionesSiElUserNoTieneMisionSeSeteaMisionDelBonus(
+                () -> {
+                    User user = userService.recuperar(USER_1.getId());
+                    userDailyBonusService.obtenerEstadoBonus(user);
+                }
+        );
+    }
+
+    @Test
+    void alRegistrarCompraSiElUserNoTieneMisionSeSeteaMisionDelBonus() {
+        alInteracturarConMisionesSiElUserNoTieneMisionSeSeteaMisionDelBonus(
+                () -> {
+                    User user = userService.recuperar(USER_1.getId());
+                    userDailyBonusService.registrarCompra(user);
+                }
+        );
+    }
+
+    @Test
+    void alVisitarJugadorSiElUserNoTieneMisionSeSeteaMisionDelBonus() {
+        alInteracturarConMisionesSiElUserNoTieneMisionSeSeteaMisionDelBonus(
+                () -> {
+                    User user = userService.recuperar(USER_1.getId());
+
+                    Player player1 = playerService.crear(getJugadorConNombre("pepito"));
+                    userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(user, player1));
+                }
+        );
+    }
+    @Test
+    void alIntentarReclamarBonusSinMisionEsErrorNoCompletoLaMision() {
+        User user = userService.recuperar(USER_1.getId());
+
+        assertThrows(RequisitosMisionesNoCumplidosException.class, () -> userDailyBonusService.reclamarBonus(user));
     }
 
     @Test

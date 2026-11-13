@@ -3,7 +3,7 @@ package com.overcode.model.bonus;
 import com.overcode.config.Reloj;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
-import com.overcode.model.exception.bonus.RequisitosMisionesNoCumplidosException;
+import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
 import com.overcode.model.user.User;
 import com.overcode.testUtils.TestDailyBonusUtil;
 import org.jspecify.annotations.NonNull;
