@@ -2,8 +2,11 @@ package com.overcode.controller.exception;
 
 import com.overcode.model.exception.*;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
+import com.overcode.model.exception.bonus.DailyBonusInvalidoException;
 import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaException;
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
+import com.overcode.model.exception.bonus.mission.MisionInvalidaException;
+import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;
@@ -117,6 +120,24 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(DailyBonusInvalidoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleDiaryBonusInvalido(DailyBonusInvalidoException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(RequisitosMisionesNoCumplidosException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleRequisitosMisionesNoCumplidos(RequisitosMisionesNoCumplidosException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(MisionInvalidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDTO handleMisionInvalida(MisionInvalidaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
     @ExceptionHandler(ReclamoBonusNoPermitidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleReclamoBonusNoPermitido(ReclamoBonusNoPermitidoException ex) {
@@ -146,6 +167,4 @@ public class GlobalExceptionHandler {
     public ErrorResponseDTO handleParametroNoValido(ParametroNoValidoException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
-
-
 }

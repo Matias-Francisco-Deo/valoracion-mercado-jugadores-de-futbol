@@ -30,9 +30,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.overcode.testUtils.TestUserUtil.getUsuarioDeNombre;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -99,7 +99,10 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     private void registrarTransaccion(Long userId, Player player, TransactionType type, int quantity) {
-        User user = new User(userId, DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, 0d, new ArrayList<>());
+        User user = getUsuarioDeNombre(DEFAULT_USERNAME);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setId(userId);
         TransaccionFinanciera tx = new TransaccionFinanciera(user, player, type, quantity);
         transactionRepository.guardar(tx);
     }

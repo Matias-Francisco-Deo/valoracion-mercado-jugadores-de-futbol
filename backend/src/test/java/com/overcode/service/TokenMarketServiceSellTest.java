@@ -1,7 +1,5 @@
 package com.overcode.service;
 
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.exception.OrdenesInsuficientesParaCancelarException;
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.market.PeticionCancelacion;
@@ -29,7 +27,6 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,17 +55,16 @@ class TokenMarketServiceSellTest {
     void setUp() {
         cleanDatabase();
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(
-                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
+        testService.crearConfiguracionSimple();
 
         seller = getUsuarioConCreditosIniciales("seller", 1000d);
         buyer = getUsuarioConCreditosIniciales("buyer", 1000d);
         player = getJugadorConRating("Test Player", 10d);
         player.setCurrentPrice(10d);
 
-        seller = userService.guardar(seller);
-        buyer = userService.guardar(buyer);
-        player = playerService.guardar(player);
+        seller = userService.crear(seller);
+        buyer = userService.crear(buyer);
+        player = playerService.crear(player);
         tokenMarketService.buy(new OrdenDeCompra(seller, player, 10));
     }
 
@@ -83,7 +79,7 @@ class TokenMarketServiceSellTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDailyBonuses();
     }
 
     private List<ResumenOrdenesDeVenta> openOrdersFor(Long userId) {

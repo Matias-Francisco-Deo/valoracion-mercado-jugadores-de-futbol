@@ -10,10 +10,14 @@ import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.*;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TransactionRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserDailyBonusService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,15 +32,18 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final TransactionRepository transactionRepository;
+    private final UserDailyBonusService userDailyBonusService;
 
     public TokenMarketServiceImpl(OrdenDeCompraRepository ordenDeCompraRepository,
                                   UserRepository userRepository,
                                   PlayerRepository playerRepository,
-                                  TransactionRepository transactionRepository) {
+                                  TransactionRepository transactionRepository,
+                                  UserDailyBonusService userDailyBonusService) {
         this.ordenDeCompraRepository = ordenDeCompraRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.transactionRepository = transactionRepository;
+        this.userDailyBonusService = userDailyBonusService;
     }
 
     @Override
@@ -90,6 +97,8 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         ordenesDeCompra.stream().map(OrdenDeVenta::getOwner).distinct().forEach(userRepository::guardar);
         ordenDeCompraRepository.saveAll(ordenesDeCompra);
         transactionRepository.guardarTodos(transaccionCompra.transaccionesFinancieras());
+
+        userDailyBonusService.registrarCompra(buyer);
     }
 
     @Override

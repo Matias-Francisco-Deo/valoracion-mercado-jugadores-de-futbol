@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User guardar(User user);
+    User crear(User user);
 
     User recuperar(Long id);
 

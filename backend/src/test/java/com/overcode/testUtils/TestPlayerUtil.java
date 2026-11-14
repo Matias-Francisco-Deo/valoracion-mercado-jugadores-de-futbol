@@ -50,6 +50,19 @@ public class TestPlayerUtil {
         return new Team("Club1", league);
     }
 
+    public static Player crearJugadorConId(Long id, String name) {
+        Player player = new Player(id);
+        player.setName(name);
+        return player;
+    }
+
+    public static Player crearJugador(String name, double price) {
+        Player player = new Player();
+        player.setName(name);
+        player.setCurrentPrice(price);
+        return player;
+    }
+
     public static Player getJugadorConLigaYClub(String name, String liga, String clubName) {
         Player jugador = getJugadorConLiga(name, liga);
         jugador.getTeam().setName(clubName);
@@ -59,6 +72,14 @@ public class TestPlayerUtil {
     public static Player getJugadorConNombre(String name) {
         Player player = new Player(name, getTeam(), null);
         PlayerGameData playerGameData = getPlayerData(player);
+        player.setPlayerGameData(playerGameData);
+        return player;
+    }
+
+    public static Player getJugadorConNombreYId(Long id, String name) {
+        Player player = new Player(name, getTeam(), null);
+        PlayerGameData playerGameData = getPlayerData(player);
+        player.setId(id);
         player.setPlayerGameData(playerGameData);
         return player;
     }

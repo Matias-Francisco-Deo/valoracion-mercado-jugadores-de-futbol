@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User guardar(User user) {
+    public User crear(User user) {
         validarUsuarioNuevo(user);
 
         return userRepository.guardar(user);
