@@ -34,6 +34,7 @@ export default function MarketPage(){
             return;
         }
         setSelectedToken(token);
+        setModalError(null);
         setActionModalOpen(true);
     }
 

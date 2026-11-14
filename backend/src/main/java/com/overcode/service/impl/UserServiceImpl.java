@@ -2,7 +2,9 @@ package com.overcode.service.impl;
 
 import com.overcode.model.exception.ParametroNoValidoException;
 import com.overcode.model.market.PeticionDeposito;
+import com.overcode.model.market.Position;
 import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.position.PlayerPositionData;
 import com.overcode.model.token.SummaryTokenPlayer;
 import com.overcode.model.user.Portfolio;
 import com.overcode.model.user.User;
@@ -112,9 +114,11 @@ public class UserServiceImpl implements UserService {
         if(!userRepository.existsById(user.getId())){
             throw new EntidadNoEncontradaException("El usuario no existe");
         }
-        List<TransaccionFinanciera> transaccionFinancieras = transactionRepository.recuperarTodasPorUser(user.getId());
+        List<PlayerPositionData> dataBaseDePosiciones = transactionRepository.findPlayerPositionsData(user.getId());
 
-        return Portfolio.desdeTransacciones(transaccionFinancieras);
+        List<Position> positions = dataBaseDePosiciones.stream().map(Position::desdePositionData).toList();
+
+        return new Portfolio(positions);
     }
 
     @Override

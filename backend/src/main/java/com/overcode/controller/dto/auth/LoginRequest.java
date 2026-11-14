@@ -11,7 +11,7 @@ public record LoginRequest(
         @Pattern(regexp = "^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email contiene caracteres invalidos")
         String email,
         @NotBlank(message = "La contraseña es obligatoria")
-        @Size(min = 6, max = 30, message = "La contraseña debe tener entre 3 y 30 caracteres")
+        @Size(min = 6, max = 30, message = "Contraseña invalida")
         String password
 ) {
     public User aModelo() {
