@@ -8,11 +8,13 @@ import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class PlayerRepositoryImpl implements PlayerRepository {
 
     private final PlayerDAOJPA playerDAOJPA;
@@ -57,6 +59,11 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     public List<Player> guardarTodos(List<Player> jugadores) {
         List<PlayerJPADTO> playerJPADTOS = playerDAOJPA.saveAll(jugadores.stream().map(PlayerJPADTO::desdeModelo).toList());
         return playerJPADTOS.stream().map(PlayerJPADTO::aModelo).toList();
+    }
+
+    @Override
+    public List<Player> recuperar3JugadoresAlAzar() {
+        return playerDAOJPA.recuperar3jugadoresAlAzar().stream().map(PlayerJPADTO::aModelo).toList();
     }
 
 

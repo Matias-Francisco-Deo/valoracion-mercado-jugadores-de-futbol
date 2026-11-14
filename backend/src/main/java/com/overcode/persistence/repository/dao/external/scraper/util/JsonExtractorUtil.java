@@ -1,6 +1,8 @@
 package com.overcode.persistence.repository.dao.external.scraper.util;
 
 import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -12,7 +14,7 @@ public class JsonExtractorUtil {
 
     /**
      * Extrae el bloque JSON asignado a require.config.params['args'] del HTML sin procesar.
-     * Utiliza búsqueda de cadenas (O(N)) para evitar problemas de super-linear backtracking
+     * Utiliza búsqueda de cadenas (O(N)) para evitar problemas de superlinear backtracking
      * en expresiones regulares evaluadas por SonarCloud o motores de análisis estático.
      *
      * @param html La cadena HTML sin procesar de WhoScored.
@@ -29,6 +31,16 @@ public class JsonExtractorUtil {
             keyIndex = html.indexOf("require.config.params[\"args\"]");
         }
 
+        String scriptContent = getScriptContent(html, keyIndex);
+        int lastBrace = scriptContent.lastIndexOf("}");
+        if (lastBrace == -1) {
+            throw new ScraperExtractionException("Could not find JSON closing brace.");
+        }
+
+        return scriptContent.substring(0, lastBrace + 1).trim();
+    }
+
+    private static @NonNull String getScriptContent(String html, int keyIndex) {
         if (keyIndex == -1) {
             throw new ScraperExtractionException("Could not find require.config.params['args'] in HTML.");
         }
@@ -48,17 +60,11 @@ public class JsonExtractorUtil {
             throw new ScraperExtractionException("Could not find closing script tag.");
         }
 
-        String scriptContent = candidate.substring(0, endScript);
-        int lastBrace = scriptContent.lastIndexOf("}");
-        if (lastBrace == -1) {
-            throw new ScraperExtractionException("Could not find JSON closing brace.");
-        }
-
-        return scriptContent.substring(0, lastBrace + 1).trim();
+        return candidate.substring(0, endScript);
     }
 
     /**
-     * Extrae la posicion del jugador del HTML.
+     * Extrae la posición del jugador del HTML.
      */
     public static String extractPlayerPosition(String html) {
         if (html == null || html.isBlank()) {
@@ -69,21 +75,8 @@ public class JsonExtractorUtil {
 
         int metaIndex = normalizedHtml.indexOf("<meta name=\"description\"");
         if (metaIndex != -1) {
-            String metaTag = html.substring(metaIndex, html.indexOf('>', metaIndex));
-            String position = normalizePosition(metaTag);
-            if (position != null) {
-                return position;
-            }
-
-            int contentIndex = metaTag.toLowerCase(Locale.ROOT).indexOf("content=");
-            if (contentIndex != -1) {
-                String contentValue = metaTag.substring(contentIndex + 8).trim();
-                contentValue = stripQuotes(contentValue);
-                String normalized = normalizePosition(contentValue);
-                if (normalized != null) {
-                    return normalized;
-                }
-            }
+            String position = metaIndexExiste(html, metaIndex);
+            if (position != null) return position;
         }
 
         String[] markers = {"positions:", "position:"};
@@ -101,8 +94,9 @@ public class JsonExtractorUtil {
             if (valueEnd == -1) {
                 return null;
             }
+            Result result = new Result(valueStart, valueEnd);
 
-            String candidate = html.substring(valueStart, valueEnd).trim();
+            String candidate = html.substring(result.valueStart(), result.valueEnd()).trim();
             String position = normalizePosition(candidate);
             if (position != null) {
                 return position;
@@ -110,6 +104,15 @@ public class JsonExtractorUtil {
         }
 
         return null;
+    }
+
+    private record Result(int valueStart, int valueEnd) {
+    }
+
+    private static @Nullable String metaIndexExiste(String html, int metaIndex) {
+        String metaTag = html.substring(metaIndex, html.indexOf('>', metaIndex));
+        // acá borré unas cosas, hay que ver si funciona así o no
+        return normalizePosition(metaTag);
     }
 
     private static String normalizePosition(String candidate) {

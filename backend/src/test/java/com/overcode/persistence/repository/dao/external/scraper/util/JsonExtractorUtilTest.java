@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.dao.external.scraper.util;
 
 import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+
 import com.overcode.testUtils.HtmlFixtures;
 import org.junit.jupiter.api.Test;
 

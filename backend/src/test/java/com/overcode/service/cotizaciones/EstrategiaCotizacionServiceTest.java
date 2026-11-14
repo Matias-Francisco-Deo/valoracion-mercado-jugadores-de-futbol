@@ -76,8 +76,6 @@ class EstrategiaCotizacionServiceTest {
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarDatosJugadores();
-        // emitTokensForNewPlayer (disparado por playerServiceImpl.crear) necesita que exista el
-        // superadmin; otra clase de test puede haber borrado todos los usuarios antes que esta.
         userService.crearSuperusuario();
     }
 
@@ -283,7 +281,7 @@ class EstrategiaCotizacionServiceTest {
     void seActualizanCotizacionesDeJugadoresUsandoEstrategia() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.guardar(player);
+        Player playerPersistido = playerServiceImpl.crear(player);
 
         final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 
@@ -309,7 +307,7 @@ class EstrategiaCotizacionServiceTest {
     void seCotizanJugadoresYQuedaUnRegistro() {
 
         Player player = getJugadorConNombre("Pepito"); // vale exactamente 1
-        Player playerPersistido = playerServiceImpl.guardar(player);
+        Player playerPersistido = playerServiceImpl.crear(player);
 
         final EstrategiaCotizacion[] estrategiaCotizacion = {ESTRATEGIA_COTIZACION_1};
 

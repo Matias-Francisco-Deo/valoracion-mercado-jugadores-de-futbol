@@ -35,7 +35,7 @@ class UserServiceImplTest {
 
     @Test
     void crearUnUsuarioExitosamente() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
 
         assertNotNull(created.getId());
         assertEquals("alice", created.getUsername());
@@ -44,7 +44,7 @@ class UserServiceImplTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSuBalanceDeCreditosEsCero() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
         User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
@@ -53,7 +53,7 @@ class UserServiceImplTest {
 
     @Test
     void alCrearYRecuperarElUsuarioSusTokensSonCero() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
         User retrieved = userService.recuperar(created.getId());
 
         assertNotNull(retrieved.getId());
@@ -63,10 +63,10 @@ class UserServiceImplTest {
     @Test
     void rechazaCreacionConNombreDuplicado() {
         User user2 = new User(USER1.getUsername(), "alice2@example.com", "secret");
-        userService.guardar(USER1);
+        userService.crear(USER1);
 
         NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
-                () -> userService.guardar(user2));
+                () -> userService.crear(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getUsername()));
     }
@@ -74,10 +74,10 @@ class UserServiceImplTest {
     @Test
     void rechazaCreacionConEmailDuplicado() {
         User user2 = new User("usuarioRepetido", USER1.getEmail(), "secret");
-        userService.guardar(USER1);
+        userService.crear(USER1);
 
         EmailRepetidoException exception = assertThrows(EmailRepetidoException.class,
-                () -> userService.guardar(user2));
+                () -> userService.crear(user2));
 
         assertTrue(exception.getMessage().contains(USER1.getEmail()));
     }
@@ -96,7 +96,7 @@ class UserServiceImplTest {
 
     @Test
     void depositarCreditosSumaCreditosAlUsuario() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
         double amount = 500d;
         PeticionDeposito petition = new PeticionDeposito(created, amount);
         User updated = userService.depositarCreditos(petition);
@@ -108,7 +108,7 @@ class UserServiceImplTest {
 
     @Test
     void depositarCreditosConMontoInvalidoLanzaExcepcion() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
 
         PeticionDeposito petitionNegativa = new PeticionDeposito(created, -1d);
         PeticionDeposito petitionCero = new PeticionDeposito(created, 0d);
@@ -119,7 +119,7 @@ class UserServiceImplTest {
 
     @Test
     void depositSumaCreditosAlUsuarioExistente() {
-        User created = userService.guardar(USER1);
+        User created = userService.crear(USER1);
         double amount = 500d;
         PeticionDeposito petition = new PeticionDeposito(created, amount);
         userService.depositarCreditos(petition);

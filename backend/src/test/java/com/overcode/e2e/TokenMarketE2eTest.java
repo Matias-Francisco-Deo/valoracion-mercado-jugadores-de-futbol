@@ -83,6 +83,8 @@ class TokenMarketE2eTest {
     @BeforeEach
     void setUp() {
         limpiarBaseDeDatos();
+        testService.crearConfiguracionSimple();
+
     }
 
     @AfterEach
@@ -97,6 +99,7 @@ class TokenMarketE2eTest {
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         testService.eliminarUsuarios();
+        testService.eliminarConfig();
     }
 
     private AuthResponse registerUser(String username, String email, String password) {

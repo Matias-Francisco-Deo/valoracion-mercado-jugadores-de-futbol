@@ -1,7 +1,5 @@
 package com.overcode.service;
 
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.exception.FondosInsuficientesException;
 import com.overcode.model.exception.TokensInsuficientesParaComprarException;
 import com.overcode.model.market.PeticionVenta;
@@ -26,12 +24,9 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TokenMarketServiceBuyTest {
@@ -58,8 +53,7 @@ class TokenMarketServiceBuyTest {
     void setUp() {
         cleanDatabase();
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(
-                new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
+        testService.crearConfiguracionSimple();
 
         buyer = getUsuarioConCreditosIniciales("buyer", 100d);
         poorBuyer = getUsuarioConCreditosIniciales("poor-buyer", 1d);
@@ -69,12 +63,12 @@ class TokenMarketServiceBuyTest {
         player = getJugadorConRating("Test Player", 10d);
         player.setCurrentPrice(10d);
 
-        buyer = userService.guardar(buyer);
-        poorBuyer = userService.guardar(poorBuyer);
-        sellerA = userService.guardar(sellerA);
-        sellerB = userService.guardar(sellerB);
-        selfBuyer = userService.guardar(selfBuyer);
-        player = playerService.guardar(player);
+        buyer = userService.crear(buyer);
+        poorBuyer = userService.crear(poorBuyer);
+        sellerA = userService.crear(sellerA);
+        sellerB = userService.crear(sellerB);
+        selfBuyer = userService.crear(selfBuyer);
+        player = playerService.crear(player);
 
         tokenMarketService.buy(new OrdenDeCompra(sellerA, player, 98));
         tokenMarketService.buy(new OrdenDeCompra(sellerB, player, 1));
@@ -92,7 +86,7 @@ class TokenMarketServiceBuyTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
+        testService.eliminarDailyBonuses();
     }
 
     private List<ResumenOrdenesDeVenta> openOrdersFor(Long userId) {

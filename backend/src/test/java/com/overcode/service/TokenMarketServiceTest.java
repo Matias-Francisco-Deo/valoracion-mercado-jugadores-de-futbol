@@ -1,14 +1,15 @@
 package com.overcode.service;
 
-import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRating;
 import com.overcode.model.market.PeticionDeposito;
 import com.overcode.model.market.PeticionVenta;
 import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.service.interfaces.*;
+import com.overcode.service.interfaces.EstrategiaCotizacionService;
+import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.overcode.testUtils.TestLoginBonusUtil.getLoginBonusBase;
 import static com.overcode.testUtils.TestPlayerUtil.getJugadorConRating;
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConCreditosIniciales;
 import static junit.framework.TestCase.*;
@@ -45,8 +45,6 @@ public class TokenMarketServiceTest {
     private TestService testService;
     @Autowired
     private EstrategiaCotizacionService estrategiaCotizacionService;
-    @Autowired
-    private ConfiguracionMercadoService configuracionMercadoService;
 
 
     @BeforeEach
@@ -56,20 +54,20 @@ public class TokenMarketServiceTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
 
         userService.crearSuperusuario();
-        configuracionMercadoService.crearConfiguracionSiNoExiste(new ConfiguracionMercado(1L, new EstrategiaCotizacionRating(), getLoginBonusBase()));
+        testService.crearConfiguracionSimple();
+
 
         user1 = getUsuarioConCreditosIniciales("pepito", 100.0);
         user2 = getUsuarioConCreditosIniciales("maria", 100.0);
 
         player1 = getJugadorConRating("messi", 10.0);
 
-        user1 = userService.guardar(user1);
-        user2 = userService.guardar(user2);
+        user1 = userService.crear(user1);
+        user2 = userService.crear(user2);
 
-        player1 = playerService.guardar(player1);
+        player1 = playerService.crear(player1);
     }
 
     @AfterEach
@@ -79,7 +77,6 @@ public class TokenMarketServiceTest {
         testService.eliminarJugadoresYEquipos();
         testService.eliminarRegistros();
         testService.eliminarEstrategiasCotizacion();
-        testService.eliminarLoginBonuses();
 
 
     }
