@@ -2,12 +2,17 @@ package com.overcode.service;
 
 import com.overcode.model.exception.TokensInsuficientesParaVenderException;
 import com.overcode.model.market.PeticionVenta;
+import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.player.Player;
 import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.*;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TransactionRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.impl.TokenMarketServiceImpl;
+import com.overcode.service.interfaces.UserDailyBonusService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +29,9 @@ class MarketSaleSelectionTest {
     private final UserRepository users = mock(UserRepository.class);
     private final PlayerRepository players = mock(PlayerRepository.class);
     private final TransactionRepository transactions = mock(TransactionRepository.class);
-    private final TokenMarketServiceImpl market = new TokenMarketServiceImpl(orders, users, players, transactions);
+    private final UserDailyBonusService userDailyBonusService = mock(UserDailyBonusService.class);
+
+    private final TokenMarketServiceImpl market = new TokenMarketServiceImpl(orders, users, players, transactions, userDailyBonusService);
     private final User seller = new User(2L, "seller", "seller@test.com", "password");
     private final Player player = new Player(10L);
     private final Token first = new Token(101L, seller, player);
@@ -46,7 +53,7 @@ class MarketSaleSelectionTest {
 
         var result = market.sell(new PeticionVenta(seller, player, 2));
 
-        assertEquals(List.of(first, second), result.stream().map(o -> o.getToken()).toList());
+        assertEquals(List.of(first, second), result.stream().map(OrdenDeVenta::getToken).toList());
         assertEquals(List.of(remaining), seller.getTokens());
         assertNull(first.getOwner());
         assertNull(second.getOwner());

@@ -34,12 +34,6 @@ public class UserJPADTO {
     @Column(name = "credit_balance", nullable = false)
     private Double creditBalance;
 
-//    @Column(name = "streak_count", nullable = false)
-//    private Integer streakCount = 0;
-//
-//    @Column(name = "last_bonus_claim_date")
-//    private LocalDate lastBonusClaimDate;
-
     @OrderBy("id ASC")
     @Column(name = "tokens")
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -61,8 +55,6 @@ public class UserJPADTO {
         dto.setPassword(user.getPassword());
         dto.setCreditBalance(user.getCreditBalance());
         dto.setUserDailyBonusJPADTO(UserDailyBonusJPADTO.desdeModelo(user.getUserDailyBonus(), dto));
-//        dto.setStreakCount(user.getStreakCount() != null ? user.getStreakCount() : 0);
-//        dto.setLastBonusClaimDate(user.getLastBonusClaimDate());
         dto.setTokens(TokenJPADTO.desdeModelo(user.getTokens(), dto));
         return dto;
     }
@@ -133,8 +125,6 @@ public class UserJPADTO {
         user.setPassword(this.password);
         user.setCreditBalance(this.creditBalance);
         user.setUserDailyBonus(this.userDailyBonusJPADTO.aModelo(user));
-//        user.setStreakCount(this.streakCount != null ? this.streakCount : 0);
-//        user.setLastBonusClaimDate(this.lastBonusClaimDate);
         user.setTokens(new ArrayList<>());
         return user;
     }

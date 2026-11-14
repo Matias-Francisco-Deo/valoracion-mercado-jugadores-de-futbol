@@ -1,8 +1,12 @@
 package com.overcode.persistence.repository;
 
+import com.overcode.model.bonus.UserDailyBonus;
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.user.User;
-import com.overcode.persistence.dto.jpa.*;
+import com.overcode.persistence.dto.jpa.OrdenDeVentaJPADTO;
+import com.overcode.persistence.dto.jpa.PlayerJPADTO;
+import com.overcode.persistence.dto.jpa.TokenJPADTO;
+import com.overcode.persistence.dto.jpa.UserJPADTO;
 import com.overcode.persistence.repository.dao.jpa.SellOrderDAOJPA;
 import com.overcode.persistence.repository.impl.OrdenDeCompraRepositoryImpl;
 import org.junit.jupiter.api.Test;
@@ -19,7 +23,7 @@ class MarketOrderMappingTest {
     @Test
     void contextualMappingReusesSellerAndPreservesOrderFields() {
         User seller = new User(2L);
-        UserJPADTO storedSeller = new UserJPADTO(2L, "seller", "seller@test.com", "pass", 10.0, List.of());
+        UserJPADTO storedSeller = UserJPADTO.desdeModelo(new User(2L, "seller", "seller@test.com", "pass", 10.0, List.of(), new UserDailyBonus()));
         PlayerJPADTO player = new PlayerJPADTO(10L, "Player", 20.0, List.of());
         Instant createdAt = Instant.parse("2026-11-13T10:00:00Z");
         var dto = new OrdenDeVentaJPADTO(1L, storedSeller, player, new TokenJPADTO(101L, null, player),
@@ -42,7 +46,7 @@ class MarketOrderMappingTest {
     @Test
     void buyRequestsOnlyNeededOrdersAndSharesSellerInstance() {
         SellOrderDAOJPA dao = mock(SellOrderDAOJPA.class);
-        UserJPADTO seller = new UserJPADTO(2L, "seller", "seller@test.com", "pass", 10.0, List.of());
+        UserJPADTO seller = UserJPADTO.desdeModelo(new User(2L, "seller", "seller@test.com", "pass", 10.0, List.of(), new UserDailyBonus()));
         PlayerJPADTO player = new PlayerJPADTO(10L, "Player", 20.0, List.of());
         var first = new OrdenDeVentaJPADTO(1L, seller, player, new TokenJPADTO(101L, null, player),
                 20.0, OrderStatus.OPEN, Instant.now());
