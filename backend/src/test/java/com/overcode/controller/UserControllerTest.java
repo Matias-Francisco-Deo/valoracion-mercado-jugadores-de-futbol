@@ -291,13 +291,11 @@ class UserControllerTest {
     @Test
     void depositDevuelveOkYLosCreditosActualizados() throws Exception {
         UserService userServiceMock = mock(UserService.class);
-//        User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
         User user = getUsuarioDeNombre("ivan");
         user.setId(USER_ID);
 
         when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
 
-//        User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
         User updatedUser = getUsuarioDeNombre("ivan");
         updatedUser.setId(USER_ID);
         updatedUser.setCreditBalance(10000d);

@@ -32,12 +32,15 @@ class UserDailyBonusRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        testService.eliminarDailyBonuses();
-        testService.eliminarUsuarios();
+        cleanDb();
     }
 
     @AfterEach
     void tearDown() {
+        cleanDb();
+    }
+
+    private void cleanDb() {
         testService.eliminarDailyBonuses();
         testService.eliminarUsuarios();
     }
