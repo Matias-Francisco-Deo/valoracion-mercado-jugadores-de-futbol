@@ -1,6 +1,6 @@
 package com.overcode.persistence.exception;
 
-public class LoginBonusPersistenciaException extends DiaryBonusPersistenciaException {
+public class LoginBonusPersistenciaException extends RuntimeException {
     public LoginBonusPersistenciaException(String message) {
         super(message);
     }

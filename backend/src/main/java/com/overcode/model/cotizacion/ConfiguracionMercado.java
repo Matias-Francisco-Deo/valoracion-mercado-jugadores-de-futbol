@@ -27,21 +27,7 @@ public class ConfiguracionMercado {
         setDailyBonus(dailyBonus);
     }
 
-    public ConfiguracionMercado(Long id, EstrategiaCotizacion estrategiaCotizacion, DailyBonus dailyBonus) {
-        setId(id);
-        setEstrategiaCotizacion(estrategiaCotizacion);
-        setDailyBonus(dailyBonus);
-    }
-
     public void cambiarEstrategiaDeCotizacionPor(EstrategiaCotizacion estrategiaCotizacion) {
         setEstrategiaCotizacion(estrategiaCotizacion);
-    }
-
-    public DailyBonus getLoginBonus() {
-        return this.dailyBonus;
-    }
-
-    public void setLoginBonus(DailyBonus dailyBonus) {
-        this.dailyBonus = dailyBonus;
     }
 }
