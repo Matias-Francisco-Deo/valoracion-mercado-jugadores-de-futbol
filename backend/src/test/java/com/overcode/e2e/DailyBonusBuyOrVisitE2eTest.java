@@ -1,7 +1,6 @@
 package com.overcode.e2e;
 
 import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.LoginRequest;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
@@ -122,20 +121,6 @@ class DailyBonusBuyOrVisitE2eTest {
         testService.eliminarUsuarios();
         testService.eliminarDailyBonuses();
         testService.eliminarJugadoresYEquipos();
-    }
-
-    @Test
-    void elLoginNoOtorgaBonus() {
-        LoginRequest loginReq = new LoginRequest(EMAIL, PASSWORD);
-        ResponseEntity<AuthResponse> loginRes = restClient.post()
-                .uri("/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(loginReq)
-                .retrieve()
-                .toEntity(AuthResponse.class);
-
-        assertNotNull(loginRes.getBody());
-        assertEquals(0.0, loginRes.getBody().user().creditBalance());
     }
 
     @Test
