@@ -55,7 +55,7 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
     }
 
     @Override
-    public EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion) {
+    public void registrarVisitaJugador(PeticionVisitaJugador peticion) {
         Long playerId = peticion.player().getId();
         Long userId = peticion.user().getId();
 
@@ -71,7 +71,6 @@ public class UserDailyBonusServiceImpl implements UserDailyBonusService {
         userDailyBonus.registrarVisitaJugador(peticion.player(), dailyBonus);
 
         userDailyBonusRepository.guardar(userDailyBonus);
-        return dailyBonus.obtenerEstadoBonus(userDailyBonus);
     }
 
     @Override

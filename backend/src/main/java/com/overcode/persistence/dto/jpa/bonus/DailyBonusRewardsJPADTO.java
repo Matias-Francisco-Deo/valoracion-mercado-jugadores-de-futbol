@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity(name = "diary_bonus_rewards")
-@Table(name = "diary_bonus_rewards_data") // TODO cambiar nombres
+@Table(name = "diary_bonus_rewards_data") // TODO cambiar nombre
 public class DailyBonusRewardsJPADTO {
 
     @Id

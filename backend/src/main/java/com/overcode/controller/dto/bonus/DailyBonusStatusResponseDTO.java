@@ -10,10 +10,10 @@ public record DailyBonusStatusResponseDTO(
         Boolean alreadyClaimedToday,
         List<Double> weeklyBonusRewards,
         Boolean puedeReclamar,
-        List<MissionStatusResponseDTO> misiones
+        MissionStatusResponseDTO misiones
 ) {
     public static DailyBonusStatusResponseDTO desdeModelo(EstadoBonus estadoBonus) {
-        List<MissionStatusResponseDTO> missionDTOs = estadoBonus.mision().getSubmissions().stream().map(MissionStatusResponseDTO::desdeModelo).toList();
+        MissionStatusResponseDTO missionDTOs = MissionStatusResponseDTO.desdeModelo(estadoBonus.mision());
 
         return new DailyBonusStatusResponseDTO(
                 estadoBonus.currentStreak(),

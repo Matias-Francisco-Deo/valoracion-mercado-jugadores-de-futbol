@@ -5,18 +5,15 @@ import com.overcode.controller.dto.auth.LoginRequest;
 import com.overcode.controller.dto.auth.RegisterRequest;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
-import com.overcode.model.bonus.DailyBonus;
-import com.overcode.model.bonus.mission.BuyDailyBonusMission;
-import com.overcode.model.bonus.mission.BuyOrVisitMission;
-import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
-import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
+import com.overcode.controller.dto.bonus.MissionStatusResponseDTO;
+import com.overcode.controller.dto.market.BuyTokenRequest;
+import com.overcode.controller.dto.user.DepositRequest;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.player.Player;
-import com.overcode.persistence.repository.interfaces.DailyBonusRepository;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
-import com.overcode.testUtils.TestDailyBonusUtil;
+import com.overcode.service.interfaces.PlayerService;
+import com.overcode.service.interfaces.UserService;
 import com.overcode.testUtils.TestPlayerUtil;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.time.DateMockConfiguration;
@@ -37,11 +34,13 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 
+import static com.overcode.testUtils.TestPlayerUtil.getJugadorConNombre;
+import static com.overcode.testUtils.bonus.TestBonusUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(DateMockConfiguration.class)
-class DailyBonusE2eTest {
+class DailyBonusBuyOrVisitE2eTest {
 
     private static final String USERNAME = "marcelo";
     private static final String EMAIL = "marcelo@example.com";
@@ -52,9 +51,6 @@ class DailyBonusE2eTest {
 
     @Autowired
     private TestService testService;
-
-    @Autowired
-    private DailyBonusRepository dailyBonusRepository;
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -70,6 +66,10 @@ class DailyBonusE2eTest {
 
     @Autowired
     private RequestDate requestDate;
+    @Autowired
+    private PlayerService playerService;
+    @Autowired
+    private UserService userService;
 
     @PostConstruct
     void init() {
@@ -83,25 +83,22 @@ class DailyBonusE2eTest {
         testService.eliminarConfig();
         testService.eliminarJugadoresYEquipos();
 
+        crearConfig();
+
+        register();
+    }
+
+    private void crearConfig() {
         player1 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador1", 100.0));
         player2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador2", 100.0));
         player3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Jugador3", 100.0));
 
-        Visit3PlayersDailyBonusMission visitMission = new Visit3PlayersDailyBonusMission(
-                new VisitPlayerDailyBonusMission(player1),
-                new VisitPlayerDailyBonusMission(player2),
-                new VisitPlayerDailyBonusMission(player3)
-        );
-        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        BuyOrVisitMission dailyOr = new BuyOrVisitMission(buyMission, visitMission);
+        ConfiguracionMercado config = getConfigConDailyOr(player1, player2, player3);
 
-        DailyBonus bonusBase = dailyBonusRepository.guardar(TestDailyBonusUtil.getDailyBonusBaseConMision(dailyOr));
-
-        ConfiguracionMercado config = new ConfiguracionMercado(1L, new EstrategiaCotizacionRendimientoTotal(), bonusBase);
-        config.setId(1L);
-        config.setDailyBonus(bonusBase);
         configuracionMercadoService.crearConfiguracionSiNoExiste(config);
+    }
 
+    private void register() {
         RegisterRequest registerReq = new RegisterRequest(USERNAME, EMAIL, PASSWORD);
         ResponseEntity<AuthResponse> registerRes = restClient.post()
                 .uri("/auth/register")
@@ -109,9 +106,15 @@ class DailyBonusE2eTest {
                 .body(registerReq)
                 .retrieve()
                 .toEntity(AuthResponse.class);
-
-        assertNotNull(registerRes.getBody());
         this.token = registerRes.getBody().token();
+
+        restClient.post()
+                .uri("/users/deposit")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new DepositRequest(1000.0))
+                .retrieve()
+                .toBodilessEntity();
     }
 
     @AfterEach
@@ -171,13 +174,51 @@ class DailyBonusE2eTest {
                 .retrieve()
                 .toBodilessEntity();
 
-        ResponseEntity<DailyBonusStatusResponseDTO> visit3 = restClient.post()
+        restClient.post()
                 .uri("/api/daily-bonus/visit/" + player3.getId())
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
-                .toEntity(DailyBonusStatusResponseDTO.class);
+                .toBodilessEntity();
 
-        assertTrue(visit3.getBody().puedeReclamar());
+
+        ResponseEntity<ClaimBonusResponseDTO> claimRes = restClient.post()
+                .uri("/api/daily-bonus/claim")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(ClaimBonusResponseDTO.class);
+
+        assertEquals(HttpStatus.OK, claimRes.getStatusCode());
+        assertNotNull(claimRes.getBody());
+        assertEquals(1.0, claimRes.getBody().givenBonus());
+        assertEquals(1, claimRes.getBody().currentStreak());
+    }
+
+    private Player crearJugador(String nombre, Double precio) {
+        Player player = getJugadorConNombre(nombre);
+        player.setCurrentPrice(precio);
+        return playerService.crear(player);
+    }
+
+    private BuyTokenRequest crearBuyRequest(Long playerId, Integer quantity) {
+        return new BuyTokenRequest(playerId, quantity);
+    }
+
+    @Test
+    void alComprarPermiteReclamarBonus() {
+        userService.crearSuperusuario();
+
+        Player player = crearJugador("Lionel Messi", 20d);
+
+        LocalDate hoy = LocalDate.of(2026, 10, 20);
+        requestDate.setDate(hoy);
+
+        restClient.post()
+                .uri("/orders/buy")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(crearBuyRequest(player.getId(), 1))
+                .retrieve()
+                .toBodilessEntity();
 
         ResponseEntity<ClaimBonusResponseDTO> claimRes = restClient.post()
                 .uri("/api/daily-bonus/claim")
@@ -296,7 +337,7 @@ class DailyBonusE2eTest {
     }
 
     @Test
-    void consultarDatosDeBonusEsConsistenteConModelo() {
+    void consultarDatosDeBonusEsConsistenteConConfiguracion() {
         ResponseEntity<DailyBonusStatusResponseDTO> estado = restClient.get()
                 .uri("/api/daily-bonus")
                 .header("Authorization", "Bearer " + token)
@@ -309,8 +350,29 @@ class DailyBonusE2eTest {
         assertEquals(1.0, estado.getBody().weeklyBonusRewards().get(0));
         assertEquals(15.0, estado.getBody().weeklyBonusRewards().get(6));
         assertNotNull(estado.getBody().misiones());
-        assertFalse(estado.getBody().misiones().isEmpty());
+        assertFalse(estado.getBody().misiones().misiones().isEmpty());
     }
+
+
+
+    @Test
+    void consultarDatosDeBonusTraeInfoDeTodasLasMisiones() {
+        ResponseEntity<DailyBonusStatusResponseDTO> estado = restClient.get()
+                .uri("/api/daily-bonus")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(DailyBonusStatusResponseDTO.class);
+
+        assertNotNull(estado.getBody());
+        assertNotNull(estado.getBody().misiones());
+        MissionStatusResponseDTO mision = estado.getBody().misiones();
+        assertFalse(mision.misiones().isEmpty());
+
+        assertEquals(6, getMisionesTotalesEnArbol(mision));
+        assertEquals(4, getObjetivosVistosEnMision(mision));
+    }
+
+
 
     @Test
     void alIntentarAccederSinTokenJwtRetornaForbidden() {

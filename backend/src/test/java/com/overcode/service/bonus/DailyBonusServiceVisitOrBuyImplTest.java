@@ -4,22 +4,15 @@ import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
 import com.overcode.model.bonus.UserDailyBonus;
-import com.overcode.model.bonus.mission.BuyDailyBonusMission;
-import com.overcode.model.bonus.mission.BuyOrVisitMission;
-import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;
-import com.overcode.model.bonus.mission.VisitPlayerDailyBonusMission;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
-import com.overcode.model.cotizacion.EstrategiaCotizacionRendimientoTotal;
 import com.overcode.model.player.Player;
 import com.overcode.model.user.User;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.UserDailyBonusService;
 import com.overcode.service.interfaces.UserService;
-import com.overcode.testUtils.TestDailyBonusUtil;
 import com.overcode.testUtils.TestPlayerUtil;
 import com.overcode.testUtils.TestService;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +24,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 
 import static com.overcode.testUtils.TestUserUtil.getUsuarioConRacha;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.overcode.testUtils.bonus.TestBonusUtil.getConfigConDailyOr;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mockStatic;
 
@@ -55,10 +50,10 @@ class DailyBonusServiceVisitOrBuyImplTest {
     @Autowired
     private ConfiguracionMercadoService configuracionMercadoService;
 
-    private User USER_1;
-    private Player PLAYER_1;
-    private Player PLAYER_2;
-    private Player PLAYER_3;
+    private User user1;
+    private Player player1;
+    private Player player2;
+    private Player player3;
 
     @BeforeEach
     void setUp() {
@@ -67,28 +62,18 @@ class DailyBonusServiceVisitOrBuyImplTest {
         testService.eliminarConfig();
         testService.eliminarJugadoresYEquipos();
 
-        PLAYER_1 = playerRepository.guardar(TestPlayerUtil.crearJugador("Messi", 100.0));
-        PLAYER_2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Ronaldo", 90.0));
-        PLAYER_3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Neymar", 80.0));
+        player1 = playerRepository.guardar(TestPlayerUtil.crearJugador("Messi", 100.0));
+        player2 = playerRepository.guardar(TestPlayerUtil.crearJugador("Ronaldo", 90.0));
+        player3 = playerRepository.guardar(TestPlayerUtil.crearJugador("Neymar", 80.0));
 
-        ConfiguracionMercado config = getConfigConDailyOr();
+        ConfiguracionMercado config = getConfigConDailyOr(player1, player2, player3);
 
         configuracionMercadoService.crearConfiguracionSiNoExiste(config);
 
-        USER_1 = userService.crear(getUsuarioConRacha("pepito", 0, null));
+        user1 = userService.crear(getUsuarioConRacha("pepito", 0, null));
     }
 
-    private @NonNull ConfiguracionMercado getConfigConDailyOr() {
-        Visit3PlayersDailyBonusMission visitMission = new Visit3PlayersDailyBonusMission(
-                new VisitPlayerDailyBonusMission(PLAYER_1),
-                new VisitPlayerDailyBonusMission(PLAYER_2),
-                new VisitPlayerDailyBonusMission(PLAYER_3)
-        );
-        BuyDailyBonusMission buyMission = new BuyDailyBonusMission();
-        BuyOrVisitMission dailyOr = new BuyOrVisitMission(buyMission, visitMission);
 
-        return new ConfiguracionMercado(new EstrategiaCotizacionRendimientoTotal(), TestDailyBonusUtil.getDailyBonusBaseConMision(dailyOr));
-    }
 
     @AfterEach
     void tearDown() {
@@ -110,20 +95,17 @@ class DailyBonusServiceVisitOrBuyImplTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         mockedDateContext(hoy, () -> {
-            EstadoBonus e1 = userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_1));
-            assertFalse(e1.canClaimBonus());
+            userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(user1, player1));
 
-            EstadoBonus e2 = userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_2));
-            assertFalse(e2.canClaimBonus());
+            userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(user1, player2));
 
-            EstadoBonus e3 = userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(USER_1, PLAYER_3));
-            assertTrue(e3.canClaimBonus());
+            userDailyBonusService.registrarVisitaJugador(new PeticionVisitaJugador(user1, player3));
 
-            BonusClaim respuesta = userDailyBonusService.reclamarBonus(USER_1);
+            BonusClaim respuesta = userDailyBonusService.reclamarBonus(user1);
             assertEquals(1.0, respuesta.givenBonus());
             assertEquals(1, respuesta.currentStreak());
 
-            User usuarioActualizado = userService.recuperar(USER_1.getId());
+            User usuarioActualizado = userService.recuperar(user1.getId());
             assertEquals(1.0, usuarioActualizado.getCreditBalance());
 
             UserDailyBonus userDailyBonus = usuarioActualizado.getUserDailyBonus();
@@ -138,12 +120,12 @@ class DailyBonusServiceVisitOrBuyImplTest {
         LocalDate hoy = LocalDate.of(2026, 10, 22);
 
         mockedDateContext(hoy, () -> {
-            userDailyBonusService.registrarCompra(USER_1);
+            userDailyBonusService.registrarCompra(user1);
 
-            EstadoBonus estado = userDailyBonusService.obtenerEstadoBonus(USER_1);
+            EstadoBonus estado = userDailyBonusService.obtenerEstadoBonus(user1);
             assertTrue(estado.canClaimBonus());
 
-            BonusClaim claim = userDailyBonusService.reclamarBonus(USER_1);
+            BonusClaim claim = userDailyBonusService.reclamarBonus(user1);
             assertEquals(1.0, claim.givenBonus());
             assertEquals(1, claim.currentStreak());
         });

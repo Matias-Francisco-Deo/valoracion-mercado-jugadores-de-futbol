@@ -45,13 +45,13 @@ public class DailyBonusController {
     }
 
     @PostMapping("/visit/{playerId}")
-    public ResponseEntity<DailyBonusStatusResponseDTO> registrarVisitaJugador(
+    public ResponseEntity<Void> registrarVisitaJugador(
             Principal principal,
             @PathVariable Long playerId
     ) {
         long id = Long.parseLong(principal.getName());
         PeticionVisitaJugador peticion = new PeticionVisitaJugador(new User(id), new Player(playerId));
-        EstadoBonus status = userDailyBonusService.registrarVisitaJugador(peticion);
-        return ResponseEntity.ok(DailyBonusStatusResponseDTO.desdeModelo(status));
+        userDailyBonusService.registrarVisitaJugador(peticion);
+        return ResponseEntity.ok().build();
     }
 }

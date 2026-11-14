@@ -45,7 +45,7 @@ public class ScheduledTasks {
 	@Scheduled(cron = "0 0 0 * * *")
 	public void actualizarMision() {
 		log.info("Actualizando misión diaria...");
-		dailyBonusService.seleccionarNuevaMision(); // TODO testear
+		dailyBonusService.seleccionarNuevaMision();
 	}
 
 

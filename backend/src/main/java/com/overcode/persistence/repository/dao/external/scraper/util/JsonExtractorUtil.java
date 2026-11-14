@@ -1,6 +1,7 @@
 package com.overcode.persistence.repository.dao.external.scraper.util;
 
 import com.overcode.persistence.repository.dao.external.scraper.exception.ScraperExtractionException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -69,21 +70,8 @@ public class JsonExtractorUtil {
 
         int metaIndex = normalizedHtml.indexOf("<meta name=\"description\"");
         if (metaIndex != -1) {
-            String metaTag = html.substring(metaIndex, html.indexOf('>', metaIndex));
-            String position = normalizePosition(metaTag);
-            if (position != null) {
-                return position;
-            }
-
-            int contentIndex = metaTag.toLowerCase(Locale.ROOT).indexOf("content=");
-            if (contentIndex != -1) {
-                String contentValue = metaTag.substring(contentIndex + 8).trim();
-                contentValue = stripQuotes(contentValue);
-                String normalized = normalizePosition(contentValue);
-                if (normalized != null) {
-                    return normalized;
-                }
-            }
+            String position = metaIndexExiste(html, metaIndex);
+            if (position != null) return position;
         }
 
         String[] markers = {"positions:", "position:"};
@@ -101,14 +89,37 @@ public class JsonExtractorUtil {
             if (valueEnd == -1) {
                 return null;
             }
+            Result result = new Result(valueStart, valueEnd);
 
-            String candidate = html.substring(valueStart, valueEnd).trim();
+            String candidate = html.substring(result.valueStart(), result.valueEnd()).trim();
             String position = normalizePosition(candidate);
             if (position != null) {
                 return position;
             }
         }
 
+        return null;
+    }
+
+    private record Result(int valueStart, int valueEnd) {
+    }
+
+    private static @Nullable String metaIndexExiste(String html, int metaIndex) {
+        String metaTag = html.substring(metaIndex, html.indexOf('>', metaIndex));
+        String position = normalizePosition(metaTag);
+        if (position != null) {
+            return position;
+        }
+
+        int contentIndex = metaTag.toLowerCase(Locale.ROOT).indexOf("content=");
+        if (contentIndex != -1) {
+            String contentValue = metaTag.substring(contentIndex + 8).trim();
+            contentValue = stripQuotes(contentValue);
+            String normalized = normalizePosition(contentValue);
+            if (normalized != null) {
+                return normalized;
+            }
+        }
         return null;
     }
 

@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +109,7 @@ public class User {
         }
         List<Token> playerTokens = getTokensForPlayer(player.getId());
         if (playerTokens.size() < quantity) {
-            throw new TokensInsuficientesParaVenderException("No hay suficientes tokens para vender la amount pedida");
+            throw new TokensInsuficientesParaVenderException("No hay suficientes tokens para vender la cantidad pedida");
         }
 
         List<Token> toRelease = new ArrayList<>(playerTokens.subList(0, quantity));
@@ -133,42 +131,5 @@ public class User {
     public void addTokens(List<Token> newTokens) {
         newTokens.forEach(this::addToken);
     }
-//
-//    public BonusClaim reclamarBonusDiario(DiaryBonus diaryBonus) {
-//        actualizarRacha();
-//        Double bonus = diaryBonus.getBonusParaUser(this);
-//        Integer racha = aumentarRacha();
-//        addCredits(bonus);
-//        return new BonusClaim(bonus, racha, getCreditBalance());
-//    }
-
-    public LocalDate getFechaActual() {
-        return LocalDate.now(ZoneOffset.UTC);
-    }
-
-//    public Boolean yaReclamoBonus(LocalDate hoy) {
-//        return this.lastBonusClaimDate != null && this.lastBonusClaimDate.equals(hoy);
-//    }
-
-//    public void actualizarRacha() {
-//        if (getLastBonusClaimDate() == null) {setStreakCount(0); return;}
-//        long diasEntreReclamos = ChronoUnit.DAYS.between(getLastBonusClaimDate(), getFechaActual());
-//        if (diasEntreReclamos > 1) {
-//            setStreakCount(0);
-//        }
-//    }
-//
-//    public Integer aumentarRacha() {
-//        Integer nuevaRacha = calcularSiguienteRacha();
-//        setStreakCount(nuevaRacha);
-//        setLastBonusClaimDate(getFechaActual());
-//        return nuevaRacha;
-//    }
-//
-//    public Integer calcularSiguienteRacha() {
-//        Integer rachaActual = getStreakCount();
-//        if (rachaActual == 6) return 0;
-//        return rachaActual + 1;
-//    }
 
 }

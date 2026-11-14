@@ -10,7 +10,7 @@ public interface UserDailyBonusService {
     UserDailyBonus recuperar(Long id);
     UserDailyBonus guardar(UserDailyBonus userDailyBonus);
     void registrarCompra(User user);
-    EstadoBonus registrarVisitaJugador(PeticionVisitaJugador peticion);
+    void registrarVisitaJugador(PeticionVisitaJugador peticion);
     BonusClaim reclamarBonus(User user);
     EstadoBonus obtenerEstadoBonus(User user);
 }

@@ -10,7 +10,4 @@ public record EstadoBonus(
         Boolean canClaimBonus,
         DailyBonusMission<?> mision
 ) {
-//    public EstadoBonus(Integer currentStreak, Double nextBonus, Boolean alreadyClaimedToday, DiaryBonusRewards weeklyBonuses, Boolean canClaimBonus, Mission<?> mision) {
-//        this(currentStreak, nextBonus, alreadyClaimedToday, weeklyBonuses, canClaimBonus, mision);
-//    }
 }
