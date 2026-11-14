@@ -11,6 +11,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "ranking")
     public Page<Player> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable) {
         return playerRepository.recuperarRankingDeJugadoresPorEstrategiaActiva(pageable);
     }
