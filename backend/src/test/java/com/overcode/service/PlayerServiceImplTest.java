@@ -19,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -38,6 +40,9 @@ class PlayerServiceImplTest {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     private Player jugador1 = getJugadorConNombre("Messi");
     private Player jugador2 = getJugadorConNombre("Mbappe");
 
@@ -52,6 +57,12 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Cache rankingCache = cacheManager.getCache("ranking");
+
+        if (rankingCache != null) {
+            rankingCache.clear();
+        }
+
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
