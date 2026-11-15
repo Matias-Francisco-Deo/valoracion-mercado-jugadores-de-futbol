@@ -1,3 +1,6 @@
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+--Indices
 --Optimiza la consulta del ranking de jugadores, ordenando por precio actual de forma descendente e identificador de forma ascendente.
 CREATE INDEX IF NOT EXISTS idx_players_ranking
     ON players (current_price DESC, id ASC);
