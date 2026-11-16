@@ -4,7 +4,7 @@ import com.overcode.controller.dto.portfolio.PortfolioResponseDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
-import com.overcode.controller.dto.user.DepositRequest;
+import com.overcode.controller.dto.user.DepositRequestDTO;
 import com.overcode.controller.dto.user.DepositResponseDTO;
 import com.overcode.controller.dto.user.UserResponseDTO;
 import com.overcode.model.market.PeticionDeposito;
@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<DepositResponseDTO> deposit(@Valid @RequestBody DepositRequest request, Principal principal) {
+    public ResponseEntity<DepositResponseDTO> deposit(@Valid @RequestBody DepositRequestDTO request, Principal principal) {
 
         long userId = Long.parseLong(principal.getName());
 

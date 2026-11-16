@@ -131,7 +131,7 @@ class EstrategiaCotizacionServiceTest {
     @Test
     void guardarFallaCuandoLaEstrategiaNoEstaMapeada() {
 
-        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
+        assertThrows(com.overcode.persistence.exception.EntidadNoEncontradaException.class, () -> estrategiaCotizacionService.guardar(ESTRATEGIA_COTIZACION_1));
     }
 
     @Test

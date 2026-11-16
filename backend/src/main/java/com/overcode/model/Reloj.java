@@ -1,4 +1,4 @@
-package com.overcode.config;
+package com.overcode.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

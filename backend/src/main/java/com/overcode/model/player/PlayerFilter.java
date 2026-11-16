@@ -1,4 +1,4 @@
-package com.overcode.controller.dto.player;
+package com.overcode.model.player;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

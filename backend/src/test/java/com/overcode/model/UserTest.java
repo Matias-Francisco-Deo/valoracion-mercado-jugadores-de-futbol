@@ -42,7 +42,7 @@ class UserTest {
         assertEquals(userA.hashCode(), userB.hashCode());
         assertNotEquals(userA, userC);
         assertNotEquals(userA, userWithoutId);
-        assertNotEquals(userA, null);
-        assertNotEquals(userA, "string");
+        assertNotEquals(null, userA);
+        assertNotEquals("string", userA);
     }
 }

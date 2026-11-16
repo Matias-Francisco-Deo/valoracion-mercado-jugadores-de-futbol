@@ -1,7 +1,7 @@
 package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
 import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
@@ -83,13 +83,13 @@ class PlayerE2eTest {
     }
 
     private String obtainAuthToken() {
-        var req = new RegisterRequest(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        ResponseEntity<AuthResponse> response = restClient.post()
+        var req = new RegisterRequestDTO(DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
         return response.getBody().token();
     }
 

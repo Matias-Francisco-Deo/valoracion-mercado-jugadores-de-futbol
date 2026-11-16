@@ -1,6 +1,6 @@
 package com.overcode.model.bonus;
 
-import com.overcode.config.Reloj;
+import com.overcode.model.Reloj;
 import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.bonus.mission.MissionEngine;
 import com.overcode.model.exception.bonus.FechaReclamoBonusDiarioInvalidaException;

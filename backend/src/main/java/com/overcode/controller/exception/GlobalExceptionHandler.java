@@ -7,6 +7,7 @@ import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaExceptio
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import com.overcode.model.exception.bonus.mission.MisionInvalidaException;
 import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
+import com.overcode.security.exception.AuthenticationException;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntidadNoEncontradaException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponseDTO handleNotFound(EntidadNoEncontradaException ex) {
+    public ErrorResponseDTO handleNotFoundService(EntidadNoEncontradaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(com.overcode.persistence.exception.EntidadNoEncontradaException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleNotFoundPersistence(com.overcode.persistence.exception.EntidadNoEncontradaException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 

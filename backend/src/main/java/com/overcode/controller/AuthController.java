@@ -1,8 +1,8 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.LoginRequest;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.LoginRequestDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.model.security.Auth;
 import com.overcode.service.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,17 +28,17 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user", description = "Creates a new user account and returns a JWT token")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
         Auth auth = authService.register(request.aModelo());
-        AuthResponse response = AuthResponse.desdeModelo(auth);
+        AuthResponseDTO response = AuthResponseDTO.desdeModelo(auth);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Log in", description = "Authenticates a user and returns a JWT token")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         Auth auth = authService.login(request.aModelo());
-        AuthResponse response = AuthResponse.desdeModelo(auth);
+        AuthResponseDTO response = AuthResponseDTO.desdeModelo(auth);
         return ResponseEntity.ok(response);
     }
 }
