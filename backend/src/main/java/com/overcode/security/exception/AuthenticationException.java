@@ -1,4 +1,4 @@
-package com.overcode.service.exception;
+package com.overcode.security.exception;
 
 public class AuthenticationException extends RuntimeException {
     public AuthenticationException(String message) {

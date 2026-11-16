@@ -7,6 +7,7 @@ import com.overcode.model.exception.bonus.FechaReclamoBonusLoginInvalidaExceptio
 import com.overcode.model.exception.bonus.LoginBonusInvalidoException;
 import com.overcode.model.exception.bonus.mission.MisionInvalidaException;
 import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
+import com.overcode.security.exception.AuthenticationException;
 import com.overcode.service.exception.*;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import org.springframework.http.HttpStatus;

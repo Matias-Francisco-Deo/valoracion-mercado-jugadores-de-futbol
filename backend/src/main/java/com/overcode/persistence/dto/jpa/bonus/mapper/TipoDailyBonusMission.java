@@ -2,7 +2,7 @@ package com.overcode.persistence.dto.jpa.bonus.mapper;
 
 import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.persistence.dto.jpa.bonus.mission.DailyBonusMissionJPADTO;
-import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.persistence.exception.EntidadNoEncontradaException;
 
 import java.util.ArrayList;
 import java.util.List;

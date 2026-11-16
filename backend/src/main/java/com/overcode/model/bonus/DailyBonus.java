@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 
-import static com.overcode.config.Reloj.getLocalDate;
+import static com.overcode.model.Reloj.getLocalDate;
 
 @Getter
 @Setter
