@@ -175,7 +175,7 @@ public class ArchitectureTest {
   @Test
   void noRecursionEntrePaquetes() {
           slices().matching("com.example.myapp.(*)..")
-                  .should().beFreeOfCycles();
+                  .should().beFreeOfCycles().because("Escalabilidad y testing separado");
   }
 
   @Test
