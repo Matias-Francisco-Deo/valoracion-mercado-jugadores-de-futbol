@@ -6,7 +6,7 @@ import com.overcode.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record SellTokenRequest(
+public record SellTokenRequestDTO(
                 @NotNull(message = "Player ID must not be null")
                 Long playerId,
 

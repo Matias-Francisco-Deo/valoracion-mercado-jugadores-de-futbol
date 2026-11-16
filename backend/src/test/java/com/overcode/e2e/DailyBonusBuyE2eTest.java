@@ -1,13 +1,13 @@
 package com.overcode.e2e;
 
 import com.overcode.config.DataInitializer;
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
 import com.overcode.controller.dto.bonus.MissionStatusResponseDTO;
-import com.overcode.controller.dto.market.BuyTokenRequest;
-import com.overcode.controller.dto.user.DepositRequest;
+import com.overcode.controller.dto.market.BuyTokenRequestDTO;
+import com.overcode.controller.dto.user.DepositRequestDTO;
 import com.overcode.model.player.Player;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.testUtils.TestService;
@@ -81,13 +81,13 @@ class DailyBonusBuyE2eTest {
     }
 
     private void register() {
-        RegisterRequest registerReq = new RegisterRequest(USERNAME, EMAIL, PASSWORD);
-        ResponseEntity<AuthResponse> registerRes = restClient.post()
+        RegisterRequestDTO registerReq = new RegisterRequestDTO(USERNAME, EMAIL, PASSWORD);
+        ResponseEntity<AuthResponseDTO> registerRes = restClient.post()
                 .uri("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(registerReq)
                 .retrieve()
-                .toEntity(AuthResponse.class);
+                .toEntity(AuthResponseDTO.class);
 
         this.token = registerRes.getBody().token();
 
@@ -95,7 +95,7 @@ class DailyBonusBuyE2eTest {
                 .uri("/users/deposit")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new DepositRequest(1000.0))
+                .body(new DepositRequestDTO(1000.0))
                 .retrieve()
                 .toBodilessEntity();
     }
@@ -114,8 +114,8 @@ class DailyBonusBuyE2eTest {
         return playerService.crear(player);
     }
 
-    private BuyTokenRequest crearBuyRequest(Long playerId, Integer quantity) {
-        return new BuyTokenRequest(playerId, quantity);
+    private BuyTokenRequestDTO crearBuyRequest(Long playerId, Integer quantity) {
+        return new BuyTokenRequestDTO(playerId, quantity);
     }
 
     @Test

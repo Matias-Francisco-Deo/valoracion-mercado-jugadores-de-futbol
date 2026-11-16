@@ -1,8 +1,8 @@
 package com.overcode.controller;
 
-import com.overcode.controller.dto.market.BuyTokenRequest;
-import com.overcode.controller.dto.market.CancellTokenRequest;
-import com.overcode.controller.dto.market.SellTokenRequest;
+import com.overcode.controller.dto.market.BuyTokenRequestDTO;
+import com.overcode.controller.dto.market.CancellTokenRequestDTO;
+import com.overcode.controller.dto.market.SellTokenRequestDTO;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.market.PeticionCancelacion;
 import com.overcode.model.market.PeticionVenta;
@@ -32,7 +32,7 @@ public class TokenMarketController {
 
     /** Buys instantly against the resting SELL book, at the player's current price. All-or-nothing. */
     @PostMapping("/buy")
-    public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequest request, Principal principal) {
+    public ResponseEntity<Void> buy(@Valid @RequestBody BuyTokenRequestDTO request, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         OrdenDeCompra buyOrder = request.aModelo(userId);
         tokenMarketService.buy(buyOrder);
@@ -42,7 +42,7 @@ public class TokenMarketController {
 
     /** Publishes resting SELL orders (one per token) for the requested quantity. */
     @PostMapping("/sell")
-    public ResponseEntity<Void> sell(@Valid @RequestBody SellTokenRequest request, Principal principal) {
+    public ResponseEntity<Void> sell(@Valid @RequestBody SellTokenRequestDTO request, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         PeticionVenta command = request.aModelo(userId);
         tokenMarketService.sell(command);
@@ -53,7 +53,7 @@ public class TokenMarketController {
     /** Cancels a resting SELL order and returns the token to the seller. No se usa.*/
     @PostMapping("/cancel")
     public ResponseEntity<Void> cancelOrder(
-            @Valid @RequestBody CancellTokenRequest request,
+            @Valid @RequestBody CancellTokenRequestDTO request,
             Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         PeticionCancelacion command = request.aModelo(userId);

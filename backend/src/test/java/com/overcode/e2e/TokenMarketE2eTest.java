@@ -1,10 +1,10 @@
 package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
-import com.overcode.controller.dto.market.BuyTokenRequest;
-import com.overcode.controller.dto.market.CancellTokenRequest;
-import com.overcode.controller.dto.market.SellTokenRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
+import com.overcode.controller.dto.market.BuyTokenRequestDTO;
+import com.overcode.controller.dto.market.CancellTokenRequestDTO;
+import com.overcode.controller.dto.market.SellTokenRequestDTO;
 import com.overcode.controller.dto.venta.OrderSellSummaryPageResponseDTO;
 import com.overcode.model.market.orden.OrderStatus;
 import com.overcode.model.player.Player;
@@ -102,14 +102,14 @@ class TokenMarketE2eTest {
         testService.eliminarConfig();
     }
 
-    private AuthResponse registerUser(String username, String email, String password) {
-        var req = new RegisterRequest(username, email, password);
-        ResponseEntity<AuthResponse> response = restClient.post()
+    private AuthResponseDTO registerUser(String username, String email, String password) {
+        var req = new RegisterRequestDTO(username, email, password);
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
                 .uri("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(req)
                 .retrieve()
-                .toEntity(AuthResponse.class);
+                .toEntity(AuthResponseDTO.class);
 
         return response.getBody();
     }
@@ -134,11 +134,11 @@ class TokenMarketE2eTest {
 
     }
 
-    private BuyTokenRequest crearBuyRequest(Long playerId, Integer quantity) {
-        return new BuyTokenRequest(playerId, quantity);
+    private BuyTokenRequestDTO crearBuyRequest(Long playerId, Integer quantity) {
+        return new BuyTokenRequestDTO(playerId, quantity);
     }
 
-    private void comprarTokens(String token, BuyTokenRequest body) {
+    private void comprarTokens(String token, BuyTokenRequestDTO body) {
         restClient.post()
                 .uri("/orders/buy")
                 .header("Authorization", "Bearer " + token)
@@ -148,7 +148,7 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
     }
 
-    private void comprarTokensSinAutenticacion(BuyTokenRequest body) {
+    private void comprarTokensSinAutenticacion(BuyTokenRequestDTO body) {
         restClient.post()
                 .uri("/orders/buy")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -157,7 +157,7 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
     }
 
-    private void publicarOrdenesVenta(String token, SellTokenRequest body) {
+    private void publicarOrdenesVenta(String token, SellTokenRequestDTO body) {
         restClient.post()
                 .uri("/orders/sell")
                 .header("Authorization", "Bearer " + token)
@@ -167,7 +167,7 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
     }
 
-    private void publicarOrdenesVentaSinAutenticacion(SellTokenRequest body) {
+    private void publicarOrdenesVentaSinAutenticacion(SellTokenRequestDTO body) {
         restClient.post()
                 .uri("/orders/sell")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -198,8 +198,8 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
     }
 
-    private SellTokenRequest crearSellRequest(Long playerId, Integer quantity) {
-        return new SellTokenRequest(playerId, quantity);
+    private SellTokenRequestDTO crearSellRequest(Long playerId, Integer quantity) {
+        return new SellTokenRequestDTO(playerId, quantity);
     }
 
     // ============================================================================================
@@ -284,7 +284,7 @@ class TokenMarketE2eTest {
     @Test
     void comprarTokensSinAutenticacionDevuelveError() {
         Player player = crearJugador("Kylian Mbappe", 25d);
-        BuyTokenRequest body = crearBuyRequest(player.getId(), 1);
+        BuyTokenRequestDTO body = crearBuyRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
                 comprarTokensSinAutenticacion(body)
@@ -297,7 +297,7 @@ class TokenMarketE2eTest {
     void comprarTokensConCantidadInvalidaDevuelveBadRequest() {
         var buyerAuth = registerUser(BUYER_USERNAME, BUYER_EMAIL, BUYER_PASSWORD);
         Player player = crearJugador("Pedri", 10d);
-        BuyTokenRequest body = crearBuyRequest(player.getId(), 0);
+        BuyTokenRequestDTO body = crearBuyRequest(player.getId(), 0);
         String token = buyerAuth.token();
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> comprarTokens(token, body));
@@ -311,7 +311,7 @@ class TokenMarketE2eTest {
         acreditarFondosAUsuario(buyerAuth.user().id(), 500);
 
         // Se intenta comprar 5 tokens cuando no hay ninguna orden publicada
-        BuyTokenRequest body = crearBuyRequest(player.getId(), 5);
+        BuyTokenRequestDTO body = crearBuyRequest(player.getId(), 5);
         String token = buyerAuth.token();
         assertThrows(HttpClientErrorException.Conflict.class, () -> comprarTokens(token, body));
     }
@@ -334,7 +334,7 @@ class TokenMarketE2eTest {
                 .toBodilessEntity();
 
         // El comprador tiene 0 créditos
-        BuyTokenRequest body = crearBuyRequest(player.getId(), 2);
+        BuyTokenRequestDTO body = crearBuyRequest(player.getId(), 2);
         String token = buyerAuth.token();
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
                 comprarTokens(token, body)
@@ -386,7 +386,7 @@ class TokenMarketE2eTest {
     @Test
     void publicarOrdenesDeVentaSinAutenticacionDevuelveError() {
         Player player = crearJugador("Rodri", 35d);
-        SellTokenRequest body = crearSellRequest(player.getId(), 1);
+        SellTokenRequestDTO body = crearSellRequest(player.getId(), 1);
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
                 publicarOrdenesVentaSinAutenticacion(body)
@@ -400,7 +400,7 @@ class TokenMarketE2eTest {
         // Flujo excepcional: amount <= 0
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Bukayo Saka", 25d);
-        SellTokenRequest body = crearSellRequest(player.getId(), -1);
+        SellTokenRequestDTO body = crearSellRequest(player.getId(), -1);
         String token = sellerAuth.token();
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> publicarOrdenesVenta(token, body));
@@ -411,7 +411,7 @@ class TokenMarketE2eTest {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
         Player player = crearJugador("Declan Rice", 20d);
         asignarTokensAUsuario(sellerAuth.user().id(), player.getId(), 1);
-        SellTokenRequest body = crearSellRequest(player.getId(), 5);
+        SellTokenRequestDTO body = crearSellRequest(player.getId(), 5);
         String token = sellerAuth.token();
 
         HttpClientErrorException ex = assertThrows(HttpClientErrorException.class, () ->
@@ -424,7 +424,7 @@ class TokenMarketE2eTest {
     @Test
     void publicarOrdenesDeVentaParaJugadorInexistenteDevuelveNotFound() {
         var sellerAuth = registerUser(SELLER_USERNAME, SELLER_EMAIL, SELLER_PASSWORD);
-        SellTokenRequest body = crearSellRequest(NON_EXISTENT_ID, 1);
+        SellTokenRequestDTO body = crearSellRequest(NON_EXISTENT_ID, 1);
         String token = sellerAuth.token();
 
         assertThrows(HttpClientErrorException.NotFound.class, () -> publicarOrdenesVenta(token, body));
@@ -459,7 +459,7 @@ class TokenMarketE2eTest {
                 .uri("/orders/cancel")
                 .header("Authorization", "Bearer " + sellerAuth.token())
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new CancellTokenRequest(player.getId(), 1))
+                .body(new CancellTokenRequestDTO(player.getId(), 1))
                 .retrieve()
                 .toBodilessEntity();
 
