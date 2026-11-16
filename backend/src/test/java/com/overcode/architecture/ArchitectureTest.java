@@ -5,13 +5,15 @@ import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
+import jakarta.persistence.Entity;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static com.tngtech.archunit.core.domain.properties.CanBeAnnotated.Predicates.annotatedWith;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
@@ -112,6 +114,53 @@ public class ArchitectureTest {
   }
 
   @Test
+  void controllersShouldNotReturnEntities() {
+    noMethods()
+        .that().areDeclaredInClassesThat().resideInAPackage("..controller..")
+        .should().haveRawReturnType(annotatedWith(Entity.class))
+        .because("Controllers should return DTOs, not JPA entities")
+        .check(CLASSES);
+  }
+
+  @Test
+  void entitiesShouldNotBeInApiPackages() {
+    classes()
+        .that().areAnnotatedWith(Entity.class)
+        .should().resideInAnyPackage("..persistence..")
+        .because("JPA entities should stay in the persistence layer")
+        .check(CLASSES);
+  }
+
+  @Test
+  void entitiesShouldUseJavaTime() {
+    noClasses()
+        .that().areAnnotatedWith(Entity.class)
+        .should().accessClassesThat().belongToAnyOf(java.util.Date.class, java.util.Calendar.class)
+        .because("Use java.time classes (LocalDate, LocalDateTime) instead of legacy date classes")
+        .check(CLASSES);
+  }
+
+  @Test
+  void noGenericExceptions() {
+    noClasses()
+        .should().callConstructor(Exception.class)
+        .because("Use specific exception types")
+        .check(CLASSES);
+    noMethods()
+        .should().declareThrowableOfType(Exception.class)
+        .because("Use specific exception types")
+        .check(CLASSES);
+  }
+
+  @Test
+  void noFieldInjection() {
+    noFields()
+        .should().beAnnotatedWith(Autowired.class)
+        .because("Use constructor injection instead of field injection")
+        .check(CLASSES);
+  }
+
+  @Test
   void noAnnotationsDePersistenciaEnModelo() {
     noClasses()
             .that().resideInAPackage("..model..")
@@ -152,6 +201,8 @@ public class ArchitectureTest {
                   .whereLayer("Model").mayOnlyBeAccessedByLayers("Controller", "Service", "Repository", "Model", "Config", "Security", "Persistence")
                   .whereLayer("Security").mayOnlyBeAccessedByLayers("Security", "Config", "Service")
                   .whereLayer("Config").mayOnlyBeAccessedByLayers("Config", "Application")
+
+                  .because("Hay que mantener arquitectura en capas para mejor organización")
                   .check(CLASSES);
 }
 }
