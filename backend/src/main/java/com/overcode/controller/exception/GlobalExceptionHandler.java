@@ -22,7 +22,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntidadNoEncontradaException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponseDTO handleNotFound(EntidadNoEncontradaException ex) {
+    public ErrorResponseDTO handleNotFoundService(EntidadNoEncontradaException ex) {
+        return new ErrorResponseDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler(com.overcode.persistence.exception.EntidadNoEncontradaException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handleNotFoundPersistence(com.overcode.persistence.exception.EntidadNoEncontradaException ex) {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
