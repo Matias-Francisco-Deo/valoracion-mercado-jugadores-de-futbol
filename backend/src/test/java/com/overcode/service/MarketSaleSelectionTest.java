@@ -70,8 +70,9 @@ class MarketSaleSelectionTest {
     void openOrderKeepsSpecificErrorAndPreventsSaving() {
         when(orders.findFirstTokenIdWithOpenOrder(List.of(101L, 102L))).thenReturn(Optional.of(102L));
 
+        PeticionVenta peticionVenta = new PeticionVenta(seller, player, 2);
         var error = assertThrows(ExisteOrdenAbiertaParaTokenException.class,
-                () -> market.sell(new PeticionVenta(seller, player, 2)));
+                () -> market.sell(peticionVenta));
 
         assertEquals("Ya existe una orden abierta para el token: 102", error.getMessage());
         verify(orders).findFirstTokenIdWithOpenOrder(List.of(101L, 102L));
@@ -82,8 +83,9 @@ class MarketSaleSelectionTest {
 
     @Test
     void insufficientTokensDoNotCheckOrdersOrSave() {
+        PeticionVenta peticionVenta = new PeticionVenta(seller, player, 4);
         assertThrows(TokensInsuficientesParaVenderException.class,
-                () -> market.sell(new PeticionVenta(seller, player, 4)));
+                () -> market.sell(peticionVenta));
         assertEquals(List.of(first, second, remaining), seller.getTokens());
         verifyNoInteractions(orders);
         verify(users, never()).guardar(any());
