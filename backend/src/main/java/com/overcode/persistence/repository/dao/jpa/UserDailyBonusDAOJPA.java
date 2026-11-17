@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserDiaryBonusDAOJPA extends JpaRepository<UserDailyBonusJPADTO, Long> {
+public interface UserDailyBonusDAOJPA extends JpaRepository<UserDailyBonusJPADTO, Long> {
     Optional<UserDailyBonusJPADTO> findByUserId(Long userId);
 }
