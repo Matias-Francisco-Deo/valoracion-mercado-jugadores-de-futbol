@@ -7,7 +7,7 @@ import java.util.List;
 public record MissionStatusResponseDTO(
         Long id,
         String nombre,
-        TipoMision tipoMision,
+        TipoMisionDTO tipoMisionDTO,
         boolean completed,
         List<MissionStatusResponseDTO> misiones
 ) {
@@ -21,7 +21,7 @@ public record MissionStatusResponseDTO(
 
         return new MissionStatusResponseDTO(dailyBonusMission.getId(),
                 dailyBonusMission.getNombre(),
-                TipoMision.discriminarTipoMision(dailyBonusMission),
+                TipoMisionDTO.discriminarTipoMision(dailyBonusMission),
                 dailyBonusMission.isCompleted(),
                 misiones);
     }

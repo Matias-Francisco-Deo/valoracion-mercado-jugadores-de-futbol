@@ -5,13 +5,13 @@ import com.overcode.model.bonus.mission.CompositeDailyBonusMission;
 import com.overcode.model.bonus.mission.DailyBonusMission;
 import com.overcode.model.bonus.mission.OrDailyBonusMission;
 
-public enum TipoMision {
+public enum TipoMisionDTO {
     AND,
     OR,
     COMPOSITE,
     OBJECTIVE;
 
-    public static TipoMision discriminarTipoMision(DailyBonusMission<?> dailyBonusMission) {
+    public static TipoMisionDTO discriminarTipoMision(DailyBonusMission<?> dailyBonusMission) {
         return switch (dailyBonusMission) {
             case AndDailyBonusMission<?> ignored -> AND;
             case OrDailyBonusMission<?> ignored -> OR;
