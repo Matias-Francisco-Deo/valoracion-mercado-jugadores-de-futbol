@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 @Getter
 @Setter
@@ -41,5 +44,25 @@ public abstract class DailyBonusMission<T> {
     }
 
     public abstract DailyBonusMission<T> clonar();
+
+    public <R> R reduce(R initialValue, Function<DailyBonusMission<?>, R> recursiveFunc, BinaryOperator<R> accFunc) {
+        List<DailyBonusMission<?>> misionesARecorrer = new ArrayList<>();
+
+        misionesARecorrer.add(this);
+
+        DailyBonusMission<?> misionActual;
+
+        R acc = initialValue; // caso base
+        while(!misionesARecorrer.isEmpty()) {
+            misionActual = misionesARecorrer.getFirst();
+            misionesARecorrer.removeFirst();
+
+            R acc2 =  recursiveFunc.apply(misionActual); // caso recursivo
+            acc = accFunc.apply(acc, acc2);
+
+            misionesARecorrer.addAll(new ArrayList<>(misionActual.getSubmissions()));
+        }
+        return acc;
+    }
 
 }

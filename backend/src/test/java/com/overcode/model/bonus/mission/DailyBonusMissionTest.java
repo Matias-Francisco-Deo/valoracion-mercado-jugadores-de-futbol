@@ -4,6 +4,8 @@ import com.overcode.testUtils.bonus.mission.TestDailyBonusMission;
 import com.overcode.testUtils.bonus.mission.TestMissionUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DailyBonusMissionTest {
@@ -26,5 +28,18 @@ class DailyBonusMissionTest {
         assertNull(clon.getId());
         assertEquals(original.getNombre(), clon.getNombre());
         assertEquals(original.isCompleted(), clon.isCompleted());
+    }
+
+    @Test
+    void reduceCuentaLasHojasApropiadamente() {
+        DailyBonusMission<?> mission1 = new TestDailyBonusMission();
+        DailyBonusMission<?> mission2 = new TestDailyBonusMission();
+        DailyBonusMission<?> mission3 = new TestDailyBonusMission();
+
+        mission1.setSubmissions(List.of(mission2, mission3));
+
+        int result = mission1.reduce(0, recMission -> recMission.getSubmissions().isEmpty() ? 1 : 0, Integer::sum);
+
+        assertEquals(2, result);
     }
 }
