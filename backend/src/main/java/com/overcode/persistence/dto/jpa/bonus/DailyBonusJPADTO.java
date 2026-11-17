@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "diary_bonus")
-@Table(name = "diary_bonuses")
+@Entity(name = "daily_bonus")
+@Table(name = "daily_bonuses")
 public class DailyBonusJPADTO {
 
     @Id

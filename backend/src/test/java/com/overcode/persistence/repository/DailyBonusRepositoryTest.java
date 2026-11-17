@@ -41,7 +41,7 @@ class DailyBonusRepositoryTest {
 
     @Test
     @Transactional
-    void alGuardarUnDiaryBonusSePersisteCorrectamenteYSeRecuperaPorId() {
+    void alGuardarUnDailyBonusSePersisteCorrectamenteYSeRecuperaPorId() {
         DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         DailyBonus guardado = dailyBonusRepository.guardar(base);
 
@@ -59,7 +59,7 @@ class DailyBonusRepositoryTest {
 
     @Test
     @Transactional
-    void alRecuperarPorNombreRetornaElDiaryBonusEsperado() {
+    void alRecuperarPorNombreRetornaElDailyBonusEsperado() {
         DailyBonus base = TestDailyBonusUtil.getDailyBonusBase();
         dailyBonusRepository.guardar(base);
 

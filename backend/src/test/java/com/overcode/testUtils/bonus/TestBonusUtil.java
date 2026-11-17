@@ -1,6 +1,6 @@
 package com.overcode.testUtils.bonus;
 
-import com.overcode.controller.dto.bonus.MissionStatusResponseDTO;
+import com.overcode.controller.dto.bonus.mission.MissionStatusResponseDTO;
 import com.overcode.model.bonus.mission.BuyDailyBonusMission;
 import com.overcode.model.bonus.mission.BuyOrVisitMission;
 import com.overcode.model.bonus.mission.Visit3PlayersDailyBonusMission;

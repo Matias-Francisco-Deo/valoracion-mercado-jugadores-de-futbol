@@ -112,7 +112,7 @@ public class TestService {
     }
 
     public void eliminarDailyBonuses() {
-        entityManager.createNativeQuery("TRUNCATE TABLE diary_rewards_list, diary_bonus_rewards_data, diary_bonuses, user_daily_bonuses RESTART IDENTITY CASCADE;").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE daily_rewards_list, daily_bonus_rewards_data, daily_bonuses, user_daily_bonuses RESTART IDENTITY CASCADE;").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE TABLE buy_mission, buy_visit_mission, visit_player_mission, visit_3_players_mission RESTART IDENTITY CASCADE;").executeUpdate();
     }
 
