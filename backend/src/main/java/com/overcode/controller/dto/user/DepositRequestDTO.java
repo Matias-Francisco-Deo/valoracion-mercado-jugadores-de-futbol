@@ -5,7 +5,7 @@ import com.overcode.model.user.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record DepositRequest(
+public record DepositRequestDTO(
         @NotNull(message = "Cantidad no puede ser nula")
         @Positive(message = "Cantidad debe ser mayor que cero")
         Double amount

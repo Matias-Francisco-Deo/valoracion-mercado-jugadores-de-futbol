@@ -3,7 +3,7 @@ package com.overcode.persistence.dto.jpa.cotizacion.mapper;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionRendimientoTotalMapAJPADTO;
-import com.overcode.service.exception.EntidadNoEncontradaException;
+import com.overcode.persistence.exception.EntidadNoEncontradaException;
 
 import java.util.ArrayList;
 import java.util.List;

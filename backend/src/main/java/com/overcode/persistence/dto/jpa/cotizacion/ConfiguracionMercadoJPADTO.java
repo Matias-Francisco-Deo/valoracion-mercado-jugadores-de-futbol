@@ -23,8 +23,8 @@ public class ConfiguracionMercadoJPADTO {
     private EstrategiaCotizacionJPADTO estrategiaCotizacion;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "diary_bonus_id")
-    private DailyBonusJPADTO diaryBonus;
+    @JoinColumn(name = "daily_bonus_id")
+    private DailyBonusJPADTO dailyBonus;
 
     public ConfiguracionMercado aModelo() {
         ConfiguracionMercado configuracion = new ConfiguracionMercado();
@@ -32,8 +32,8 @@ public class ConfiguracionMercadoJPADTO {
         if (getEstrategiaCotizacion() != null) {
             configuracion.setEstrategiaCotizacion(getEstrategiaCotizacion().aModelo());
         }
-        if (getDiaryBonus() != null) {
-            configuracion.setDailyBonus(getDiaryBonus().aModelo());
+        if (getDailyBonus() != null) {
+            configuracion.setDailyBonus(getDailyBonus().aModelo());
         }
         return configuracion;
     }
@@ -48,7 +48,7 @@ public class ConfiguracionMercadoJPADTO {
             dto.setEstrategiaCotizacion(EstrategiaCotizacionJPADTO.desdeModelo(configuracion.getEstrategiaCotizacion()));
         }
         if (configuracion.getDailyBonus() != null) {
-            dto.setDiaryBonus(DailyBonusJPADTO.desdeModelo(configuracion.getDailyBonus()));
+            dto.setDailyBonus(DailyBonusJPADTO.desdeModelo(configuracion.getDailyBonus()));
         }
         return dto;
     }

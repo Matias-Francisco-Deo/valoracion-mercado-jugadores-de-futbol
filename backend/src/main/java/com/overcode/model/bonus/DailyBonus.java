@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 
-import static com.overcode.config.Reloj.getLocalDate;
+import static com.overcode.model.Reloj.getLocalDate;
 
 @Getter
 @Setter
@@ -36,7 +36,7 @@ public class DailyBonus {
     }
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new DailyBonusInvalidoException("El nombre del DiaryBonus no puede ser nulo ni vacío.");
+            throw new DailyBonusInvalidoException("El nombre del DailyBonus no puede ser nulo ni vacío.");
         }
         this.nombre = nombre.trim();
     }

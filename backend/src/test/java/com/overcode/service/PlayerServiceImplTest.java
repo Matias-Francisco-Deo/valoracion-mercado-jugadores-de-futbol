@@ -1,8 +1,8 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import com.overcode.model.player.PlayerGameData;
 import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;

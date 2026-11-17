@@ -11,8 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "diary_bonus_rewards")
-@Table(name = "diary_bonus_rewards_data") // TODO cambiar nombre
+@Entity(name = "daily_bonus_rewards")
+@Table(name = "daily_bonus_rewards_data") // TODO cambiar nombre
 public class DailyBonusRewardsJPADTO {
 
     @Id
@@ -21,7 +21,7 @@ public class DailyBonusRewardsJPADTO {
 
     @ElementCollection
     @CollectionTable(
-            name = "diary_rewards_list",
+            name = "daily_rewards_list",
             joinColumns = @JoinColumn(name = "id")
     )
     @Column(name = "rewards", nullable = false)

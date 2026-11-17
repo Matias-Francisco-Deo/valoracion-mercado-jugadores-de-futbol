@@ -1,7 +1,7 @@
 package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
@@ -71,14 +71,14 @@ import static org.junit.jupiter.api.Assertions.*;
         this.restClient = RestClient.builder().baseUrl("http://localhost:" + port).build();
     }
 
-    private AuthResponse registerUser(String username, String email, String password) {
-        var req = new RegisterRequest(username, email, password);
-        ResponseEntity<AuthResponse> response = restClient.post()
+    private AuthResponseDTO registerUser(String username, String email, String password) {
+        var req = new RegisterRequestDTO(username, email, password);
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
 
         return response.getBody();
     }
@@ -444,7 +444,7 @@ import static org.junit.jupiter.api.Assertions.*;
                 .toBodilessEntity();
     }
 
-    private @NonNull ResponseEntity<Void> getDeUserInexistente(AuthResponse auth, String endpoint) {
+    private @NonNull ResponseEntity<Void> getDeUserInexistente(AuthResponseDTO auth, String endpoint) {
         return restClient.get()
                 .uri("/users/" + NON_EXISTENT_ID + endpoint)
                 .header("Authorization", "Bearer " + auth.token())

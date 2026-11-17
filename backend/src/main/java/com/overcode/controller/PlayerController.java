@@ -2,13 +2,13 @@ package com.overcode.controller;
 
 import com.overcode.controller.dto.cotizacion.BusquedaRegistroCotizacionRequestDTO;
 import com.overcode.controller.dto.cotizacion.RegistroCotizacionResponseDTO;
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.controller.dto.player.PlayerFilterDTO;
 import com.overcode.controller.dto.player.PlayerPageResponseDTO;
 import com.overcode.controller.dto.player.PlayerResponseDTO;
 import com.overcode.model.cotizacion.registro.BusquedaRegistroCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.RegistroCotizacionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
