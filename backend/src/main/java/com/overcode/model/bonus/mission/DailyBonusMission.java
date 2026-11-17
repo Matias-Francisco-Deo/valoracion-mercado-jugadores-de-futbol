@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Getter
@@ -57,12 +58,16 @@ public abstract class DailyBonusMission<T> {
             misionActual = misionesARecorrer.getFirst();
             misionesARecorrer.removeFirst();
 
-            R acc2 =  recursiveFunc.apply(misionActual); // caso recursivo
+            R acc2 = recursiveFunc.apply(misionActual); // caso recursivo
             acc = accFunc.apply(acc, acc2);
 
             misionesARecorrer.addAll(new ArrayList<>(misionActual.getSubmissions()));
         }
         return acc;
+    }
+
+    public void forEach(Consumer<DailyBonusMission<?>> action) {
+        this.reduce(null, mission -> {action.accept(mission); return null;}, (n1, n2) -> n1);
     }
 
 }

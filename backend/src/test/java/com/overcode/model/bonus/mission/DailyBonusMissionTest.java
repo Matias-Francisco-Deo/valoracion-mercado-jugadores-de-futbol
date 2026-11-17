@@ -42,4 +42,19 @@ class DailyBonusMissionTest {
 
         assertEquals(2, result);
     }
+
+    @Test
+    void forEachEjecutaAccionesSinResultado() {
+        DailyBonusMission<?> mission1 = new TestDailyBonusMission();
+        DailyBonusMission<?> mission2 = new TestDailyBonusMission();
+        DailyBonusMission<?> mission3 = new TestDailyBonusMission();
+
+        mission1.setSubmissions(List.of(mission2, mission3));
+
+        mission1.forEach(DailyBonusMission::setComplete);
+
+        assertTrue(mission1.isCompleted());
+        assertTrue(mission2.isCompleted());
+        assertTrue(mission3.isCompleted());
+    }
 }
