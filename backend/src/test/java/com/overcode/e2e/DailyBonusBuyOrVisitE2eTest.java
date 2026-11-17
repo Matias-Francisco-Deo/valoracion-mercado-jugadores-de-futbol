@@ -4,7 +4,8 @@ import com.overcode.controller.dto.auth.AuthResponseDTO;
 import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.controller.dto.bonus.ClaimBonusResponseDTO;
 import com.overcode.controller.dto.bonus.DailyBonusStatusResponseDTO;
-import com.overcode.controller.dto.bonus.MissionStatusResponseDTO;
+import com.overcode.controller.dto.bonus.mission.MissionStatusResponseDTO;
+import com.overcode.controller.dto.bonus.mission.TipoMision;
 import com.overcode.controller.dto.market.BuyTokenRequestDTO;
 import com.overcode.controller.dto.user.DepositRequestDTO;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
@@ -353,6 +354,7 @@ class DailyBonusBuyOrVisitE2eTest {
         MissionStatusResponseDTO mision = estado.getBody().misiones();
         assertFalse(mision.misiones().isEmpty());
 
+        assertEquals(TipoMision.OR, mision.tipoMision());
         assertEquals(6, getMisionesTotalesEnArbol(mision));
         assertEquals(4, getObjetivosVistosEnMision(mision));
     }
