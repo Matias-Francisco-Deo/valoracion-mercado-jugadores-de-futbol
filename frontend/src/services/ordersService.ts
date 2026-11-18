@@ -10,7 +10,11 @@ export async function listTokensForSale(payload: OrderTokensRequest): Promise<vo
 }
 
 export async function buyListedTokens(payload: OrderTokensRequest): Promise<void> {
-  return futbolApi.post<void>('/orders/buy', payload);
+  const response = await futbolApi.post<void>('/orders/buy', payload);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('daily-bonus:refresh'));
+  }
+  return response;
 }
 
 export async function cancelTokenListing(payload: OrderTokensRequest): Promise<void> {

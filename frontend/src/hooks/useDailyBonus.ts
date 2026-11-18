@@ -77,6 +77,14 @@ export function useDailyBonus() {
     void fetchStatus();
   }, [fetchStatus]);
 
+  useEffect(() => {
+    const handleRefresh = () => {
+      void fetchStatus();
+    };
+    window.addEventListener('daily-bonus:refresh', handleRefresh);
+    return () => window.removeEventListener('daily-bonus:refresh', handleRefresh);
+  }, [fetchStatus]);
+
   return {
     status,
     isLoading,

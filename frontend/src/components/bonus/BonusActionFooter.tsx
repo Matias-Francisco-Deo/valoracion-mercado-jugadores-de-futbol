@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Gift, Loader2 } from 'lucide-react';
+import { Check, Gift, Loader2, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface BonusActionFooterProps {
@@ -7,6 +7,7 @@ interface BonusActionFooterProps {
   todayRewardAmount: number;
   isLoading: boolean;
   isClaiming: boolean;
+  canClaim?: boolean;
   onClaim: () => Promise<unknown>;
   onClose: () => void;
 }
@@ -16,9 +17,12 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
   todayRewardAmount,
   isLoading,
   isClaiming,
+  canClaim = true,
   onClaim,
   onClose,
 }) => {
+  const isButtonDisabled = isClaiming || isLoading || !canClaim;
+
   return (
     <div className="flex flex-col items-center gap-3 pt-3">
       {alreadyClaimed ? (
@@ -50,13 +54,22 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
           <Button
             type="button"
             onClick={() => void onClaim()}
-            disabled={isClaiming || isLoading}
-            className="w-full py-3 sm:py-3.5 text-sm sm:text-base font-bold bg-brand-orange hover:bg-[#e58600] text-white shadow-lg shadow-orange-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            disabled={isButtonDisabled}
+            className={`w-full py-3 sm:py-3.5 text-sm sm:text-base font-bold text-white shadow-lg active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+              canClaim
+                ? 'bg-brand-orange hover:bg-[#e58600] shadow-orange-500/20'
+                : 'bg-gray-400 hover:bg-gray-400 shadow-none'
+            }`}
           >
             {isClaiming ? (
               <>
                 <Loader2 size={18} className="animate-spin" />
                 Reclamando créditos...
+              </>
+            ) : !canClaim ? (
+              <>
+                <Lock size={18} />
+                Completá las misiones para reclamar +${todayRewardAmount}
               </>
             ) : (
               <>
@@ -66,7 +79,9 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
             )}
           </Button>
           <span className="text-[11px] text-gray-500">
-            La racha se reinicia si pasa más de 1 día calendario (UTC) sin reclamar.
+            {!canClaim
+              ? 'Debés cumplir las misiones requeridas para habilitar el reclamo.'
+              : 'La racha se reinicia si pasa más de 1 día calendario (UTC) sin reclamar.'}
           </span>
         </div>
       )}
