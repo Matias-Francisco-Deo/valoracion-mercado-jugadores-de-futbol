@@ -1,6 +1,5 @@
 package com.overcode.service.impl;
 
-import com.overcode.cache.event.RecotizacionFinalizadaEvent;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.model.cotizacion.registro.RegistroCotizacion;
@@ -11,7 +10,7 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +30,8 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     private final PlayerService playerService;
     private final OrdenDeCompraRepository ordenDeCompraRepository;
 
-    private final ApplicationEventPublisher eventPublisher;
 
-    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService,OrdenDeCompraRepository ordenDeCompraRepository, ApplicationEventPublisher eventPublisher) {
+    public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService,OrdenDeCompraRepository ordenDeCompraRepository) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
         this.configuracionMercadoService = configuracionMercadoService;
         this.configuracionMercadoRepository = configuracionMercadoRepository;
@@ -41,7 +39,6 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         this.playerRepository = playerRepository;
         this.playerService = playerService;
         this.ordenDeCompraRepository = ordenDeCompraRepository;
-        this.eventPublisher = eventPublisher;
     }
 
 
@@ -88,6 +85,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     }
 
     @Override
+    @CacheEvict(value = "ranking", allEntries = true)
     public void cotizarJugadores() {
         ConfiguracionMercado configuracionMercado = configuracionMercadoService.recuperar();
 
@@ -102,7 +100,6 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
 
         ordenDeCompraRepository.actualizarPreciosOrdenesAbiertas();
 
-        eventPublisher.publishEvent(new RecotizacionFinalizadaEvent());
     }
 
     private static void verificarFactorEscalaPositivo(Double factorEscala) {
