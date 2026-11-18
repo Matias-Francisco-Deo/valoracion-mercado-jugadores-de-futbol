@@ -21,7 +21,7 @@ Provide an administrative endpoint `GET /api/admin/metrics/sales` to retrieve th
 
 **Language/Version**: Java 21  
 **Primary Dependencies**: Spring Boot 3.x, Spring Data JPA, Spring Security, Hibernate, Lombok  
-**Storage**: PostgreSQL (Testcontainers PostgreSQL for tests)  
+**Storage**: PostgreSQL
 **Testing**: JUnit 5, Mockito, AssertJ, ArchUnit (`ArchitectureTest`), RestClient (@SpringBootTest)  
 **Target Platform**: Linux / Containerized JVM web service  
 **Project Type**: RESTful Web Application Backend  
