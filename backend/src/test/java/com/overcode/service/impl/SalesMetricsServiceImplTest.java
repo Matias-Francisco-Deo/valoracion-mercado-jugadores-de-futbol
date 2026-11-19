@@ -1,102 +1,139 @@
 package com.overcode.service.impl;
 
+import com.overcode.model.market.transaction.TransaccionFinanciera;
+import com.overcode.model.market.transaction.TransactionType;
 import com.overcode.model.metricas.MonthlySalesPetition;
+import com.overcode.model.player.Player;
+import com.overcode.model.user.User;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TransactionRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
+import com.overcode.service.interfaces.SalesMetricsService;
+import com.overcode.testUtils.TestService;
+import com.overcode.testUtils.TestUserUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class) // TODO NO MOCKEAR SERVICE AAAAAAA
+@SpringBootTest
 class SalesMetricsServiceImplTest {
 
-    @Mock
+    @Autowired
+    private SalesMetricsService salesMetricsService;
+
+    @Autowired
     private TransactionRepository transactionRepository;
 
-    private SalesMetricsServiceImpl salesMetricsService;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private TestService testService;
+
+    private User usuarioTest;
+    private Player jugadorTest;
 
     @BeforeEach
     void setUp() {
-        salesMetricsService = new SalesMetricsServiceImpl(transactionRepository);
+        testService.eliminarRegistros();
+        testService.eliminarUsuarios();
+        testService.eliminarJugadoresYEquipos();
+
+        usuarioTest = userRepository.guardar(TestUserUtil.getUsuarioDeNombre("VendedorServiceTest"));
+        Player player = new Player();
+        player.setName("JugadorServiceTest");
+        player.setCurrentPrice(100.0);
+        jugadorTest = playerRepository.guardar(player);
     }
 
-    private static MonthlySalesPetition crearPeticion( Integer year, Integer month) {
-        return new MonthlySalesPetition(year, month);
+    @AfterEach
+    void tearDown() {
+        testService.eliminarRegistros();
+        testService.eliminarUsuarios();
+        testService.eliminarJugadoresYEquipos();
     }
 
     @Test
-    void conAnioYMesValidos_calculaLimitesYConsultaRepositorio() {
-        ArgumentCaptor<LocalDateTime> inicioCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-        ArgumentCaptor<LocalDateTime> finCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-        when(transactionRepository.contarVentasEntre(any(), any())).thenReturn(10L);
+    void obtenerCantidadVentasMensuales_conVentasEnElMes_retornaCantidadCorrecta() {
+        guardarTransaccion(LocalDateTime.of(2026, 11, 5, 10, 0, 0), TransactionType.SELL, 1, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 15, 14, 30, 0), TransactionType.SELL, 2, 75.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 28, 20, 0, 0), TransactionType.SELL, 1, 100.0);
 
-        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(crearPeticion(2026, 11));
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
 
-        assertEquals(10L, totalVentas);
-        verify(transactionRepository).contarVentasEntre(inicioCaptor.capture(), finCaptor.capture());
-        assertEquals(LocalDateTime.of(2026, 11, 1, 0, 0, 0), inicioCaptor.getValue());
-        assertEquals(2026, finCaptor.getValue().getYear());
-        assertEquals(11, finCaptor.getValue().getMonthValue());
-        assertEquals(30, finCaptor.getValue().getDayOfMonth());
+        assertEquals(3L, totalVentas);
     }
-
-
-
-//    @Test
-//    void cuandoMesEsMenorAUno_lanzaValidationException() { // TODO este test sería del request en todo caso
-//        assertThrows(ValidationException.class, () ->
-//                salesMetricsService.obtenerCantidadVentasMensuales(crearPeticion(2026, -1))
-//        );
-//    }
-//
-//    @Test
-//    void cuandoMesEsMayorADoce_lanzaValidationException() {
-//        assertThrows(ValidationException.class, () ->
-//                salesMetricsService.obtenerCantidadVentasMensuales(crearPeticion(2026, 13))
-//        );
-//    }
-
-//    @Test
-//    void cuandoAnioEsMenorOIgualACero_lanzaValidationException() {
-//        assertThrows(ValidationException.class, () ->
-//                salesMetricsService.obtenerCantidadVentasMensuales(0)
-//        );
-//    }
-
-//    @Test
-//    void cuandoParametrosSonNulos_utilizaMesYAnioActuales() {
-//        ArgumentCaptor<LocalDateTime> inicioCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-//        ArgumentCaptor<LocalDateTime> finCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-//        when(transactionRepository.contarVentasEntre(any(), any())).thenReturn(5L);
-//
-//        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(null);
-//
-//        assertEquals(5L, totalVentas);
-//        verify(transactionRepository).contarVentasEntre(inicioCaptor.capture(), finCaptor.capture());
-//        LocalDate hoy = LocalDate.now();
-//        assertEquals(hoy.getYear(), inicioCaptor.getValue().getYear());
-//        assertEquals(hoy.getMonthValue(), inicioCaptor.getValue().getMonthValue());
-//        assertEquals(1, inicioCaptor.getValue().getDayOfMonth());
-//    }
 
     @Test
-    void enFebreroBisiesto_limiteFinEsVeintinueveDeFebrero() {
-        ArgumentCaptor<LocalDateTime> finCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-        when(transactionRepository.contarVentasEntre(any(), any())).thenReturn(2L);
+    void obtenerCantidadVentasMensuales_sinTransacciones_retornaCero() {
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
 
-        salesMetricsService.obtenerCantidadVentasMensuales(crearPeticion(2024, 2));
-
-        verify(transactionRepository).contarVentasEntre(any(), finCaptor.capture());
-        assertEquals(29, finCaptor.getValue().getDayOfMonth());
+        assertEquals(0L, totalVentas);
     }
 
+    @Test
+    void obtenerCantidadVentasMensuales_ignoraCompras() {
+        guardarTransaccion(LocalDateTime.of(2026, 11, 5, 10, 0, 0), TransactionType.SELL, 1, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 10, 11, 0, 0), TransactionType.BUY, 3, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 20, 18, 0, 0), TransactionType.BUY, 2, 80.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
+
+        assertEquals(1L, totalVentas);
+    }
+
+    @Test
+    void obtenerCantidadVentasMensuales_ignoraVentasDeOtrosMeses() {
+        // Venta en mes anterior (octubre)
+        guardarTransaccion(LocalDateTime.of(2026, 10, 31, 23, 59, 58), TransactionType.SELL, 1, 60.0);
+        // Ventas en mes consultado (noviembre)
+        guardarTransaccion(LocalDateTime.of(2026, 11, 2, 10, 0, 0), TransactionType.SELL, 1, 70.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 25, 16, 0, 0), TransactionType.SELL, 1, 80.0);
+        // Venta en mes posterior (diciembre)
+        guardarTransaccion(LocalDateTime.of(2026, 12, 1, 0, 0, 1), TransactionType.SELL, 1, 90.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
+
+        assertEquals(2L, totalVentas);
+    }
+
+    @Test
+    void obtenerCantidadVentasMensuales_incluyeTransaccionesEnLimitesExactosDelMes() {
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+
+        guardarTransaccion(petition.getMinTime(), TransactionType.SELL, 1, 50.0);
+        guardarTransaccion(petition.getMaxTime().withNano(0), TransactionType.SELL, 1, 50.0);
+
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
+
+        assertEquals(2L, totalVentas);
+    }
+
+    @Test
+    void obtenerCantidadVentasMensuales_enFebreroBisiesto_cuentaHasta29DeFebrero() {
+        guardarTransaccion(LocalDateTime.of(2024, 2, 29, 12, 0, 0), TransactionType.SELL, 1, 100.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2024, 2);
+        Long totalVentas = salesMetricsService.obtenerCantidadVentasMensuales(petition);
+
+        assertEquals(1L, totalVentas);
+    }
+
+    private void guardarTransaccion(LocalDateTime fecha, TransactionType tipo, Integer cantidad, Double precioUnitario) {
+        TransaccionFinanciera tx = new TransaccionFinanciera(null, usuarioTest, jugadorTest, fecha, tipo, cantidad, precioUnitario);
+        transactionRepository.guardar(tx);
+    }
 }
