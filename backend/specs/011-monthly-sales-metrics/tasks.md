@@ -21,7 +21,7 @@ description: "Task list for Monthly Sales Metrics feature implementation"
 
 **Purpose**: Initialize directory structure for new DTO package
 
-- [ ] T001 Create metrics DTO package directory in src/main/java/com/overcode/controller/dto/metrics
+- [X] T001 Create metrics DTO package directory in src/main/java/com/overcode/controller/dto/metrics
 
 ---
 
@@ -31,9 +31,9 @@ description: "Task list for Monthly Sales Metrics feature implementation"
 
 **⚠️ CRITICAL**: Must be completed and verified before starting User Story endpoints
 
-- [ ] T002 Add countCompletedSalesBetween query method with @Query in src/main/java/com/overcode/persistence/repository/dao/jpa/TransactionDAOJPA.java
-- [ ] T003 Expose contarVentasEntre in src/main/java/com/overcode/persistence/repository/interfaces/TransactionRepository.java and implement in src/main/java/com/overcode/persistence/repository/impl/TransactionRepositoryImpl.java
-- [ ] T004 Add repository integration tests with real PostgreSQL Testcontainers for contarVentasEntre in src/test/java/com/overcode/persistence/repository/TransactionRepositoryTest.java
+- [X] T002 Add countCompletedSalesBetween query method with @Query in src/main/java/com/overcode/persistence/repository/dao/jpa/TransactionDAOJPA.java
+- [X] T003 Expose contarVentasEntre in src/main/java/com/overcode/persistence/repository/interfaces/TransactionRepository.java and implement in src/main/java/com/overcode/persistence/repository/impl/TransactionRepositoryImpl.java
+- [X] T004 Add repository integration tests with real PostgreSQL Testcontainers for contarVentasEntre in src/test/java/com/overcode/persistence/repository/TransactionRepositoryTest.java
 
 **Checkpoint**: Repository layer tested with real PostgreSQL data — ready for service and controller implementation.
 
@@ -47,12 +47,12 @@ description: "Task list for Monthly Sales Metrics feature implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T005 [P] [US1] Create MonthlySalesResponseDTO record in src/main/java/com/overcode/controller/dto/metrics/MonthlySalesResponseDTO.java
-- [ ] T006 [P] [US1] Create SalesMetricsService interface in src/main/java/com/overcode/service/interfaces/SalesMetricsService.java
-- [ ] T007 [US1] Implement SalesMetricsServiceImpl with month validation and boundary calculation in src/main/java/com/overcode/service/impl/SalesMetricsServiceImpl.java
-- [ ] T008 [P] [US1] Create unit tests for SalesMetricsServiceImpl in src/test/java/com/overcode/service/impl/SalesMetricsServiceImplTest.java
-- [ ] T009 [US1] Implement SalesMetricsController mapped to /api/admin/metrics/sales in src/main/java/com/overcode/controller/SalesMetricsController.java
-- [ ] T010 [US1] Create E2E tests for monthly sales metrics with explicit parameters and API key security in src/test/java/com/overcode/e2e/SalesMetricsE2eTest.java
+- [X] T005 [P] [US1] Create MonthlySalesResponseDTO record in src/main/java/com/overcode/controller/dto/metrics/MonthlySalesResponseDTO.java
+- [X] T006 [P] [US1] Create SalesMetricsService interface in src/main/java/com/overcode/service/interfaces/SalesMetricsService.java
+- [X] T007 [US1] Implement SalesMetricsServiceImpl with month validation and boundary calculation in src/main/java/com/overcode/service/impl/SalesMetricsServiceImpl.java
+- [X] T008 [P] [US1] Create unit tests for SalesMetricsServiceImpl in src/test/java/com/overcode/service/impl/SalesMetricsServiceImplTest.java
+- [X] T009 [US1] Implement SalesMetricsController mapped to /api/admin/metrics/sales in src/main/java/com/overcode/controller/SalesMetricsController.java
+- [X] T010 [US1] Create E2E tests for monthly sales metrics with explicit parameters and API key security in src/test/java/com/overcode/e2e/SalesMetricsE2eTest.java
 
 **Checkpoint**: User Story 1 MVP fully functional and independently testable end-to-end.
 
@@ -66,9 +66,9 @@ description: "Task list for Monthly Sales Metrics feature implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Update SalesMetricsServiceImpl to default null year and month parameters to current calendar month in src/main/java/com/overcode/service/impl/SalesMetricsServiceImpl.java
-- [ ] T012 [P] [US2] Add unit tests for current month defaulting in src/test/java/com/overcode/service/impl/SalesMetricsServiceImplTest.java
-- [ ] T013 [US2] Add E2E tests for omitting year and month parameters in src/test/java/com/overcode/e2e/SalesMetricsE2eTest.java
+- [X] T011 [US2] Update SalesMetricsServiceImpl to default null year and month parameters to current calendar month in src/main/java/com/overcode/service/impl/SalesMetricsServiceImpl.java
+- [X] T012 [P] [US2] Add unit tests for current month defaulting in src/test/java/com/overcode/service/impl/SalesMetricsServiceImplTest.java
+- [X] T013 [US2] Add E2E tests for omitting year and month parameters in src/test/java/com/overcode/e2e/SalesMetricsE2eTest.java
 
 **Checkpoint**: User Stories 1 and 2 complete, working seamlessly together and testable independently.
 
@@ -78,9 +78,9 @@ description: "Task list for Monthly Sales Metrics feature implementation"
 
 **Purpose**: Quality gates, architecture validation, and full regression verification
 
-- [ ] T014 [P] Run and verify architecture compliance tests in src/test/java/com/overcode/architecture/ArchitectureTest.java
-- [ ] T015 Run full test suite and build verification via ./mvnw clean test
-- [ ] T016 Execute manual quickstart verification scenarios per specs/011-monthly-sales-metrics/quickstart.md
+- [X] T014 [P] Run and verify architecture compliance tests in src/test/java/com/overcode/architecture/ArchitectureTest.java
+- [X] T015 Run full test suite and build verification via ./mvnw clean test
+- [X] T016 Execute manual quickstart verification scenarios per specs/011-monthly-sales-metrics/quickstart.md
 
 ---
 

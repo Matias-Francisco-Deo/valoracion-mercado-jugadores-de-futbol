@@ -8,12 +8,25 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransactionDAOJPA extends JpaRepository<TransactionJPADTO, Long> {
     Page<TransactionJPADTO> findAllByOwner_IdOrderByDateDesc(Long userId, Pageable pageable);
 
     List<TransactionJPADTO> findAllByOwner_IdOrderByDateAscIdAsc(Long userId);
+
+    @Query(value = """
+    SELECT COUNT(*)
+    FROM transactions t
+    WHERE t.type = 'SELL'
+      AND t.date >= :startDate
+      AND t.date <= :endDate
+    """, nativeQuery = true)
+    Long countCompletedSalesBetween(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 
     @Query(value = """
     SELECT *
