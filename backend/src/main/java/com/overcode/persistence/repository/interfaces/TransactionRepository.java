@@ -5,6 +5,7 @@ import com.overcode.model.position.PlayerPositionData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public interface TransactionRepository {
 
     List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras);
 
-    List<TransaccionFinanciera> recuperarTodasPorUser(Long userId);
-
     List<PlayerPositionData> findPlayerPositionsData(Long userId);
+
+    Long contarVentasEntre(LocalDateTime inicio, LocalDateTime fin);
 }

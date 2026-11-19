@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +39,6 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public List<TransaccionFinanciera> recuperarTodasPorUser(Long userId) {
-        return transactionDAOJPA.findAllByOwner_IdOrderByDateAscIdAsc(userId).stream().map(TransactionJPADTO::aModelo).toList();
-    }
-
-    @Override
     public List<TransaccionFinanciera> guardarTodos(List<TransaccionFinanciera> transaccionFinancieras) {
         List<TransactionJPADTO> transactionDTOS = transactionDAOJPA.saveAll(transaccionFinancieras.stream().map(TransactionJPADTO::desdeModelo).toList());
         return transactionDTOS.stream().map(TransactionJPADTO::aModelo).toList();
@@ -53,4 +49,8 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         return transactionDAOJPA.findPlayerPositions(userId);
     }
 
+    @Override
+    public Long contarVentasEntre(LocalDateTime inicio, LocalDateTime fin) {
+        return transactionDAOJPA.countCompletedSalesBetween(inicio, fin);
+    }
 }
