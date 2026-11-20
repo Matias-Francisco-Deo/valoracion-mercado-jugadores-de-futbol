@@ -15,7 +15,7 @@ export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isBonusModalOpen, setIsBonusModalOpen] = useState(false);
-  const { status, isLoading: isBonusLoading, isClaiming, claim, isAvailable } = useDailyBonus();
+  const { status, isLoading: isBonusLoading, isClaiming, claim, isAvailable, refetch } = useDailyBonus();
 
   useEffect(() => {
     if (isAuthenticated && status && !status.alreadyClaimedToday && isAvailable) {
@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
           {isAuthenticated && user ? (
             <div className="flex items-center gap-3 sm:gap-4">
 
-              <LoginStreak  status={status} onClick={() => setIsBonusModalOpen(true)} className="hidden sm:flex"/>
+              <LoginStreak status={status} onClick={() => { void refetch(); setIsBonusModalOpen(true); }} className="hidden sm:flex"/>
 
               <CreditsSection  user={user} onDepositClick={() => setIsDepositModalOpen(true)} className="hidden sm:flex" data-testid="user-credits-navbar"/>
 

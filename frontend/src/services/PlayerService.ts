@@ -45,3 +45,21 @@ export async function getFiltredPlayers(filter:PlayerFilter,page=0,size=20) {
 export async function getPlayerQuotes(playerId: string): Promise<RegistroCotizacion[]> {
     return futbolApi.get<RegistroCotizacion[]>(`/players/${playerId}/quotes`);
 }
+
+let cachedPlayers: Player[] | null = null;
+
+export async function getPlayerByName(name: string): Promise<Player | null> {
+    const cleanName = name.trim().toLowerCase();
+    if (cachedPlayers) {
+        const found = cachedPlayers.find((p) => p.name.trim().toLowerCase() === cleanName);
+        if (found) return found;
+    }
+
+    try {
+        const response = await futbolApi.get<PlayerPageResponse>(`/players?size=100`);
+        cachedPlayers = response.content ?? [];
+        return cachedPlayers.find((p) => p.name.trim().toLowerCase() === cleanName) ?? null;
+    } catch {
+        return null;
+    }
+}

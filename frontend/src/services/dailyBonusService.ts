@@ -11,3 +11,7 @@ export async function getDailyBonusStatus(): Promise<DailyBonusStatus> {
 export async function claimDailyBonus(): Promise<ClaimBonusResponse> {
   return futbolApi.post<ClaimBonusResponse>('/api/daily-bonus/claim', {});
 }
+
+export async function recordPlayerVisit(playerId: number | string): Promise<void> {
+  return futbolApi.post<void>(`/api/daily-bonus/visit/${playerId}`, {});
+}
