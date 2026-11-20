@@ -1,5 +1,7 @@
 package com.overcode.model.metricas;
 
+import com.overcode.model.Reloj;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -7,6 +9,10 @@ import java.time.YearMonth;
 public class MonthlySalesPetition {
 
     private final YearMonth yearMonth;
+
+    public MonthlySalesPetition() {
+        this.yearMonth = Reloj.getYearMonth();
+    }
 
     public MonthlySalesPetition(Integer year, Integer month) {
 
