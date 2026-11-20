@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Target } from 'lucide-react';
 import type { DailyBonusStatus } from '@/types/bonus';
 import { calculateBonusProgress } from '@/utils/bonusRules';
 import { BonusStreakHeader } from './BonusStreakHeader';
 import { BonusDayCard } from './BonusDayCard';
 import { BonusActionFooter } from './BonusActionFooter';
+import { MissionTreeNode } from './MissionTreeNode';
 
 export interface DailyBonusModalProps {
   isOpen: boolean;
@@ -74,12 +75,33 @@ export const DailyBonusModal: React.FC<DailyBonusModalProps> = ({
           ))}
         </div>
 
+        {/* Daily Missions Tree Section */}
+        {status?.misiones && (
+          <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Target size={16} className="text-orange-600" />
+                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-800">
+                  Misiones de Hoy
+                </h3>
+              </div>
+              <span className="text-[11px] font-medium text-gray-500">
+                {status.puedeReclamar ? '¡Requisitos listos para reclamar!' : 'Requeridas para cobrar'}
+              </span>
+            </div>
+            <div>
+              <MissionTreeNode mission={status.misiones} onClose={onClose} />
+            </div>
+          </div>
+        )}
+
         {/* Footer / Call To Action */}
         <BonusActionFooter
           alreadyClaimed={alreadyClaimed}
           todayRewardAmount={todayRewardAmount}
           isLoading={isLoading}
           isClaiming={isClaiming}
+          canClaim={status?.puedeReclamar ?? true}
           onClaim={onClaim}
           onClose={onClose}
         />

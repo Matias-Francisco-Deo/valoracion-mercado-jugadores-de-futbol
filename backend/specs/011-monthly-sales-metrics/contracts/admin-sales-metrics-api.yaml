@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info:
+  title: Admin Sales Metrics API
+  description: Administrative endpoint for querying monthly sales metrics.
+  version: 1.0.0
+paths:
+  /api/admin/metrics/sales:
+    get:
+      summary: Retrieve monthly executed sales count
+      description: Returns the total count of completed peer-to-peer sales transactions executed within the specified calendar month and year. Defaults to current month-to-date if parameters are omitted.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: year
+          in: query
+          required: false
+          description: Calendar year (defaults to current year)
+          schema:
+            type: integer
+            minimum: 1
+            example: 2026
+        - name: month
+          in: query
+          required: false
+          description: Calendar month from 1 to 12 (defaults to current month)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+            example: 11
+      responses:
+        '200':
+          description: Monthly sales count successfully calculated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlySalesResponse'
+        '400':
+          description: Invalid month or year query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - missing or invalid X-API-KEY header
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    MonthlySalesResponse:
+      type: object
+      required:
+        - year
+        - month
+        - totalSales
+      properties:
+        year:
+          type: integer
+          example: 2026
+        month:
+          type: integer
+          example: 11
+        totalSales:
+          type: integer
+          format: int64
+          example: 42
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid month parameter: must be between 1 and 12"

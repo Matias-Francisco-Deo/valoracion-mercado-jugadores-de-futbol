@@ -51,6 +51,23 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
+    public SecurityFilterChain actuatorFilterChain(HttpSecurity http){
+        http.securityMatcher("/actuator/**")
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> {})
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(new ApiKeyAuthFilter(configuredApiKey), UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(authorize -> authorize
+                .anyRequest().authenticated()
+            );
+
+        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(3)
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> {})

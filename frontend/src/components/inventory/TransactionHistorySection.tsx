@@ -3,6 +3,7 @@ import type { ComponentProps } from "react";
 import { Pagination } from "../common/Pagination";
 import type { HttpError } from "@/lib/http-error";
 import { formatTransactionDate } from "@/lib/utils";
+import { formatPrice } from "@/lib/playerQuoteUtils";
 
 const transactionTypeConfig: Record<Transaction["type"],{ label: string; className: string }> = {
     BUY: {
@@ -58,8 +59,8 @@ export const TransactionHistorySection = ({ transactionsPage,onPageChange,transa
                                             </span>
                                         </td>
                                         <td>{transaction.quantity}</td>
-                                        <td>${transaction.unitPrice}</td>
-                                        <td>${transaction.totalPrice}</td>
+                                        <td>{formatPrice(transaction.unitPrice)}</td>
+                                        <td>{formatPrice(transaction.totalPrice)}</td>
                                     </tr>
                                 ))
                             ) : (

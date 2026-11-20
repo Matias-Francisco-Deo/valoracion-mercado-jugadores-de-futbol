@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
@@ -43,4 +45,7 @@ public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
             "from player p order by p.currentPrice desc, p.id asc"
     )
     Page<PlayerJPADTO> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable);
+
+    @Query(value = "SELECT * FROM players ORDER BY RANDOM() LIMIT 3", nativeQuery = true)
+    List<PlayerJPADTO> recuperar3jugadoresAlAzar();
 }

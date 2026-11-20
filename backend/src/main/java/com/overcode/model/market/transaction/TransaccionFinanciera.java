@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-import static com.overcode.config.Reloj.getLocalDateTime;
+import static com.overcode.model.Reloj.getLocalDateTime;
 
 @Setter
 @Getter

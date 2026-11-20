@@ -1,7 +1,7 @@
 package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.controller.dto.portfolio.PositionResponseDTO;
 import com.overcode.controller.dto.token.SummaryTokenPageResponseDTO;
 import com.overcode.controller.dto.transaction.TransactionPageResponseDTO;
@@ -30,9 +30,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.overcode.testUtils.TestUserUtil.getUsuarioDeNombre;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -71,14 +71,14 @@ import static org.junit.jupiter.api.Assertions.*;
         this.restClient = RestClient.builder().baseUrl("http://localhost:" + port).build();
     }
 
-    private AuthResponse registerUser(String username, String email, String password) {
-        var req = new RegisterRequest(username, email, password);
-        ResponseEntity<AuthResponse> response = restClient.post()
+    private AuthResponseDTO registerUser(String username, String email, String password) {
+        var req = new RegisterRequestDTO(username, email, password);
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
 
         return response.getBody();
     }
@@ -99,7 +99,10 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     private void registrarTransaccion(Long userId, Player player, TransactionType type, int quantity) {
-        User user = new User(userId, DEFAULT_USERNAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, 0d, new ArrayList<>());
+        User user = getUsuarioDeNombre(DEFAULT_USERNAME);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setId(userId);
         TransaccionFinanciera tx = new TransaccionFinanciera(user, player, type, quantity);
         transactionRepository.guardar(tx);
     }
@@ -441,7 +444,7 @@ import static org.junit.jupiter.api.Assertions.*;
                 .toBodilessEntity();
     }
 
-    private @NonNull ResponseEntity<Void> getDeUserInexistente(AuthResponse auth, String endpoint) {
+    private @NonNull ResponseEntity<Void> getDeUserInexistente(AuthResponseDTO auth, String endpoint) {
         return restClient.get()
                 .uri("/users/" + NON_EXISTENT_ID + endpoint)
                 .header("Authorization", "Bearer " + auth.token())

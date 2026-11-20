@@ -17,11 +17,6 @@ const PERIODS: { label: string; value: Period }[] = [
     { label: "Todo", value: "all" },
 ];
 
-const currency = new Intl.NumberFormat("es-AR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
-
 export function PlayerQuoteChart({quotes,loading = false,}: Props) {
     const [period, setPeriod] = useState<Period>("30d");
 
@@ -119,7 +114,7 @@ export function PlayerQuoteChart({quotes,loading = false,}: Props) {
 
                                 <YAxis domain={["auto", "auto"]}
                                     tickFormatter={(value: number) =>
-                                        currency.format(value)
+                                        formatPrice(value)
                                     }
                                     tick={{fontSize: 10,fill: "#6b7280"}} tickLine={false} axisLine={false} width={48} tickMargin={4}/>
 
