@@ -10,12 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
+public class BuyOrVisitMission extends OrDailyBonusMission {
 
     private BuyDailyBonusMission buyMission;
     private Visit3PlayersDailyBonusMission visit3PlayersMission;
 
-    public BuyOrVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
+    public BuyOrVisitMission(Long id, String nombre, boolean completed, List<DailyBonusMission> submissions) {
         super(id, nombre, completed, submissions);
     }
 
@@ -23,11 +23,6 @@ public class BuyOrVisitMission extends OrDailyBonusMission<Void> {
         super("Visitar jugador o comprar token", List.of(buyMission, visit3PlayersMission));
         this.buyMission = buyMission;
         this.visit3PlayersMission = visit3PlayersMission;
-    }
-
-    @Override
-    public void complete(Void checkerObject) {
-        setCompleted(isCompleted());
     }
 
     public void completeBuy() {

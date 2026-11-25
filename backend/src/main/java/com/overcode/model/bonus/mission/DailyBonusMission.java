@@ -14,12 +14,12 @@ import java.util.function.Function;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class DailyBonusMission<T> {
+public abstract class DailyBonusMission {
 
     private Long id;
     private String nombre;
     private Boolean completed = false;
-    private List<DailyBonusMission<?>> submissions = Collections.emptyList();
+    private List<DailyBonusMission> submissions = Collections.emptyList();
     // precondición: nunca debería haber una misión que se llame a sí misma en las submisiones
 
     protected DailyBonusMission(Long id, String nombre, Boolean completed) {
@@ -38,20 +38,18 @@ public abstract class DailyBonusMission<T> {
 
     public boolean isCompleted() {return this.completed;}
 
-    public abstract void complete(T checkerObject);
-
     public void setComplete() {
         setCompleted(true);
     }
 
-    public abstract DailyBonusMission<T> clonar();
+    public abstract DailyBonusMission clonar();
 
-    public <R> R reduce(R initialValue, Function<DailyBonusMission<?>, R> recursiveFunc, BinaryOperator<R> accFunc) {
-        List<DailyBonusMission<?>> misionesARecorrer = new ArrayList<>();
+    public <R> R reduce(R initialValue, Function<DailyBonusMission, R> recursiveFunc, BinaryOperator<R> accFunc) {
+        List<DailyBonusMission> misionesARecorrer = new ArrayList<>();
 
         misionesARecorrer.add(this);
 
-        DailyBonusMission<?> misionActual;
+        DailyBonusMission misionActual;
 
         R acc = initialValue; // caso base
         while(!misionesARecorrer.isEmpty()) {
@@ -66,7 +64,7 @@ public abstract class DailyBonusMission<T> {
         return acc;
     }
 
-    public void forEach(Consumer<DailyBonusMission<?>> action) {
+    public void forEach(Consumer<DailyBonusMission> action) {
         this.reduce(null, mission -> {action.accept(mission); return null;}, (n1, n2) -> n1);
     }
 

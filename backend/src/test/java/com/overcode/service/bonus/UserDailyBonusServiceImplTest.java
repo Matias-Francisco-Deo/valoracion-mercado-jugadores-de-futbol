@@ -4,6 +4,7 @@ import com.overcode.model.bonus.BonusClaim;
 import com.overcode.model.bonus.DailyBonus;
 import com.overcode.model.bonus.EstadoBonus;
 import com.overcode.model.bonus.PeticionVisitaJugador;
+import com.overcode.model.bonus.mission.DailyBonusCompletableMission;
 import com.overcode.model.exception.bonus.BonusYaReclamadoHoyException;
 import com.overcode.model.exception.bonus.mission.RequisitosMisionesNoCumplidosException;
 import com.overcode.model.player.Player;
@@ -76,7 +77,8 @@ class UserDailyBonusServiceImplTest {
         User userRecuperado = userService.recuperar(user.getId());
         userRecuperado.getUserDailyBonus().actualizarMision(dailyBonus);
 
-        userRecuperado.getUserDailyBonus().getActiveMission().complete(null); // completa la misión
+        DailyBonusCompletableMission<?> mission = (DailyBonusCompletableMission<?>) userRecuperado.getUserDailyBonus().getActiveMission();
+        mission.complete(null); // completa la misión
 
         userDailyBonusService.guardar(userRecuperado.getUserDailyBonus());
 

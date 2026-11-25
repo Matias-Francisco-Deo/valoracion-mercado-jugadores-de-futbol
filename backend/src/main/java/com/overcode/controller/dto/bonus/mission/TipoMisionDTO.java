@@ -11,12 +11,12 @@ public enum TipoMisionDTO {
     COMPOSITE,
     OBJECTIVE;
 
-    public static TipoMisionDTO discriminarTipoMision(DailyBonusMission<?> dailyBonusMission) {
+    public static TipoMisionDTO discriminarTipoMision(DailyBonusMission dailyBonusMission) {
         return switch (dailyBonusMission) {
-            case AndDailyBonusMission<?> ignored -> AND;
-            case OrDailyBonusMission<?> ignored -> OR;
-            case CompositeDailyBonusMission<?> ignored -> COMPOSITE;
-            case DailyBonusMission<?> ignored -> OBJECTIVE;
+            case AndDailyBonusMission ignored -> AND;
+            case OrDailyBonusMission ignored -> OR;
+            case CompositeDailyBonusMission ignored -> COMPOSITE;
+            case DailyBonusMission ignored -> OBJECTIVE;
         };
     }
 

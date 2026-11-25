@@ -59,15 +59,15 @@ class VisitPlayerDailyBonusMissionTest {
         assertNull(clonada.getId());
         assertNotEquals(clonada, mision.getSubmissions().getFirst());
 
-        DailyBonusMission<?> firstVisit = clonada.getSubmissions().getFirst();
+        DailyBonusMission firstVisit = clonada.getSubmissions().getFirst();
         assertNull(firstVisit.getId());
         assertNotEquals(firstVisit, mision.getSubmissions().get(1));
 
-        DailyBonusMission<?> secondVisit = clonada.getSubmissions().get(1);
+        DailyBonusMission secondVisit = clonada.getSubmissions().get(1);
         assertNull(secondVisit.getId());
         assertNotEquals(secondVisit, mision);
 
-        DailyBonusMission<?> thirdVisit = clonada.getSubmissions().get(2);
+        DailyBonusMission thirdVisit = clonada.getSubmissions().get(2);
         assertNull(thirdVisit.getId());
         assertNotEquals(thirdVisit, mision.getSubmissions().get(2));
 

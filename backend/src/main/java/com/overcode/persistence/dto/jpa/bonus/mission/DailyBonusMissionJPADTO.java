@@ -31,10 +31,10 @@ public abstract class DailyBonusMissionJPADTO {
     @JoinColumn()
     private List<DailyBonusMissionJPADTO> submissions = new ArrayList<>();
 
-    public abstract DailyBonusMission<?> instanciarMision();
+    public abstract DailyBonusMission instanciarMision();
 
-    public DailyBonusMission<?> aModelo() {
-        DailyBonusMission<?> mission = instanciarMision();
+    public DailyBonusMission aModelo() {
+        DailyBonusMission mission = instanciarMision();
         mission.setId(this.id);
         mission.setCompleted(completed);
         mission.setNombre(nombre);
@@ -43,21 +43,21 @@ public abstract class DailyBonusMissionJPADTO {
         return mission;
     }
 
-    public void setSubmissionsOnMission(DailyBonusMission<?> mission) {
-        List<? extends DailyBonusMission<?>> list = submissions.stream().map(DailyBonusMissionJPADTO::aModelo).toList();
+    public void setSubmissionsOnMission(DailyBonusMission mission) {
+        List<DailyBonusMission> list = submissions.stream().map(DailyBonusMissionJPADTO::aModelo).toList();
         mission.setSubmissions(new ArrayList<>(list));
     }
 
-    public void aModeloHook(DailyBonusMission<?> mission) {}
+    public void aModeloHook(DailyBonusMission mission) {}
 
-    public void setDtoSubmissions(DailyBonusMission<?> mision) {
+    public void setDtoSubmissions(DailyBonusMission mision) {
         // esta lógica la debe manejar cada uno
 
         this.setSubmissions(mision.getSubmissions().stream().map(DailyBonusMissionJPADTO::desdeModelo).toList());
         // ojo, nunca debería haber una misión que se llame a sí misma
     }
 
-    public static DailyBonusMissionJPADTO desdeModelo(DailyBonusMission<?> mision) {
+    public static DailyBonusMissionJPADTO desdeModelo(DailyBonusMission mision) {
         DailyBonusMissionJPADTO dto = TipoDailyBonusMission.getValueOf(mision);
         dto.setId(mision.getId());
         dto.setCompleted(mision.getCompleted());

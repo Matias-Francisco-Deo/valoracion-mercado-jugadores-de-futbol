@@ -97,7 +97,7 @@ class DailyBonusServiceImplTest {
 
         DailyBonus dailyBonus = dailyBonusService.recuperarSeleccionado();
 
-        DailyBonusMission<?> newMission = dailyBonusService.seleccionarNuevaMision();
+        DailyBonusMission newMission = dailyBonusService.seleccionarNuevaMision();
 
         DailyBonus dailyBonusConMisionNueva = dailyBonusService.recuperarSeleccionado();
 

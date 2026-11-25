@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @Entity(name = "buy_mission")
 public class BuyMissionJPADTO extends DailyBonusMissionJPADTO {
     @Override
-    public DailyBonusMission<?> instanciarMision() {
+    public DailyBonusMission instanciarMision() {
         return new BuyDailyBonusMission();
     }
 

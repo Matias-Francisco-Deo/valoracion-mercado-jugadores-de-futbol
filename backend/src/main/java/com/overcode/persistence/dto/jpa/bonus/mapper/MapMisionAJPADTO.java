@@ -5,18 +5,18 @@ import com.overcode.persistence.dto.jpa.bonus.mission.DailyBonusMissionJPADTO;
 import org.jspecify.annotations.NonNull;
 
 
-public abstract class MapMisionAJPADTO<D extends DailyBonusMissionJPADTO, M extends DailyBonusMission<?>> {
+public abstract class MapMisionAJPADTO<D extends DailyBonusMissionJPADTO, M extends DailyBonusMission> {
     private final Class<M> misionClase;
 
     protected MapMisionAJPADTO(Class<M> misionClase) {
         this.misionClase = misionClase;
     }
 
-    public boolean esAplicable(DailyBonusMission<?> mision) {
+    public boolean esAplicable(DailyBonusMission mision) {
         return this.misionClase == mision.getClass();
     }
 
-    public D mappear(DailyBonusMission<?> mision) {
+    public D mappear(DailyBonusMission mision) {
         return desdeModelo(misionClase.cast(mision));
     }
 

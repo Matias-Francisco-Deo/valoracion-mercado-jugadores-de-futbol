@@ -1,6 +1,6 @@
 package com.overcode.testUtils.bonus.mission;
 
-import com.overcode.model.bonus.mission.DailyBonusMission;
+import com.overcode.model.bonus.mission.DailyBonusCompletableMission;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TestDailyBonusMission extends DailyBonusMission<String> {
+public class TestDailyBonusMission extends DailyBonusCompletableMission<String> {
 
     public TestDailyBonusMission(String nombre, boolean completed) {
         super(null, nombre, completed);

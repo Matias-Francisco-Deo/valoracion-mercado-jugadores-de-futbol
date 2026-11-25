@@ -10,16 +10,16 @@ import java.util.Optional;
 
 public enum TipoDailyBonusMission {;
 
-    private static final List<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission<?>>> maps = new ArrayList<>(List.of(
+    private static final List<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission>> maps = new ArrayList<>(List.of(
             new MapBuyMissionAJPADTO(),
             new MapVisitPlayerMissionAJPADTO(),
             new MapVisit3PlayersMissionAJPADTO(),
             new MapBuyOrVisitMissionAJPADTO()
     ));
 
-    public static DailyBonusMissionJPADTO getValueOf(DailyBonusMission<?> mision) {
+    public static DailyBonusMissionJPADTO getValueOf(DailyBonusMission mision) {
 
-        Optional<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission<?>>>
+        Optional<MapMisionAJPADTO<? extends DailyBonusMissionJPADTO, ? extends DailyBonusMission>>
                 mapMision = maps.stream().filter(
                 map -> map.esAplicable(mision)
         ).findFirst();

@@ -26,11 +26,11 @@ public class BuyOrVisitMissionJPADTO extends DailyBonusMissionJPADTO {
     private Visit3PlayersMissionJPADTO visit3PlayersMission;
 
     @Override
-    public DailyBonusMission<?> instanciarMision() {
+    public DailyBonusMission instanciarMision() {
         BuyOrVisitMission buyOrVisitMission = new BuyOrVisitMission();
 
-        DailyBonusMission<?> modeloBuyMission = buyMission.aModelo();
-        DailyBonusMission<?> modeloVisitMission = visit3PlayersMission.aModelo();
+        DailyBonusMission modeloBuyMission = buyMission.aModelo();
+        DailyBonusMission modeloVisitMission = visit3PlayersMission.aModelo();
 
         buyOrVisitMission.setBuyMission((BuyDailyBonusMission) modeloBuyMission);
         buyOrVisitMission.setVisit3PlayersMission((Visit3PlayersDailyBonusMission) modeloVisitMission);
@@ -39,12 +39,12 @@ public class BuyOrVisitMissionJPADTO extends DailyBonusMissionJPADTO {
     }
 
     @Override
-    public void setSubmissionsOnMission(DailyBonusMission<?> mission) {
+    public void setSubmissionsOnMission(DailyBonusMission mission) {
         // se setean manualmente en este caso
     }
 
     @Override
-    public void setDtoSubmissions(DailyBonusMission<?> mision) {
+    public void setDtoSubmissions(DailyBonusMission mision) {
         // se setean manualmente en este caso
     }
 }

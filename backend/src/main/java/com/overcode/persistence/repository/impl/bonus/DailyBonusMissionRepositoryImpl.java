@@ -18,13 +18,13 @@ public class DailyBonusMissionRepositoryImpl implements DailyBonusMissionReposit
     }
 
     @Override
-    public DailyBonusMission<?> guardar(DailyBonusMission<?> dailyBonusMission) {
+    public DailyBonusMission guardar(DailyBonusMission dailyBonusMission) {
         DailyBonusMissionJPADTO dto = DailyBonusMissionJPADTO.desdeModelo(dailyBonusMission);
         return dailyBonusMissionDAOJPA.save(dto).aModelo();
     }
 
     @Override
-    public Optional<DailyBonusMission<?>> recuperarPorId(Long id) {
+    public Optional<DailyBonusMission> recuperarPorId(Long id) {
         return dailyBonusMissionDAOJPA.findById(id).map(DailyBonusMissionJPADTO::aModelo);
     }
 

@@ -7,7 +7,7 @@ public interface DailyBonusService {
 
     DailyBonus recuperarSeleccionado();
 
-    DailyBonusMission<?> seleccionarNuevaMision();
+    DailyBonusMission seleccionarNuevaMision();
 
-    DailyBonusMission<?> crearNuevaMision();
+    DailyBonusMission crearNuevaMision();
 }
