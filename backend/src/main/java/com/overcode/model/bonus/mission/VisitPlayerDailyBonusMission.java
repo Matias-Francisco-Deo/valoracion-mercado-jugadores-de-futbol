@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class VisitPlayerDailyBonusMission extends DailyBonusMission<Player> {
+public class VisitPlayerDailyBonusMission extends DailyBonusCompletableMission<Player> {
     private Player targetPlayer;
 
     public VisitPlayerDailyBonusMission(Long id, String nombre, boolean completed, Player targetPlayer) {

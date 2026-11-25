@@ -10,17 +10,17 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class AndDailyBonusMission<T> extends CompositeDailyBonusMission<T> {
+public abstract class AndDailyBonusMission extends CompositeDailyBonusMission {
 
     protected AndDailyBonusMission(String nombre) {
         super(null, nombre, false, new ArrayList<>());
     }
 
-    protected AndDailyBonusMission(String nombre, List<DailyBonusMission<?>> submissions) {
+    protected AndDailyBonusMission(String nombre, List<DailyBonusMission> submissions) {
         super(null, nombre, false, submissions);
     }
 
-    protected AndDailyBonusMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
+    protected AndDailyBonusMission(Long id, String nombre, boolean completed, List<DailyBonusMission> submissions) {
         super(id, nombre, completed, submissions);
     }
 

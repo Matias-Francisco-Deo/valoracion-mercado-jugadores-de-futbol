@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 public class TestMissionJPADTO extends DailyBonusMissionJPADTO {
 
     @Override
-    public DailyBonusMission<?> instanciarMision() {
+    public DailyBonusMission instanciarMision() {
         return new TestDailyBonusMission();
     }
 }

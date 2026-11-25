@@ -32,9 +32,9 @@ class DailyBonusMissionTest {
 
     @Test
     void reduceCuentaLasHojasApropiadamente() {
-        DailyBonusMission<?> mission1 = new TestDailyBonusMission();
-        DailyBonusMission<?> mission2 = new TestDailyBonusMission();
-        DailyBonusMission<?> mission3 = new TestDailyBonusMission();
+        DailyBonusMission mission1 = new TestDailyBonusMission();
+        DailyBonusMission mission2 = new TestDailyBonusMission();
+        DailyBonusMission mission3 = new TestDailyBonusMission();
 
         mission1.setSubmissions(List.of(mission2, mission3));
 
@@ -45,9 +45,9 @@ class DailyBonusMissionTest {
 
     @Test
     void forEachEjecutaAccionesSinResultado() {
-        DailyBonusMission<?> mission1 = new TestDailyBonusMission();
-        DailyBonusMission<?> mission2 = new TestDailyBonusMission();
-        DailyBonusMission<?> mission3 = new TestDailyBonusMission();
+        DailyBonusMission mission1 = new TestDailyBonusMission();
+        DailyBonusMission mission2 = new TestDailyBonusMission();
+        DailyBonusMission mission3 = new TestDailyBonusMission();
 
         mission1.setSubmissions(List.of(mission2, mission3));
 

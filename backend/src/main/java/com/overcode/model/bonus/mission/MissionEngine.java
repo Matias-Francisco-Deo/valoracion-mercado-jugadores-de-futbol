@@ -8,7 +8,7 @@ public class MissionEngine {
     }
 
 
-    public static void registrarVisitaJugadorRecursivamente(DailyBonusMission<?> dailyBonusMission, Player player) {
+    public static void registrarVisitaJugadorRecursivamente(DailyBonusMission dailyBonusMission, Player player) {
 
         dailyBonusMission.forEach(mission -> {
                     switch (mission) {
@@ -22,7 +22,7 @@ public class MissionEngine {
             );
     }
 
-    public static void registrarCompraRecursivamente(DailyBonusMission<?> dailyBonusMission) {
+    public static void registrarCompraRecursivamente(DailyBonusMission dailyBonusMission) {
         dailyBonusMission.forEach(mission -> {
                     switch (mission) {
                         case BuyDailyBonusMission bm:

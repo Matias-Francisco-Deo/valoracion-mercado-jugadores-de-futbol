@@ -8,6 +8,6 @@ public record EstadoBonus(
         Boolean alreadyClaimedToday,
         DailyBonusRewards weeklyBonuses,
         Boolean canClaimBonus,
-        DailyBonusMission<?> mision
+        DailyBonusMission mision
 ) {
 }

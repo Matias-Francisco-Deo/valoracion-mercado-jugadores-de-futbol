@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BuyDailyBonusMission extends DailyBonusMission<Void> {
+public class BuyDailyBonusMission extends DailyBonusCompletableMission<Void> {
 
     public BuyDailyBonusMission(Long id, String nombre, boolean completed) {
         super(id, nombre, completed);

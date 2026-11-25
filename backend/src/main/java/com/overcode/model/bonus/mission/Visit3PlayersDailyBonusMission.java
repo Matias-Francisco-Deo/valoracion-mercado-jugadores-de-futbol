@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player> {
+public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission {
 
     public Visit3PlayersDailyBonusMission(VisitPlayerDailyBonusMission m1, VisitPlayerDailyBonusMission m2, VisitPlayerDailyBonusMission m3) {
         super("Visitar 3 jugadores del día", List.of(m1, m2, m3));
@@ -24,11 +24,11 @@ public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player>
 
     }
 
-    private static @NonNull ArrayList<DailyBonusMission<?>> updateSubmissions(List<VisitPlayerDailyBonusMission> submissions) {
+    private static @NonNull ArrayList<DailyBonusMission> updateSubmissions(List<VisitPlayerDailyBonusMission> submissions) {
         return new ArrayList<>(submissions.stream().limit(3).toList());
     }
 
-    private static @NonNull List<DailyBonusMission<?>> crearSubmisiones(List<Player> players) {
+    private static @NonNull List<DailyBonusMission> crearSubmisiones(List<Player> players) {
         if (players.size() != 3) throw new MisionInvalidaException("La cantidad de jugadores debe ser 3");
         return List.of(
                 new VisitPlayerDailyBonusMission(players.get(0)),
@@ -37,7 +37,6 @@ public class Visit3PlayersDailyBonusMission extends AndDailyBonusMission<Player>
         );
     }
 
-    @Override
     public void complete(Player checkerObject) {
         getSubmissions().forEach(m -> ((VisitPlayerDailyBonusMission) m).complete(checkerObject));
         setCompleted(isCompleted());

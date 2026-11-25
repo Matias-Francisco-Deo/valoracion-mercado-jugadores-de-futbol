@@ -24,9 +24,9 @@ public class UserDailyBonus {
     private Integer streakCount = 0;
     private LocalDate lastBonusClaimDate;
     private LocalDate activeMissionDate;
-    private DailyBonusMission<?> activeMission;
+    private DailyBonusMission activeMission;
 
-    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, DailyBonusMission<?> activeMission) {
+    public UserDailyBonus(Long id, User user, Integer streakCount, LocalDate lastBonusClaimDate, LocalDate activeMissionDate, DailyBonusMission activeMission) {
         this.id = id;
         this.user = user;
         this.streakCount = streakCount;

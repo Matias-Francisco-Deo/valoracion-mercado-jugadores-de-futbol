@@ -22,16 +22,16 @@ public class DailyBonus {
     private Long id;
     private String nombre;
     private DailyBonusRewards bonusRewards;
-    private DailyBonusMission<?> getRootMission;
+    private DailyBonusMission getRootMission;
 
-    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> getRootMission) {
+    public DailyBonus(Long id, String nombre, DailyBonusRewards bonusRewards, DailyBonusMission getRootMission) {
         this.id = id;
         setNombre(nombre);
         setBonusRewards(bonusRewards);
         this.getRootMission = getRootMission;
     }
 
-    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission<?> getRootMission) {
+    public DailyBonus(String nombre, DailyBonusRewards bonusRewards, DailyBonusMission getRootMission) {
         this(null, nombre, bonusRewards, getRootMission);
     }
     public void setNombre(String nombre) {
@@ -63,7 +63,7 @@ public class DailyBonus {
         Double nextBonus = getBonusConRacha(rachaActual);
         boolean yaReclamo = userBonus.yaReclamoBonusHoy(fechaActual);
         boolean puedeReclamar = userBonus.puedeReclamarBonusHoy();
-        DailyBonusMission<?> mision = userBonus.getActiveMission();
+        DailyBonusMission mision = userBonus.getActiveMission();
         return new EstadoBonus(rachaActual, nextBonus, yaReclamo, this.bonusRewards, puedeReclamar, mision);
     }
 

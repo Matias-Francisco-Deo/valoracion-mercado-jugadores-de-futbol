@@ -46,7 +46,7 @@ public class DataInitializer {
 
         DailyBonusRewards rewardsBase = new DailyBonusRewards(List.of(1.0, 2.0, 2.0, 5.0, 5.0, 10.0, 15.0));
 
-        DailyBonusMission<?> baseMision = dailyBonusService.crearNuevaMision();
+        DailyBonusMission baseMision = dailyBonusService.crearNuevaMision();
 
         DailyBonus bonusBase = new DailyBonus("Bonus Base Semanal", rewardsBase, baseMision);
 

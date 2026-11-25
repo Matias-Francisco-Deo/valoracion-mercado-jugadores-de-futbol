@@ -40,10 +40,10 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public DailyBonusMission<?> seleccionarNuevaMision() {
+    public DailyBonusMission seleccionarNuevaMision() {
         DailyBonus dailyBonus = recuperarSeleccionado();
 
-        DailyBonusMission<?> buyOrVisitMission = crearNuevaMision();
+        DailyBonusMission buyOrVisitMission = crearNuevaMision();
 
         dailyBonus.setGetRootMission(buyOrVisitMission);
 
@@ -53,7 +53,7 @@ public class DailyBonusServiceImpl implements DailyBonusService {
     }
 
     @Override
-    public DailyBonusMission<?> crearNuevaMision() {
+    public DailyBonusMission crearNuevaMision() {
 
         List<Player> randomPlayers = playerRepository.recuperar3JugadoresAlAzar();
 

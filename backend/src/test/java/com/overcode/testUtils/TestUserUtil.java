@@ -34,7 +34,7 @@ public class TestUserUtil {
         return user;
     }
 
-    public static User getUsuarioConRachaYMision(String nombre, int racha, LocalDate ultimoReclamo, DailyBonusMission<?> dailyBonusMission) {
+    public static User getUsuarioConRachaYMision(String nombre, int racha, LocalDate ultimoReclamo, DailyBonusMission dailyBonusMission) {
         User user = getUsuarioDeNombre(nombre);
         user.getUserDailyBonus().setStreakCount(racha);
         user.getUserDailyBonus().setLastBonusClaimDate(ultimoReclamo);

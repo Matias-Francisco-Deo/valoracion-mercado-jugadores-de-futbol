@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class OrDailyBonusMission<T> extends CompositeDailyBonusMission<T> {
+public abstract class OrDailyBonusMission extends CompositeDailyBonusMission {
 
-    protected OrDailyBonusMission(Long id, String nombre, boolean completed, List<DailyBonusMission<?>> submissions) {
+    protected OrDailyBonusMission(Long id, String nombre, boolean completed, List<DailyBonusMission> submissions) {
         super(id, nombre, completed, submissions);
     }
 
-    protected OrDailyBonusMission(String nombre, List<DailyBonusMission<?>> submissions) {
+    protected OrDailyBonusMission(String nombre, List<DailyBonusMission> submissions) {
         this(null, nombre, false, submissions);
     }
 

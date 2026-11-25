@@ -12,7 +12,7 @@ public record MissionStatusResponseDTO(
         List<MissionStatusResponseDTO> misiones
 ) {
 
-    public static MissionStatusResponseDTO desdeModelo(DailyBonusMission<?> dailyBonusMission) {
+    public static MissionStatusResponseDTO desdeModelo(DailyBonusMission dailyBonusMission) {
         if (dailyBonusMission == null) {
             return null;
         }
