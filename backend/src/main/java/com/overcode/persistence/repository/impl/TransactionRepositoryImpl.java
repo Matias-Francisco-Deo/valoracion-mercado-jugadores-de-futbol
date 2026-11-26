@@ -53,4 +53,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     public Long contarVentasEntre(LocalDateTime inicio, LocalDateTime fin) {
         return transactionDAOJPA.countCompletedSalesBetween(inicio, fin);
     }
+
+    @Override
+    public Double sumarComprasEntre(LocalDateTime inicio, LocalDateTime fin) {
+        return transactionDAOJPA.sumPurchasesBetween(inicio, fin);
+    }
 }

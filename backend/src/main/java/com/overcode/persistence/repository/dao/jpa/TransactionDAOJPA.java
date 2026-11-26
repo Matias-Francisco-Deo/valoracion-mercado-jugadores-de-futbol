@@ -29,6 +29,18 @@ public interface TransactionDAOJPA extends JpaRepository<TransactionJPADTO, Long
     );
 
     @Query(value = """
+    SELECT COALESCE(SUM(t.unit_price * t.quantity), 0)
+    FROM transactions t
+    WHERE t.type = 'BUY'
+      AND t.date >= :startDate
+      AND t.date <= :endDate
+    """, nativeQuery = true)
+    Double sumPurchasesBetween(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query(value = """
     SELECT *
     FROM (
         SELECT

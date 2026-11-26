@@ -22,4 +22,6 @@ public interface TransactionRepository {
     List<PlayerPositionData> findPlayerPositionsData(Long userId);
 
     Long contarVentasEntre(LocalDateTime inicio, LocalDateTime fin);
+
+    Double sumarComprasEntre(LocalDateTime inicio, LocalDateTime fin);
 }
