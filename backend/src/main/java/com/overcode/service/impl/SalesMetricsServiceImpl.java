@@ -27,6 +27,10 @@ public class SalesMetricsServiceImpl implements SalesMetricsService {
                 .description("Ventas mensuales de tokens")
                 .tags("sales", "sells", "business", "financial")
                 .register(meterRegistry);
+        Gauge.builder("monthly_exchange", () -> obtenerSumaComprasMensuales(petition))
+                .description("Importe mensual de compras de tokens")
+                .tags("exchange", "buys", "business", "financial")
+                .register(meterRegistry);
     }
 
     @Override
@@ -35,5 +39,13 @@ public class SalesMetricsServiceImpl implements SalesMetricsService {
         LocalDateTime fin = petition.getMaxTime();
 
         return transactionRepository.contarVentasEntre(inicio, fin);
+    }
+
+    @Override
+    public Double obtenerSumaComprasMensuales(MonthlySalesPetition petition) {
+        LocalDateTime inicio = petition.getMinTime();
+        LocalDateTime fin = petition.getMaxTime();
+
+        return transactionRepository.sumarComprasEntre(inicio, fin);
     }
 }
