@@ -132,6 +132,73 @@ class SalesMetricsServiceImplTest {
         assertEquals(1L, totalVentas);
     }
 
+    @Test
+    void obtenerSumaComprasMensuales_conComprasEnElMes_retornaSumaCorrecta() {
+        guardarTransaccion(LocalDateTime.of(2026, 11, 5, 10, 0, 0), TransactionType.BUY, 1, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 15, 14, 30, 0), TransactionType.BUY, 2, 75.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 28, 20, 0, 0), TransactionType.BUY, 1, 100.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(300.0, sumaCompras);
+    }
+
+    @Test
+    void obtenerSumaComprasMensuales_sinTransacciones_retornaCero() {
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(0.0, sumaCompras);
+    }
+
+    @Test
+    void obtenerSumaComprasMensuales_ignoraVentas() {
+        guardarTransaccion(LocalDateTime.of(2026, 11, 5, 10, 0, 0), TransactionType.SELL, 1, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 10, 11, 0, 0), TransactionType.BUY, 3, 50.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 20, 18, 0, 0), TransactionType.BUY, 2, 80.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(310.0, sumaCompras);
+    }
+
+    @Test
+    void obtenerSumaComprasMensuales_ignoraComprasDeOtrosMeses() {
+        guardarTransaccion(LocalDateTime.of(2026, 10, 31, 23, 59, 58), TransactionType.BUY, 1, 60.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 2, 10, 0, 0), TransactionType.BUY, 1, 70.0);
+        guardarTransaccion(LocalDateTime.of(2026, 11, 25, 16, 0, 0), TransactionType.BUY, 2, 80.0);
+        guardarTransaccion(LocalDateTime.of(2026, 12, 1, 0, 0, 1), TransactionType.BUY, 1, 90.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(230.0, sumaCompras);
+    }
+
+    @Test
+    void obtenerSumaComprasMensuales_incluyeTransaccionesEnLimitesExactosDelMes() {
+        MonthlySalesPetition petition = new MonthlySalesPetition(2026, 11);
+
+        guardarTransaccion(petition.getMinTime(), TransactionType.BUY, 1, 50.0);
+        guardarTransaccion(petition.getMaxTime().withNano(0), TransactionType.BUY, 2, 25.0);
+
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(100.0, sumaCompras);
+    }
+
+    @Test
+    void obtenerSumaComprasMensuales_enFebreroBisiesto_sumaHasta29DeFebrero() {
+        guardarTransaccion(LocalDateTime.of(2024, 2, 29, 12, 0, 0), TransactionType.BUY, 3, 100.0);
+
+        MonthlySalesPetition petition = new MonthlySalesPetition(2024, 2);
+        Double sumaCompras = salesMetricsService.obtenerSumaComprasMensuales(petition);
+
+        assertEquals(300.0, sumaCompras);
+    }
+
     private void guardarTransaccion(LocalDateTime fecha, TransactionType tipo, Integer cantidad, Double precioUnitario) {
         TransaccionFinanciera tx = new TransaccionFinanciera(null, usuarioTest, jugadorTest, fecha, tipo, cantidad, precioUnitario);
         transactionRepository.guardar(tx);
