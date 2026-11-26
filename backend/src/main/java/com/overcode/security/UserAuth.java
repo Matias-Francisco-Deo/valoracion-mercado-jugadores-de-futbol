@@ -2,7 +2,7 @@ package com.overcode.security;
 
 import com.overcode.model.security.Auth;
 import com.overcode.model.user.User;
-import com.overcode.service.exception.AuthenticationException;
+import com.overcode.security.exception.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

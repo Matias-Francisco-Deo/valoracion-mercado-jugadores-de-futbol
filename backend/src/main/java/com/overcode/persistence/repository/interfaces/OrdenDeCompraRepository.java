@@ -18,7 +18,9 @@ public interface OrdenDeCompraRepository {
 
     boolean existsOpenOrderByTokenId(Long tokenId);
 
-    List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId);
+    Optional<Long> findFirstTokenIdWithOpenOrder(List<Long> tokenIds);
+
+    List<OrdenDeVenta> findOpenSellOrders(Long playerId, Long buyerId, int quantity);
 
     Page<ResumenOrdenesDeVenta> buscarOrdenesDeVentaAbiertas(Long userId, String nombre, Pageable pageable);
 

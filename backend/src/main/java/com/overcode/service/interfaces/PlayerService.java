@@ -1,7 +1,7 @@
 package com.overcode.service.interfaces;
 
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlayerService {
 
-    Player guardar(Player player);
+    Player crear(Player player);
 
     Player recuperar(Long id);
 

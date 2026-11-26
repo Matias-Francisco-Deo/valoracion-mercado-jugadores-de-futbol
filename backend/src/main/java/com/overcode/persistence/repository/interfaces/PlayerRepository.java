@@ -1,7 +1,7 @@
 package com.overcode.persistence.repository.interfaces;
 
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,4 +25,6 @@ public interface PlayerRepository {
     List<Player> listarTodos();
 
     List<Player> guardarTodos(List<Player> jugadores);
+
+    List<Player> recuperar3JugadoresAlAzar();
 }

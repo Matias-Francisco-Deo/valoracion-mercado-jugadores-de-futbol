@@ -3,8 +3,8 @@ package com.overcode.persistence.repository;
 import com.overcode.model.cotizacion.EstrategiaCotizacion;
 import com.overcode.persistence.dto.jpa.cotizacion.EstrategiaCotizacionJPADTO;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
+import com.overcode.persistence.exception.EntidadNoEncontradaException;
 import com.overcode.persistence.repository.interfaces.EstrategiaCotizacionRepository;
-import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.testUtils.TestService;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2;
 import com.overcode.testUtils.cotizacion.siempre2.EstrategiaCotizacionSiempre2JPADTO;
@@ -86,9 +86,8 @@ class EstrategiaCotizacionRepositoryTest {
     @Test
     @Transactional
     void guardarFallaCuandoLaEstrategiaNoEstaMapeada() {
-        EstrategiaCotizacionSiempre2 estrategia = ESTRATEGIA_COTIZACION_1;
 
-        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionRepository.guardar(estrategia));
+        assertThrows(EntidadNoEncontradaException.class, () -> estrategiaCotizacionRepository.guardar(ESTRATEGIA_COTIZACION_1));
     }
 
     @Test

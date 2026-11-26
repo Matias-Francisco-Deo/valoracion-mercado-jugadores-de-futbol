@@ -27,6 +27,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.overcode.testUtils.TestUserUtil.getUsuarioDeNombre;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -148,9 +149,7 @@ class UserControllerTest {
 
     @Test
     void getPortfolioDevuelveListaDePosicionesDelUsuario() throws Exception {
-        Player player = crearJugadorConPrecio(PLAYER_ID, "Lionel Messi", 120d);
-        TransaccionFinanciera tx = new TransaccionFinanciera(100L, null, player, LocalDateTime.now(), TransactionType.BUY, 5, 100.0);
-        Position position = new Position(player, List.of(tx));
+        Position position = new Position(PLAYER_ID, "Lionel Messi", 5, 100.0, 120.0, 600.0, 100.0, 20.0);
 
         when(userService.recuperarPortfolioDeUser(any(User.class))).thenReturn(new Portfolio(List.of(position)));
 
@@ -292,9 +291,15 @@ class UserControllerTest {
     @Test
     void depositDevuelveOkYLosCreditosActualizados() throws Exception {
         UserService userServiceMock = mock(UserService.class);
-        User user = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 0d, null);
+        User user = getUsuarioDeNombre("ivan");
+        user.setId(USER_ID);
+
         when(userServiceMock.recuperar(USER_ID)).thenReturn(user);
-        User updatedUser = new User(USER_ID, "ivan", "ivan@gmail.com", "pass", 10000d, null);
+
+        User updatedUser = getUsuarioDeNombre("ivan");
+        updatedUser.setId(USER_ID);
+        updatedUser.setCreditBalance(10000d);
+
         when(userServiceMock.depositarCreditos(any(PeticionDeposito.class))).thenReturn(updatedUser);
 
         MockMvc userControllerMock = MockMvcBuilders.standaloneSetup(new UserController(userServiceMock)).build();

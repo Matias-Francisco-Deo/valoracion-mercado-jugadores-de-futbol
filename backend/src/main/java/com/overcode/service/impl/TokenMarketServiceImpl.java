@@ -8,11 +8,16 @@ import com.overcode.model.market.orden.OrdenDeCompra;
 import com.overcode.model.market.orden.OrdenDeVenta;
 import com.overcode.model.market.orden.ResumenOrdenesDeVenta;
 import com.overcode.model.player.Player;
+import com.overcode.model.token.Token;
 import com.overcode.model.user.User;
-import com.overcode.persistence.repository.interfaces.*;
+import com.overcode.persistence.repository.interfaces.OrdenDeCompraRepository;
+import com.overcode.persistence.repository.interfaces.PlayerRepository;
+import com.overcode.persistence.repository.interfaces.TransactionRepository;
+import com.overcode.persistence.repository.interfaces.UserRepository;
 import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.exception.venta.ExisteOrdenAbiertaParaTokenException;
 import com.overcode.service.interfaces.TokenMarketService;
+import com.overcode.service.interfaces.UserDailyBonusService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,15 +32,18 @@ public class TokenMarketServiceImpl implements TokenMarketService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final TransactionRepository transactionRepository;
+    private final UserDailyBonusService userDailyBonusService;
 
     public TokenMarketServiceImpl(OrdenDeCompraRepository ordenDeCompraRepository,
                                   UserRepository userRepository,
                                   PlayerRepository playerRepository,
-                                  TransactionRepository transactionRepository) {
+                                  TransactionRepository transactionRepository,
+                                  UserDailyBonusService userDailyBonusService) {
         this.ordenDeCompraRepository = ordenDeCompraRepository;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.transactionRepository = transactionRepository;
+        this.userDailyBonusService = userDailyBonusService;
     }
 
     @Override
@@ -54,13 +62,10 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         MotorDeMercado motorDeMercado = new MotorDeMercado();
         List<OrdenDeVenta> orders = motorDeMercado.venderTokens(seller, player, quantity);
 
-        for (OrdenDeVenta order : orders) {
-            Long tokenId = order.getToken().getId();
-
-            if (ordenDeCompraRepository.existsOpenOrderByTokenId(tokenId)) {
-                throw new ExisteOrdenAbiertaParaTokenException("Ya existe una orden abierta para el token: " + tokenId);
-            }
-        }
+        List<Long> tokenIds = orders.stream().map(OrdenDeVenta::getToken).map(Token::getId).toList();
+        ordenDeCompraRepository.findFirstTokenIdWithOpenOrder(tokenIds).ifPresent(tokenId -> {
+            throw new ExisteOrdenAbiertaParaTokenException("Ya existe una orden abierta para el token: " + tokenId);
+        });
 
         userRepository.guardar(seller);
         playerRepository.guardar(player);
@@ -81,7 +86,7 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         if (!playerRepository.existsById(playerId)){throw new EntidadNoEncontradaException("El jugador no existe: " + playerId);}
 
         // Buscar órdenes de venta abiertas excluyendo las del propio comprador
-        List<OrdenDeVenta> openOrders = ordenDeCompraRepository.findOpenSellOrders(playerId,buyerId);
+        List<OrdenDeVenta> openOrders = ordenDeCompraRepository.findOpenSellOrders(playerId, buyerId, quantity);
 
         MotorDeMercado motorDeMercado = new MotorDeMercado();
         TransaccionCompra transaccionCompra = motorDeMercado.comprarOrdenes(openOrders, quantity, buyer);
@@ -92,6 +97,8 @@ public class TokenMarketServiceImpl implements TokenMarketService {
         ordenesDeCompra.stream().map(OrdenDeVenta::getOwner).distinct().forEach(userRepository::guardar);
         ordenDeCompraRepository.saveAll(ordenesDeCompra);
         transactionRepository.guardarTodos(transaccionCompra.transaccionesFinancieras());
+
+        userDailyBonusService.registrarCompra(buyer);
     }
 
     @Override

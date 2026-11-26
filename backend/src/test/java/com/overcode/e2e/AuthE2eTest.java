@@ -1,8 +1,8 @@
 package com.overcode.e2e;
 
-import com.overcode.controller.dto.auth.AuthResponse;
-import com.overcode.controller.dto.auth.LoginRequest;
-import com.overcode.controller.dto.auth.RegisterRequest;
+import com.overcode.controller.dto.auth.AuthResponseDTO;
+import com.overcode.controller.dto.auth.LoginRequestDTO;
+import com.overcode.controller.dto.auth.RegisterRequestDTO;
 import com.overcode.testUtils.TestService;
 import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
@@ -37,14 +37,14 @@ import static org.junit.jupiter.api.Assertions.*;
     //------------------------------Tests de registro------------------------------
     @Test
      void registrarUsuarioConDatosValidos() {
-        var req = new RegisterRequest("User", "register@example.com", "Password123!");
+        var req = new RegisterRequestDTO("User", "register@example.com", "Password123!");
 
-        ResponseEntity<AuthResponse> response = restClient.post()
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -54,14 +54,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
      void alCrearUsuarioNuevoTieneDatosDeInicializacionCreditos0YSinTokens() {
-        var req = new RegisterRequest("User", "register@example.com", "Password123!");
+        var req = new RegisterRequestDTO("User", "register@example.com", "Password123!");
 
-        ResponseEntity<AuthResponse> response = restClient.post()
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
                 .uri("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(req)
                 .retrieve()
-                .toEntity(AuthResponse.class);
+                .toEntity(AuthResponseDTO.class);
 
        assertNotNull(response.getBody());
         assertEquals(0, response.getBody().user().creditBalance());
@@ -69,7 +69,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
      void registrarUsuarioConEmailInvalido() {
-        var req = new RegisterRequest("invalidEmail", "invalid-email", "Password123!");
+        var req = new RegisterRequestDTO("invalidEmail", "invalid-email", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
             .uri("/auth/register")
@@ -81,7 +81,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
      void registrarUsuarioSinEmail() {
-        var req = new RegisterRequest("sinEmail", "", "Password123!");
+        var req = new RegisterRequestDTO("sinEmail", "", "Password123!");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -93,7 +93,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
      void registrarUsuarioSinContraseña() {
-        var req = new RegisterRequest("sinContraseña", "login@example.com", "");
+        var req = new RegisterRequestDTO("sinContraseña", "login@example.com", "");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -105,7 +105,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @Test
      void registrarUsuarioSinNombre() {
-        var req = new RegisterRequest("", "login@example.com", "Password123");
+        var req = new RegisterRequestDTO("", "login@example.com", "Password123");
 
         assertThrows(HttpClientErrorException.BadRequest.class, () -> restClient.post()
                 .uri("/auth/register")
@@ -119,13 +119,13 @@ import static org.junit.jupiter.api.Assertions.*;
      void loginConDatosValidos() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new LoginRequest("login@example.com", "Password123!");
-        ResponseEntity<AuthResponse> response = restClient.post()
+        var req = new LoginRequestDTO("login@example.com", "Password123!");
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -137,7 +137,7 @@ import static org.junit.jupiter.api.Assertions.*;
      void loginConContraseñaIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new LoginRequest("login@example.com", "WrongPassword123!");
+        var req = new LoginRequestDTO("login@example.com", "WrongPassword123!");
 
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> restClient.post()
             .uri("/auth/login")
@@ -151,7 +151,7 @@ import static org.junit.jupiter.api.Assertions.*;
      void loginConEmailIncorrecta() {
         registerUser("loginUser", "login@example.com", "Password123!");
 
-        var req = new LoginRequest("wrong@example.com", "Password123!");
+        var req = new LoginRequestDTO("wrong@example.com", "Password123!");
 
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> restClient.post()
                 .uri("/auth/login")
@@ -193,14 +193,14 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     //Metodo para registrar un usuario para tests
-    private AuthResponse registerUser(String username, String email, String password) {
-        var req = new RegisterRequest(username, email, password);
-        ResponseEntity<AuthResponse> response = restClient.post()
+    private AuthResponseDTO registerUser(String username, String email, String password) {
+        var req = new RegisterRequestDTO(username, email, password);
+        ResponseEntity<AuthResponseDTO> response = restClient.post()
             .uri("/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .body(req)
             .retrieve()
-            .toEntity(AuthResponse.class);
+            .toEntity(AuthResponseDTO.class);
 
         return response.getBody();
     }

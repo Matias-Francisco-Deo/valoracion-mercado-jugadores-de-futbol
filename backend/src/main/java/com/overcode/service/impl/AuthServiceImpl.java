@@ -3,7 +3,7 @@ package com.overcode.service.impl;
 import com.overcode.model.security.Auth;
 import com.overcode.model.user.User;
 import com.overcode.security.UserAuth;
-import com.overcode.service.exception.AuthenticationException;
+import com.overcode.security.exception.AuthenticationException;
 import com.overcode.service.interfaces.AuthService;
 import com.overcode.service.interfaces.UserService;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("Attempting to register user with email: {}", user.getEmail());
         userAuth.register(user);
 
-        User saved = userService.guardar(user);
+        User saved = userService.crear(user);
         log.info("User registered successfully with ID: {}", saved.getId());
 
         return userAuth.login(saved);

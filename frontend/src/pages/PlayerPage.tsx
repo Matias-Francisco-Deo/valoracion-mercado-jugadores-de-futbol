@@ -10,27 +10,40 @@ import { getPlayerById, getPlayerQuotes } from "@/services/PlayerService";
 import { PlayerQuoteChart } from "@/components/player/PlayerQuoteChart";
 import { PageLink } from "@/components/ui/PageLink";
 import { TrendingUp } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { recordPlayerVisit } from "@/services/dailyBonusService";
 
 export default function PlayerPage(){
     const { playerId } = useParams();
+    const { isAuthenticated } = useAuth();
     const [player,setPlayer] = useState<Player|null>(null);
     const [quotes, setQuotes] = useState<RegistroCotizacion[]>([]);
 
     const [error,setError] = useState<HttpError  | null>(null);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-            if (!playerId) return
+            if (!playerId) return;
 
             getPlayerById(playerId)
             .then(setPlayer)
-            .catch((error: HttpError) => setError(error))
+            .catch((error: HttpError) => setError(error));
 
             getPlayerQuotes(playerId)
             .then(setQuotes)
             .catch((error: HttpError) => setError(error))
-            .finally(() => setLoading(false))
-        }, [playerId])
+            .finally(() => setLoading(false));
+
+            if (isAuthenticated) {
+                recordPlayerVisit(playerId)
+                    .then(() => {
+                        window.dispatchEvent(new Event('daily-bonus:refresh'));
+                    })
+                    .catch(() => {
+                        // Non-blocking: background mission tracking shouldn't impact user browsing
+                    });
+            }
+        }, [playerId, isAuthenticated]);
 
     if (loading) return <Loading text="Cargando jugador..." className="flex-1" />
     if (error?.status === 404) return <NotFoundPage />

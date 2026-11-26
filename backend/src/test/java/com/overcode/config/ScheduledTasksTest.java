@@ -1,6 +1,7 @@
 package com.overcode.config;
 
 import com.overcode.config.scheduling.ScheduledTasks;
+import com.overcode.service.interfaces.DailyBonusService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.ExternalPlayerService;
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,9 @@ class ScheduledTasksTest {
     @MockitoBean
     EstrategiaCotizacionService estrategiaCotizacionService;
 
+    @MockitoBean
+    DailyBonusService dailyBonusService;
+
 
 
     @Test
@@ -74,5 +78,11 @@ class ScheduledTasksTest {
         when(externalPlayerService.actualizarJugadores(null)).thenReturn(Optional.empty());
 
         await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarJugadores());
+    }
+
+    @Test
+    void actualizarMisionSeEjecutaALas12DeLaNoche() {
+
+        await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> verify(tasks, atLeastOnce()).actualizarMision());
     }
 }

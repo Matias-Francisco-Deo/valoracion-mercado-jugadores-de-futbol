@@ -23,13 +23,13 @@ The `User.tokens` attribute is a business field for the app’s token economy an
 
 ### Registration DTOs
 
-- `RegisterRequest` / `CreateUserRequest` equivalent: fields `username`, `email`, `password`.
+- `RegisterRequestDTO` / `CreateUserRequest` equivalent: fields `username`, `email`, `password`.
 - Validation requirements: required, non-empty, proper email format, password length according to project conventions.
-- Response DTO: `AuthResponse` or `LoginResponse` with `token`, `expiresAt`, and the authenticated user summary.
+- Response DTO: `AuthResponseDTO` or `LoginResponse` with `token`, `expiresAt`, and the authenticated user summary.
 
 ### Login DTOs
 
-- `LoginRequest`: `email`, `password`.
+- `LoginRequestDTO`: `email`, `password`.
 - Response DTO: same auth payload as registration, or a dedicated `TokenResponse` if the project prefers a narrower contract.
 
 ## Validation rules

@@ -1,7 +1,7 @@
 package com.overcode.service.impl;
 
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import com.overcode.model.player.Team;
 import com.overcode.persistence.repository.interfaces.PlayerRepository;
 import com.overcode.persistence.repository.interfaces.TeamRepository;
@@ -11,6 +11,7 @@ import com.overcode.service.interfaces.PlayerService;
 import com.overcode.service.interfaces.TokenEmissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player guardar(Player player) {
+    public Player crear(Player player) {
         validarJugador(player);
 
         Team team = player.getTeam();
@@ -75,6 +76,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "ranking")
     public Page<Player> recuperarRankingDeJugadoresPorEstrategiaActiva(Pageable pageable) {
         return playerRepository.recuperarRankingDeJugadoresPorEstrategiaActiva(pageable);
     }

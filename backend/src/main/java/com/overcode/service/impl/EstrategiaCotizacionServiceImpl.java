@@ -10,6 +10,7 @@ import com.overcode.service.exception.EntidadNoEncontradaException;
 import com.overcode.service.interfaces.ConfiguracionMercadoService;
 import com.overcode.service.interfaces.EstrategiaCotizacionService;
 import com.overcode.service.interfaces.PlayerService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     private final PlayerRepository playerRepository;
     private final PlayerService playerService;
     private final OrdenDeCompraRepository ordenDeCompraRepository;
+
 
     public EstrategiaCotizacionServiceImpl(EstrategiaCotizacionRepository estrategiaCotizacionRepository, ConfiguracionMercadoService configuracionMercadoService, ConfiguracionMercadoRepository configuracionMercadoRepository, RegistroCotizacionRepository registroCotizacionRepository, PlayerRepository playerRepository, PlayerService playerService,OrdenDeCompraRepository ordenDeCompraRepository) {
         this.estrategiaCotizacionRepository = estrategiaCotizacionRepository;
@@ -83,6 +85,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
     }
 
     @Override
+    @CacheEvict(value = "ranking", allEntries = true)
     public void cotizarJugadores() {
         ConfiguracionMercado configuracionMercado = configuracionMercadoService.recuperar();
 
@@ -96,6 +99,7 @@ public class EstrategiaCotizacionServiceImpl implements EstrategiaCotizacionServ
         playerRepository.guardarTodos(jugadores);
 
         ordenDeCompraRepository.actualizarPreciosOrdenesAbiertas();
+
     }
 
     private static void verificarFactorEscalaPositivo(Double factorEscala) {

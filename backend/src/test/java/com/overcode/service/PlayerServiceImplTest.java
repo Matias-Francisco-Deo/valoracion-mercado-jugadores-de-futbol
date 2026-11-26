@@ -1,8 +1,8 @@
 package com.overcode.service;
 
-import com.overcode.controller.dto.player.PlayerFilter;
 import com.overcode.model.cotizacion.ConfiguracionMercado;
 import com.overcode.model.player.Player;
+import com.overcode.model.player.PlayerFilter;
 import com.overcode.model.player.PlayerGameData;
 import com.overcode.model.player.PlayerPosition;
 import com.overcode.persistence.dto.jpa.cotizacion.mapper.TipoEstrategiaCotizacion;
@@ -19,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -38,6 +40,9 @@ class PlayerServiceImplTest {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     private Player jugador1 = getJugadorConNombre("Messi");
     private Player jugador2 = getJugadorConNombre("Mbappe");
 
@@ -52,6 +57,12 @@ class PlayerServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Cache rankingCache = cacheManager.getCache("ranking");
+
+        if (rankingCache != null) {
+            rankingCache.clear();
+        }
+
         testService.eliminarCotizaciones();
         testService.eliminarJugadoresYEquipos();
         TipoEstrategiaCotizacion.agregarMapEstrategia(estrategiaADTO);
@@ -64,7 +75,7 @@ class PlayerServiceImplTest {
     void crearJugadorValidoExitosamente() {
         Player nuevo = getJugadorConNombre("Messi");
 
-        Player guardado = playerService.guardar(nuevo);
+        Player guardado = playerService.crear(nuevo);
 
         assertNotNull(guardado.getId());
         assertEquals("Messi", guardado.getName());
@@ -76,7 +87,7 @@ class PlayerServiceImplTest {
     void jugadorNuevoTiene100TokensYValeExactamente1() {
         Player nuevo = getJugadorConNombre("Messi");
 
-        Player guardado = playerService.guardar(nuevo);
+        Player guardado = playerService.crear(nuevo);
 
         assertEquals(1, guardado.getCurrentPrice());
         assertEquals(100, guardado.getTokens().size());
@@ -84,10 +95,10 @@ class PlayerServiceImplTest {
 
     @Test
     void rechazaCreacionConNombreDuplicado() {
-        playerService.guardar(jugador1);
+        playerService.crear(jugador1);
 
         NombreRepetidoException exception = assertThrows(NombreRepetidoException.class,
-            () -> playerService.guardar(jugador1));
+            () -> playerService.crear(jugador1));
 
         assertTrue(exception.getMessage().contains("Messi"));
     }
@@ -96,7 +107,7 @@ class PlayerServiceImplTest {
 
     @Test
     void obtieneJugadorPorId() {
-        Player creado = playerService.guardar(jugador1);
+        Player creado = playerService.crear(jugador1);
 
         Player encontrado = playerService.recuperar(creado.getId());
 
@@ -111,8 +122,8 @@ class PlayerServiceImplTest {
 
     @Test
     void listaTodosLosJugadores() {
-        playerService.guardar(jugador1);
-        playerService.guardar(jugador2);
+        playerService.crear(jugador1);
+        playerService.crear(jugador2);
 
         List<Player> jugadores = playerService.recuperarTodos();
 
@@ -130,19 +141,19 @@ class PlayerServiceImplTest {
     void listaRankingDeJugadoresPorEstrategiaActiva() {
         // usa estrategia que se basa en el rating
         Player jugadorUltimo = getJugadorConRating("Jugador1", 2D);
-        playerService.guardar(jugadorUltimo);
+        playerService.crear(jugadorUltimo);
 
         Player jugadorAnteultimo = getJugadorConRating("Jugador2", 3D);
-        playerService.guardar(jugadorAnteultimo);
+        playerService.crear(jugadorAnteultimo);
 
         Player jugador3 = getJugadorConRating("Jugador3", 4D);
-        playerService.guardar(jugador3);
+        playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConRating("Jugador4", 8D);
-        playerService.guardar(jugador4);
+        playerService.crear(jugador4);
 
         Player jugador5 = getJugadorConRating("Jugador5", 9.5D);
-        playerService.guardar(jugador5);
+        playerService.crear(jugador5);
 
         estrategiaCotizacionService.cotizarJugadores();
 
@@ -171,19 +182,19 @@ class PlayerServiceImplTest {
     @Test
     void listarJugadoresPorClub() {
         jugador1 = getJugadorConClub("Jugador1", "Club1");
-        playerService.guardar(jugador1);
+        playerService.crear(jugador1);
 
         jugador2 = getJugadorConClub("Jugador2", "Club1");
-        playerService.guardar(jugador2);
+        playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConClub("Jugador3", "Club2");
-        playerService.guardar(jugador3);
+        playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConClub("Jugador4", "Club2");
-        playerService.guardar(jugador4);
+        playerService.crear(jugador4);
 
         Player jugador5 = getJugadorConClub("Jugador5", "Club2");
-        playerService.guardar(jugador5);
+        playerService.crear(jugador5);
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withClubname("Club1"),PageRequest.of(0, 10));
 
@@ -199,19 +210,19 @@ class PlayerServiceImplTest {
     @Test
     void listarJugadoresPorLiga() {
         jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
-        playerService.guardar(jugador1);
+        playerService.crear(jugador1);
 
         jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club1");
-        playerService.guardar(jugador2);
+        playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
-        playerService.guardar(jugador3);
+        playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConLigaYClub("Jugador4", "Liga2", "Club2");
-        playerService.guardar(jugador4);
+        playerService.crear(jugador4);
 
         Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club2");
-        playerService.guardar(jugador5);
+        playerService.crear(jugador5);
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(PlayerFilter.withLeague("Liga1"),PageRequest.of(0, 10));
         List<Player> expectedPlayers = List.of(jugador1, jugador2);
@@ -227,19 +238,19 @@ class PlayerServiceImplTest {
     @Test
     void listarJugadoresPorLigaYClub() {
         jugador1 = getJugadorConLigaYClub("Jugador1", "Liga1", "Club1");
-        playerService.guardar(jugador1);
+        playerService.crear(jugador1);
 
         jugador2 = getJugadorConLigaYClub("Jugador2", "Liga1", "Club4");
-        playerService.guardar(jugador2);
+        playerService.crear(jugador2);
 
         Player jugador3 = getJugadorConLigaYClub("Jugador3", "Liga2", "Club2");
-        playerService.guardar(jugador3);
+        playerService.crear(jugador3);
 
         Player jugador4 = getJugadorConLigaYClub("Jugador4", "Liga2", "Club2");
-        playerService.guardar(jugador4);
+        playerService.crear(jugador4);
 
         Player jugador5 = getJugadorConLigaYClub("Jugador5", "Liga2", "Club3");
-        playerService.guardar(jugador5);
+        playerService.crear(jugador5);
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(new PlayerFilter("Club1", "Liga1",null),PageRequest.of(0, 10));
         List<Player> expectedPlayers = List.of(jugador1);
@@ -256,8 +267,8 @@ class PlayerServiceImplTest {
     @Test
     void listarJugadoresPorPosicion() {
         Player defensor = getJugadorConPosicion("Defensor", PlayerPosition.DEFENSOR);
-        playerService.guardar(defensor);
-        playerService.guardar(getJugadorConPosicion("Atacante", PlayerPosition.ATACANTE));
+        playerService.crear(defensor);
+        playerService.crear(getJugadorConPosicion("Atacante", PlayerPosition.ATACANTE));
 
         Page<Player> jugadores = playerService.recuperarTodosConFiltro(
                 PlayerFilter.withPosition("DEFENSOR"), PageRequest.of(0, 10));

@@ -1,4 +1,5 @@
 import type { AllocationMetricItem } from "@/hooks/usePortfolioMetrics";
+import { formatPrice } from "@/lib/playerQuoteUtils";
 import {
   ResponsiveContainer,
   PieChart,
@@ -82,7 +83,7 @@ export function PortfolioAllocationChart({
             </Pie>
             <RechartsTooltip
               formatter={(val: unknown) => [
-                `$${Number(val).toLocaleString("es-AR", { minimumFractionDigits: 2 })}`,
+                formatPrice(Number(val)),
                 "Valor",
               ]}
             />

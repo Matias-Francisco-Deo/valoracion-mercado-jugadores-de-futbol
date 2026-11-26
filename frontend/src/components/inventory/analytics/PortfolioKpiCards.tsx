@@ -1,3 +1,5 @@
+import { formatPrice } from "@/lib/playerQuoteUtils";
+
 export interface PortfolioKpiCardsProps {
   totalValue: number;
   totalInvested: number;
@@ -18,7 +20,7 @@ export function PortfolioKpiCards({
       <div className="flex flex-col rounded-xl border border-gray-300 bg-white p-4 shadow-xs">
         <span className="text-xs font-medium text-gray-500">Valor Total de Cartera</span>
         <span className="mt-1 text-2xl font-semibold tracking-tight text-black">
-          ${totalValue.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {formatPrice(totalValue)}
         </span>
         <span className="mt-1 text-xs text-gray-400">Valuación actual de mercado</span>
       </div>
@@ -26,7 +28,7 @@ export function PortfolioKpiCards({
       <div className="flex flex-col rounded-xl border border-gray-300 bg-white p-4 shadow-xs">
         <span className="text-xs font-medium text-gray-500">Capital Invertido</span>
         <span className="mt-1 text-2xl font-semibold tracking-tight text-black">
-          ${totalInvested.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {formatPrice(totalInvested)}
         </span>
         <span className="mt-1 text-xs text-gray-400">Costo promedio de adquisición</span>
       </div>
@@ -48,7 +50,7 @@ export function PortfolioKpiCards({
             isNetProfit ? "text-green-800" : "text-red-800"
           }`}
         >
-          {isNetProfit ? "+" : ""}${totalProfitLoss.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {isNetProfit ? "+" : ""}{formatPrice(totalProfitLoss)}
         </span>
         <span className="mt-1 text-xs text-gray-400">Ganancia/Pérdida acumulada</span>
       </div>
