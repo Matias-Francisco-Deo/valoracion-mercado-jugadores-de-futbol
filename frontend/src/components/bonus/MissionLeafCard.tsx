@@ -9,6 +9,7 @@ export interface MissionLeafCardProps {
   mission: MissionStatusResponse;
   onClose?: () => void;
   compact?: boolean;
+  isOptional?: boolean;
   className?: string;
 }
 
@@ -16,12 +17,14 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
   mission,
   onClose,
   compact = false,
+  isOptional = false,
   className,
 }) => {
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState<number | null>(null);
 
   const isCompleted = mission.completed;
+  const isOptionalPending = isOptional && !isCompleted;
   const isVisitPlayer = /^visitar perfil de\s+/i.test(mission.nombre);
   const isMarketMission = /comprar.*token|mercado/i.test(mission.nombre);
   const rawPlayerName = isVisitPlayer ? mission.nombre.replace(/^visitar perfil de\s+/i, '').trim() : '';
@@ -75,8 +78,13 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
         compact ? 'p-2 sm:p-2.5 min-h-[48px]' : 'p-2.5 sm:p-3',
         isCompleted
           ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
-          : 'bg-white border-gray-200 text-gray-800 hover:border-orange-300 shadow-xs',
-        isNavigable && 'cursor-pointer hover:shadow-md hover:bg-orange-50/30',
+          : isOptionalPending
+            ? 'bg-gray-50/70 border-dashed border-gray-200 text-gray-500 opacity-75'
+            : 'bg-white border-gray-200 text-gray-800 hover:border-orange-300 shadow-xs',
+        isNavigable &&
+          (isOptionalPending
+            ? 'cursor-pointer hover:opacity-100 hover:border-gray-300'
+            : 'cursor-pointer hover:shadow-md hover:bg-orange-50/30'),
         className
       )}
     >
@@ -87,7 +95,9 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
             compact ? 'h-6 w-6' : 'h-7 w-7',
             isCompleted
               ? 'bg-emerald-500 text-white'
-              : 'bg-orange-100 text-orange-600 group-hover:scale-110'
+              : isOptionalPending
+                ? 'bg-gray-100 text-gray-400'
+                : 'bg-orange-100 text-orange-600 group-hover:scale-110'
           )}
         >
           {isCompleted ? (
@@ -104,7 +114,9 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
               compact ? 'text-xs sm:text-xs' : 'text-xs sm:text-sm',
               isCompleted
                 ? 'line-through text-emerald-900/70'
-                : 'text-gray-900 group-hover:text-orange-600'
+                : isOptionalPending
+                  ? 'text-gray-600'
+                  : 'text-gray-900 group-hover:text-orange-600'
             )}
             title={mission.nombre}
           >
@@ -112,13 +124,22 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
             {isNavigable && !isCompleted && (
               <ExternalLink
                 size={11}
-                className="opacity-0 group-hover:opacity-100 text-orange-500 transition-opacity shrink-0"
+                className={cn(
+                  'opacity-0 group-hover:opacity-100 transition-opacity shrink-0',
+                  isOptionalPending ? 'text-gray-400' : 'text-orange-500'
+                )}
               />
             )}
           </span>
           {!compact && (
             <span className="text-[11px] text-gray-500">
-              {isCompleted ? 'Completada' : isNavigable ? 'Clic para ir a cumplirla' : 'Pendiente'}
+              {isCompleted
+                ? 'Completada'
+                : isOptionalPending
+                  ? 'Opcional — reto ya cumplido'
+                  : isNavigable
+                    ? 'Clic para ir a cumplirla'
+                    : 'Pendiente'}
             </span>
           )}
         </div>
@@ -133,6 +154,15 @@ export const MissionLeafCard: React.FC<MissionLeafCardProps> = ({
             )}
           >
             Listo
+          </span>
+        ) : isOptionalPending ? (
+          <span
+            className={cn(
+              'inline-flex items-center rounded-full font-medium bg-gray-100 text-gray-500',
+              compact ? 'px-1.5 py-0.5 text-[10px]' : 'px-2 py-0.5 text-[10px]'
+            )}
+          >
+            Opcional
           </span>
         ) : (
           <span

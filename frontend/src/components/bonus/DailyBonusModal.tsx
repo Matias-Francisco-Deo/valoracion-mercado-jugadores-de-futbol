@@ -40,6 +40,14 @@ export const DailyBonusModal: React.FC<DailyBonusModalProps> = ({
 
   const { currentStreak, alreadyClaimed, todayRewardAmount, days } =
     calculateBonusProgress(status);
+  const isOrRoot = status?.misiones?.tipoMisionDTO === 'OR';
+  const missionSectionHint = alreadyClaimed
+    ? 'Bonus de hoy reclamado'
+    : status?.puedeReclamar
+      ? '¡Reto cumplido! Ya podés reclamar'
+      : isOrRoot
+        ? 'Completá 1 opción para reclamar'
+        : 'Requerida para reclamar';
 
   return (
     <div
@@ -78,15 +86,15 @@ export const DailyBonusModal: React.FC<DailyBonusModalProps> = ({
         {/* Daily Missions Tree Section */}
         {status?.misiones && (
           <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
                 <Target size={16} className="text-orange-600" />
                 <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-800">
-                  Misiones de Hoy
+                  {isOrRoot ? 'Reto de Hoy' : 'Misión de Hoy'}
                 </h3>
               </div>
-              <span className="text-[11px] font-medium text-gray-500">
-                {status.puedeReclamar ? '¡Requisitos listos para reclamar!' : 'Requeridas para cobrar'}
+              <span className="text-[11px] font-medium text-gray-500 text-right">
+                {missionSectionHint}
               </span>
             </div>
             <div>
@@ -102,6 +110,7 @@ export const DailyBonusModal: React.FC<DailyBonusModalProps> = ({
           isLoading={isLoading}
           isClaiming={isClaiming}
           canClaim={status?.puedeReclamar ?? true}
+          hasAlternativeMissions={isOrRoot}
           onClaim={onClaim}
           onClose={onClose}
         />

@@ -8,6 +8,7 @@ interface BonusActionFooterProps {
   isLoading: boolean;
   isClaiming: boolean;
   canClaim?: boolean;
+  hasAlternativeMissions?: boolean;
   onClaim: () => Promise<unknown>;
   onClose: () => void;
 }
@@ -18,6 +19,7 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
   isLoading,
   isClaiming,
   canClaim = true,
+  hasAlternativeMissions = false,
   onClaim,
   onClose,
 }) => {
@@ -69,7 +71,9 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
             ) : !canClaim ? (
               <>
                 <Lock size={18} />
-                Completá las misiones para reclamar +${todayRewardAmount}
+                {hasAlternativeMissions
+                  ? `Completá 1 opción para reclamar +$${todayRewardAmount}`
+                  : `Completá la misión para reclamar +$${todayRewardAmount}`}
               </>
             ) : (
               <>
@@ -80,7 +84,9 @@ export const BonusActionFooter: React.FC<BonusActionFooterProps> = ({
           </Button>
           <span className="text-[11px] text-gray-500">
             {!canClaim
-              ? 'Debés cumplir las misiones requeridas para habilitar el reclamo.'
+              ? hasAlternativeMissions
+                ? 'Alcanza con completar una de las opciones disponibles para habilitar el reclamo.'
+                : 'Debés cumplir la misión requerida para habilitar el reclamo.'
               : 'La racha se reinicia si pasa más de 1 día calendario (UTC) sin reclamar.'}
           </span>
         </div>
