@@ -134,4 +134,140 @@ class TeamRepositoryTest {
         assertEquals("player2", result.newPlayers().getFirst().getName());
     }
 
+    @Test
+    @Transactional
+    void upsertearUnEquipoExistenteActualizaJugadorSinExternalIdSinDuplicarlo() {
+        Player existingPlayer = getJugadorConNombre("Harry Wilson");
+        existingPlayer.setExternalId(null);
+        existingPlayer.getPlayerGameData().setRating(6.5);
+        Team initialTeam = new Team("Fulham", "Premier League", new ArrayList<>(List.of(existingPlayer)));
+        existingPlayer.setTeam(initialTeam);
+        teamRepository.guardar(initialTeam);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Player incomingPlayer = getJugadorConNombre("Harry Wilson");
+        incomingPlayer.setExternalId(12345L);
+        incomingPlayer.getPlayerGameData().setRating(8.2);
+        Team incomingTeam = new Team("Fulham", "Premier League", new ArrayList<>(List.of(incomingPlayer)));
+        incomingPlayer.setTeam(incomingTeam);
+
+        TeamUpsertResult result = teamRepository.upsertTeam(incomingTeam);
+        entityManager.flush();
+
+        Team updatedTeam = result.team();
+        assertEquals(1, updatedTeam.getPlayers().size());
+        Player persisted = updatedTeam.getPlayers().getFirst();
+        assertEquals("Harry Wilson", persisted.getName());
+        assertEquals(Long.valueOf(12345L), persisted.getExternalId());
+        assertEquals(8.2, persisted.getPlayerGameData().getRating());
+        assertTrue(result.newPlayers().isEmpty());
+    }
+
+    @Test
+    @Transactional
+    void upsertearUnEquipoExistenteReasignaJugadorQueYaExistiaEnOtroEquipo() {
+        Player existingPlayer = getJugadorConNombre("Harry Wilson");
+        existingPlayer.setExternalId(12345L);
+        existingPlayer.getPlayerGameData().setRating(6.8);
+        Team liverpool = new Team("Liverpool", "Premier League", new ArrayList<>(List.of(existingPlayer)));
+        existingPlayer.setTeam(liverpool);
+        teamRepository.guardar(liverpool);
+
+        Team fulham = new Team("Fulham", "Premier League", new ArrayList<>());
+        teamRepository.guardar(fulham);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Player transferredPlayer = getJugadorConNombre("Harry Wilson");
+        transferredPlayer.setExternalId(12345L);
+        transferredPlayer.getPlayerGameData().setRating(8.0);
+        Team incomingFulham = new Team("Fulham", "Premier League", new ArrayList<>(List.of(transferredPlayer)));
+        transferredPlayer.setTeam(incomingFulham);
+
+        TeamUpsertResult result = teamRepository.upsertTeam(incomingFulham);
+        entityManager.flush();
+
+        Team updatedFulham = teamRepository.recuperarPorNombreYLiga("Fulham", "Premier League").orElseThrow();
+        assertEquals(1, updatedFulham.getPlayers().size());
+        Player persisted = updatedFulham.getPlayers().getFirst();
+        assertEquals(Long.valueOf(12345L), persisted.getExternalId());
+        assertEquals(8.0, persisted.getPlayerGameData().getRating());
+        assertTrue(result.newPlayers().isEmpty());
+    }
+
+    @Test
+    @Transactional
+    void upsertearUnEquipoNuevoNoDuplicaJugadorQueYaExistiaEnOtroEquipo() {
+        Player existingPlayer = getJugadorConNombre("Harry Wilson");
+        existingPlayer.setExternalId(12345L);
+        existingPlayer.getPlayerGameData().setRating(6.8);
+        Team liverpool = new Team("Liverpool", "Premier League", new ArrayList<>(List.of(existingPlayer)));
+        existingPlayer.setTeam(liverpool);
+        teamRepository.guardar(liverpool);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Player transferredPlayer = getJugadorConNombre("Harry Wilson");
+        transferredPlayer.setExternalId(12345L);
+        transferredPlayer.getPlayerGameData().setRating(8.5);
+        Team newFulham = new Team("Fulham", "Premier League", new ArrayList<>(List.of(transferredPlayer)));
+        transferredPlayer.setTeam(newFulham);
+
+        TeamUpsertResult result = teamRepository.upsertTeam(newFulham);
+        entityManager.flush();
+
+        Team savedFulham = teamRepository.recuperarPorNombreYLiga("Fulham", "Premier League").orElseThrow();
+        assertEquals(1, savedFulham.getPlayers().size());
+        assertEquals(8.5, savedFulham.getPlayers().getFirst().getPlayerGameData().getRating());
+        assertTrue(result.newPlayers().isEmpty());
+    }
+
+    @Test
+    @Transactional
+    void upsertearEquiposPermiteJugadoresDistintosConMismoNombreYDistintoExternalId() {
+        Player firstPlayer = getJugadorConNombre("Harry Wilson");
+        firstPlayer.setExternalId(100L);
+        Team team1 = new Team("Fulham", "Premier League", new ArrayList<>(List.of(firstPlayer)));
+        firstPlayer.setTeam(team1);
+        teamRepository.upsertTeam(team1);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Player secondPlayer = getJugadorConNombre("Harry Wilson");
+        secondPlayer.setExternalId(200L);
+        Team team2 = new Team("Otro Club", "LaLiga", new ArrayList<>(List.of(secondPlayer)));
+        secondPlayer.setTeam(team2);
+
+        TeamUpsertResult result = teamRepository.upsertTeam(team2);
+        entityManager.flush();
+
+        assertEquals(1, result.team().getPlayers().size());
+        assertEquals(Long.valueOf(200L), result.team().getPlayers().getFirst().getExternalId());
+        assertEquals(1, result.newPlayers().size());
+    }
+
+    @Test
+    @Transactional
+    void upsertearUnEquipoDeduplicaJugadoresRepetidosEnLaMismaLista() {
+        Player firstCopy = getJugadorConNombre("Adama Traore");
+        firstCopy.setExternalId(555L);
+        Player secondCopy = getJugadorConNombre("Adama Traore");
+        secondCopy.setExternalId(555L);
+
+        Team team = new Team("Fulham", "Premier League", new ArrayList<>(List.of(firstCopy, secondCopy)));
+        firstCopy.setTeam(team);
+        secondCopy.setTeam(team);
+
+        TeamUpsertResult result = teamRepository.upsertTeam(team);
+        entityManager.flush();
+
+        assertEquals(1, result.team().getPlayers().size());
+        assertEquals(1, result.newPlayers().size());
+    }
+
 }

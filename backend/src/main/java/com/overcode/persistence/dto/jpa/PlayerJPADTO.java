@@ -24,7 +24,7 @@ public class PlayerJPADTO {
     @Column(name = "external_id", unique = true)
     private Long externalId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false, name = "current_price")
     private Double currentPrice;
