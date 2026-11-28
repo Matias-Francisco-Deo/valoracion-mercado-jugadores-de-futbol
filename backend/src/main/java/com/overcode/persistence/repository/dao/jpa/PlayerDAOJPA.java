@@ -8,10 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlayerDAOJPA extends JpaRepository<PlayerJPADTO, Long> {
 
     boolean existsByNameIgnoreCase(String name);
+
+    Optional<PlayerJPADTO> findByExternalId(Long externalId);
+
+    Optional<PlayerJPADTO> findFirstByNameIgnoreCaseAndExternalIdIsNull(String name);
 
     String FIND_BY_CLUBNAME = "(:teamName IS NULL OR unaccent(LOWER(t.name)) LIKE unaccent(CONCAT(LOWER(CAST(:teamName AS text)), '%')))";
 
